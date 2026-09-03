@@ -84,6 +84,26 @@ window.MJ = window.MJ || {};
     ui.showIntro(!!save);
   };
 
+  function galleryHtml() {
+    var g = MJ.saveSystem.getGallery();
+    var defs = MJ.config.endings;
+    var total = Object.keys(defs).length;
+    var got = Object.keys(g).length;
+    var html = '<div class="panel gallery">' +
+      '<div class="g-head">结局图鉴 <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
+      '<div class="g-grid">';
+    Object.keys(defs).forEach(function (k) {
+      var e = defs[k];
+      var on = !!g[k];
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? e.name : '未解锁') + '">' +
+        '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
+        '<div class="g-name">' + (on ? e.name : '？？？') + '</div>' +
+        '</div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
@@ -94,6 +114,7 @@ window.MJ = window.MJ || {};
           '<p><b>机制</b>：多数事件为三选一，选项后的 <b>hint</b> 提示大概后果但不剧透全局；部分事件仅在满足前置条件时出现；隐藏的「元路线」（艺术家/慈善家/商业巨擘/隐士）会随选择累积，影响专属走向。</p>' +
           '<p><b>原则</b>：只呈现后果，不评判选择。法律相关事件以中性、程序化的方式叙述。</p>' +
         '</div>' +
+        galleryHtml() +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">继续游戏</button>' : '') +
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">开始新人生</button>' +
