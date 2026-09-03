@@ -141,6 +141,26 @@ html, body {
 
 .foot { color: var(--ink-dim); font-size: 12px; text-align: center; opacity: .7; }
 
+/* ---------- 人生轨迹（历史回顾） ---------- */
+.history { padding: 10px 14px; }
+.history summary {
+  cursor: pointer; color: var(--gold); font-weight: 700; letter-spacing: 1px;
+  list-style: none; user-select: none;
+}
+.history summary::-webkit-details-marker { display: none; }
+.history summary::before { content: '▸ '; color: var(--gold-soft); }
+.history[open] summary::before { content: '▾ '; }
+.history summary .cnt { color: var(--ink-dim); font-weight: 400; }
+.history .timeline {
+  margin-top: 10px; max-height: 220px; overflow: auto;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.history .step { display: flex; gap: 8px; font-size: 12px; align-items: baseline; animation: fadeUp .3s ease both; }
+.history .step .yr { color: var(--gold-soft); min-width: 42px; }
+.history .step .t { color: var(--ink); min-width: 96px; }
+.history .step .c { color: var(--ink-dim); }
+.history .empty { color: var(--ink-dim); font-size: 13px; }
+
 /* ---------- 轻量级动效 ---------- */
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(10px); }
