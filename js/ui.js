@@ -10,6 +10,37 @@ window.MJ = window.MJ || {};
 
   function $(sel) { return app.querySelector(sel); }
 
+  function setKeyHandler(fn) {
+    if (ui._keyHandler) { try { document.removeEventListener('keydown', ui._keyHandler); } catch (e) {} }
+    ui._keyHandler = fn || null;
+    if (fn) document.addEventListener('keydown', fn);
+  }
+
+  // 键盘可访问性：数字键 1-9 选择、上下方向键移动焦点、回车/空格确认继续或结束
+  function bindEventKeys(ev) {
+    setKeyHandler(function (e) {
+      if (ev.kind === 'choice') {
+        var btns = app.querySelectorAll('.option');
+        if (e.key >= '1' && e.key <= '9') {
+          var idx = parseInt(e.key, 10) - 1;
+          if (btns[idx]) { e.preventDefault(); MJ.engine.choose(idx); }
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          var list = Array.prototype.slice.call(btns);
+          if (!list.length) return;
+          var pos = list.indexOf(document.activeElement);
+          var next = (pos < 0) ? 0
+            : (e.key === 'ArrowDown' ? Math.min(list.length - 1, pos + 1) : Math.max(0, pos - 1));
+          list[next].focus();
+        }
+      } else if (ev.kind === 'auto') {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); var b = $('#btn-next'); if (b) b.click(); }
+      } else if (ev.kind === 'ending') {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); var b2 = $('#btn-end'); if (b2) b2.click(); }
+      }
+    });
+  }
+
   function formatMoney(v) {
     var sign = v < 0 ? '-' : '';
     var a = Math.abs(v);
@@ -125,6 +156,7 @@ window.MJ = window.MJ || {};
       MJ.engine.resume(MJ.saveSystem.load());
     });
     $('#btn-new').addEventListener('click', function () {
+      if (hasSave && !window.confirm('将覆盖当前存档并开始新人生，确定吗？')) return;
       MJ.saveSystem.clear();
       MJ.engine.start();
     });
@@ -169,6 +201,7 @@ window.MJ = window.MJ || {};
         });
       });
     }
+    bindEventKeys(ev);
     window.scrollTo(0, 0);
   };
 
@@ -200,6 +233,9 @@ window.MJ = window.MJ || {};
     $('#btn-restart').addEventListener('click', function () {
       MJ.saveSystem.clear();
       ui.showIntro(false);
+    });
+    setKeyHandler(function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }
     });
     window.scrollTo(0, 0);
   };

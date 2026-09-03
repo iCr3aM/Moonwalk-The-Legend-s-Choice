@@ -112,7 +112,7 @@ window.MJ = window.MJ || {};
 
     go: function (id) {
       var ev = MJ.EVENTS[id];
-      if (!ev) { console.error('事件缺失:', id); return; }
+      if (!ev) { console.error('事件缺失:', id); this.go('start'); return; }
 
       // 门控条件
       if (ev.cond && !ev.cond(this.state)) {

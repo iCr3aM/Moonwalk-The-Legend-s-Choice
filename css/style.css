@@ -213,6 +213,7 @@ html, body {
 .btn { position: relative; overflow: hidden; }
 .btn:hover { box-shadow: 0 6px 18px rgba(212,175,55,0.25); }
 .btn:active { transform: translateY(1px) scale(.99); }
+.option:focus-visible, .btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
 /* 属性条入场微光 */
 .fill { transition: width .45s cubic-bezier(.22,.61,.36,1); }
