@@ -102,5 +102,26 @@ window.MJ = window.MJ || {};
     }
   };
 
+  // 成就系统（GDD §17：慈善家/巡演王/法律斗士/隐士 等；复用图鉴式 localStorage 持久化）
+  // check(state, ctx) 中 ctx = { ending?: 结局id }；返回 true 即解锁。
+  C.achievements = [
+    { id: 'ACH_PHIL', name: '慈善家', icon: '🕊️', desc: '以善意照亮世界，把公益走成了第二份事业。',
+      check: function (s) { return (s.meta.phil || 0) >= 3; } },
+    { id: 'ACH_RECLUSE', name: '隐士', icon: '🏔️', desc: '一次次退向静默，把喧嚣关在门外。',
+      check: function (s) { return (s.meta.recluse || 0) >= 3; } },
+    { id: 'ACH_LEGAL', name: '法律斗士', icon: '⚖️', desc: '风波数度加身，却始终挺直脊背、不卑不亢。',
+      check: function (s) { return (s.flags.settlement1993 || s.flags.secondCharge || s.flags.secondVerdict) && (s.attributes.reputation || 0) >= 55; } },
+    { id: 'ACH_MOGUL', name: '商业巨擘', icon: '💼', desc: '用远见构筑起属于自己的音乐与版权帝国。',
+      check: function (s) { return (s.meta.mogul || 0) >= 2 && !s.debt; } },
+    { id: 'ACH_ARTIST', name: '艺术宗师', icon: '🎵', desc: '把一生淬炼成旋律，登临艺术之巅。',
+      check: function (s) { return (s.meta.artPath || 0) >= 2 && (s.attributes.art || 0) >= 75; } },
+    { id: 'ACH_TOUR', name: '舞台之王', icon: '🌟', desc: '在无数舞台上点燃世界，掌声即是王冠。',
+      check: function (s) { return (s.attributes.art || 0) >= 75 && (s.attributes.reputation || 0) >= 75; } },
+    { id: 'ACH_ETERNAL', name: '永恒符号', icon: '👑', desc: '艺术与声誉不朽，成为时代的文化图腾。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ETERNAL'; } },
+    { id: 'ACH_SURVIVOR', name: '绝境求生', icon: '💪', desc: '在债务的阴影里，仍把命握在自己手里。',
+      check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } }
+  ];
+
   MJ.config = C;
 })();

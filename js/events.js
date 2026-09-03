@@ -121,7 +121,7 @@ window.MJ = window.MJ || {};
   };
 
   E['1_5'] = {
-    id: '1_5', year: 1971, title: '是否单飞', kind: 'choice',
+    id: '1_5', year: 1971, title: '是否单飞', kind: 'choice', key: true,
     text: function (s) {
       return narr('经纪公司递来一份个人合约。单飞意味着挣脱兄弟的影子、握住自己的方向盘，也意味着庆功宴上少了几张熟悉的面孔。', s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '你望向兄弟们，单飞的决定像一把悄悄抽走的椅子。' },
@@ -238,7 +238,7 @@ window.MJ = window.MJ || {};
   };
 
   E['2_4'] = {
-    id: '2_4', year: 1979, title: '与 Epic 深度合作', kind: 'choice',
+    id: '2_4', year: 1979, title: '与 Epic 深度合作', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '3_1',
     text: function (s) {
       return narr('厂牌伸出橄榄枝，邀你更深地绑定。合约的字里行间，藏着创作主导权与自由之间的权衡。', s, [
@@ -283,7 +283,7 @@ window.MJ = window.MJ || {};
   };
 
   E['3_1b'] = {
-    id: '3_1b', year: 1983, title: 'Motown 25 月球漫步', kind: 'choice',
+    id: '3_1b', year: 1983, title: 'Motown 25 月球漫步', kind: 'choice', key: true,
     text: function (s) {
       return narr('Motown 25 周年直播现场，灯光暗下又骤亮。你决定，把那段藏在袜子里的舞步，献给全世界。', s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: '长久的苦练在这一刻有了出口，脚下的滑步像是早已注定。' },
@@ -313,7 +313,7 @@ window.MJ = window.MJ || {};
   };
 
   E['3_2'] = {
-    id: '3_2', year: 1984, title: '百事广告', kind: 'choice',
+    id: '3_2', year: 1984, title: '百事广告', kind: 'choice', key: true,
     text: function (s) {
       return narr('百事可乐的合约铺开红毯，片场的聚光灯比演唱会还刺眼。谁也没料到，那一簇火苗会改写此后的人生。', s, [
         { cond: function (s) { return (s.attributes.stress || 0) >= 45; }, text: '连广告片场都透着紧绷，你比谁都清楚，风光背后总有代价。' }
@@ -371,7 +371,7 @@ window.MJ = window.MJ || {};
   };
 
   E['3_5'] = {
-    id: '3_5', year: 1985, title: 'We Are The World', kind: 'choice',
+    id: '3_5', year: 1985, title: 'We Are The World', kind: 'choice', key: true,
     text: function (s) {
       return narr('群星在录音棚里排成一列，为远方的非洲唱一首《We Are The World》。那一刻，流行乐第一次觉得自己能改变点什么。', s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: '名气让你的一句倡议就能掀起风浪，公益因此格外有力。' },
@@ -386,7 +386,7 @@ window.MJ = window.MJ || {};
   };
 
   E['3_6'] = {
-    id: '3_6', year: 1985, title: '收购 ATV 版权', kind: 'choice',
+    id: '3_6', year: 1985, title: '收购 ATV 版权', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '4_0',
     text: function (s) {
       return narr('机会来了：买下包含披头士作品的 ATV 版权目录。这不只是生意，更是把音乐版图纳入掌心的野心。', s, [
@@ -417,7 +417,7 @@ window.MJ = window.MJ || {};
   };
 
   E['4_1'] = {
-    id: '4_1', year: 1987, title: '梦幻庄园', kind: 'choice',
+    id: '4_1', year: 1987, title: '梦幻庄园', kind: 'choice', key: true,
     text: function (s) {
       return narr('你在加州买下一座庄园，取名“Neverland”——一个属于童真、旋转木马与欢笑的乌托邦。', s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '你想象着孩子们的笑声填满庄园，那画面比任何舞台都动人。' },
@@ -512,7 +512,7 @@ window.MJ = window.MJ || {};
   };
 
   E['5_2b'] = {
-    id: '5_2b', year: 1992, title: 'Heal the World 基金会', kind: 'choice',
+    id: '5_2b', year: 1992, title: 'Heal the World 基金会', kind: 'choice', key: true,
     text: function (s) {
       return narr('你创立 Heal the World 基金会，想把舞台上的爱，分一点给那些够不着灯光的孩子。', s, [
         { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '公益的火苗已经点燃，这一次你只是往里添了更多柴。' },
@@ -557,7 +557,7 @@ window.MJ = window.MJ || {};
   };
 
   E['5_3'] = {
-    id: '5_3', year: 1993, title: '1993 年民事指控', kind: 'choice',
+    id: '5_3', year: 1993, title: '1993 年民事指控', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; }, fallback: '5_5',
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {
@@ -575,7 +575,7 @@ window.MJ = window.MJ || {};
   };
 
   E['5_4'] = {
-    id: '5_4', year: 1993, title: '药物依赖公开', kind: 'auto',
+    id: '5_4', year: 1993, title: '药物依赖公开', kind: 'auto', key: true,
     cond: function (s) { return s.flags.isPepsiBurned === true && s.flags.painkillerDependent === true; }, fallback: '5_5',
     text: function (s) {
       return narr('长年倚赖的止痛药物，终于被外界的目光揪了出来。依赖，从私密的伤口变成了公开的注脚。', s, [
@@ -586,7 +586,7 @@ window.MJ = window.MJ || {};
   };
 
   E['5_5'] = {
-    id: '5_5', year: 1994, title: '与 Lisa Marie 结婚', kind: 'choice',
+    id: '5_5', year: 1994, title: '与 Lisa Marie 结婚', kind: 'choice', key: true,
     text: function (s) {
       return narr('你与 Lisa Marie Presley 携手步入婚姻，两段孤独的星轨，在镜头前短暂交叠。', s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: '两道星轨的交叠被镜头津津乐道，你分不清是爱还是表演。' },
@@ -615,7 +615,7 @@ window.MJ = window.MJ || {};
   };
 
   E['6_1b'] = {
-    id: '6_1b', year: 1995, title: '索尼合并', kind: 'choice',
+    id: '6_1b', year: 1995, title: '索尼合并', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true && s.flags.epicDeep === true; }, fallback: '6_1c',
     text: function (s) {
       return narr('你可将 ATV 版权与索尼合并，把零散的版图拼成一张王座。这是商业棋局里最凶险也最诱人的一步。', s, [
@@ -748,7 +748,7 @@ window.MJ = window.MJ || {};
   };
 
   E['6_3b'] = {
-    id: '6_3b', year: 2001, title: '《Invincible》与 30 周年', kind: 'choice',
+    id: '6_3b', year: 2001, title: '《Invincible》与 30 周年', kind: 'choice', key: true,
     text: function (s) {
       return narr('新专辑《Invincible》与出道 30 周年演唱会接踵而至。三十年的加冕，也是一次与时光的对望。', s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: '三十年的功力都在这台纪念里，你唱给时光，也唱给自己。' },
@@ -763,7 +763,7 @@ window.MJ = window.MJ || {};
   };
 
   E['6_4'] = {
-    id: '6_4', year: 2002, title: '第二次刑事指控', kind: 'choice',
+    id: '6_4', year: 2002, title: '第二次刑事指控', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; }, fallback: '7_1',
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {
@@ -857,7 +857,7 @@ window.MJ = window.MJ || {};
   };
 
   E['7_0'] = {
-    id: '7_0', year: 2008, title: '《Thriller 25》', kind: 'choice',
+    id: '7_0', year: 2008, title: '《Thriller 25》', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '7_1',
     text: function (s) {
       return narr('《Thriller 25》周年纪念专辑面世，格莱美的聚光灯再次为你亮起。二十五年过去，那张封面依旧在发光。', s, [
@@ -873,7 +873,7 @@ window.MJ = window.MJ || {};
   };
 
   E['7_1'] = {
-    id: '7_1', year: 2008, title: '债务危机', kind: 'choice',
+    id: '7_1', year: 2008, title: '债务危机', kind: 'choice', key: true,
     cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '7_2',
     text: function (s) {
       return narr('梦幻庄园像个吞金的无底洞，债务危机逼上门来。Colony Capital 递来一根浮木——条件是让你松手些许。', s, [
@@ -889,7 +889,7 @@ window.MJ = window.MJ || {};
   };
 
   E['7_2'] = {
-    id: '7_2', year: 2009, title: 'This Is It', kind: 'choice',
+    id: '7_2', year: 2009, title: 'This Is It', kind: 'choice', key: true,
     text: function (s) {
       return narr('你宣布《This Is It》系列演唱会，像要和岁月再赌一把。伦敦的舞台已经搭好，聚光灯在等你归来。', s, [
         { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: '医生的叮嘱还悬在耳边，你却仍在盘算能撑几场。' },
@@ -1247,6 +1247,78 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：倚赖处方', hint: '痛楚暂退，暗藏隐忧（健康+8，压力-5）', effects: { health: 8, stress: -5 }, epilogue: '针尖落处，世界软了下来；只是你没察觉，自己正一点点交出了清醒的缰绳。', next: '__RETURN__' },
       { label: 'B：保持清醒', hint: '克制自律（健康+3，压力+3）', effects: { health: 3, stress: 3 }, epilogue: '你把处方推了回去，宁愿忍着疼，也想把方向盘握在自己手里。', next: '__RETURN__' }
+    ]
+  };
+
+  // ----- 补充变体：让四条元路线都有变体代表（artPath 此前缺位） -----
+  E.V_SONGWRITE = {
+    id: 'V_SONGWRITE', variant: true, window: [1983, 2005], weight: 30,
+    title: '深夜创作', kind: 'choice',
+    text: function (s) {
+      return narr('又一宿未眠，你在钢琴前反复推敲一段旋律。天快亮时，那个让你心跳的动机终于浮现。', s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: '完美主义的耳朵不肯放过任何一个音符，你又把自己逼到了墙角。' }
+      ]);
+    },
+    options: [
+      { label: 'A：顺手记下灵感', hint: '灵感入册，匠心+1（艺术+5，artPath+1）', effects: { art: 5, artPath: 1 }, next: '__RETURN__' },
+      { label: 'B：推翻重来', hint: '精益求精（艺术+8，压力+5）', effects: { art: 8, stress: 5 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BUSINESS_EMPIRE = {
+    id: 'V_BUSINESS_EMPIRE', variant: true, window: [1985, 2005], weight: 30,
+    cond: function (s) { return s.flags.isSolo === true; },
+    title: '版图扩张', kind: 'choice',
+    text: function (s) {
+      return narr('你面前摊着一份版图不小的商业计划：主题乐园、唱片厂牌、版权矩阵。野心在账本上铺开。', s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '生意场上的嗅觉越来越灵，你几乎能闻到每一笔交易里的气味。' }
+      ]);
+    },
+    options: [
+      { label: 'A：大举收购', hint: '商业帝国+1，树大招风（mogul+1，声誉-2）', effects: { mogul: 1, reputation: -2 }, next: '__RETURN__' },
+      { label: 'B：稳扎稳打', hint: '步步为营（mogul+1，财富+8）', effects: { mogul: 1, wealth: 8 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_GLOBAL_AID = {
+    id: 'V_GLOBAL_AID', variant: true, window: [1993, 2008], weight: 30,
+    cond: function (s) { return s.flags.healWorld === true; },
+    title: '跨国援助', kind: 'choice',
+    text: function (s) {
+      return narr('依托你设立的公益基金会，一场面向战乱与疫病地区儿童的跨国援助被提上日程。聚光灯，这一次为远方而亮。', s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: '公益早已成了你生命里甩不掉的牵挂，你几乎不假思索就点了头。' }
+      ]);
+    },
+    options: [
+      { label: 'A：倾力投入', hint: '善名广传，仁爱+1（声誉+10，家庭+5，压力+8，慈善+1）', effects: { reputation: 10, family: 5, stress: 8, phil: 1 }, next: '__RETURN__' },
+      { label: 'B：量力而行', hint: '克尽绵薄（声誉+5，慈善+1）', effects: { reputation: 5, phil: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_SANCTUARY = {
+    id: 'V_SANCTUARY', variant: true, window: [1990, 2009], weight: 30,
+    title: '世外桃源', kind: 'choice',
+    text: function (s) {
+      return narr('你越来越想躲开所有镜头，去一个连名字都没人认识的地方。庄园深处，安静得能听见自己的心跳。', s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '你发现自己竟开始享受这份与世隔绝，连门铃都成了多余的声响。' }
+      ]);
+    },
+    options: [
+      { label: 'A：彻底隐居', hint: '退入静默（隐士+2，压力-5）', effects: { recluse: 2, stress: -5 }, next: '__RETURN__' },
+      { label: 'B：偶尔露面', hint: '张弛有度（隐士+1，声誉+3）', effects: { recluse: 1, reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ----- 隐藏彩蛋：东方之约（被搁置的 chinaVisit，低概率+高门槛，纯文化中性彩蛋） -----
+  E.V_CHINA = {
+    id: 'V_CHINA', variant: true, window: [1993, 2005], weight: 6,
+    cond: function (s) { return (s.attributes.reputation || 0) >= 80 && ((s.meta.phil || 0) >= 2 || (s.meta.artPath || 0) >= 2); },
+    title: '东方之约', kind: 'choice',
+    text: function (s) {
+      return narr('一封来自东方的邀约跨海而来：希望你在长江与长城之间，办一场跨越文化的音乐会。两种古老与现代交汇的想象力，让你心动。', s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '你想起 Heal the World 的初衷——音乐本就不该有国界。' }
+      ]);
+    },
+    options: [
+      { label: 'A：赴约东方', hint: '跨越山海的共鸣（艺术+8，声誉+8，慈善+1）', effects: { art: 8, reputation: 8, phil: 1 }, flags: { chinaVisit: true }, next: '__RETURN__' },
+      { label: 'B：婉拒，专注当下', hint: '留白给自己（艺术+3）', effects: { art: 3 }, next: '__RETURN__' }
     ]
   };
 

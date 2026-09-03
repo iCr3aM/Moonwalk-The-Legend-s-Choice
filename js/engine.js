@@ -178,7 +178,7 @@ window.MJ = window.MJ || {};
       var opt = opts[optIndex];
       if (!opt) return;
 
-      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: opt.label });
+      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: opt.label, key: !!ev.key });
       applyEffects(opt.effects, this.state);
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
       if (opt.flags) for (var k in opt.flags) this.state.setFlag(k, opt.flags[k]);
@@ -194,6 +194,7 @@ window.MJ = window.MJ || {};
       var ev = this.current;
       applyEffects(ev.effects, this.state);
       if (ev.flags) for (var k in ev.flags) this.state.setFlag(k, ev.flags[k]);
+      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: '（经历）', key: !!ev.key });
       MJ.ruleEngine.afterEvent(this.state);
       MJ.saveSystem.save(this.state);
       this.advance(ev.next);
@@ -243,6 +244,35 @@ window.MJ = window.MJ || {};
     },
     unlockEnding: function (id) {
       try { var g = this.getGallery(); g[id] = true; localStorage.setItem(this.galleryKey, JSON.stringify(g)); } catch (e) {}
+    }
+  };
+
+  // ---------- 成就系统（localStorage 持久化，复用图鉴式读写） ----------
+  MJ.achievementSystem = {
+    key: 'mj_lifechoices_ach_v1',
+    _store: function () {
+      try { return JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) { return {}; }
+    },
+    isUnlocked: function (id) { return !!this._store()[id]; },
+    unlock: function (id) {
+      try { var s = this._store(); s[id] = true; localStorage.setItem(this.key, JSON.stringify(s)); } catch (e) {}
+    },
+    // 评估全部成就，返回本次“新解锁”的成就定义数组（用于弹窗提示）
+    evaluate: function (state, ctx) {
+      var newly = [];
+      var self = this;
+      (MJ.config.achievements || []).forEach(function (a) {
+        if (self.isUnlocked(a.id)) return;
+        try { if (a.check(state, ctx || {})) { self.unlock(a.id); newly.push(a); } } catch (e) {}
+      });
+      return newly;
+    },
+    // 供图鉴面板使用：返回 [{id,name,icon,desc,unlocked}]
+    all: function () {
+      var self = this;
+      return (MJ.config.achievements || []).map(function (a) {
+        return { id: a.id, name: a.name, icon: a.icon, desc: a.desc, unlocked: self.isUnlocked(a.id) };
+      });
     }
   };
 })();

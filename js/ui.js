@@ -95,6 +95,26 @@ window.MJ = window.MJ || {};
     return inner;
   }
 
+  // 关键抉择回顾：仅汇总被标记为关键节点的选择/经历（复用 history 数据）
+  function keyReviewPanel(state) {
+    var h = state.history || [];
+    var keys = h.filter(function (e) { return e.key; });
+    var inner = '<details class="panel history kreview" open>' +
+      '<summary>关键抉择回顾 <span class="cnt">(' + keys.length + ')</span></summary>' +
+      '<div class="timeline">';
+    if (keys.length === 0) {
+      inner += '<div class="empty">这一程没有惊心动魄的岔路，平凡本身也是一种答案。</div>';
+    } else {
+      keys.forEach(function (e) {
+        inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
+          '<span class="t">' + escapeHtml(e.title) + '</span>' +
+          '<span class="c">' + escapeHtml(e.choice) + '</span></div>';
+      });
+    }
+    inner += '</div></details>';
+    return inner;
+  }
+
   function statusBar(state, ev) {
     var net = state.netWorth;
     var debtCls = net < 0 ? 'net debt' : 'net';
@@ -135,6 +155,39 @@ window.MJ = window.MJ || {};
     return html;
   }
 
+  function achievementsPanel(state) {
+    var list = MJ.achievementSystem.all();
+    var got = list.filter(function (a) { return a.unlocked; }).length;
+    var total = list.length;
+    var html = '<div class="panel ach-panel">' +
+      '<div class="g-head">成就 <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
+      '<div class="ach-grid">';
+    list.forEach(function (a) {
+      var on = a.unlocked;
+      html += '<div class="ach-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(a.name + '：' + a.desc) : '未解锁') + '">' +
+        '<div class="ach-icon">' + (on ? a.icon : '🔒') + '</div>' +
+        '<div class="ach-name">' + (on ? a.name : '？？？') + '</div>' +
+        '</div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除）
+  function toastAchievement(a) {
+    var t = document.createElement('div');
+    t.className = 'ach-toast';
+    t.innerHTML = '<div class="at-icon">' + a.icon + '</div>' +
+      '<div class="at-body"><div class="at-title">成就解锁 · ' + escapeHtml(a.name) + '</div>' +
+      '<div class="at-desc">' + escapeHtml(a.desc) + '</div></div>';
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('show'); }, 20);
+    setTimeout(function () {
+      t.classList.remove('show');
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400);
+    }, 3600);
+  }
+
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
@@ -146,6 +199,7 @@ window.MJ = window.MJ || {};
           '<p><b>原则</b>：只呈现后果，不评判选择。法律相关事件以中性、程序化的方式叙述。</p>' +
         '</div>' +
         galleryHtml() +
+        achievementsPanel() +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">继续游戏</button>' : '') +
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">开始新人生</button>' +
@@ -207,6 +261,7 @@ window.MJ = window.MJ || {};
       });
     }
     bindEventKeys(ev);
+    MJ.achievementSystem.evaluate(state, {}).forEach(toastAchievement);
     window.scrollTo(0, 0);
   };
 
@@ -233,9 +288,12 @@ window.MJ = window.MJ || {};
         snap +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button></div>' +
       '</div>' +
+      achievementsPanel() +
+      keyReviewPanel(state) +
       historyPanel(state) +
       '<div class="foot">你的每一个选择，写就了独一无二的传奇。</div>';
     app.innerHTML = html;
+    MJ.achievementSystem.evaluate(state, { ending: id }).forEach(toastAchievement);
     $('#btn-restart').addEventListener('click', function () {
       MJ.saveSystem.clear();
       ui.showIntro(false);
