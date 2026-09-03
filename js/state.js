@@ -16,6 +16,12 @@ window.MJ = window.MJ || {};
     // 初始财富属性由净资产推导（与 Economy 联动）
     var _scale0 = (cfg.wealthScale) || 150;
     this.attributes.wealth = Math.max(0, Math.min(100, Math.round(cfg.initialNetWorth / _scale0)));
+    // M1 具名 NPC 好感（-100..100，初值 0）
+    this.relations = Object.assign({}, cfg.initialRelations);
+    // M2 人生手记 / M4 命运回响 / M3 当前章节（持久化以避免续玩时重复生成）
+    this.diary = [];     // [{ chapter, title, text }]
+    this.echoes = [];    // [text]
+    this.era = -1;       // 当前章节索引（-1=尚未进入）
     this.history = []; // { year, title, choice }
     this.stats = { variants: 0, keyChoices: 0, events: 0 }; // 生涯数据（深度反馈）
   }
@@ -52,6 +58,13 @@ window.MJ = window.MJ || {};
     this.flags[name] = val;
   };
 
+  // M1 关系好感变更（钳制 -100..100）
+  GameState.prototype.changeRel = function (name, delta) {
+    if (!delta) return;
+    var cur = this.relations[name] || 0;
+    this.relations[name] = Math.max(-100, Math.min(100, cur + delta));
+  };
+
   GameState.prototype.pushHistory = function (entry) {
     this.history.push(entry);
   };
@@ -65,6 +78,10 @@ window.MJ = window.MJ || {};
       meta: this.meta,
       netWorth: this.netWorth,
       debt: this.debt,
+      relations: this.relations,
+      diary: this.diary,
+      echoes: this.echoes,
+      era: this.era,
       history: this.history,
       stats: this.stats,
       currentId: cur
@@ -78,6 +95,10 @@ window.MJ = window.MJ || {};
     this.meta = data.meta || this.meta;
     this.netWorth = data.netWorth != null ? data.netWorth : this.netWorth;
     this.debt = !!data.debt;
+    this.relations = data.relations || Object.assign({}, MJ.config.initialRelations);
+    this.diary = data.diary || [];
+    this.echoes = data.echoes || [];
+    this.era = (data.era != null) ? data.era : -1;
     this.history = data.history || [];
     this.stats = data.stats || { variants: 0, keyChoices: 0, events: 0 };
   };

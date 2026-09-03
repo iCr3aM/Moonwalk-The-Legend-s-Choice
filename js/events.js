@@ -129,9 +129,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：迈出单飞那一步', hint: '艺术与财富飞跃，兄弟情谊却出现裂痕（艺术+20，财富+15，家庭-15，压力+15）', effects: { art: 20, wealth: 15, family: -15, stress: 15 }, flags: { isSolo: true }, epilogue: '麦克风交到你一个人手里，身后的和声忽然空了一块。', next: '1_6' },
-      { label: 'B：守在 Jackson 5 里', hint: '亲情稳固，安稳生长（家庭+20，艺术+5，财富+5）', effects: { family: 20, art: 5, wealth: 5 }, flags: { isSolo: false }, epilogue: '你望了望兄弟，决定把"我们"继续写下去。', next: '2_1' },
-      { label: 'C：半只脚踏出门槛', hint: '兼顾两头，温吞却周全（艺术+10，家庭+10，财富+5）', effects: { art: 10, family: 10, wealth: 5 }, flags: { isSolo: false }, epilogue: '你一只脚迈向聚光灯，另一只脚还留在兄弟们的影子里。', next: '2_1' }
+      { label: 'A：迈出单飞那一步', hint: '艺术与财富飞跃，兄弟情谊却出现裂痕（艺术+20，财富+15，家庭-15，压力+15）', effects: { art: 20, wealth: 15, family: -15, stress: 15, rel: { brothers: -15 } }, flags: { isSolo: true }, epilogue: '麦克风交到你一个人手里，身后的和声忽然空了一块。', next: '1_6' },
+      { label: 'B：守在 Jackson 5 里', hint: '亲情稳固，安稳生长（家庭+20，艺术+5，财富+5）', effects: { family: 20, art: 5, wealth: 5, rel: { brothers: 15 } }, flags: { isSolo: false }, epilogue: '你望了望兄弟，决定把"我们"继续写下去。', next: '2_1' },
+      { label: 'C：半只脚踏出门槛', hint: '兼顾两头，温吞却周全（艺术+10，家庭+10，财富+5）', effects: { art: 10, family: 10, wealth: 5, rel: { brothers: 8 } }, flags: { isSolo: false }, epilogue: '你一只脚迈向聚光灯，另一只脚还留在兄弟们的影子里。', next: '2_1' }
     ]
   };
 
@@ -195,7 +195,7 @@ window.MJ = window.MJ || {};
     options: function (s) {
       if (s.flags.isSolo) {
         return [
-          { label: 'A：倾尽所有去演', hint: '舞台感与口碑双收（艺术+15，声誉+10）', effects: { art: 15, reputation: 10 }, next: '2_2' },
+          { label: 'A：倾尽所有去演', hint: '舞台感与口碑双收（艺术+15，声誉+10）', effects: { art: 15, reputation: 10, rel: { quincy: 10 } }, next: '2_2' },
           { label: 'B：把重心留给家人', hint: '温暖的角落自有分量（家庭+10）', effects: { family: 10 }, next: '2_2' },
           { label: 'C：临时退演护隐私', hint: '避开窥探，留住宁静（家庭+5，压力-5）', effects: { family: 5, stress: -5 }, next: '2_2' }
         ];
@@ -249,7 +249,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：深度绑定 Epic', hint: '话语权与收益齐涨（声誉+10，财富+15）', effects: { reputation: 10, wealth: 15 }, flags: { epicDeep: true }, next: '3_1' },
+      { label: 'A：深度绑定 Epic', hint: '话语权与收益齐涨（声誉+10，财富+15）', effects: { reputation: 10, wealth: 15, rel: { quincy: 12 } }, flags: { epicDeep: true }, next: '3_1' },
       { label: 'B：保持安全距离', hint: '留白给生活，压力随之退潮（家庭+5，压力-10）', effects: { family: 5, stress: -10 }, flags: { epicDeep: false }, next: '3_1' },
       { label: 'C：自创厂牌单干', hint: '野心勃勃，却也烧钱劳神（艺术+10，财富-10，压力+5）', effects: { art: 10, wealth: -10, stress: 5 }, next: '3_1' }
     ]
@@ -294,7 +294,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：完美演绎月球漫步', hint: '一个滑步，滑进了时代记忆（艺术+15，声誉+15，压力+5）', effects: { art: 15, reputation: 15, stress: 5 }, next: '3_1c' },
+      { label: 'A：完美演绎月球漫步', hint: '一个滑步，滑进了时代记忆（艺术+15，声誉+15，压力+5）', effects: { art: 15, reputation: 15, stress: 5, rel: { fans: 15 } }, next: '3_1c' },
       { label: 'B：保守地完成演出', hint: '稳扎稳打，松弛自在（声誉+5，压力-5）', effects: { reputation: 5, stress: -5 }, next: '3_1c' },
       { label: 'C：临时换曲避锋芒', hint: '藏锋守拙，小有所得（艺术+5，声誉+3）', effects: { art: 5, reputation: 3 }, next: '3_1c' }
     ]
@@ -323,7 +323,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：接拍并意外烧伤', hint: '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）', effects: { wealth: 20, reputation: 5 }, flags: { isPepsiBurned: true }, epilogue: '片场的火苗舔过皮肤，那一刻的惊呼，成了此后多年都挥不去的回音。', next: '3_2b' },
+      { label: 'A：接拍并意外烧伤', hint: '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）', effects: { wealth: 20, reputation: 5, rel: { fans: 5 } }, flags: { isPepsiBurned: true }, epilogue: '片场的火苗舔过皮肤，那一刻的惊呼，成了此后多年都挥不去的回音。', next: '3_2b' },
       { label: 'B：安全优先拒拍', hint: '护住身体，丢了广告费（健康+10，财富-20）', effects: { health: 10, wealth: -20 }, flags: { isPepsiBurned: false }, epilogue: '你绕开了那簇火，却也错过了一次让名字更深入人心的机会。', next: '3_2b' },
       { label: 'C：议价安全拍摄', hint: '皆大欢喜的折中（财富+5，健康+5）', effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, epilogue: '你在安全与曝光间找到了平衡点，片场圆满收工。', next: '3_2b' }
     ]
@@ -384,7 +384,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：倾情义唱', hint: '善名远扬，爱心+1（声誉+15，家庭+5，慈善+1）', effects: { reputation: 15, family: 5, phil: 1 }, flags: { weAreTheWorld: true }, next: '3_6' },
+      { label: 'A：倾情义唱', hint: '善名远扬，爱心+1（声誉+15，家庭+5，慈善+1）', effects: { reputation: 15, family: 5, phil: 1, rel: { fans: 8 } }, flags: { weAreTheWorld: true }, next: '3_6' },
       { label: 'B：婉拒这份邀约', hint: '退回自己的旋律里（艺术+5）', effects: { art: 5 }, next: '3_6' },
       { label: 'C：独自捐出巨款', hint: '不露面也行善，爱心+1（声誉+10，财富-15，慈善+1）', effects: { reputation: 10, wealth: -15, phil: 1 }, next: '3_6' }
     ]
@@ -525,7 +525,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：全身心投入', hint: '善名与牵挂同增，爱心+1（声誉+15，家庭+5，压力+5，慈善+1）', effects: { reputation: 15, family: 5, stress: 5, phil: 1 }, flags: { healWorld: true }, next: '5_2c' },
+      { label: 'A：全身心投入', hint: '善名与牵挂同增，爱心+1（声誉+15，家庭+5，压力+5，慈善+1）', effects: { reputation: 15, family: 5, stress: 5, phil: 1, rel: { fans: 12 } }, flags: { healWorld: true }, next: '5_2c' },
       { label: 'B：仅挂名参与', hint: '轻描淡写（声誉+5）', effects: { reputation: 5 }, next: '5_2c' },
       { label: 'C：高调营销慈善', hint: '流量与爱心齐涨，爱心+1（声誉+10，压力+5，慈善+1）', effects: { reputation: 10, stress: 5, phil: 1 }, next: '5_2c' }
     ]
@@ -540,9 +540,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：奉上一场盛典', hint: '惊艳全国，艺术与声名齐飞（艺术+10，声誉+15）', effects: { art: 10, reputation: 15 }, next: '5_2d' },
+      { label: 'A：奉上一场盛典', hint: '惊艳全国，艺术与声名齐飞（艺术+10，声誉+15）', effects: { art: 10, reputation: 15, rel: { fans: 15 } }, next: '5_2d' },
       { label: 'B：低调呈现', hint: '稳妥收场（声誉+5）', effects: { reputation: 5 }, next: '5_2d' },
-      { label: 'C：邀请童声合唱团', hint: '纯真共鸣，暖意融融（声誉+10，家庭+5）', effects: { reputation: 10, family: 5 }, next: '5_2d' }
+      { label: 'C：邀请童声合唱团', hint: '纯真共鸣，暖意融融（声誉+10，家庭+5）', effects: { reputation: 10, family: 5, rel: { fans: 8 } }, next: '5_2d' }
     ]
   };
 
@@ -555,9 +555,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：坦诚聊白癜风与童年', hint: '卸下伪装换来理解，却也透支（声誉+20，压力+10）', effects: { reputation: 20, stress: 10 }, flags: { oprahOpen: true }, next: '5_3' },
-      { label: 'B：绕开敏感话题', hint: '体面，却隔了一层（声誉+5，压力+5）', effects: { reputation: 5, stress: 5 }, next: '5_3' },
-      { label: 'C：拒访守住神秘', hint: '退入孤独，隐士之心+1（声誉-8，压力-5，隐士+1）', effects: { reputation: -8, stress: -5, recluse: 1 }, next: '5_3' }
+      { label: 'A：坦诚聊白癜风与童年', hint: '卸下伪装换来理解，却也透支（声誉+20，压力+10）', effects: { reputation: 20, stress: 10, media: 6 }, flags: { oprahOpen: true }, next: '5_3' },
+      { label: 'B：绕开敏感话题', hint: '体面，却隔了一层（声誉+5，压力+5）', effects: { reputation: 5, stress: 5, media: 2 }, next: '5_3' },
+      { label: 'C：拒访守住神秘', hint: '退入孤独，隐士之心+1（声誉-8，压力-5，隐士+1）', effects: { reputation: -8, stress: -5, recluse: 1, media: -4 }, next: '5_3' }
     ]
   };
 
@@ -573,9 +573,9 @@ window.MJ = window.MJ || {};
       return '你未购置庄园且始终与兄弟并肩，相关民事指控未曾发生。';
     },
     options: [
-      { label: 'A：达成庭外和解', hint: '支付和解费用，声誉重创，压力陡增（声誉-35，压力+20，净资产 -2300 万）', effects: { reputation: -35, stress: 20 }, moneyEffect: -2300, flags: { settlement1993: true }, next: '5_4' },
-      { label: 'B：应诉到底', hint: '硬刚法庭，心力交瘁（压力+30）', effects: { stress: 30 }, flags: { settlement1993: false }, next: '5_4' },
-      { label: 'C：配合调查', hint: '清白与否交给程序，声誉仍受伤（声誉-10，压力+25）', effects: { reputation: -10, stress: 25 }, flags: { settlement1993: false }, next: '5_4' }
+      { label: 'A：达成庭外和解', hint: '支付和解费用，声誉重创，压力陡增（声誉-35，压力+20，净资产 -2300 万）', effects: { reputation: -35, stress: 20, media: -15 }, moneyEffect: -2300, flags: { settlement1993: true }, next: '5_4' },
+      { label: 'B：应诉到底', hint: '硬刚法庭，心力交瘁（压力+30）', effects: { stress: 30, media: -6 }, flags: { settlement1993: false }, next: '5_4' },
+      { label: 'C：配合调查', hint: '清白与否交给程序，声誉仍受伤（声誉-10，压力+25）', effects: { reputation: -10, stress: 25, media: -4 }, flags: { settlement1993: false }, next: '5_4' }
     ]
   };
 
@@ -587,7 +587,7 @@ window.MJ = window.MJ || {};
         { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: '身体早已发出过太多次警告，这一次，连警告都显得无力。' }
       ]);
     },
-    effects: { reputation: -15, health: -10, stress: 20 }, next: '5_5'
+    effects: { reputation: -15, health: -10, stress: 20, media: -8 }, next: '5_5'
   };
 
   E['5_5'] = {
@@ -599,9 +599,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：用心经营这段婚姻', hint: '家有了温度，名气也添暖意（家庭+15，声誉+10）', effects: { family: 15, reputation: 10 }, flags: { marriedLisa: true }, next: '6_1' },
-      { label: 'B：保持距离', hint: '貌合神离（家庭-5）', effects: { family: -5 }, flags: { marriedLisa: false }, next: '6_1' },
-      { label: 'C：办一场世纪婚礼', hint: '举世瞩目，破费又劳神（声誉+5，财富-10，压力+5）', effects: { reputation: 5, wealth: -10, stress: 5 }, flags: { marriedLisa: false }, next: '6_1' }
+      { label: 'A：用心经营这段婚姻', hint: '家有了温度，名气也添暖意（家庭+15，声誉+10）', effects: { family: 15, reputation: 10, rel: { lisa: 15 } }, flags: { marriedLisa: true }, next: '6_1' },
+      { label: 'B：保持距离', hint: '貌合神离（家庭-5）', effects: { family: -5, rel: { lisa: -5 } }, flags: { marriedLisa: false }, next: '6_1' },
+      { label: 'C：办一场世纪婚礼', hint: '举世瞩目，破费又劳神（声誉+5，财富-10，压力+5）', effects: { reputation: 5, wealth: -10, stress: 5, rel: { lisa: 5 } }, flags: { marriedLisa: false }, next: '6_1' }
     ]
   };
 
@@ -674,9 +674,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：全心经营家庭', hint: '家成了最稳的锚（家庭+20）', effects: { family: 20 }, flags: { marriedDebbie: true }, next: '6_2b' },
-      { label: 'B：保持疏离', hint: '有名无实的冷淡（家庭-10）', effects: { family: -10 }, flags: { marriedDebbie: false }, next: '6_2b' },
-      { label: 'C：规划代孕子女', hint: '为新生命铺路，账目出血（家庭+5，财富-10）', effects: { family: 5, wealth: -10 }, flags: { surrogacy: true }, next: '6_2b' }
+      { label: 'A：全心经营家庭', hint: '家成了最稳的锚（家庭+20）', effects: { family: 20, rel: { debbie: 15 } }, flags: { marriedDebbie: true }, next: '6_2b' },
+      { label: 'B：保持疏离', hint: '有名无实的冷淡（家庭-10）', effects: { family: -10, rel: { debbie: -10 } }, flags: { marriedDebbie: false }, next: '6_2b' },
+      { label: 'C：规划代孕子女', hint: '为新生命铺路，账目出血（家庭+5，财富-10）', effects: { family: 5, wealth: -10, rel: { debbie: 3, kids: 3 } }, flags: { surrogacy: true }, next: '6_2b' }
     ]
   };
 
@@ -795,8 +795,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：全心陪伴他长大', hint: '父爱沉淀，亦添劳碌（家庭+15，压力+5）', effects: { family: 15, stress: 5 }, flags: { blanketBorn: true }, next: '6_4c' },
-      { label: 'B：暂缓公众曝光', hint: '把私密留给自己（家庭+5）', effects: { family: 5 }, next: '6_4c' },
+      { label: 'A：全心陪伴他长大', hint: '父爱沉淀，亦添劳碌（家庭+15，压力+5）', effects: { family: 15, stress: 5, rel: { kids: 18 }, media: -2 }, flags: { blanketBorn: true }, next: '6_4c' },
+      { label: 'B：暂缓公众曝光', hint: '把私密留给自己（家庭+5）', effects: { family: 5, rel: { kids: 8 }, media: 2 }, next: '6_4c' },
       { label: 'C：高调展示家庭', hint: '秀恩爱涨粉，隐士之心-1（声誉+5，家庭+10）', effects: { reputation: 5, family: 10, recluse: -1 }, next: '6_4c' }
     ]
   };
@@ -871,7 +871,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：盛大回归', hint: '王者归来，艺术家之心+1（艺术+10，声誉+10）', effects: { art: 10, reputation: 10, artPath: 1 }, flags: { thriller25: true }, next: '7_1' },
+      { label: 'A：盛大回归', hint: '王者归来，艺术家之心+1（艺术+10，声誉+10）', effects: { art: 10, reputation: 10, artPath: 1, rel: { fans: 8 } }, flags: { thriller25: true }, next: '7_1' },
       { label: 'B：释出混音', hint: '温故而知新（艺术+5，声誉+5）', effects: { art: 5, reputation: 5 }, next: '7_1' },
       { label: 'C：婉拒亮相', hint: '退居幕后，隐士之心+1（声誉-3）', effects: { reputation: -3, recluse: 1 }, next: '7_1' }
     ]
@@ -970,8 +970,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：礼貌地侧身避开', hint: '体面退场，闲言渐起（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, next: '__RETURN__' },
-      { label: 'B：强硬回击', hint: '怒火外露，口碑受损（声誉-3，压力+8）', effects: { reputation: -3, stress: 8 }, next: '__RETURN__' }
+      { label: 'A：礼貌地侧身避开', hint: '体面退场，闲言渐起（声誉+3，压力+5）', effects: { reputation: 3, stress: 5, media: -2 }, next: '__RETURN__' },
+      { label: 'B：强硬回击', hint: '怒火外露，口碑受损（声誉-3，压力+8）', effects: { reputation: -3, stress: 8, media: -6 }, next: '__RETURN__' }
     ]
   };
   E.V_RUMOR = {
@@ -983,8 +983,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：冷处理不理会', hint: '任其自生自灭，口碑微损（声誉-3）', effects: { reputation: -3 }, next: '__RETURN__' },
-      { label: 'B：主动出面澄清', hint: '以正视听，徒增疲惫（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, next: '__RETURN__' }
+      { label: 'A：冷处理不理会', hint: '任其自生自灭，口碑微损（声誉-3）', effects: { reputation: -3, media: -4 }, next: '__RETURN__' },
+      { label: 'B：主动出面澄清', hint: '以正视听，徒增疲惫（声誉+3，压力+5）', effects: { reputation: 3, stress: 5, media: 4 }, next: '__RETURN__' }
     ]
   };
   E.V_COLLAB = {
@@ -1145,8 +1145,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：不予置评', hint: '冷处理（压力+3，隐士+1）', effects: { stress: 3, recluse: 1 }, next: '__RETURN__' },
-      { label: 'B：主动公关', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, next: '__RETURN__' }
+      { label: 'A：不予置评', hint: '冷处理（压力+3，隐士+1）', effects: { stress: 3, recluse: 1, media: -3 }, next: '__RETURN__' },
+      { label: 'B：主动公关', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5, media: 4 }, next: '__RETURN__' }
     ]
   };
 
@@ -1199,8 +1199,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：正面回应', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, epilogue: '你站出来把话说清，镜头却只截取了你最紧绷的那一秒。', next: '__RETURN__' },
-      { label: 'B：沉默以对', hint: '退入静默，隐士之心+1（压力+3，隐士+1）', effects: { stress: 3, recluse: 1 }, epilogue: '你把窗帘拉紧了些，任由外界的猜测在门外喧嚣。', next: '__RETURN__' }
+      { label: 'A：正面回应', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5, media: -3 }, epilogue: '你站出来把话说清，镜头却只截取了你最紧绷的那一秒。', next: '__RETURN__' },
+      { label: 'B：沉默以对', hint: '退入静默，隐士之心+1（压力+3，隐士+1）', effects: { stress: 3, recluse: 1, media: -2 }, epilogue: '你把窗帘拉紧了些，任由外界的猜测在门外喧嚣。', next: '__RETURN__' }
     ]
   };
   E.V_BUBBLES = {
@@ -1225,8 +1225,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：冷处理', hint: '任其沉底（声誉-3，压力+3）', effects: { reputation: -3, stress: 3 }, epilogue: '你关掉屏幕，假装那些字句伤不到你，可夜里的辗转出卖了你。', next: '__RETURN__' },
-      { label: 'B：亲自辟谣', hint: '以正视听（声誉+5，压力+5）', effects: { reputation: 5, stress: 5 }, epilogue: '你敲下一段郑重其事的回应，寄望真相能跑赢偏见。', next: '__RETURN__' }
+      { label: 'A：冷处理', hint: '任其沉底（声誉-3，压力+3）', effects: { reputation: -3, stress: 3, media: -3 }, epilogue: '你关掉屏幕，假装那些字句伤不到你，可夜里的辗转出卖了你。', next: '__RETURN__' },
+      { label: 'B：亲自辟谣', hint: '以正视听（声誉+5，压力+5）', effects: { reputation: 5, stress: 5, media: 5 }, epilogue: '你敲下一段郑重其事的回应，寄望真相能跑赢偏见。', next: '__RETURN__' }
     ]
   };
   E.V_COMEBACK = {
@@ -1402,6 +1402,22 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：把这场婚姻当真', hint: '真心经营，家庭升温（家庭+8，声誉+3）', effects: { family: 8, reputation: 3 }, next: '__RETURN__' },
       { label: 'B：视作公众剧本', hint: '清醒地演下去，心却更远（声誉+5，家庭-3，压力+3）', effects: { reputation: 5, family: -3, stress: 3 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ----- 体验深化 M6：童年闪回（孤独轴驱动，高孤独时触发） -----
+  E.V_FLASHBACK = {
+    id: 'V_FLASHBACK', variant: true, window: [1985, 2008], weight: 40,
+    cond: function (s) { return (s.attributes.loneliness || 0) >= 35; },
+    title: '盖瑞的回声', kind: 'choice',
+    text: function (s) {
+      return narr('深夜，盖瑞旧屋的煤油灯在梦里晃。父亲的节拍器、哥哥们的笑声，和那双再也回不去的小鞋，忽然全涌上来。', s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '你抱着孩子，忽然很想给童年的自己一个拥抱。' }
+      ]);
+    },
+    options: [
+      { label: 'A：把思念写进歌里', hint: '温柔沉淀（艺术+5，孤独-8）', effects: { art: 5, loneliness: -8 }, next: '__RETURN__' },
+      { label: 'B：独自消化', hint: '内敛，却更孤（孤独+5，压力+3）', effects: { loneliness: 5, stress: 3 }, next: '__RETURN__' }
     ]
   };
 

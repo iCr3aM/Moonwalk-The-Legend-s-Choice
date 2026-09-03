@@ -125,8 +125,10 @@ window.MJ = window.MJ || {};
         '<span><span class="year">' + yearTxt + '</span> &nbsp; <span class="' + debtCls + '">净资产 ' + formatMoney(net) + '</span></span>' +
       '</div>' +
       attrBars(state) +
+      softBars(state) +
       metaHints(state) +
       metaTendency(state) +
+      relationsPanel(state) +
       '</div>';
   }
 
@@ -196,6 +198,58 @@ window.MJ = window.MJ || {};
     return '<div class="tend">正在走向：<b>' + MJ.config.metaDefs[dom].name + '</b> 之路</div>';
   }
 
+  // M5/M6 体验轴次条：媒体关系 / 孤独（与核心六维分离展示）
+  function softBars(state) {
+    var keys = ['media', 'loneliness'];
+    var html = '<div class="bars soft">';
+    keys.forEach(function (k) {
+      var val = state.attributes[k] || 0;
+      html += '<div class="bar"><div class="lab"><span>' + MJ.config.attrNames[k] + '</span><b>' + val + '</b></div>' +
+        '<div class="track"><div class="fill ' + k + '" style="width:' + val + '%"></div></div></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // M1 关系/羁绊面板：具名 NPC 好感（-100..100）
+  function relationsPanel(state) {
+    var defs = MJ.config.relationsDefs || [];
+    var rel = state.relations || {};
+    var html = '<div class="rel-panel"><div class="rel-head">羁绊</div><div class="rel-grid">';
+    defs.forEach(function (d) {
+      var v = rel[d.key] || 0;
+      var cls = v >= 20 ? 'warm' : (v <= -10 ? 'cold' : 'neutral');
+      var sign = v > 0 ? '+' : '';
+      html += '<div class="rel-cell ' + cls + '" title="' + escapeHtml(d.name) + '：' + (v > 0 ? '亲近' : v < 0 ? '疏远' : '平淡') + '（' + sign + v + '）">' +
+        '<span class="rel-ico">' + d.icon + '</span><span class="rel-name">' + escapeHtml(d.name) + '</span>' +
+        '<span class="rel-val">' + sign + v + '</span></div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  // M2 人生手记汇总（结局页）
+  function diaryPanel(state) {
+    var d = state.diary || [];
+    var inner = '<details class="panel history diary" open><summary>人生手记 <span class="cnt">(' + d.length + ')</span></summary><div class="diary-list">';
+    if (!d.length) inner += '<div class="empty">这一程尚未留下手记。</div>';
+    else d.forEach(function (e) {
+      inner += '<div class="diary-item"><b>' + escapeHtml(e.title) + '</b><p>' + escapeHtml(e.text) + '</p></div>';
+    });
+    inner += '</div></details>';
+    return inner;
+  }
+
+  // M4 命运回响汇总（结局页）
+  function echoesPanel(state) {
+    var d = state.echoes || [];
+    var inner = '<details class="panel history echoes"><summary>命运回响 <span class="cnt">(' + d.length + ')</span></summary><div class="echo-list">';
+    if (!d.length) inner += '<div class="empty">每一个选择都安分地落在了它该在的地方。</div>';
+    else d.forEach(function (t) { inner += '<div class="echo-item">' + escapeHtml(t) + '</div>'; });
+    inner += '</div></details>';
+    return inner;
+  }
+
   // ---------- 环境音（GDD §10：原创/公共领域 BGM，轻量 WebAudio 氛围垫，默认关闭） ----------
   var audio = (function () {
     var ctx = null, master = null, nodes = [], on = false;
@@ -251,6 +305,7 @@ window.MJ = window.MJ || {};
     var a = state.attributes;
     var dm = MJ.dominantMeta(state.meta);
     var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var legend = MJ.legendScore(state);
     var all = MJ.achievementSystem.all();
     var ach = all.filter(function (x) { return x.unlocked; }).length;
     var st = state.stats || { variants: 0, keyChoices: 0 };
@@ -259,7 +314,8 @@ window.MJ = window.MJ || {};
       '',
       e.icon + ' ' + e.name + '（' + e.tone + '）',
       '健康 ' + a.health + ' · 声誉 ' + a.reputation + ' · 艺术 ' + a.art + ' · 财富 ' + a.wealth + ' · 家庭 ' + a.family + ' · 压力 ' + a.stress,
-      '主导路线：' + metaName + '　触发变体 ' + st.variants + ' 次　关键抉择 ' + st.keyChoices + ' 个',
+      '主导路线：' + metaName + '　传奇评分 ' + legend.score + '（评级 ' + legend.grade + '）',
+      '触发变体 ' + st.variants + ' 次　关键抉择 ' + st.keyChoices + ' 个',
       '解锁成就 ' + ach + '/' + all.length,
       '',
       '每个人都是自己人生的词曲作者——来写下你的版本。'
@@ -360,6 +416,7 @@ window.MJ = window.MJ || {};
     var a = state.attributes;
     var dm = MJ.dominantMeta(state.meta);
     var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var legend = MJ.legendScore(state);
     var all = MJ.achievementSystem.all();
     var unlocked = all.filter(function (x) { return x.unlocked; });
     var st = state.stats || { variants: 0, keyChoices: 0, events: 0 };
@@ -424,7 +481,7 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = '#f3e2b0'; ctx.font = '600 18px "PingFang SC",sans-serif';
     ctx.fillText('主导路线：' + metaName, W / 2, ly);
     ctx.fillStyle = '#caa84a'; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText('途经人生节点 ' + st.events + ' 个 · 触发变体 ' + st.variants + ' 次 · 关键抉择 ' + st.keyChoices + ' 个', W / 2, ly + 26);
+    ctx.fillText('主导路线：' + metaName + '　·　传奇 ' + legend.score + '（' + legend.grade + '）', W / 2, ly + 26);
 
     var ay = ly + 60;
     ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
@@ -534,6 +591,7 @@ window.MJ = window.MJ || {};
     body += '</div>';
 
     app.innerHTML = statusBar(state, ev) + body + historyPanel(state);
+    try { app.setAttribute('data-chapter', MJ.chapterOf(ev)); } catch (e) {}
 
     if (ev.kind === 'auto') {
       $('#btn-next').addEventListener('click', function () { MJ.engine.proceed(); });
@@ -552,8 +610,29 @@ window.MJ = window.MJ || {};
     window.scrollTo(0, 0);
   };
 
+  // M3 章节过场（时代卡片）：展示章节标题/副题、本章人生手记(M2)与命运回响(M4)
+  ui.showEraCard = function (chapter, state, onContinue) {
+    var diary = (state.diary && state.diary.length) ? state.diary[state.diary.length - 1].text : '';
+    var echo = (state.echoes && state.echoes.length) ? state.echoes[state.echoes.length - 1] : '';
+    var html = statusBar(state, { year: chapter.start }) +
+      '<div class="panel era-card">' +
+        '<div class="era-ch">' + escapeHtml(chapter.title) + '</div>' +
+        '<div class="era-sub">' + escapeHtml(chapter.sub) + '</div>' +
+        (diary ? '<div class="era-block"><span class="e-tag">手记</span>' + escapeHtml(diary) + '</div>' : '') +
+        (echo ? '<div class="era-block"><span class="e-tag">命运回响</span>' + escapeHtml(echo) + '</div>' : '') +
+        (chapter.flavor ? '<div class="era-flavor">' + escapeHtml(chapter.flavor) + '</div>' : '') +
+        '<div class="continue-row"><button class="btn primary" id="btn-era">进入本章</button></div>' +
+      '</div>' + historyPanel(state);
+    app.innerHTML = html;
+    try { app.setAttribute('data-chapter', chapter.id); } catch (e) {}
+    var btn = document.getElementById('btn-era');
+    if (btn) btn.addEventListener('click', function () { onContinue(); });
+    window.scrollTo(0, 0);
+  };
+
   ui.showEnding = function (id, state) {
     var e = MJ.config.endings[id] || { name: id, icon: '🌟', tone: '', summary: '' };
+    var legend = MJ.legendScore(state);
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
@@ -562,6 +641,7 @@ window.MJ = window.MJ || {};
     snap += '<div class="s">净资产：<b>' + formatMoney(state.netWorth) + '</b></div>';
     var dm = MJ.dominantMeta(state.meta);
     snap += '<div class="s">主导路线：<b>' + (dm ? MJ.config.metaDefs[dm].name : '—') + '</b></div>';
+    snap += '<div class="s">传奇评分：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
     snap += '<div class="life-stat">本局触发变体 <b>' + (state.stats ? state.stats.variants : 0) + '</b> 次 · 关键抉择 <b>' + (state.stats ? state.stats.keyChoices : 0) + '</b> 个</div>';
     snap += '</div>';
 
@@ -588,6 +668,8 @@ window.MJ = window.MJ || {};
       '</div>' +
       achievementsPanel() +
       keyReviewPanel(state) +
+      diaryPanel(state) +
+      echoesPanel(state) +
       historyPanel(state) +
       '<div class="foot">你的每一个选择，写就了独一无二的传奇。</div>';
     app.innerHTML = html;

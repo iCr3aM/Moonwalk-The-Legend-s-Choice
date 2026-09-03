@@ -19,8 +19,11 @@ window.MJ = window.MJ || {};
       else if (stress < 40) health = Math.min(100, health + 2);
       else if (stress < 60) health = Math.min(100, health + 1);
       a.health = health;
-      // 兜底钳制
-      ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+      // M6 孤独轴：由 隐士倾向 + 低家庭 + 低媒体 累积（单调增长，作为心理伤痕，驱动幼年闪回）
+      var lonTarget = (state.meta.recluse || 0) * 12 + ((a.family || 0) < 35 ? 15 : 0) + ((a.media || 0) < 25 ? 8 : 0);
+      if (lonTarget > (a.loneliness || 0)) a.loneliness = Math.min(100, lonTarget);
+      // 兜底钳制（含 M5/M6 体验轴）
+      ['health', 'reputation', 'wealth', 'family', 'art', 'stress', 'media', 'loneliness'].forEach(function (k) {
         var v = a[k];
         if (v != null) a[k] = Math.max(0, Math.min(100, v));
       });
@@ -37,6 +40,12 @@ window.MJ = window.MJ || {};
       if (k === 'money') { state.applyMoney(eff[k]); continue; }
       // 财富属性与净资产联动：wealth 变化直接折算为净资产变化，二者永不背离
       if (k === 'wealth') { state.applyMoney(eff[k] * scale); continue; }
+      // M1 关系好感：eff.rel = { brothers:-15, quincy:12, ... }
+      if (k === 'rel') {
+        var ro = eff[k];
+        for (var rk in ro) { if (ro.hasOwnProperty(rk)) state.changeRel(rk, ro[rk]); }
+        continue;
+      }
       state.changeAttr(k, eff[k]);
     }
   }
@@ -85,6 +94,52 @@ window.MJ = window.MJ || {};
     return '';
   };
 
+  // M3 章节判定：按事件年份落在哪一段落（章节定义在 config.chapters）
+  MJ.chapterOf = function (ev) {
+    var y = MJ.eventYear(ev);
+    var chs = MJ.config.chapters || [];
+    for (var i = 0; i < chs.length; i++) {
+      if (y >= chs[i].start && y <= chs[i].end) return i;
+    }
+    if (!chs.length) return 0;
+    if (y < chs[0].start) return 0;
+    return chs.length - 1;
+  };
+
+  // M2 人生手记：按章节 + 元路线/flag 取首个命中模板（无 cond 为兜底）
+  MJ.buildDiary = function (chapterId, state) {
+    var tpls = (MJ.config.diaryTemplates || {})[chapterId];
+    if (!tpls) return '';
+    for (var i = 0; i < tpls.length; i++) {
+      try { if (!tpls[i].cond || tpls[i].cond(state)) return tpls[i].text; } catch (e) {}
+    }
+    return '';
+  };
+
+  // M4 命运回响：收集所有命中 flag 的跨章因果回响（去重由调用方负责）
+  MJ.buildEchoes = function (state) {
+    var tpls = MJ.config.echoTemplates || [];
+    var out = [];
+    for (var i = 0; i < tpls.length; i++) {
+      try { if (tpls[i].cond(state)) out.push(tpls[i].text); } catch (e) {}
+    }
+    return out;
+  };
+
+  // M7 传奇评分 / 遗产评级（0–100 → S/A/B/C/D），结局页与海报展示，给重玩明确目标
+  MJ.legendScore = function (state) {
+    var a = state.attributes, m = state.meta;
+    var score = a.art * 0.22 + a.reputation * 0.22 + a.health * 0.14 - a.stress * 0.10;
+    score += (m.phil || 0) * 4 + (m.mogul || 0) * 4 + (m.artPath || 0) * 4 + (m.recluse || 0) * 2;
+    score += Math.max(0, (a.family || 0) - 50) * 0.05;
+    var relSum = 0;
+    for (var k in state.relations) { if (state.relations.hasOwnProperty(k)) relSum += state.relations[k]; }
+    score += Math.max(-10, Math.min(10, relSum * 0.03));
+    score = Math.max(0, Math.min(100, Math.round(score)));
+    var grade = score >= 90 ? 'S' : score >= 78 ? 'A' : score >= 64 ? 'B' : score >= 48 ? 'C' : 'D';
+    return { score: score, grade: grade };
+  };
+
   MJ.resolveEnding = function (state, entryId) {
     var f = state.flags, a = state.attributes, m = state.meta;
     var burned = f.isPepsiBurned === true;
@@ -104,7 +159,7 @@ window.MJ = window.MJ || {};
     if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 9
     if (debt && !held) return 'END_SURVIVE_DEBT';            // 10 负债但取消巡演保命
     if (debt) return 'END_FINANCIAL';                        // 11 债务压垮
-    if (a.reputation < 60 && f.settlement1993) return 'END_CONTROVERSIAL'; // 12 声誉承压
+    if ((a.reputation < 60 && f.settlement1993) || ((a.media || 0) < 25 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL'; // 12 声誉承压（M5 媒体轴联动）
     return 'END_TRAGIC';                                     // 13 默认
   };
 
@@ -166,7 +221,33 @@ window.MJ = window.MJ || {};
       this.current = ev;
       this.state.stats.events = (this.state.stats.events || 0) + 1; // 途经人生节点计数
       MJ.saveSystem.save(this.state); // 进入新事件即存档（含 currentId），刷新可续玩
+
+      // M3 章节过场：主线非结局事件跨越新章节时，先弹“时代卡片”（含 M2 手记 / M4 命运回响），再展示事件
+      if (!ev.variant && ev.kind !== 'ending') {
+        var ch = MJ.chapterOf(ev);
+        if (ch !== this.state.era) {
+          this.state.era = ch;
+          this._recordChapter(ch);
+          MJ.saveSystem.save(this.state);
+          var self = this;
+          MJ.ui.showEraCard(MJ.config.chapters[ch], this.state, function () { MJ.ui.showEvent(ev, self.state); });
+          return;
+        }
+      }
       MJ.ui.showEvent(ev, this.state);
+    },
+
+    // M2/M4：进入新章节时生成人生手记片段与命运回响（去重）
+    _recordChapter: function (chapterId) {
+      var s = this.state;
+      var frag = MJ.buildDiary(chapterId, s);
+      if (frag) {
+        s.diary.push({ chapter: chapterId, title: (MJ.config.chapters[chapterId] || {}).title || '', text: frag });
+        if (s.diary.length > 6) s.diary.shift();
+      }
+      MJ.buildEchoes(s).forEach(function (t) {
+        if (s.echoes.indexOf(t) < 0) s.echoes.push(t);
+      });
     },
 
     optionsOf: function (ev) {

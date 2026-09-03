@@ -7,14 +7,16 @@ window.MJ = window.MJ || {};
 
   var C = {};
 
-  // 六维属性初值（GDD 5.2）
+  // 六维属性初值（GDD 5.2）；media(媒体关系)、loneliness(孤独) 为体验深化轴（§17.1 M5/M6），与声誉/压力相互独立
   C.initialAttributes = {
     health: 70,
     reputation: 50,
     wealth: 13,
     family: 60,
     art: 30,
-    stress: 20
+    stress: 20,
+    media: 60,
+    loneliness: 0
   };
 
   // 财富属性（0–100）由净资产推导：wealth = clamp(round(netWorth / wealthScale), 0, 100)
@@ -47,7 +49,9 @@ window.MJ = window.MJ || {};
     wealth: '财富',
     family: '家庭',
     art: '艺术',
-    stress: '压力'
+    stress: '压力',
+    media: '媒体',
+    loneliness: '孤独'
   };
 
   // 12 种结局（GDD 7.1）；monologue 为结局专属长文独白（收尾独白），保持中性、不杜撰虚假史实。
@@ -136,6 +140,75 @@ window.MJ = window.MJ || {};
     { id: 'ACH_COMEBACK', name: '浴火重生', icon: '🔥', desc: '聚光灯熄灭过，你又亲手把它点亮。',
       check: function (s) { return s.flags.comebackSeen === true; } }
   ];
+
+  // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------
+  // M3 章节（时代切片 / 过场）：按年份把人生切为五章
+  C.chapters = [
+    { id: 0, start: 1958, end: 1969, title: '第一章 · 盖瑞的摇篮', sub: '1958 – 1969　工业城的童音', flavor: '炼钢厂的红光里，七口之家挤在窄屋。节拍，从廉价的摇篮边开始。' },
+    { id: 1, start: 1970, end: 1981, title: '第二章 · 单飞与抉择', sub: '1970 – 1981　从组合到 Solo', flavor: '麦克风交到你一个人手里，身后的和声空了一块——也亮了一块。' },
+    { id: 2, start: 1982, end: 1990, title: '第三章 · 巅峰时代', sub: '1982 – 1990　Thriller 与世界', flavor: '黑胶转动的声音，盖过了全世界的呼吸。你成了流行本身。' },
+    { id: 3, start: 1991, end: 1999, title: '第四章 · 风暴与善意', sub: '1991 – 1999　争议、慈善与高墙', flavor: '掌声与议论同时涌来。你在高墙内建起乐园，也在法庭间走过暗廊。' },
+    { id: 4, start: 2000, end: 2009, title: '第五章 · 谢幕与告别', sub: '2000 – 2009　晚景、官司与 This Is It', flavor: '镜前的舞步慢了，但那双缀着水钻的手套，仍在时间里闪光。' }
+  ];
+
+  // M1 关系/羁绊系统：具名 NPC 好感（-100..100，初值 0）
+  C.relationsDefs = [
+    { key: 'brothers', name: '兄长与兄弟', icon: '👬' },
+    { key: 'quincy', name: '昆西·琼斯', icon: '🎼' },
+    { key: 'lisa', name: 'Lisa Marie', icon: '💍' },
+    { key: 'debbie', name: '黛比·罗', icon: '💑' },
+    { key: 'kids', name: '孩子们', icon: '🧒' },
+    { key: 'fans', name: '歌迷', icon: '🌟' }
+  ];
+  C.initialRelations = {};
+  C.relationsDefs.forEach(function (r) { C.initialRelations[r.key] = 0; });
+
+  // M2 内心独白 / 手记模板：按章节 + 元路线/flag 生成第一人称独白（取首个命中 cond，无 cond 为兜底）
+  C.diaryTemplates = {
+    0: [
+      { cond: function (s) { return (s.attributes.art || 0) >= 50; }, text: '哥哥说我天生属于舞台。我偷偷把洗发水瓶当麦克风，对着镜子练了整晚的舞步。' },
+      { text: '盖瑞的夜晚总带着炼钢厂的铁锈味。我常在床上数着哥哥们的呼吸，想：外面的世界，会不会也有人为我的歌声停下脚步？' }
+    ],
+    1: [
+      { cond: function (s) { return s.flags.isSolo === true; }, text: '离开兄弟的那天，我既兴奋又空。方向盘握在自己手里，可庆功宴上少了几张熟悉的脸。' },
+      { cond: function (s) { return s.flags.isSolo === false; }, text: '我选择留在兄弟身边。有人笑我错失了独舞的聚光灯，可血缘的合唱，是谁也偷不走的。' },
+      { text: '二十岁像一张没写完的乐谱。我急于证明自己不只是"那个小男孩"。' }
+    ],
+    2: [
+      { cond: function (s) { return (s.attributes.art || 0) >= 75; }, text: '当《Thriller》的黑胶转起来，我听见全世界屏住了呼吸。这一刻，我确信音乐能打败孤独。' },
+      { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '名声像涨潮，我忙着不被冲走。偶尔想起盖瑞，才想起自己为什么开始唱。' },
+      { text: '镁光灯很暖，也很烫。我在世界之巅学着想：接下来，要留下什么？' }
+    ],
+    3: [
+      { cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: '我建起乐园、办起基金会，只想把光分一点给够不着灯的孩子。' },
+      { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '我一点点退向高墙里。外界的议论越响，我越想安静。' },
+      { text: '掌声和流言同时涌来。我在法庭与舞台之间，学着不让任何人替我写结局。' }
+    ],
+    4: [
+      { cond: function (s) { return s.debt === true; }, text: '账单像雪片。我告诉自己：活下来，有时比完美落幕更需要勇气。' },
+      { cond: function (s) { return (s.attributes.health || 0) >= 60 && (s.attributes.reputation || 0) >= 60; }, text: '镜前的舞步慢了，可那双手套还在闪光。这一程，我不亏欠舞台。' },
+      { text: '2009 年的夏天，很多事要落幕了。我合上谱子，听见最初的那个盖瑞孩子在鼓掌。' }
+    ]
+  };
+
+  // M4 命运回响 / 因果回调模板：按 flag 生成跨章因果回响（引擎收集所有命中项，去重）
+  C.echoTemplates = [
+    { cond: function (s) { return s.flags.isSolo === true; }, text: '命运回响：当年迈出单飞那一步，让你与兄弟渐行渐远，却也握住了自己的方向盘。' },
+    { cond: function (s) { return s.flags.isPepsiBurned === true; }, text: '命运回响：84 年百事舞台的那场火，至今仍在肩头留着隐约的疤。' },
+    { cond: function (s) { return s.flags.painkillerDependent === true; }, text: '命运回响：从那场烧伤的镇痛起，药物悄悄成了你离不开的拐杖。' },
+    { cond: function (s) { return s.flags.marriedLisa === true || s.flags.marriedDebbie === true; }, text: '命运回响：你曾向镜头前的人交付过真心，婚姻的余温是暖，也是软肋。' },
+    { cond: function (s) { return s.flags.blanketBorn === true || s.flags.surrogacy === true; }, text: '命运回响：孩子降生的啼哭，是这喧嚣人间里你最想守护的安静。' },
+    { cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: '命运回响：早年种下的善，如今长成了 Heal the World 的森林。' },
+    { cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
+  ];
+
+  // M1 关系相关成就
+  C.achievements.push(
+    { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', desc: '纵使单飞，也始终把兄弟放在心上。',
+      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
+    { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', desc: '让一代人的青春里，都住着你的旋律。',
+      check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } }
+  );
 
   MJ.config = C;
 })();

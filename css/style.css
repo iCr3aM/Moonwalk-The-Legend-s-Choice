@@ -333,3 +333,49 @@ html, body {
   border: 1px solid rgba(212, 175, 55, 0.35);
 }
 .poster-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
+
+/* ---------- M5/M6 体验轴次条（媒体 / 孤独） ---------- */
+.bars.soft { margin-top: 8px; grid-template-columns: repeat(2, 1fr); }
+.fill.media { background: linear-gradient(90deg, #3f6fae, #6fa6d4); }
+.fill.loneliness { background: linear-gradient(90deg, #5b5b70, #9a9ab6); }
+
+/* ---------- M1 关系/羁绊面板 ---------- */
+.rel-panel { margin-top: 10px; }
+.rel-head { font-size: 12px; color: var(--gold); letter-spacing: 1px; }
+.rel-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.rel-cell {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 3px 10px; font-size: 12px; color: var(--ink-dim);
+}
+.rel-cell.warm { border-color: var(--good); color: var(--good); }
+.rel-cell.cold { border-color: var(--danger); color: var(--danger); }
+.rel-ico { font-size: 14px; }
+.rel-val { font-weight: 700; }
+
+/* ---------- M3 章节过场（时代卡片） ---------- */
+.era-card { padding: 30px 26px; text-align: center; }
+.era-ch { font-size: 26px; color: var(--gold); letter-spacing: 2px; text-shadow: 0 2px 12px rgba(212,175,55,0.25); }
+.era-sub { color: var(--ink-dim); margin: 6px 0 16px; letter-spacing: .5px; }
+.era-block { text-align: left; background: rgba(0,0,0,0.25); border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 10px 0; line-height: 1.85; font-size: 14px; }
+.era-flavor { color: var(--ink); line-height: 1.9; font-style: italic; margin-top: 8px; opacity: .92; }
+
+/* ---------- M2/M4 人生手记 / 命运回响（结局页） ---------- */
+.diary-list, .echo-list { margin-top: 10px; max-height: 260px; overflow: auto; }
+.diary-item { margin-bottom: 12px; }
+.diary-item b { color: var(--gold); letter-spacing: .5px; }
+.diary-item p { margin: 4px 0 0; color: var(--ink); line-height: 1.85; white-space: pre-line; }
+.echo-item { color: var(--ink); line-height: 1.8; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+.echo-item:last-child { border-bottom: none; }
+
+/* ---------- M8 章节主题色（童年暖→巅峰金→风暴沉→告别幽蓝） ---------- */
+.app[data-chapter="0"] { --gold: #e3a64a; --gold-soft: #b9822f; }
+.app[data-chapter="1"] { --gold: #e6b94a; --gold-soft: #bd8a2f; }
+.app[data-chapter="2"] { --gold: #f0cf63; --gold-soft: #c79a2c; }
+.app[data-chapter="3"] { --gold: #c9a23e; --gold-soft: #9c7a2c; }
+.app[data-chapter="4"] { --gold: #a9c2dc; --gold-soft: #7e96ad; }
+.app { transition: filter .4s ease; }
+
+/* ---------- M7 传奇评分高亮 ---------- */
+.snapshot .s b { letter-spacing: .3px; }
+.legend-grade-S { color: #f0cf63; } .legend-grade-A { color: #d4af37; }
