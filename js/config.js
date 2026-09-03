@@ -11,14 +11,19 @@ window.MJ = window.MJ || {};
   C.initialAttributes = {
     health: 70,
     reputation: 50,
-    wealth: 20,
+    wealth: 13,
     family: 60,
     art: 30,
     stress: 20
   };
 
-  // 净资产初值（单位：万元），走 Economy 子系统，与 0–100 的 wealth 属性解耦
-  C.initialNetWorth = 200;
+  // 财富属性（0–100）由净资产推导：wealth = clamp(round(netWorth / wealthScale), 0, 100)
+  // wealthScale = 150（万 / 财富点）。真实 MJ 在 80–90 年代净资产已达数亿至十数亿美元，
+  // 故净资产以“万”为单位时可达数万，使「财富」与「显示的净资产」始终一致且符合史实量级。
+  C.wealthScale = 150;
+
+  // 净资产初值（单位：万）。走 Economy 子系统，与财富属性联动（不再各自为政）。
+  C.initialNetWorth = 2000;
 
   // 标志（flag）初值：多数在游玩中写入；此处仅占位
   C.initialFlags = {};

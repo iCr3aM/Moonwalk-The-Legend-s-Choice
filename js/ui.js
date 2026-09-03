@@ -86,7 +86,7 @@ window.MJ = window.MJ || {};
       inner += '<div class="empty">尚未做出选择，传奇正在书写…</div>';
     } else {
       h.forEach(function (e) {
-        inner += '<div class="step"><span class="yr">' + e.year + '</span>' +
+        inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
           '<span class="t">' + escapeHtml(e.title) + '</span>' +
           '<span class="c">' + escapeHtml(e.choice) + '</span></div>';
       });
@@ -98,7 +98,7 @@ window.MJ = window.MJ || {};
   function statusBar(state, ev) {
     var net = state.netWorth;
     var debtCls = net < 0 ? 'net debt' : 'net';
-    var yearTxt = ev && ev.year ? ev.year : '';
+    var yearTxt = ev ? MJ.eventYear(ev) : '';
     return '<div class="panel status">' +
       '<div class="status-top">' +
         '<span class="title">迈克尔·杰克逊：人生选择</span>' +
@@ -171,7 +171,7 @@ window.MJ = window.MJ || {};
     }
     var body =
       '<div class="panel event">' + epilogueHtml +
-        '<div class="yr">' + (ev.year || '') + ' 年</div>' +
+        '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年</div>' +
         '<h2>' + ev.title + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';
 

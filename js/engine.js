@@ -10,17 +10,19 @@ window.MJ = window.MJ || {};
   // ---------- 规则引擎：压力→健康联动 + 属性钳制 ----------
   MJ.ruleEngine = {
     afterEvent: function (state) {
-      var stress = state.attributes.stress || 0;
-      // GDD 8.1 精神（高压损耗健康）：仅在压力极高(>=70)时按梯度小幅扣减，
-      // 让「善于管理压力」的玩法得以保持健康，从而可达健康类结局（可达性微调）。
-      var dmg = stress >= 70 ? Math.floor((stress - 60) / 25) : 0;
-      if (dmg > 0) {
-        state.attributes.health = Math.max(0, state.attributes.health - dmg);
-      }
+      var a = state.attributes;
+      var stress = a.stress || 0;
+      var health = a.health || 0;
+      // GDD 8.1 精神→健康联动：仅在极致高压(>=85)时极缓扣血；
+      // 低压力时身心回血，让「善于管理压力」的玩法得以保持健康（可达性微调）。
+      if (stress >= 85) health = Math.max(0, health - 1);
+      else if (stress < 40) health = Math.min(100, health + 2);
+      else if (stress < 60) health = Math.min(100, health + 1);
+      a.health = health;
       // 兜底钳制
       ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
-        var v = state.attributes[k];
-        if (v != null) state.attributes[k] = Math.max(0, Math.min(100, v));
+        var v = a[k];
+        if (v != null) a[k] = Math.max(0, Math.min(100, v));
       });
     }
   };
@@ -29,9 +31,12 @@ window.MJ = window.MJ || {};
   function applyEffects(eff, state) {
     if (!eff) return;
     if (typeof eff === 'function') eff = eff(state);
+    var scale = (MJ.config && MJ.config.wealthScale) || 150;
     for (var k in eff) {
       if (!eff.hasOwnProperty(k)) continue;
       if (k === 'money') { state.applyMoney(eff[k]); continue; }
+      // 财富属性与净资产联动：wealth 变化直接折算为净资产变化，二者永不背离
+      if (k === 'wealth') { state.applyMoney(eff[k] * scale); continue; }
       state.changeAttr(k, eff[k]);
     }
   }
@@ -72,6 +77,14 @@ window.MJ = window.MJ || {};
   }
   MJ.dominantMeta = dominantMeta;
 
+  // 事件年份：主线用 year；变体事件用窗口中值，确保状态栏与人生轨迹均显示合理年份
+  MJ.eventYear = function (ev) {
+    if (!ev) return '';
+    if (ev.year != null) return ev.year;
+    if (ev.window) return Math.round((ev.window[0] + ev.window[1]) / 2);
+    return '';
+  };
+
   MJ.resolveEnding = function (state, entryId) {
     var f = state.flags, a = state.attributes, m = state.meta;
     var burned = f.isPepsiBurned === true;
@@ -86,7 +99,7 @@ window.MJ = window.MJ || {};
     if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 4
     if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 5
     if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 6 巅峰需加冕标志
-    if (!burned && a.health >= 50) return 'END_PERFECT';     // 7 健康谢幕
+    if (!burned && a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';     // 7 健康谢幕（需声誉达标，否则归争议缠身）
     if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 8
     if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 9
     if (debt && !held) return 'END_SURVIVE_DEBT';            // 10 负债但取消巡演保命
@@ -165,7 +178,7 @@ window.MJ = window.MJ || {};
       var opt = opts[optIndex];
       if (!opt) return;
 
-      this.state.pushHistory({ year: ev.year, title: ev.title, choice: opt.label });
+      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: opt.label });
       applyEffects(opt.effects, this.state);
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
       if (opt.flags) for (var k in opt.flags) this.state.setFlag(k, opt.flags[k]);

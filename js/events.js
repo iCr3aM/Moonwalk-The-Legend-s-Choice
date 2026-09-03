@@ -52,7 +52,7 @@ window.MJ = window.MJ || {};
   };
 
   E['1_1'] = {
-    id: '1_1', year: 1963, title: '五岁显露才华', kind: 'choice',
+    id: '1_1', year: 1965, title: '年少显露才华', kind: 'choice',
     text: function (s) {
       return narr('父亲信奉“铁腕出天才”，夜里的琴房总回荡着节拍器的催促。天赋与苛责一同降临，你想逃，却又舍不得镜子前那个会发光的自己。', s, [
         { cond: function (s) { return (s.attributes.family || 0) <= 50; }, text: '家里的气氛因你的倔强而发紧，琴房门外是长久的沉默。' },
@@ -395,7 +395,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：全资收购', hint: '支付收购费用，落下商业帝国的基石（商业+1）（财富-15，声誉+10）', effects: { wealth: -15, reputation: 10, mogul: 1 }, flags: { atvBought: true }, moneyEffect: -100, next: '4_0' },
+      { label: 'A：全资收购', hint: '落下商业帝国的基石（商业+1）（声誉+10，资金 -2250 万）', effects: { wealth: -15, reputation: 10, mogul: 1 }, flags: { atvBought: true }, next: '4_0' },
       { label: 'B：暂不收购', hint: '按兵不动，现金充裕（财富+5）', effects: { wealth: 5 }, flags: { atvBought: false }, next: '4_0' },
       { label: 'C：联合财团分期吃下', hint: '以小博大，商业嗅觉+1（商业+1）（财富-5，声誉+5）', effects: { wealth: -5, reputation: 5, mogul: 1 }, next: '4_0' }
     ]
@@ -568,7 +568,7 @@ window.MJ = window.MJ || {};
       return '你未购置庄园且始终与兄弟并肩，相关民事指控未曾发生。';
     },
     options: [
-      { label: 'A：达成庭外和解', hint: '支付和解费用，声誉重创，压力陡增（声誉-35，压力+20）', effects: { reputation: -35, stress: 20 }, moneyEffect: -200, flags: { settlement1993: true }, next: '5_4' },
+      { label: 'A：达成庭外和解', hint: '支付和解费用，声誉重创，压力陡增（声誉-35，压力+20，净资产 -2300 万）', effects: { reputation: -35, stress: 20 }, moneyEffect: -2300, flags: { settlement1993: true }, next: '5_4' },
       { label: 'B：应诉到底', hint: '硬刚法庭，心力交瘁（压力+30）', effects: { stress: 30 }, flags: { settlement1993: false }, next: '5_4' },
       { label: 'C：配合调查', hint: '清白与否交给程序，声誉仍受伤（声誉-10，压力+25）', effects: { reputation: -10, stress: 25 }, flags: { settlement1993: false }, next: '5_4' }
     ]
@@ -873,7 +873,7 @@ window.MJ = window.MJ || {};
   };
 
   E['7_1'] = {
-    id: '7_1', year: 2006, title: '债务危机', kind: 'choice',
+    id: '7_1', year: 2008, title: '债务危机', kind: 'choice',
     cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '7_2',
     text: function (s) {
       return narr('梦幻庄园像个吞金的无底洞，债务危机逼上门来。Colony Capital 递来一根浮木——条件是让你松手些许。', s, [
@@ -882,9 +882,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：转让部分权益', hint: '引入注资断尾求生，家更冷但避债（财富-30，家庭-15，账+150万）', effects: { wealth: -30, family: -15 }, moneyEffect: 150, flags: { debtCrisis: true }, next: '7_2' },
-      { label: 'B：死撑不卖', hint: '硬扛到底，濒临窒息（财富-20，压力+10，账-500万，可能负债）', effects: { wealth: -20, stress: 10 }, moneyEffect: -500, flags: { debtCrisis: false }, next: '7_2' },
-      { label: 'C：引入注资', hint: '外人入局，压力稍缓（财富-10，压力-5，账+80万）', effects: { wealth: -10, stress: -5 }, moneyEffect: 80, next: '7_2' }
+      { label: 'A：转让部分权益', hint: '引入注资断尾求生，家更冷但避债（家庭-15，净资产 +2 亿）', effects: { family: -15 }, moneyEffect: 20000, flags: { debtCrisis: true }, next: '7_2' },
+      { label: 'B：死撑不卖', hint: '硬扛到底，濒临窒息（压力+10，净资产 -6 亿，可能负债）', effects: { stress: 10 }, moneyEffect: -60000, flags: { debtCrisis: false }, next: '7_2' },
+      { label: 'C：引入注资', hint: '外人入局，压力稍缓（压力-5，净资产 +8000 万）', effects: { stress: -5 }, moneyEffect: 8000, next: '7_2' }
     ]
   };
 
@@ -899,14 +899,14 @@ window.MJ = window.MJ || {};
     options: function (s) {
       if (s.flags.isSolo) {
         return [
-          { label: 'A：咬牙撑满 50 场', hint: '财富暴涨，身体濒临极限（财富+100，压力+40，账+400万）', effects: { wealth: 100, stress: 40 }, moneyEffect: 400, flags: { thisItHeld: true, thisItFull: true }, epilogue: '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。', next: '7_3' },
+          { label: 'A：咬牙撑满 50 场', hint: '财富暴涨，身体濒临极限（财富+100，压力+40，净资产 +1.5 亿）', effects: { wealth: 100, stress: 40 }, flags: { thisItHeld: true, thisItFull: true }, epilogue: '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。', next: '7_3' },
           { label: 'B：忍痛取消', hint: '保住健康，声誉微损（健康+20，声誉-10）', effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, epilogue: '你按下暂停键，把命留给了自己，哪怕掌声因此远了。', next: '7_3' },
-          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10，账+150万）', effects: { wealth: 40, stress: 20, health: 10 }, moneyEffect: 150, flags: { thisItHeld: true, thisItReduced: true }, epilogue: '你折中地数着场次，想既不负舞台，也不负这副身子。', next: '7_3' }
+          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10，净资产 +6000 万）', effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, epilogue: '你折中地数着场次，想既不负舞台，也不负这副身子。', next: '7_3' }
         ];
       }
       return [
-        { label: 'A：20 场团体巡演', hint: '兄弟同台，稳健收官（财富+40，压力+20，健康+5，账+150万）', effects: { wealth: 40, stress: 20, health: 5 }, moneyEffect: 150, flags: { thisItHeld: true, thisItFull: false }, epilogue: '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。', next: '7_3' },
-        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，财富-30）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。', next: '7_3' }
+        { label: 'A：20 场团体巡演', hint: '兄弟同台，稳健收官（财富+40，压力+20，健康+5，净资产 +6000 万）', effects: { wealth: 40, stress: 20, health: 5 }, flags: { thisItHeld: true, thisItFull: false }, epilogue: '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。', next: '7_3' },
+        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，净资产 -4500 万）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。', next: '7_3' }
       ];
     }
   };

@@ -13,14 +13,23 @@ window.MJ = window.MJ || {};
     this.meta = Object.assign({}, cfg.initialMeta);
     this.netWorth = cfg.initialNetWorth; // 万元
     this.debt = false;
+    // 初始财富属性由净资产推导（与 Economy 联动）
+    var _scale0 = (cfg.wealthScale) || 150;
+    this.attributes.wealth = Math.max(0, Math.min(100, Math.round(cfg.initialNetWorth / _scale0)));
     this.history = []; // { year, title, choice }
   }
 
   // 变更属性或元路线计数（属性钳制 0–100，元路线为非负整数）
   GameState.prototype.changeAttr = function (key, delta) {
     if (key in this.attributes) {
-      var v = (this.attributes[key] || 0) + delta;
-      this.attributes[key] = Math.max(0, Math.min(100, v));
+      var cur = this.attributes[key] || 0;
+      var nv = cur + delta;
+      // 软上限：声誉/艺术/压力进入高分段(>85)后收益递减(×0.5)，避免过早顶满 100，
+      // 但保留可达 85–100 的空间（艺术家巅峰等结局需要 art>=85）。
+      if (delta > 0 && nv > 85 && (key === 'reputation' || key === 'art' || key === 'stress')) {
+        nv = cur + delta * 0.5;
+      }
+      this.attributes[key] = Math.max(0, Math.min(100, nv));
     } else if (key in this.meta) {
       var m = (this.meta[key] || 0) + delta;
       this.meta[key] = Math.max(0, m);
@@ -32,6 +41,10 @@ window.MJ = window.MJ || {};
     if (!amount) return;
     this.netWorth += amount;
     if (this.netWorth < 0) this.debt = true;
+    // 财富属性（0–100）由净资产推导，确保「财富」与「净资产」始终一致
+    var scale = (MJ.config && MJ.config.wealthScale) || 150;
+    var w = Math.round(this.netWorth / scale);
+    this.attributes.wealth = Math.max(0, Math.min(100, w));
   };
 
   GameState.prototype.setFlag = function (name, val) {
