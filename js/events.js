@@ -768,7 +768,7 @@ window.MJ = window.MJ || {};
   };
 
   E['6_4'] = {
-    id: '6_4', year: 2002, title: '第二次刑事指控', kind: 'choice', key: true,
+    id: '6_4', year: 2003, title: '第二次刑事指控', kind: 'choice', key: true,
     cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; }, fallback: '7_1',
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {

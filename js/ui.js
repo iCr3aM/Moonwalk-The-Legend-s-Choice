@@ -77,8 +77,20 @@ window.MJ = window.MJ || {};
     return html;
   }
 
+  // 时间轨迹按年份升序排列（同年保持发生顺序），修复「插入顺序」导致的 chronology 错乱
+  function numYear(y) { var n = (typeof y === 'number') ? y : parseInt(y, 10); return isFinite(n) ? n : 1e9; }
+  function chronoSteps(h) {
+    return h.map(function (e, i) { return { e: e, i: i }; })
+      .sort(function (a, b) {
+        var ya = numYear(a.e.year), yb = numYear(b.e.year);
+        if (ya !== yb) return ya - yb;
+        return a.i - b.i;
+      })
+      .map(function (x) { return x.e; });
+  }
+
   function historyPanel(state) {
-    var h = state.history || [];
+    var h = chronoSteps(state.history || []);
     var inner = '<details class="panel history">' +
       '<summary>人生轨迹 <span class="cnt">(' + h.length + ')</span></summary>' +
       '<div class="timeline">';
@@ -105,7 +117,7 @@ window.MJ = window.MJ || {};
     if (keys.length === 0) {
       inner += '<div class="empty">这一程没有惊心动魄的岔路，平凡本身也是一种答案。</div>';
     } else {
-      keys.forEach(function (e) {
+      chronoSteps(keys).forEach(function (e) {
         inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
           '<span class="t">' + escapeHtml(e.title) + '</span>' +
           '<span class="c">' + escapeHtml(e.choice) + '</span></div>';
@@ -521,6 +533,40 @@ window.MJ = window.MJ || {};
     }, 'image/png');
   }
 
+  // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图/「放大海报」再次打开（放大查看）
+  function openPosterModal(state, id) {
+    var old = document.getElementById('poster-overlay');
+    if (old) old.parentNode.removeChild(old);
+    var e = MJ.config.endings[id] || { name: id };
+    var cv = createPoster(state, id);
+    var canShareImg = false;
+    try { canShareImg = typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([new Uint8Array(1)], 'x.png', { type: 'image/png' })] }); } catch (err) {}
+    var overlay = document.createElement('div');
+    overlay.id = 'poster-overlay';
+    overlay.className = 'overlay poster-modal';
+    overlay.innerHTML = '<div class="poster-frame">' +
+      '<div class="poster-tools">' +
+        '<span class="pf-title">' + escapeHtml(e.name) + ' · 传奇海报</span>' +
+        '<span class="pf-spacer"></span>' +
+        '<button class="btn primary" id="pm-save">保存图片</button>' +
+        (canShareImg ? '<button class="btn ghost" id="pm-share">分享图片</button>' : '') +
+        '<button class="btn ghost" id="pm-close">关闭 ✕</button>' +
+      '</div>' +
+      '<div class="poster-canvas-wrap"></div>' +
+    '</div>';
+    overlay.querySelector('.poster-canvas-wrap').appendChild(cv);
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
+    document.getElementById('pm-close').addEventListener('click', closePosterModal);
+    document.getElementById('pm-save').addEventListener('click', function () { downloadPoster(cv, 'MJ人生传奇_' + id); });
+    var pms = document.getElementById('pm-share');
+    if (pms) pms.addEventListener('click', function () { sharePosterImage(state, id); });
+  }
+  function closePosterModal() {
+    var o = document.getElementById('poster-overlay');
+    if (o) o.parentNode.removeChild(o);
+  }
+
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
@@ -680,11 +726,24 @@ window.MJ = window.MJ || {};
     });
     var posterCanvas = createPoster(state, id);
     var pbox = document.getElementById('poster-box');
-    if (pbox) pbox.appendChild(posterCanvas);
+    if (pbox) {
+      var thumb = document.createElement('img');
+      thumb.src = posterCanvas.toDataURL('image/png');
+      thumb.alt = '传奇海报';
+      thumb.className = 'poster-thumb';
+      thumb.title = '点击放大海报';
+      thumb.addEventListener('click', function () { openPosterModal(state, id); });
+      pbox.appendChild(thumb);
+      var vb = document.createElement('button');
+      vb.className = 'btn ghost small'; vb.textContent = '放大海报';
+      vb.addEventListener('click', function () { openPosterModal(state, id); });
+      pbox.appendChild(vb);
+    }
     $('#btn-save-poster').addEventListener('click', function () { downloadPoster(posterCanvas, 'MJ人生传奇_' + id); });
     $('#btn-copy').addEventListener('click', function () { copyText(buildEndingShareText(state, id), this); });
     var sib = $('#btn-share-img');
     if (sib) sib.addEventListener('click', function () { sharePosterImage(state, id); });
+    openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
     var ebAudio = $('#btn-audio-end');
     if (ebAudio) ebAudio.addEventListener('click', function () {
       var on = MJ.audio.toggle();

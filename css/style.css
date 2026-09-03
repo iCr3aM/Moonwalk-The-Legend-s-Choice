@@ -326,13 +326,34 @@ html, body {
 .sc-tip { margin-top: 10px; font-size: 11px; color: var(--ink-dim); line-height: 1.5; }
 
 /* ---------- 传奇海报 ---------- */
-.poster-box { margin: 16px auto 6px; text-align: center; }
-.poster-box canvas {
-  width: 260px; max-width: 72%; height: auto;
+.poster-box { margin: 16px auto 6px; text-align: center; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+.poster-box .poster-thumb {
+  width: 150px; max-width: 46%; height: auto; cursor: zoom-in;
+  border-radius: 12px; box-shadow: var(--shadow);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.poster-box .poster-thumb:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.5); }
+.poster-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
+
+/* 结局默认弹出的海报弹窗（可关闭，关闭后可点击缩略图放大） */
+.poster-modal { z-index: 80; }
+.poster-frame {
+  width: min(520px, 100%); max-height: 92vh; overflow: auto;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--gold-soft); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.poster-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.poster-tools .pf-title { color: var(--gold); font-weight: 700; letter-spacing: 1px; }
+.poster-tools .pf-spacer { flex: 1; }
+.poster-canvas-wrap { text-align: center; }
+.poster-canvas-wrap canvas {
+  width: 100%; max-width: 100%; height: auto; max-height: 76vh;
   border-radius: 12px; box-shadow: var(--shadow);
   border: 1px solid rgba(212, 175, 55, 0.35);
 }
-.poster-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
 
 /* ---------- M5/M6 体验轴次条（媒体 / 孤独） ---------- */
 .bars.soft { margin-top: 8px; grid-template-columns: repeat(2, 1fr); }
