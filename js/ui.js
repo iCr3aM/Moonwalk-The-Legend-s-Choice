@@ -224,6 +224,7 @@ window.MJ = window.MJ || {};
         '<h2>' + e.name + '</h2>' +
         '<p class="tone">' + e.tone + '</p>' +
         '<div class="desc">' + escapeHtml(e.summary) + '</div>' +
+        (e.monologue ? '<div class="mono">' + escapeHtml(e.monologue) + '</div>' : '') +
         snap +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button></div>' +
       '</div>' +
