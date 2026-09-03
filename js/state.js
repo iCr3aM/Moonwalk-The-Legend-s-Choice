@@ -17,7 +17,7 @@ window.MJ = window.MJ || {};
     var _scale0 = (cfg.wealthScale) || 150;
     this.attributes.wealth = Math.max(0, Math.min(100, Math.round(cfg.initialNetWorth / _scale0)));
     this.history = []; // { year, title, choice }
-    this.stats = { variants: 0, keyChoices: 0 }; // 生涯数据（深度反馈）
+    this.stats = { variants: 0, keyChoices: 0, events: 0 }; // 生涯数据（深度反馈）
   }
 
   // 变更属性或元路线计数（属性钳制 0–100，元路线为非负整数）
@@ -79,7 +79,7 @@ window.MJ = window.MJ || {};
     this.netWorth = data.netWorth != null ? data.netWorth : this.netWorth;
     this.debt = !!data.debt;
     this.history = data.history || [];
-    this.stats = data.stats || { variants: 0, keyChoices: 0 };
+    this.stats = data.stats || { variants: 0, keyChoices: 0, events: 0 };
   };
 
   MJ.GameState = GameState;

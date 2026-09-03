@@ -324,3 +324,12 @@ html, body {
 }
 .sc-link:hover { background: rgba(212, 175, 55, 0.12); transform: translateY(-1px); }
 .sc-tip { margin-top: 10px; font-size: 11px; color: var(--ink-dim); line-height: 1.5; }
+
+/* ---------- 传奇海报 ---------- */
+.poster-box { margin: 16px auto 6px; text-align: center; }
+.poster-box canvas {
+  width: 260px; max-width: 72%; height: auto;
+  border-radius: 12px; box-shadow: var(--shadow);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+.poster-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }

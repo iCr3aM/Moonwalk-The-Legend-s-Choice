@@ -164,6 +164,7 @@ window.MJ = window.MJ || {};
       }
 
       this.current = ev;
+      this.state.stats.events = (this.state.stats.events || 0) + 1; // 途经人生节点计数
       MJ.saveSystem.save(this.state); // 进入新事件即存档（含 currentId），刷新可续玩
       MJ.ui.showEvent(ev, this.state);
     },

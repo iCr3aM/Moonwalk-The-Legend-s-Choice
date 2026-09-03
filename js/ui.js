@@ -333,6 +333,137 @@ window.MJ = window.MJ || {};
     }
   }
 
+  // ---------- 传奇海报（Canvas 自动生成，可保存/分享的图片） ----------
+  function roundRect(ctx, x, y, w, h, r) {
+    if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+  function wrapText(ctx, text, cx, y, maxW, lh) {
+    var words = text.split(' '), line = '', lines = [];
+    for (var i = 0; i < words.length; i++) {
+      var test = line ? line + ' ' + words[i] : words[i];
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    var startY = y - (lines.length - 1) * lh / 2;
+    for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], cx, startY + j * lh);
+  }
+  function createPoster(state, endingId) {
+    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
+    var a = state.attributes;
+    var dm = MJ.dominantMeta(state.meta);
+    var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var all = MJ.achievementSystem.all();
+    var unlocked = all.filter(function (x) { return x.unlocked; });
+    var st = state.stats || { variants: 0, keyChoices: 0, events: 0 };
+    var W = 720, H = 1080, S = 2;
+    var cv = document.createElement('canvas');
+    cv.width = W * S; cv.height = H * S;
+    var ctx = cv.getContext('2d');
+    ctx.scale(S, S);
+    ctx.textBaseline = 'alphabetic';
+
+    var bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75);
+    vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2;
+    ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1;
+    ctx.strokeRect(34, 34, W - 68, H - 68);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4af37'; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText('MICHAEL JACKSON · 人 生 选 择', W / 2, 78);
+    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
+    ctx.fillText('1958 — 2009', W / 2, 102);
+
+    ctx.beginPath(); ctx.arc(W / 2, 190, 62, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.font = '64px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    ctx.textBaseline = 'middle';
+    try { ctx.fillText(e.icon, W / 2, 192); } catch (err) {}
+    ctx.textBaseline = 'alphabetic';
+
+    ctx.fillStyle = '#f3e2b0'; ctx.font = '700 46px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(e.name, W / 2, 300);
+    ctx.fillStyle = '#caa84a'; ctx.font = 'italic 20px "PingFang SC",sans-serif';
+    ctx.fillText(e.tone, W / 2, 336);
+
+    var dims = [['健康', a.health], ['声誉', a.reputation], ['艺术', a.art], ['财富', a.wealth], ['家庭', a.family], ['压力', a.stress]];
+    var bx0 = 70, colW = (W - 140) / 2, rowH = 50, top = 392, barX = bx0 + 96, barW = colW - 96 - 16;
+    for (var i = 0; i < dims.length; i++) {
+      var col = i % 2, row = (i / 2) | 0;
+      var x = bx0 + col * colW, y = top + row * rowH;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#b9a06a'; ctx.font = '16px "PingFang SC",sans-serif';
+      ctx.fillText(dims[i][0], x, y + 16);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 16px sans-serif';
+      ctx.fillText(String(dims[i][1]), x + 80, y + 16);
+      var v = Math.max(0, Math.min(100, dims[i][1])) / 100;
+      var bgx = barX + col * colW;
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 10, 5); ctx.fill();
+      var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);
+      grad.addColorStop(0, '#caa84a'); grad.addColorStop(1, '#f3e2b0');
+      ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 10, 5); ctx.fill();
+    }
+
+    var ly = top + 3 * rowH + 18;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#f3e2b0'; ctx.font = '600 18px "PingFang SC",sans-serif';
+    ctx.fillText('主导路线：' + metaName, W / 2, ly);
+    ctx.fillStyle = '#caa84a'; ctx.font = '15px "PingFang SC",sans-serif';
+    ctx.fillText('途经人生节点 ' + st.events + ' 个 · 触发变体 ' + st.variants + ' 次 · 关键抉择 ' + st.keyChoices + ' 个', W / 2, ly + 26);
+
+    var ay = ly + 60;
+    ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
+    ctx.fillText('解锁成就 ' + unlocked.length + ' / ' + all.length, W / 2, ay);
+    var iconStr = unlocked.length ? unlocked.map(function (x) { return x.icon; }).join('   ') : '— 尚未点亮 —';
+    ctx.font = '24px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    ctx.fillStyle = '#f3e2b0';
+    wrapText(ctx, iconStr, W / 2, ay + 34, W - 120, 32);
+
+    ctx.fillStyle = '#d4af37'; ctx.font = 'italic 18px "PingFang SC",sans-serif';
+    ctx.fillText('每个人都是自己人生的词曲作者。', W / 2, H - 78);
+    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
+    ctx.fillText('MJ · 人生选择', W / 2, H - 52);
+
+    return cv;
+  }
+  function downloadPoster(cv, base) {
+    var name = base + '.png';
+    function go(blob) {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a'); a.href = url; a.download = name;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    }
+    if (cv.toBlob) cv.toBlob(go, 'image/png');
+    else { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
+  }
+  function sharePosterImage(state, endingId) {
+    if (!navigator.canShare) return;
+    var cv = createPoster(state, endingId);
+    cv.toBlob(function (blob) {
+      if (!blob) return;
+      var file = new File([blob], 'MJ人生传奇_' + endingId + '.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: '迈克尔·杰克逊：人生选择', text: buildEndingShareText(state, endingId) }).catch(function () {});
+      }
+    }, 'image/png');
+  }
+
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
@@ -434,6 +565,9 @@ window.MJ = window.MJ || {};
     snap += '<div class="life-stat">本局触发变体 <b>' + (state.stats ? state.stats.variants : 0) + '</b> 次 · 关键抉择 <b>' + (state.stats ? state.stats.keyChoices : 0) + '</b> 个</div>';
     snap += '</div>';
 
+    var canShareImg = false;
+    try { canShareImg = typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([new Uint8Array(1)], 'x.png', { type: 'image/png' })] }); } catch (e) {}
+
     var html =
       statusBar(state, { year: 2009 }) +
       '<div class="panel ending">' +
@@ -443,8 +577,13 @@ window.MJ = window.MJ || {};
         '<div class="desc">' + escapeHtml(e.summary) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(e.monologue) + '</div>' : '') +
         snap +
+        '<div class="poster-box" id="poster-box"></div>' +
+        '<div class="poster-actions">' +
+          '<button class="btn primary" id="btn-save-poster">保存图片海报</button>' +
+          '<button class="btn ghost" id="btn-copy">复制文案</button>' +
+          (canShareImg ? '<button class="btn ghost" id="btn-share-img">分享图片</button>' : '') +
+        '</div>' +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button>' +
-        '<button class="btn ghost" id="btn-share">分享我的传奇</button>' +
         '<button class="btn ghost" id="btn-audio-end">♪ 环境音：关</button></div>' +
       '</div>' +
       achievementsPanel() +
@@ -457,8 +596,13 @@ window.MJ = window.MJ || {};
       MJ.saveSystem.clear();
       ui.showIntro(false);
     });
-    var ebShare = $('#btn-share');
-    if (ebShare) ebShare.addEventListener('click', function () { openShare('分享我的传奇', buildEndingShareText(state, id)); });
+    var posterCanvas = createPoster(state, id);
+    var pbox = document.getElementById('poster-box');
+    if (pbox) pbox.appendChild(posterCanvas);
+    $('#btn-save-poster').addEventListener('click', function () { downloadPoster(posterCanvas, 'MJ人生传奇_' + id); });
+    $('#btn-copy').addEventListener('click', function () { copyText(buildEndingShareText(state, id), this); });
+    var sib = $('#btn-share-img');
+    if (sib) sib.addEventListener('click', function () { sharePosterImage(state, id); });
     var ebAudio = $('#btn-audio-end');
     if (ebAudio) ebAudio.addEventListener('click', function () {
       var on = MJ.audio.toggle();

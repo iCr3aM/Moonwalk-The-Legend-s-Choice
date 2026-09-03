@@ -213,7 +213,9 @@ window.MJ = window.MJ || {};
     text: function (s) {
       return narr('镜子里那张脸，被无数镜头反复丈量。你开始怀疑，是不是该按世界的期待，重新雕琢它。', s, [
         { cond: function (s) { return (s.attributes.reputation || 0) <= 40; }, text: '外界的闲言像细针，你更想躲进手术室，把不完美的自己修一修。' },
-        { cond: function (s) { return (s.attributes.health || 0) <= 50; }, text: '身体发出的信号你假装没看见，镜中的焦虑却越来越重。' }
+        { cond: function (s) { return (s.attributes.health || 0) <= 50; }, text: '身体发出的信号你假装没看见，镜中的焦虑却越来越重。' },
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: '你对着镜子反复揣摩每一个角度，像在雕琢一件即将展出的作品。' },
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '你越来越想藏起这张脸，连镜中的自己都显得陌生。' }
       ]);
     },
     options: [
@@ -273,7 +275,8 @@ window.MJ = window.MJ || {};
     text: function (s) {
       if (s.flags.isSolo) {
         return narr('《Thriller》发行。它后来会成为史上最畅销的专辑，而此刻，你还不知道自己正把流行音乐的天花板推高了一寸。', s, [
-          { cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: '你隐约感到，这张专辑会把自己钉进历史的某一页。' }
+          { cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: '你隐约感到，这张专辑会把自己钉进历史的某一页。' },
+          { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '商人的直觉在耳边低语：这张唱片，不只是艺术，更是资产。' }
         ]);
       }
       return '你在团体中参与了这张里程碑专辑的创作，历史的页码里，有你写下的一行。';
@@ -375,7 +378,9 @@ window.MJ = window.MJ || {};
     text: function (s) {
       return narr('群星在录音棚里排成一列，为远方的非洲唱一首《We Are The World》。那一刻，流行乐第一次觉得自己能改变点什么。', s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: '名气让你的一句倡议就能掀起风浪，公益因此格外有力。' },
-        { cond: function (s) { return (s.attributes.wealth || 0) >= 60; }, text: '你大可以只写一张支票，但那一刻你更想亲口唱出那份心意。' }
+        { cond: function (s) { return (s.attributes.wealth || 0) >= 60; }, text: '你大可以只写一张支票，但那一刻你更想亲口唱出那份心意。' },
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '早已习惯把聚光灯让给更需要的人，这一晚你唱得格外轻。' },
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '人群让你局促，可面对苦难，你又舍不得退到镜头之外。' }
       ]);
     },
     options: [
@@ -893,7 +898,9 @@ window.MJ = window.MJ || {};
     text: function (s) {
       return narr('你宣布《This Is It》系列演唱会，像要和岁月再赌一把。伦敦的舞台已经搭好，聚光灯在等你归来。', s, [
         { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: '医生的叮嘱还悬在耳边，你却仍在盘算能撑几场。' },
-        { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '身体的红绿灯已经亮起，你假装没看见。' }
+        { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '身体的红绿灯已经亮起，你假装没看见。' },
+        { cond: function (s) { return (s.meta.artPath || 0) >= 1; }, text: '舞台是你的朝圣之地，哪怕最后一次，你也想在那束光里站直。' },
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '这一战关乎的不只是名声，还有你亲手垒起的那座商业版图。' }
       ]);
     },
     options: function (s) {
@@ -1349,6 +1356,52 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：欣慰于传承', hint: '艺术火种延续（艺术+5，声誉+5）', effects: { art: 5, reputation: 5 }, next: '__RETURN__' },
       { label: 'B：低调不回应', hint: '退入静默，隐士之心+1（隐士+1，压力-3）', effects: { recluse: 1, stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ----- 隐藏/条件变体（续）：更多稀有门控叙事 -----
+  E.V_DANGEROUS_ERA = {
+    id: 'V_DANGEROUS_ERA', variant: true, window: [1991, 1993], weight: 28,
+    cond: function (s) { return (s.attributes.art || 0) >= 80; },
+    title: '《Dangerous》视听革命', kind: 'choice',
+    text: function (s) {
+      return narr('你把自己关进剪辑室，想把音乐录影带拍成一部部微型电影。当白衣在镜头里定格，流行乐的视觉语言被你重新改写。', s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '镜头外的你其实更愿意独处，可一旦开机，你又成了那个燃烧全场的自己。' }
+      ]);
+    },
+    options: [
+      { label: 'A：把每支 MV 当电影拍', hint: '视听标杆立起（艺术+6，声誉+5）', effects: { art: 6, reputation: 5 }, next: '__RETURN__' },
+      { label: 'B：押注前卫特效', hint: '科技感拉满，话题与疲惫齐来（艺术+5，声誉+3，压力+5）', effects: { art: 5, reputation: 3, stress: 5 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_HISTORY_MOMENT = {
+    id: 'V_HISTORY_MOMENT', variant: true, window: [1995, 1997], weight: 26,
+    cond: function (s) { return (s.attributes.reputation || 0) >= 80; },
+    title: '《HIStory》与世纪宣言', kind: 'choice',
+    text: function (s) {
+      return narr('你用一张双碟专辑向整个时代喊话，封面上的你如雕像般俯视众生。盛名至此，既是一种加冕，也是一座高台。', s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '你清楚这张唱片背后的版权与版图，远比旋律本身更值钱。' },
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '台前的 monument 越宏伟，台后的你越想缩回那道缝里。' }
+      ]);
+    },
+    options: [
+      { label: 'A：把宣言唱给世界', hint: '声望再攀高峰（声誉+7，艺术+4）', effects: { reputation: 7, art: 4 }, next: '__RETURN__' },
+      { label: 'B：以版权巩固版图', hint: '商业嗅觉变现（商业+1，财富+5）', effects: { mogul: 1, wealth: 5 }, next: '__RETURN__' },
+      { label: 'C：低调收束锋芒', hint: '退后半步，留一份清静（隐士+1，压力-3）', effects: { recluse: 1, stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_SECRET_WEDDING = {
+    id: 'V_SECRET_WEDDING', variant: true, window: [1994, 1996], weight: 22,
+    cond: function (s) { return s.flags.marriedLisa === true; },
+    title: '世纪婚礼的幕后', kind: 'choice',
+    text: function (s) {
+      return narr('全世界都在围观这场世纪婚礼，闪光灯比舞台还亮。可只有你们知道，红毯尽头牵着的手，到底是爱情，还是又一场被写好的剧本。', s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '你多希望镜头外的家人，能真心为这一刻鼓掌。' }
+      ]);
+    },
+    options: [
+      { label: 'A：把这场婚姻当真', hint: '真心经营，家庭升温（家庭+8，声誉+3）', effects: { family: 8, reputation: 3 }, next: '__RETURN__' },
+      { label: 'B：视作公众剧本', hint: '清醒地演下去，心却更远（声誉+5，家庭-3，压力+3）', effects: { reputation: 5, family: -3, stress: 3 }, next: '__RETURN__' }
     ]
   };
 

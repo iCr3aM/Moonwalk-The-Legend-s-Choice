@@ -126,7 +126,15 @@ window.MJ = window.MJ || {};
     { id: 'ACH_BALANCED', name: '身心康泰', icon: '🍃', desc: '在名利场里也守住了一张安静的睡眠。',
       check: function (s) { return (s.attributes.health || 0) >= 85 && (s.attributes.stress || 0) <= 30; } },
     { id: 'ACH_FAMILYMAN', name: '情系家庭', icon: '🏡', desc: '无论舞台多大，心里总为家人留着一盏灯。',
-      check: function (s) { return (s.attributes.family || 0) >= 80; } }
+      check: function (s) { return (s.attributes.family || 0) >= 80; } },
+    { id: 'ACH_DIGITAL', name: '数字公民', icon: '📡', desc: '在互联网的浪潮里，你是弄潮儿也是掌舵人。',
+      check: function (s) { return s.flags.internetSavvy === true; } },
+    { id: 'ACH_PEACEMAKER', name: '和平使者', icon: '🕊️', desc: '你让《Heal the World》不只是一首歌，而是一个承诺。',
+      check: function (s) { return s.flags.healedWorld === true; } },
+    { id: 'ACH_RECLUSE', name: '隐世智者', icon: '🌙', desc: '三度走进静默，你终于听见了自己。',
+      check: function (s) { return (s.meta.recluse || 0) >= 3; } },
+    { id: 'ACH_COMEBACK', name: '浴火重生', icon: '🔥', desc: '聚光灯熄灭过，你又亲手把它点亮。',
+      check: function (s) { return s.flags.comebackSeen === true; } }
   ];
 
   MJ.config = C;
