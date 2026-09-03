@@ -103,6 +103,7 @@ window.MJ = window.MJ || {};
         var v = evs[id];
         if (!v.variant || this._usedVariants[id]) continue;
         if (year < v.window[0] || year > v.window[1]) continue;
+        if (v.cond && !v.cond(this.state)) continue; // 变体亦可带条件门控
         if (Math.random() * 100 < v.weight) { best = id; break; }
       }
       if (best) this._usedVariants[best] = true;
