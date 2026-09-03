@@ -143,7 +143,7 @@ window.MJ = window.MJ || {};
         if (v.cond && !v.cond(this.state)) continue; // 变体亦可带条件门控
         if (Math.random() * 100 < v.weight) { best = id; break; }
       }
-      if (best) this._usedVariants[best] = true;
+      if (best) { this._usedVariants[best] = true; this.state.stats.variants++; }
       return best;
     },
 
@@ -179,6 +179,7 @@ window.MJ = window.MJ || {};
       if (!opt) return;
 
       this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: opt.label, key: !!ev.key });
+      if (ev.key) this.state.stats.keyChoices++;
       applyEffects(opt.effects, this.state);
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
       if (opt.flags) for (var k in opt.flags) this.state.setFlag(k, opt.flags[k]);

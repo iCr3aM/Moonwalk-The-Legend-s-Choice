@@ -120,7 +120,13 @@ window.MJ = window.MJ || {};
     { id: 'ACH_ETERNAL', name: '永恒符号', icon: '👑', desc: '艺术与声誉不朽，成为时代的文化图腾。',
       check: function (s, ctx) { return ctx && ctx.ending === 'END_ETERNAL'; } },
     { id: 'ACH_SURVIVOR', name: '绝境求生', icon: '💪', desc: '在债务的阴影里，仍把命握在自己手里。',
-      check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } }
+      check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } },
+    { id: 'ACH_RICH', name: '商业巨富', icon: '💰', desc: '把旋律酿成了泼天的财富，数字本身已成传奇。',
+      check: function (s) { return (s.attributes.wealth || 0) >= 90; } },
+    { id: 'ACH_BALANCED', name: '身心康泰', icon: '🍃', desc: '在名利场里也守住了一张安静的睡眠。',
+      check: function (s) { return (s.attributes.health || 0) >= 85 && (s.attributes.stress || 0) <= 30; } },
+    { id: 'ACH_FAMILYMAN', name: '情系家庭', icon: '🏡', desc: '无论舞台多大，心里总为家人留着一盏灯。',
+      check: function (s) { return (s.attributes.family || 0) >= 80; } }
   ];
 
   MJ.config = C;

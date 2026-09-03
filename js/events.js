@@ -1322,5 +1322,35 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ----- 隐藏/条件变体：稀有门控事件（GDD §5.7 隐藏/条件事件） -----
+  E.V_INVINCIBLE_CLASH = {
+    id: 'V_INVINCIBLE_CLASH', variant: true, window: [2001, 2003], weight: 35,
+    cond: function (s) { return s.flags.invincibleStarted === true; },
+    title: '与厂牌的拉锯', kind: 'choice',
+    text: function (s) {
+      return narr('《Invincible》的销量没能追上你的野心，厂牌方的脸色也冷了下来。合同里的字句，忽然成了勒紧喉咙的绳。', s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '生意人的直觉告诉你，这场博弈拼的不只是音乐，更是筹码。' }
+      ]);
+    },
+    options: [
+      { label: 'A：正面硬刚争取权益', hint: '保住创作尊严，商途生波（商业+1，声誉-3，压力+8）', effects: { mogul: 1, reputation: -3, stress: 8 }, next: '__RETURN__' },
+      { label: 'B：忍让保全关系', hint: '以退为进（压力+5，声誉+3）', effects: { stress: 5, reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_MOONWALK_TRIBUTE = {
+    id: 'V_MOONWALK_TRIBUTE', variant: true, window: [1984, 2009], weight: 25,
+    cond: function (s) { return (s.attributes.art || 0) >= 80; },
+    title: '传奇舞步的回响', kind: 'choice',
+    text: function (s) {
+      return narr('街头的少年们模仿着你那记滑步，一段段粗糙却真诚的录像在网上疯传。你的舞，成了别人青春里的注脚。', s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '你隔着屏幕看着那些模仿者，竟有点想藏起自己，又有点暖。' }
+      ]);
+    },
+    options: [
+      { label: 'A：欣慰于传承', hint: '艺术火种延续（艺术+5，声誉+5）', effects: { art: 5, reputation: 5 }, next: '__RETURN__' },
+      { label: 'B：低调不回应', hint: '退入静默，隐士之心+1（隐士+1，压力-3）', effects: { recluse: 1, stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+
   MJ.EVENTS = E;
 })();

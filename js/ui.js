@@ -126,6 +126,7 @@ window.MJ = window.MJ || {};
       '</div>' +
       attrBars(state) +
       metaHints(state) +
+      metaTendency(state) +
       '</div>';
   }
 
@@ -188,6 +189,150 @@ window.MJ = window.MJ || {};
     }, 3600);
   }
 
+  // 元路线倾向提示（GDD §9）：状态栏下方提示玩家“正在走向”哪条路
+  function metaTendency(state) {
+    var dom = MJ.dominantMeta(state.meta);
+    if (!dom) return '';
+    return '<div class="tend">正在走向：<b>' + MJ.config.metaDefs[dom].name + '</b> 之路</div>';
+  }
+
+  // ---------- 环境音（GDD §10：原创/公共领域 BGM，轻量 WebAudio 氛围垫，默认关闭） ----------
+  var audio = (function () {
+    var ctx = null, master = null, nodes = [], on = false;
+    function ensure() {
+      if (ctx) return true;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return false;
+      try {
+        ctx = new AC();
+        master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
+        return true;
+      } catch (e) { return false; }
+    }
+    function build() {
+      var freqs = [146.83, 220.0, 277.18]; // D3 A3 C#4 柔和大三和弦
+      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 620; lp.connect(master);
+      freqs.forEach(function (f, i) {
+        var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+        var g = ctx.createGain(); g.gain.value = 0.16 / (i + 1);
+        var lfo = ctx.createOscillator(); lfo.frequency.value = 0.06 + i * 0.03;
+        var lg = ctx.createGain(); lg.gain.value = 2.5; lfo.connect(lg); lg.connect(o.detune); lfo.start();
+        o.connect(g); g.connect(lp); o.start();
+        nodes.push(o, lfo);
+      });
+    }
+    function start() {
+      if (!ensure()) return false;
+      if (ctx.state === 'suspended') ctx.resume();
+      if (!nodes.length) build();
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1.5);
+      on = true; return true;
+    }
+    function stop() {
+      if (!ctx) return;
+      master.gain.cancelScheduledValues(ctx.currentTime);
+      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+      on = false;
+    }
+    return {
+      toggle: function () { if (on) { stop(); return false; } return start(); },
+      isOn: function () { return on; }
+    };
+  })();
+  MJ.audio = audio;
+
+  // ---------- 社交分享（GDD §17） ----------
+  function escapeText(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  function buildEndingShareText(state, endingId) {
+    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
+    var a = state.attributes;
+    var dm = MJ.dominantMeta(state.meta);
+    var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var all = MJ.achievementSystem.all();
+    var ach = all.filter(function (x) { return x.unlocked; }).length;
+    var st = state.stats || { variants: 0, keyChoices: 0 };
+    return [
+      '我在《迈克尔·杰克逊：人生选择》中，走完了属于自己的传奇一生：',
+      '',
+      e.icon + ' ' + e.name + '（' + e.tone + '）',
+      '健康 ' + a.health + ' · 声誉 ' + a.reputation + ' · 艺术 ' + a.art + ' · 财富 ' + a.wealth + ' · 家庭 ' + a.family + ' · 压力 ' + a.stress,
+      '主导路线：' + metaName + '　触发变体 ' + st.variants + ' 次　关键抉择 ' + st.keyChoices + ' 个',
+      '解锁成就 ' + ach + '/' + all.length,
+      '',
+      '每个人都是自己人生的词曲作者——来写下你的版本。'
+    ].join('\n');
+  }
+  function buildGameShareText() {
+    return [
+      '《迈克尔·杰克逊：人生选择》——一款文字人生模拟游戏。',
+      '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，',
+      '导向 12 种截然不同的人生结局。你，会走出怎样的传奇？',
+      '',
+      '（纯网页，双击即玩；含 28+ 变体事件、11 项成就、关键抉择回顾。）'
+    ].join('\n');
+  }
+  function flashBtn(btn, txt) { if (!btn) return; var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1500); }
+  function legacyCopy(text, ok, fail) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.top = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      var done = document.execCommand('copy');
+      document.body.removeChild(ta);
+      done ? ok() : fail();
+    } catch (e) { fail(); }
+  }
+  function copyText(text, btn) {
+    function ok() { flashBtn(btn, '已复制 ✓'); }
+    function fail() { flashBtn(btn, '请手动复制'); }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok, function () { legacyCopy(text, ok, fail); });
+      } else legacyCopy(text, ok, fail);
+    } catch (e) { legacyCopy(text, ok, fail); }
+  }
+  function openShare(title, summary) {
+    var old = document.getElementById('share-overlay');
+    if (old) old.parentNode.removeChild(old);
+    var isFile = location.href.indexOf('file:') === 0;
+    var url = isFile ? '' : location.href;
+    var full = summary + (url ? '\n' + url : '');
+    var encoded = encodeURIComponent(full);
+    var overlay = document.createElement('div');
+    overlay.id = 'share-overlay';
+    overlay.className = 'overlay';
+    var html = '<div class="share-card">' +
+      '<div class="sc-head">' + escapeHtml(title) + '</div>' +
+      '<textarea class="sc-text" id="share-text" readonly>' + escapeText(summary) + '</textarea>' +
+      '<div class="sc-actions">' +
+        '<button class="btn" id="share-copy">复制文案</button>' +
+        (navigator.share ? '<button class="btn primary" id="share-native">系统分享…</button>' : '') +
+        '<button class="btn ghost" id="share-close">关闭</button>' +
+      '</div>' +
+      '<div class="sc-links">' +
+        (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://service.weibo.com/share/share.php?title=' + encoded + '">微博</a>' : '') +
+        (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=' + encoded + '">X / Twitter</a>' : '') +
+      '</div>' +
+      '<div class="sc-tip">复制文案或点「系统分享」后，可粘贴到任意社交平台' + (url ? '；也可直接分享本页链接。' : '（本地文件无链接，可手动分享游戏地址）。') + '</div>' +
+      '</div>';
+    overlay.innerHTML = html;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.parentNode.removeChild(overlay); });
+    document.getElementById('share-close').addEventListener('click', function () { overlay.parentNode.removeChild(overlay); });
+    document.getElementById('share-copy').addEventListener('click', function () { copyText(full, this); });
+    if (navigator.share) {
+      document.getElementById('share-native').addEventListener('click', function () {
+        var data = { title: '迈克尔·杰克逊：人生选择', text: summary };
+        if (url) data.url = url;
+        if (navigator.canShare && !navigator.canShare(data)) { /* 仍尝试分享 */ }
+        navigator.share(data).catch(function () {});
+      });
+    }
+  }
+
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
@@ -204,6 +349,10 @@ window.MJ = window.MJ || {};
           (hasSave ? '<button class="btn primary" id="btn-continue">继续游戏</button>' : '') +
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">开始新人生</button>' +
         '</div>' +
+        '<div class="toolbar">' +
+          '<button class="btn ghost small" id="btn-audio">♪ 环境音：关</button>' +
+          '<button class="btn ghost small" id="btn-share-intro">分享给朋友</button>' +
+        '</div>' +
       '</div>';
     app.innerHTML = html;
     if (hasSave) $('#btn-continue').addEventListener('click', function () {
@@ -214,6 +363,13 @@ window.MJ = window.MJ || {};
       MJ.saveSystem.clear();
       MJ.engine.start();
     });
+    var audioBtn = $('#btn-audio');
+    if (audioBtn) audioBtn.addEventListener('click', function () {
+      var on = MJ.audio.toggle();
+      audioBtn.textContent = on ? '♪ 环境音：开' : '♪ 环境音：关';
+    });
+    var si = $('#btn-share-intro');
+    if (si) si.addEventListener('click', function () { openShare('分享《迈克尔·杰克逊：人生选择》', buildGameShareText()); });
   };
 
   ui.showEvent = function (ev, state) {
@@ -275,6 +431,7 @@ window.MJ = window.MJ || {};
     snap += '<div class="s">净资产：<b>' + formatMoney(state.netWorth) + '</b></div>';
     var dm = MJ.dominantMeta(state.meta);
     snap += '<div class="s">主导路线：<b>' + (dm ? MJ.config.metaDefs[dm].name : '—') + '</b></div>';
+    snap += '<div class="life-stat">本局触发变体 <b>' + (state.stats ? state.stats.variants : 0) + '</b> 次 · 关键抉择 <b>' + (state.stats ? state.stats.keyChoices : 0) + '</b> 个</div>';
     snap += '</div>';
 
     var html =
@@ -286,7 +443,9 @@ window.MJ = window.MJ || {};
         '<div class="desc">' + escapeHtml(e.summary) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(e.monologue) + '</div>' : '') +
         snap +
-        '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button></div>' +
+        '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button>' +
+        '<button class="btn ghost" id="btn-share">分享我的传奇</button>' +
+        '<button class="btn ghost" id="btn-audio-end">♪ 环境音：关</button></div>' +
       '</div>' +
       achievementsPanel() +
       keyReviewPanel(state) +
@@ -297,6 +456,13 @@ window.MJ = window.MJ || {};
     $('#btn-restart').addEventListener('click', function () {
       MJ.saveSystem.clear();
       ui.showIntro(false);
+    });
+    var ebShare = $('#btn-share');
+    if (ebShare) ebShare.addEventListener('click', function () { openShare('分享我的传奇', buildEndingShareText(state, id)); });
+    var ebAudio = $('#btn-audio-end');
+    if (ebAudio) ebAudio.addEventListener('click', function () {
+      var on = MJ.audio.toggle();
+      ebAudio.textContent = on ? '♪ 环境音：开' : '♪ 环境音：关';
     });
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }
