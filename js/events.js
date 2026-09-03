@@ -129,9 +129,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：迈出单飞那一步', hint: '艺术与财富飞跃，兄弟情谊却出现裂痕（艺术+20，财富+15，家庭-15，压力+15）', effects: { art: 20, wealth: 15, family: -15, stress: 15 }, flags: { isSolo: true }, next: '1_6' },
-      { label: 'B：守在 Jackson 5 里', hint: '亲情稳固，安稳生长（家庭+20，艺术+5，财富+5）', effects: { family: 20, art: 5, wealth: 5 }, flags: { isSolo: false }, next: '2_1' },
-      { label: 'C：半只脚踏出门槛', hint: '兼顾两头，温吞却周全（艺术+10，家庭+10，财富+5）', effects: { art: 10, family: 10, wealth: 5 }, flags: { isSolo: false }, next: '2_1' }
+      { label: 'A：迈出单飞那一步', hint: '艺术与财富飞跃，兄弟情谊却出现裂痕（艺术+20，财富+15，家庭-15，压力+15）', effects: { art: 20, wealth: 15, family: -15, stress: 15 }, flags: { isSolo: true }, epilogue: '麦克风交到你一个人手里，身后的和声忽然空了一块。', next: '1_6' },
+      { label: 'B：守在 Jackson 5 里', hint: '亲情稳固，安稳生长（家庭+20，艺术+5，财富+5）', effects: { family: 20, art: 5, wealth: 5 }, flags: { isSolo: false }, epilogue: '你望了望兄弟，决定把"我们"继续写下去。', next: '2_1' },
+      { label: 'C：半只脚踏出门槛', hint: '兼顾两头，温吞却周全（艺术+10，家庭+10，财富+5）', effects: { art: 10, family: 10, wealth: 5 }, flags: { isSolo: false }, epilogue: '你一只脚迈向聚光灯，另一只脚还留在兄弟们的影子里。', next: '2_1' }
     ]
   };
 
@@ -320,9 +320,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：接拍并意外烧伤', hint: '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）', effects: { wealth: 20, reputation: 5 }, flags: { isPepsiBurned: true }, next: '3_2b' },
-      { label: 'B：安全优先拒拍', hint: '护住身体，丢了广告费（健康+10，财富-20）', effects: { health: 10, wealth: -20 }, flags: { isPepsiBurned: false }, next: '3_2b' },
-      { label: 'C：议价安全拍摄', hint: '皆大欢喜的折中（财富+5，健康+5）', effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, next: '3_2b' }
+      { label: 'A：接拍并意外烧伤', hint: '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）', effects: { wealth: 20, reputation: 5 }, flags: { isPepsiBurned: true }, epilogue: '片场的火苗舔过皮肤，那一刻的惊呼，成了此后多年都挥不去的回音。', next: '3_2b' },
+      { label: 'B：安全优先拒拍', hint: '护住身体，丢了广告费（健康+10，财富-20）', effects: { health: 10, wealth: -20 }, flags: { isPepsiBurned: false }, epilogue: '你绕开了那簇火，却也错过了一次让名字更深入人心的机会。', next: '3_2b' },
+      { label: 'C：议价安全拍摄', hint: '皆大欢喜的折中（财富+5，健康+5）', effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, epilogue: '你在安全与曝光间找到了平衡点，片场圆满收工。', next: '3_2b' }
     ]
   };
 
@@ -395,7 +395,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：全资收购', hint: '豪掷 4750 万，落下商业帝国的基石（商业+1）（财富-15，声誉+10）', effects: { wealth: -15, reputation: 10, mogul: 1 }, flags: { atvBought: true }, moneyEffect: -4750, next: '4_0' },
+      { label: 'A：全资收购', hint: '支付收购费用，落下商业帝国的基石（商业+1）（财富-15，声誉+10）', effects: { wealth: -15, reputation: 10, mogul: 1 }, flags: { atvBought: true }, moneyEffect: -100, next: '4_0' },
       { label: 'B：暂不收购', hint: '按兵不动，现金充裕（财富+5）', effects: { wealth: 5 }, flags: { atvBought: false }, next: '4_0' },
       { label: 'C：联合财团分期吃下', hint: '以小博大，商业嗅觉+1（商业+1）（财富-5，声誉+5）', effects: { wealth: -5, reputation: 5, mogul: 1 }, next: '4_0' }
     ]
@@ -426,7 +426,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: 'A：对公众敞开大门', hint: '孩子们的乐园，钱包的窟窿（家庭+20，财富-30）', effects: { family: 20, wealth: -30 }, flags: { neverlandType: 'public' }, next: '4_2' },
-      { label: 'B：圈起私人天地', hint: '留一方静土（财富-20，家庭+5）', effects: { wealth: -20, family: 5 }, flags: { neverlandType: 'private' }, next: '4_2' },
+      { label: 'B：圈起私人天地', hint: '留一方静土（财富-20，家庭+5，隐士+1）', effects: { wealth: -20, family: 5, recluse: 1 }, flags: { neverlandType: 'private' }, next: '4_2' },
       { label: 'C：干脆不购置', hint: '无牵无挂，现金在手（财富+10）', effects: { wealth: 10 }, flags: { neverlandType: 'none' }, next: '4_2' }
     ]
   };
@@ -552,7 +552,7 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：坦诚聊白癜风与童年', hint: '卸下伪装换来理解，却也透支（声誉+20，压力+10）', effects: { reputation: 20, stress: 10 }, flags: { oprahOpen: true }, next: '5_3' },
       { label: 'B：绕开敏感话题', hint: '体面，却隔了一层（声誉+5，压力+5）', effects: { reputation: 5, stress: 5 }, next: '5_3' },
-      { label: 'C：拒访守住神秘', hint: '退入孤独，隐士之心+1（声誉-3，压力-5，隐士+1）', effects: { reputation: -3, stress: -5, recluse: 1 }, next: '5_3' }
+      { label: 'C：拒访守住神秘', hint: '退入孤独，隐士之心+1（声誉-8，压力-5，隐士+1）', effects: { reputation: -8, stress: -5, recluse: 1 }, next: '5_3' }
     ]
   };
 
@@ -568,7 +568,7 @@ window.MJ = window.MJ || {};
       return '你未购置庄园且始终与兄弟并肩，相关民事指控未曾发生。';
     },
     options: [
-      { label: 'A：达成庭外和解', hint: '支付 2300 万，声誉重创，压力陡增（声誉-20，压力+20）', effects: { reputation: -20, stress: 20 }, moneyEffect: -2300, flags: { settlement1993: true }, next: '5_4' },
+      { label: 'A：达成庭外和解', hint: '支付和解费用，声誉重创，压力陡增（声誉-35，压力+20）', effects: { reputation: -35, stress: 20 }, moneyEffect: -200, flags: { settlement1993: true }, next: '5_4' },
       { label: 'B：应诉到底', hint: '硬刚法庭，心力交瘁（压力+30）', effects: { stress: 30 }, flags: { settlement1993: false }, next: '5_4' },
       { label: 'C：配合调查', hint: '清白与否交给程序，声誉仍受伤（声誉-10，压力+25）', effects: { reputation: -10, stress: 25 }, flags: { settlement1993: false }, next: '5_4' }
     ]
@@ -775,9 +775,9 @@ window.MJ = window.MJ || {};
       return '你未购置庄园或始终在兄弟保护下，相关刑事指控未曾出现。';
     },
     options: [
-      { label: 'A：应诉到底', hint: '支付 1000 万辩护，心力耗尽，终获无罪裁定（压力+30）', effects: { stress: 30 }, moneyEffect: -1000, flags: { secondCharge: true, secondVerdict: 'not_guilty' }, next: '6_5' },
-      { label: 'B：达成和解', hint: '砸下 2000 万买断纠纷，声名重创（声誉-30）', effects: { reputation: -30 }, moneyEffect: -2000, flags: { secondCharge: true, secondVerdict: 'settled' }, next: '7_1' },
-      { label: 'C：透明地坚持', hint: '把清白交给时间，压力如山（压力+20）', effects: { stress: 20 }, flags: { secondCharge: true }, next: '6_5' }
+      { label: 'A：应诉到底', hint: '支付 1000 万辩护，心力耗尽，终获无罪裁定（压力+30）', effects: { stress: 30 }, moneyEffect: -1000, flags: { secondCharge: true, secondVerdict: 'not_guilty' }, epilogue: '法庭的灯亮了又灭，你挺直脊背走进去，把命运交给了十二个陌生人。', next: '6_4b' },
+      { label: 'B：达成和解', hint: '砸下 2000 万买断纠纷，声名重创（声誉-30）', effects: { reputation: -30 }, moneyEffect: -2000, flags: { secondCharge: true, secondVerdict: 'settled' }, epilogue: '支票签下的瞬间，纠纷平息了，可你心里的那块石头，并没真的落地。', next: '7_1' },
+      { label: 'C：透明地坚持', hint: '把清白交给时间，压力如山（压力+20）', effects: { stress: 20 }, flags: { secondCharge: true }, epilogue: '你选择把一切摊在阳光下，任由时间慢慢给出答案。', next: '6_4b' }
     ]
   };
 
@@ -804,7 +804,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：公开致歉', hint: '主动担责，口碑受挫（声誉-10，压力+10）', effects: { reputation: -10, stress: 10 }, flags: { babyDangle: true }, next: '6_4d' },
+      { label: 'A：公开致歉', hint: '主动担责，口碑受挫（声誉-15，压力+10）', effects: { reputation: -15, stress: 10 }, flags: { babyDangle: true }, next: '6_4d' },
       { label: 'B：保持沉默', hint: '任流言发酵（声誉-5，压力+5）', effects: { reputation: -5, stress: 5 }, next: '6_4d' },
       { label: 'C：反诉媒体', hint: '以攻代守，退意渐生（隐士+1）（声誉-3，压力+5）', effects: { reputation: -3, stress: 5, recluse: 1 }, next: '6_4d' }
     ]
@@ -819,7 +819,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：坦然面对镜头', hint: '直面争议，身心承压（声誉-5，压力+10）', effects: { reputation: -5, stress: 10 }, flags: { bashirDoc: true }, next: '6_4e' },
+      { label: 'A：坦然面对镜头', hint: '直面争议，身心承压（声誉-12，压力+10）', effects: { reputation: -12, stress: 10 }, flags: { bashirDoc: true }, next: '6_4e' },
       { label: 'B：拒拍保持距离', hint: '退后半步，隐士之心+1（压力+5）', effects: { stress: 5, recluse: 1 }, next: '6_4e' },
       { label: 'C：起诉记者', hint: '以法律回击，耗时耗神（声誉+3，压力+15）', effects: { reputation: 3, stress: 15 }, next: '6_4e' }
     ]
@@ -834,7 +834,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：配合保释流程', hint: '依法而行，声誉微损（压力+20，声誉-5）', effects: { stress: 20, reputation: -5 }, next: '6_5' },
+      { label: 'A：配合保释流程', hint: '依法而行，声誉微损（压力+20，声誉-12）', effects: { stress: 20, reputation: -12 }, next: '6_5' },
       { label: 'B：隐居避世', hint: '躲进静默，隐士之心+1（压力-5）', effects: { stress: -5, recluse: 1 }, next: '6_5' },
       { label: 'C：公开回应', hint: '自证清白，心力交瘁（声誉-3，压力+10）', effects: { reputation: -3, stress: 10 }, next: '6_5' }
     ]
@@ -882,9 +882,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：转让部分权益', hint: '断尾求生，家也更冷（财富-50，家庭-15）', effects: { wealth: -50, family: -15 }, flags: { debtCrisis: true }, next: '7_2' },
-      { label: 'B：死撑不卖', hint: '硬扛到底，濒临窒息（财富-100，压力+10）', effects: { wealth: -100, stress: 10 }, flags: { debtCrisis: false }, next: '7_2' },
-      { label: 'C：引入注资', hint: '外人入局，压力稍缓（财富-20，压力-5）', effects: { wealth: -20, stress: -5 }, next: '7_2' }
+      { label: 'A：转让部分权益', hint: '引入注资断尾求生，家更冷但避债（财富-30，家庭-15，账+150万）', effects: { wealth: -30, family: -15 }, moneyEffect: 150, flags: { debtCrisis: true }, next: '7_2' },
+      { label: 'B：死撑不卖', hint: '硬扛到底，濒临窒息（财富-20，压力+10，账-500万，可能负债）', effects: { wealth: -20, stress: 10 }, moneyEffect: -500, flags: { debtCrisis: false }, next: '7_2' },
+      { label: 'C：引入注资', hint: '外人入局，压力稍缓（财富-10，压力-5，账+80万）', effects: { wealth: -10, stress: -5 }, moneyEffect: 80, next: '7_2' }
     ]
   };
 
@@ -899,14 +899,14 @@ window.MJ = window.MJ || {};
     options: function (s) {
       if (s.flags.isSolo) {
         return [
-          { label: 'A：咬牙撑满 50 场', hint: '财富暴涨，身体濒临极限（财富+100，压力+40）', effects: { wealth: 100, stress: 40 }, flags: { thisItHeld: true, thisItFull: true }, next: '7_3' },
-          { label: 'B：忍痛取消', hint: '保住健康，声誉微损（健康+20，声誉-10）', effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, next: '7_3' },
-          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10）', effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, next: '7_3' }
+          { label: 'A：咬牙撑满 50 场', hint: '财富暴涨，身体濒临极限（财富+100，压力+40，账+400万）', effects: { wealth: 100, stress: 40 }, moneyEffect: 400, flags: { thisItHeld: true, thisItFull: true }, epilogue: '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。', next: '7_3' },
+          { label: 'B：忍痛取消', hint: '保住健康，声誉微损（健康+20，声誉-10）', effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, epilogue: '你按下暂停键，把命留给了自己，哪怕掌声因此远了。', next: '7_3' },
+          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10，账+150万）', effects: { wealth: 40, stress: 20, health: 10 }, moneyEffect: 150, flags: { thisItHeld: true, thisItReduced: true }, epilogue: '你折中地数着场次，想既不负舞台，也不负这副身子。', next: '7_3' }
         ];
       }
       return [
-        { label: 'A：20 场团体巡演', hint: '兄弟同台，稳健收官（财富+40，压力+20，健康+5）', effects: { wealth: 40, stress: 20, health: 5 }, flags: { thisItHeld: true, thisItFull: false }, next: '7_3' },
-        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，财富-30）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, next: '7_3' }
+        { label: 'A：20 场团体巡演', hint: '兄弟同台，稳健收官（财富+40，压力+20，健康+5，账+150万）', effects: { wealth: 40, stress: 20, health: 5 }, moneyEffect: 150, flags: { thisItHeld: true, thisItFull: false }, epilogue: '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。', next: '7_3' },
+        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，财富-30）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。', next: '7_3' }
       ];
     }
   };
@@ -994,7 +994,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_ASIA = {
-    id: 'V_ASIA', variant: true, window: [1987, 2009], weight: 35,
+    id: 'V_ASIA', variant: true, window: [1991, 2005], weight: 35,
     title: '亚洲巡演邀约', kind: 'choice',
     text: function (s) {
       return narr('亚洲几座城市的邀约像雪片飞来，票房的数字令人心动，可连轴转的行程也让人发怵。', s, [
@@ -1023,7 +1023,7 @@ window.MJ = window.MJ || {};
 
   // ----- 新增变体题材库（③ 扩充） -----
   E.V_PRESS = {
-    id: 'V_PRESS', variant: true, window: [1985, 2005], weight: 35,
+    id: 'V_PRESS', variant: true, window: [1988, 2005], weight: 35,
     title: '深度专访邀约', kind: 'choice',
     text: function (s) {
       return narr('一档极具分量的访谈节目递来邀约，主持人想聊聊“真实的你”。镜头之后，是又一场关于坦诚的赌注。', s, [
@@ -1036,7 +1036,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BACKSTAGE = {
-    id: 'V_BACKSTAGE', variant: true, window: [1980, 2005], weight: 30,
+    id: 'V_BACKSTAGE', variant: true, window: [1982, 2005], weight: 30,
     title: '巡演后台崩溃', kind: 'choice',
     text: function (s) {
       return narr('一场巡演的间隙，你在空荡的后台摘下耳返，忽然不想再面对下一座城市的万人欢呼。', s, [
@@ -1063,7 +1063,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BLOCK = {
-    id: 'V_BLOCK', variant: true, window: [1980, 2005], weight: 30,
+    id: 'V_BLOCK', variant: true, window: [1982, 2005], weight: 30,
     title: '创作瓶颈', kind: 'choice',
     text: function (s) {
       return narr('录音室里，你对着一段怎么也写不顺的副歌发呆。灵感的井，似乎一夜之间干涸了。', s, [
@@ -1076,7 +1076,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_FANMAIL = {
-    id: 'V_FANMAIL', variant: true, window: [1980, 2005], weight: 35,
+    id: 'V_FANMAIL', variant: true, window: [1983, 2005], weight: 35,
     title: '一封粉丝来信', kind: 'choice',
     text: function (s) {
       return narr('助理抱来一摞信件，其中一封来自重病中的孩子，说你的歌是她黑夜里的光。', s, [
@@ -1116,7 +1116,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_NOSTALGIA = {
-    id: 'V_NOSTALGIA', variant: true, window: [1985, 2009], weight: 25,
+    id: 'V_NOSTALGIA', variant: true, window: [1990, 2009], weight: 25,
     title: '旧友重逢', kind: 'choice',
     text: function (s) {
       return narr('一张泛黄的照片把你拉回盖瑞的旧屋。那位儿时玩伴偶然重逢，聊起初雪、蝉鸣和再也回不去的夏天。', s, [
@@ -1140,6 +1140,113 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：不予置评', hint: '冷处理（压力+3，隐士+1）', effects: { stress: 3, recluse: 1 }, next: '__RETURN__' },
       { label: 'B：主动公关', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ----- 更细年份窗口的新变体题材（年代化纹理） -----
+  E.V_CHILDHOOD = {
+    id: 'V_CHILDHOOD', variant: true, window: [1965, 1976], weight: 35,
+    title: '童星日程', kind: 'choice',
+    text: function (s) {
+      return narr('排练表从清晨排到深夜，同龄的孩子在街上奔跑，你却在镜前一遍遍校正舞步。', s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 40; }, text: '你数着窗外的星星，盼着哪天能像他们一样，只是个孩子。' }
+      ]);
+    },
+    options: [
+      { label: 'A：咬牙加练', hint: '技艺精进，身心俱疲（艺术+8，压力+5）', effects: { art: 8, stress: 5 }, epilogue: '你把童年摁进了节拍里，镜中的舞步越来越稳，眼底的疲惫也越来越深。', next: '__RETURN__' },
+      { label: 'B：偷得浮生', hint: '短暂喘息（压力-5，家庭+3）', effects: { stress: -5, family: 3 }, epilogue: '你溜去巷口看了一回弹珠，那点偷来的快乐，比任何掌声都真实。', next: '__RETURN__' }
+    ]
+  };
+  E.V_DISCO = {
+    id: 'V_DISCO', variant: true, window: [1978, 1982], weight: 30,
+    title: '迪斯科浪潮', kind: 'choice',
+    text: function (s) {
+      return narr('街头的霓虹随迪斯科的鼓点晃动，整个时代都在扭动。你站在潮流的门口，犹豫要不要推门。', s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: '你听见身体里那股想跟着跳的冲动，它比你以为的更诚实。' }
+      ]);
+    },
+    options: [
+      { label: 'A：拥抱潮流', hint: '时代同步，声名+（艺术+8，声誉+5）', effects: { art: 8, reputation: 5 }, epilogue: '你让身体跟上时代的鼓点，新的旋律在血液里发芽。', next: '__RETURN__' },
+      { label: 'B：冷眼旁观', hint: '守住自我（艺术+3）', effects: { art: 3 }, epilogue: '你站在舞池边缘，悄悄记下了这阵风，却没让自己被卷走。', next: '__RETURN__' }
+    ]
+  };
+  E.V_FAME_WINDOW = {
+    id: 'V_FAME_WINDOW', variant: true, window: [1982, 1985], weight: 30,
+    title: '巅峰眩晕', kind: 'choice',
+    text: function (s) {
+      return narr('《Thriller》的余温未散，世界把你架到了一个前所未有的高度。风很烈，也容易让人忘记脚下的地。', s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 45; }, text: '你开始分不清，台下欢呼的是音乐，还是那个被神话了的名字。' }
+      ]);
+    },
+    options: [
+      { label: 'A：享受荣光', hint: '声名更响，暗生虚浮（声誉+8，压力+5）', effects: { reputation: 8, stress: 5 }, epilogue: '你在掌声里多停了一秒，那点眩晕，后来成了最难戒的甜。', next: '__RETURN__' },
+      { label: 'B：如履薄冰', hint: '清醒自律（压力-5，艺术+3）', effects: { stress: -5, art: 3 }, epilogue: '你把奖杯摆正，提醒自己：明天还要对着空白的五线谱。', next: '__RETURN__' }
+    ]
+  };
+  E.V_TABLOID = {
+    id: 'V_TABLOID', variant: true, window: [1986, 1990], weight: 35,
+    title: '小报初袭', kind: 'choice',
+    text: function (s) {
+      return narr('八卦小报第一次把镜头对准你私生活的褶皱，标题比事实更大更红。', s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 50; }, text: '你忽然明白，被写进报纸，和被写进歌里，是两种完全不同的滋味。' }
+      ]);
+    },
+    options: [
+      { label: 'A：正面回应', hint: '以正视听（声誉+3，压力+5）', effects: { reputation: 3, stress: 5 }, epilogue: '你站出来把话说清，镜头却只截取了你最紧绷的那一秒。', next: '__RETURN__' },
+      { label: 'B：沉默以对', hint: '退入静默，隐士之心+1（压力+3，隐士+1）', effects: { stress: 3, recluse: 1 }, epilogue: '你把窗帘拉紧了些，任由外界的猜测在门外喧嚣。', next: '__RETURN__' }
+    ]
+  };
+  E.V_BUBBLES = {
+    id: 'V_BUBBLES', variant: true, window: [1985, 1990], weight: 25,
+    title: '童心宠物', kind: 'choice',
+    text: function (s) {
+      return narr('庄园里多了一只会陪你玩耍的宠物猩猩，童真的笑第一次这么近。', s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '你想起小时候那个也想要个玩伴的自己。' }
+      ]);
+    },
+    options: [
+      { label: 'A：童心未泯', hint: '暖意融融（家庭+5）', effects: { family: 5 }, epilogue: '你在草地上和它滚作一团，那一刻，你只是个爱玩的大孩子。', next: '__RETURN__' },
+      { label: 'B：担心舆论', hint: '束手束脚（声誉-3，压力+3）', effects: { reputation: -3, stress: 3 }, epilogue: '你怕镜头把这当成又一个怪谈，只好把那份快乐悄悄收了起来。', next: '__RETURN__' }
+    ]
+  };
+  E.V_INTERNET = {
+    id: 'V_INTERNET', variant: true, window: [1998, 2005], weight: 30,
+    title: '网络谣言', kind: 'choice',
+    text: function (s) {
+      return narr('互联网初兴，未经核实的传言以光速蔓延，你成了屏幕上人人可判的被告。', s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 50; }, text: '你发现，辟谣的速度，永远追不上谣言繁殖的速度。' }
+      ]);
+    },
+    options: [
+      { label: 'A：冷处理', hint: '任其沉底（声誉-3，压力+3）', effects: { reputation: -3, stress: 3 }, epilogue: '你关掉屏幕，假装那些字句伤不到你，可夜里的辗转出卖了你。', next: '__RETURN__' },
+      { label: 'B：亲自辟谣', hint: '以正视听（声誉+5，压力+5）', effects: { reputation: 5, stress: 5 }, epilogue: '你敲下一段郑重其事的回应，寄望真相能跑赢偏见。', next: '__RETURN__' }
+    ]
+  };
+  E.V_COMEBACK = {
+    id: 'V_COMEBACK', variant: true, window: [2006, 2009], weight: 35,
+    title: '复出筹备', kind: 'choice',
+    text: function (s) {
+      return narr('《This Is It》的鼓点在前方敲响，复出的帷幕正在拉开。久违的舞台，既让人热血，也让人忐忑。', s, [
+        { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: '你摸了摸隐隐作痛的关节，不知道这副身子还能不能接住当年的自己。' }
+      ]);
+    },
+    options: [
+      { label: 'A：满腔热忱', hint: '重燃舞台魂（艺术+8，压力+5）', effects: { art: 8, stress: 5 }, epilogue: '你对着镜子压了压腿，久违的亢奋，像年轻时在后台那样涌了上来。', next: '__RETURN__' },
+      { label: 'B：忧心健康', hint: '谨慎以待（健康-5，压力+5）', effects: { health: -5, stress: 5 }, epilogue: '体检单上的红字让你犹豫，可你又不甘心就此向舞台告别。', next: '__RETURN__' }
+    ]
+  };
+  E.V_DOCTOR = {
+    id: 'V_DOCTOR', variant: true, window: [2007, 2009], weight: 30,
+    cond: function (s) { return s.flags.isSolo === true; },
+    title: '私人医生', kind: 'choice',
+    text: function (s) {
+      return narr('一位随行的私人医生出现在你身边，处方笺上的字，成了你最难拒绝的安慰。', s, [
+        { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: '疼痛需要一个出口，而他就站在离你最近的地方。' }
+      ]);
+    },
+    options: [
+      { label: 'A：倚赖处方', hint: '痛楚暂退，暗藏隐忧（健康+8，压力-5）', effects: { health: 8, stress: -5 }, epilogue: '针尖落处，世界软了下来；只是你没察觉，自己正一点点交出了清醒的缰绳。', next: '__RETURN__' },
+      { label: 'B：保持清醒', hint: '克制自律（健康+3，压力+3）', effects: { health: 3, stress: 3 }, epilogue: '你把处方推了回去，宁愿忍着疼，也想把方向盘握在自己手里。', next: '__RETURN__' }
     ]
   };
 

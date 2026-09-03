@@ -136,6 +136,8 @@ html, body {
 .ending .tone { color: var(--ink-dim); margin: 0 0 16px; }
 .ending .desc { color: var(--ink); line-height: 1.9; white-space: pre-line; text-align: left; background: rgba(0,0,0,0.25); border:1px solid var(--line); border-radius:10px; padding:16px; }
 .ending .mono { color: var(--ink); line-height: 2.0; white-space: pre-line; text-align: left; margin-top: 14px; padding: 18px 20px; background: linear-gradient(180deg, rgba(255,215,0,0.07), rgba(0,0,0,0.28)); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 10px; font-style: italic; letter-spacing: 0.3px; }
+.epilogue { margin: 0 0 14px; padding: 12px 16px; background: rgba(255,215,0,0.06); border: 1px dashed var(--gold); border-radius: 10px; color: var(--ink); line-height: 1.85; font-size: 14px; }
+.epilogue .e-tag { display: inline-block; margin-right: 8px; padding: 1px 8px; border-radius: 999px; background: var(--gold); color: #1a1408; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
 .snapshot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 14px; margin: 18px 0; text-align: left; }
 .snapshot .s { font-size: 13px; color: var(--ink-dim); }
 .snapshot .s b { color: var(--ink); }

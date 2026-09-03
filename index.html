@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>迈克尔·杰克逊：人生选择</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <!-- 由 ui.js 动态渲染：引导 / 状态栏 / 事件卡 / 选项 / 结局 -->
+  </div>
+
+  <!-- 模块按依赖顺序加载（经典脚本，可直接双击打开 index.html 运行） -->
+  <script src="js/config.js"></script>
+  <script src="js/events.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      MJ.ui.init();
+    });
+  </script>
+</body>
+</html>

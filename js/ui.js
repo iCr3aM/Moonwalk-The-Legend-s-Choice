@@ -164,8 +164,13 @@ window.MJ = window.MJ || {};
 
   ui.showEvent = function (ev, state) {
     var text = (typeof ev.text === 'function') ? ev.text(state) : ev.text;
+    var epilogueHtml = '';
+    if (MJ.engine.pendingEpilogue) {
+      epilogueHtml = '<div class="epilogue"><span class="e-tag">抉择的回响</span>' + escapeHtml(MJ.engine.pendingEpilogue) + '</div>';
+      MJ.engine.pendingEpilogue = null;
+    }
     var body =
-      '<div class="panel event">' +
+      '<div class="panel event">' + epilogueHtml +
         '<div class="yr">' + (ev.year || '') + ' 年</div>' +
         '<h2>' + ev.title + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';

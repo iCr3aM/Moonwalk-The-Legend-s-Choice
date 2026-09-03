@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>迈克尔·杰克逊：人生选择</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #f0d080;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+        }
+        #app {
+            max-width: 720px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 28px;
+            padding: 20px 18px 24px;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.08);
+            border: 1px solid #3a3a2a;
+            position: relative;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #3a3a2a;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #f0d080, #d4a040);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #year {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f0d080;
+            background: #2a2a1a;
+            padding: 4px 16px;
+            border-radius: 30px;
+            border: 1px solid #5a4a2a;
+            font-variant-numeric: tabular-nums;
+        }
+        #attributes {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px 12px;
+            background: #121210;
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 18px;
+            border: 1px solid #2a2a1a;
+        }
+        .attr-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #c0b080;
+        }
+        .attr-label {
+            width: 52px;
+            font-weight: 600;
+            color: #d4b060;
+            flex-shrink: 0;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .attr-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #2a2a1a;
+            border-radius: 6px;
+            overflow: hidden;
+            min-width: 30px;
+        }
+        .attr-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #d4a040, #f0d080);
+        }
+        .attr-value {
+            width: 30px;
+            text-align: right;
+            font-size: 12px;
+            color: #f0d080;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        #event-container {
+            background: #121210;
+            border-radius: 20px;
+            padding: 18px 16px 20px;
+            border: 1px solid #2a2a1a;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        .event-year {
+            font-size: 14px;
+            color: #a09060;
+            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .event-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f0d080;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        .event-desc {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #d0c0a0;
+            margin-bottom: 18px;
+            background: #1a1a12;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border-left: 3px solid #d4a040;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        .option-btn, .continue-btn {
+            background: #1f1f16;
+            border: 1px solid #4a3a2a;
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #f0d080;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        .option-btn:hover, .continue-btn:hover {
+            background: #2f2f1e;
+            border-color: #d4a040;
+            transform: scale(1.01);
+            box-shadow: 0 0 20px rgba(212, 160, 64, 0.15);
+        }
+        .option-btn:active, .continue-btn:active {
+            transform: scale(0.98);
+        }
+        .option-btn .hint {
+            font-weight: 300;
+            color: #a09070;
+            font-size: 13px;
+            display: block;
+            margin-top: 4px;
+        }
+        .continue-btn {
+            text-align: center;
+            background: #2a2a1a;
+            border-color: #5a4a2a;
+            color: #f0d080;
+            font-size: 16px;
+            letter-spacing: 2px;
+        }
+        .continue-btn:hover {
+            background: #3a3a2a;
+        }
+        #footer {
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+        }
+        #restart {
+            background: transparent;
+            border: 1px solid #4a3a2a;
+            color: #a09070;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #restart:hover {
+            border-color: #d4a040;
+            color: #f0d080;
+        }
+        .ending-sub {
+            color: #c0b080;
+            font-size: 15px;
+            margin-top: 12px;
+            text-align: center;
+        }
+        @media (max-width: 480px) {
+            #app {
+                padding: 14px 12px 18px;
+            }
+            h1 {
+                font-size: 16px;
+            }
+            #year {
+                font-size: 18px;
+                padding: 2px 12px;
+            }
+            #attributes {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px 10px;
+                padding: 10px;
+            }
+            .attr-label {
+                width: 44px;
+                font-size: 11px;
+            }
+            .attr-item {
+                font-size: 12px;
+            }
+            .event-title {
+                font-size: 17px;
+            }
+            .event-desc {
+                font-size: 14px;
+                padding: 12px;
+            }
+            .option-btn, .continue-btn {
+                font-size: 14px;
+                padding: 12px 14px;
+            }
+        }
+        @media (max-width: 360px) {
+            #attributes {
+                grid-template-columns: 1fr;
+            }
+            .attr-label {
+                width: 52px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <header>
+        <h1>🎤 人生选择</h1>
+        <div id="year">1958</div>
+    </header>
+    <div id="attributes"></div>
+    <div id="event-container"></div>
+    <div id="footer">
+        <button id="restart">⟳ 重新开始</button>
+    </div>
+</div>
+<script>
+    (function() {
+        // ---------- 游戏状态 ----------
+        const state = {
+            year: 1958,
+            health: 70,
+            reputation: 50,
+            wealth: 20,
+            family: 60,
+            art: 30,
+            stress: 20,
+            flags: {
+                isSolo: null,
+                isPepsiBurned: false,
+                settlement1993: false,
+                neverlandType: 'public', // 'public','private','none'
+                painkillerDependent: false,
+                marriedLisa: false,
+                marriedDebbie: false,
+                thisItHeld: false,
+                thisItScale: 'full',
+                secondCharge: false,
+                secondVerdict: null,
+                debtCrisis: false,
+                // 新增标志
+                soloAlbum1972: false,   // 是否发行了早期个人专辑
+                epicDeep: false,        // 是否与Epic深度合作
+                sonyMerge: false,       // 是否与索尼合并出版
+                invincibleStarted: false, // 是否启动Invincible项目
+                invincibleProtest: false, // 是否公开抗议
+            },
+            currentEventId: 'start',
+            gameEnded: false,
+        };
+
+        // ---------- 辅助函数 ----------
+        function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+        function applyEffects(effects) {
+            if (!effects) return;
+            if (effects.health) state.health = clamp(state.health + effects.health, 0, 100);
+            if (effects.reputation) state.reputation = clamp(state.reputation + effects.reputation, 0, 100);
+            if (effects.wealth) state.wealth = clamp(state.wealth + effects.wealth, 0, 100);
+            if (effects.family) state.family = clamp(state.family + effects.family, 0, 100);
+            if (effects.art) state.art = clamp(state.art + effects.art, 0, 100);
+            if (effects.stress) state.stress = clamp(state.stress + effects.stress, 0, 100);
+        }
+
+        function setFlags(flagObj) {
+            if (!flagObj) return;
+            for (let k in flagObj) {
+                state.flags[k] = flagObj[k];
+            }
+        }
+
+        // ---------- 事件定义 ----------
+        const events = {};
+
+        function createEvent(id, year, title, descFn, optsOrAuto) {
+            let options = null;
+            let isAuto = true;
+            let effects = null;
+            let next = null;
+            let condition = null;
+            let fallbackNext = null;
+            let flags = null;
+
+            if (Array.isArray(optsOrAuto)) {
+                options = optsOrAuto;
+                isAuto = false;
+            } else if (optsOrAuto && typeof optsOrAuto === 'object') {
+                if (optsOrAuto.options && Array.isArray(optsOrAuto.options)) {
+                    options = optsOrAuto.options;
+                    isAuto = false;
+                    effects = optsOrAuto.effects || null;
+                    next = optsOrAuto.next || null;
+                    condition = optsOrAuto.condition || null;
+                    fallbackNext = optsOrAuto.fallbackNext || null;
+                    flags = optsOrAuto.flags || null;
+                } else {
+                    effects = optsOrAuto.effects || null;
+                    next = optsOrAuto.next || null;
+                    condition = optsOrAuto.condition || null;
+                    fallbackNext = optsOrAuto.fallbackNext || null;
+                    flags = optsOrAuto.flags || null;
+                }
+            }
+            events[id] = {
+                id,
+                year,
+                title,
+                description: typeof descFn === 'function' ? descFn : () => descFn,
+                isAuto,
+                options,
+                effects,
+                next,
+                condition,
+                fallbackNext,
+                flags,
+            };
+        }
+
+        // ----- 原有事件（保持不变，但修改部分next指向）-----
+        createEvent('start', 1958, '🌟 诞生', '1958年8月29日，迈克尔·约瑟夫·杰克逊出生于美国印第安纳州盖瑞市。\n你是杰克逊家族的第7个孩子。父亲约瑟夫热爱音乐，你的天赋即将被发现……', {
+            effects: { family: 5 },
+            next: '1_1'
+        });
+
+        createEvent('1_1', 1963, '🎵 5岁显露才华',
+            '迈克尔5岁便显露歌唱与舞蹈才华，父亲约瑟夫开始严苛训练。\n他常坐在椅子上，手里拿着皮带。你选择如何面对？', [{
+                text: 'A：全力投入训练',
+                hint: '艺术+15，家庭-10，压力+15',
+                effects: { art: 15, family: -10, stress: 15 },
+                next: '1_2'
+            }, {
+                text: 'B：保持适度训练',
+                hint: '艺术+5，家庭+5，压力+5',
+                effects: { art: 5, family: 5, stress: 5 },
+                next: '1_2'
+            }]
+        );
+
+        createEvent('1_2', 1968, '💿 签约Steeltown',
+            '乐队与当地唱片公司Steeltown合作出版了第一张唱片《Big Boy》。\n你如何看待这个机会？', [{
+                text: 'A：全力以赴抓住机会',
+                hint: '艺术+10，声誉+10，压力+10',
+                effects: { art: 10, reputation: 10, stress: 10 },
+                next: '1_3'
+            }, {
+                text: 'B：保持谨慎节奏',
+                hint: '艺术+5，家庭+5',
+                effects: { art: 5, family: 5 },
+                next: '1_3'
+            }]
+        );
+
+        createEvent('1_3', 1969, '✈️ 结识Diana Ross，签约Motown',
+            '杰克逊全家迁居洛杉矶，你的个人首支单曲《I Want You Back》登上榜首。\n但这也意味着离开故乡……', [{
+                text: 'A：举家迁往洛杉矶',
+                hint: '声誉+15，财富+10，家庭-5，压力+15',
+                effects: { reputation: 15, wealth: 10, family: -5, stress: 15 },
+                next: '1_4'
+            }, {
+                text: 'B：留在盖瑞，保持平静生活',
+                hint: '家庭+15，压力-10，但错失巨星之路',
+                effects: { family: 15, stress: -10 },
+                next: 'END_PLAIN'
+            }]
+        );
+
+        createEvent('1_4', 1970, '🏆 Jackson 5四首单曲登顶',
+            'Jackson 5的前四首单曲全部登上排行榜榜首！\n你们成为全美最炙手可热的少年组合。', {
+                effects: { reputation: 15, wealth: 15, art: 10, stress: 10 },
+                next: '1_5'
+            });
+
+        createEvent('1_5', 1971, '🎤 是否开始单飞？',
+            '迈克尔于1971年开始单飞。这是一个改变命运的时刻。\n是留在兄弟身边，还是独自闯荡？', [{
+                text: 'A：开始单飞（历史路线）',
+                hint: '艺术+20，财富+15，家庭-15，压力+15',
+                effects: { art: 20, wealth: 15, family: -15, stress: 15 },
+                flags: { isSolo: true },
+                next: '1_6'      // 改为1_6
+            }, {
+                text: 'B：不单飞，一直和兄弟们演出',
+                hint: '家庭+20，艺术+5，财富+5，开启兄弟共荣线',
+                effects: { family: 20, art: 5, wealth: 5 },
+                flags: { isSolo: false },
+                next: '2_1'     // 不单飞则跳到2_1
+            }]
+        );
+
+        // ---- 新增事件1_6：早期个人专辑（仅单飞后） ----
+        createEvent('1_6', 1972, '🎤 发行早期个人专辑？',
+            '在Jackson 5大获成功后，Motown唱片提议为你发行个人专辑《Got to Be There》。\n你愿意在团体之外开启个人音乐事业吗？', {
+                condition: function() { return state.flags.isSolo === true; },
+                fallbackNext: '2_1',
+                options: [{
+                    text: 'A：发行个人专辑（《Got to Be There》《Ben》等）',
+                    hint: '艺术+15，财富+10，家庭-5',
+                    effects: { art: 15, wealth: 10, family: -5 },
+                    flags: { soloAlbum1972: true },
+                    next: '2_1'
+                }, {
+                    text: 'B：暂不发行，专注Jackson 5',
+                    hint: '家庭+5，艺术+5',
+                    effects: { family: 5, art: 5 },
+                    flags: { soloAlbum1972: false },
+                    next: '2_1'
+                }]
+            });
+
+        createEvent('2_1', 1978, '🎬 拍摄《新绿野仙踪》',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '迈克尔独自参演《新绿野仙踪》，结识电影音乐制作人昆西·琼斯。\n这将开启《Off The Wall》时代。你如何选择？';
+                } else {
+                    return '整个The Jacksons客串《新绿野仙踪》，迈克尔结识昆西·琼斯，但昆西提议为整个团体制作专辑。\n你如何回应？';
+                }
+            }, [{
+                text: function() { return state.flags.isSolo ? 'A：深入合作（与昆西）' : 'A：接受昆西为团体制作'; },
+                hint: function() { return state.flags.isSolo ? '艺术+15，声誉+10' : '艺术+10，家庭+5'; },
+                effects: function() { return state.flags.isSolo ? { art: 15, reputation: 10 } : { art: 10, family: 5 }; },
+                next: '2_2'
+            }, {
+                text: function() { return state.flags.isSolo ? 'B：保持距离' : 'B：坚持团体自主创作'; },
+                hint: function() { return state.flags.isSolo ? '家庭+10' : '艺术+5，家庭+10'; },
+                effects: function() { return state.flags.isSolo ? { family: 10 } : { art: 5, family: 10 }; },
+                next: '2_2'
+            }]
+        );
+
+        createEvent('2_2', 1978, '👃 鼻子整容手术',
+            '迈克尔因意外弄伤鼻子，首次做鼻子整容手术。\n你如何抉择？', [{
+                text: 'A：接受手术',
+                hint: '声誉-5，自信+10（后续外貌变化）',
+                effects: { reputation: -5 },
+                next: '2_3'
+            }, {
+                text: 'B：拒绝手术，保持自然',
+                hint: '健康+10',
+                effects: { health: 10 },
+                next: '2_3'
+            }]
+        );
+
+        createEvent('2_3', 1979, '💿 《Off The Wall》发行',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '个人专辑《Off The Wall》全球销量1900万张，奠定“流行王子”地位！';
+                } else {
+                    return '团体专辑《The Jacksons：Off The Wall》发行，销量800万张，虽不如个人版本，但兄弟齐心。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 20, wealth: 20, reputation: 15 };
+                    } else {
+                        return { art: 10, wealth: 10, reputation: 5 };
+                    }
+                },
+                next: '2_4'      // 改为2_4
+            });
+
+        // ---- 新增事件2_4：与Epic唱片合作 ----
+        createEvent('2_4', 1979, '🤝 与Epic唱片深度合作？',
+            '《Off The Wall》大获成功后，你与Epic唱片（索尼子公司）的关系日益紧密。\n你愿意与Epic建立长期深度合作关系，还是保持独立？', {
+                condition: function() { return state.flags.isSolo === true; },  // 仅单飞时出现
+                fallbackNext: '3_1',
+                options: [{
+                    text: 'A：与Epic深度合作（为未来索尼合作铺路）',
+                    hint: '声誉+10，财富+15，但可能受制于唱片公司',
+                    effects: { reputation: 10, wealth: 15 },
+                    flags: { epicDeep: true },
+                    next: '3_1'
+                }, {
+                    text: 'B：保持距离，维持独立',
+                    hint: '家庭+5，压力-10',
+                    effects: { family: 5, stress: -10 },
+                    flags: { epicDeep: false },
+                    next: '3_1'
+                }]
+            });
+
+        createEvent('3_1', 1982, '🔥 《Thriller》发行',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '《Thriller》成为音乐史上最畅销专辑！全球销量超6500万张，格莱美奖在望。';
+                } else {
+                    return '因前作未达预期，昆西失去兴趣。《Thriller》变为普通Funk团体专辑，错失“流行音乐之王”头衔。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 30, wealth: 30, reputation: 25, stress: 10 };
+                    } else {
+                        return { art: 10, wealth: 10, reputation: 5 };
+                    }
+                },
+                next: '3_2'
+            });
+
+        createEvent('3_2', 1984, '🥤 百事可乐广告邀约',
+            '1984年1月，百事可乐邀你拍摄广告。\n舞台特效烟火可能带来危险……你接受吗？', [{
+                text: 'A：接受拍摄（历史路线）',
+                hint: '财富+20，但可能发生烧伤事故',
+                effects: { wealth: 20, reputation: 5 },
+                flags: { isPepsiBurned: true },
+                next: '3_3'
+            }, {
+                text: 'B：拒绝拍摄（平行路线）',
+                hint: '健康+10，避免烧伤，但失去广告收入',
+                effects: { health: 10, wealth: -20 },
+                flags: { isPepsiBurned: false },
+                next: '3_3'
+            }]
+        );
+
+        createEvent('3_3', 1984, '🏆 格莱美8项大奖',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '在第26届格莱美奖上，你凭《Thriller》独得8项大奖，事业达到巅峰！';
+                } else {
+                    return '团体获得格莱美最佳R&B团体奖，虽不如个人辉煌，但也是肯定。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 20, reputation: 20 };
+                    } else {
+                        return { art: 8, reputation: 8 };
+                    }
+                },
+                next: '3_4'
+            });
+
+        createEvent('3_4', 1985, '🏥 烧伤后治疗',
+            function() {
+                if (state.flags.isPepsiBurned) {
+                    return '百事广告拍摄中发生意外，你的头部二级烧伤，疼痛剧烈。\n你选择如何应对治疗？';
+                } else {
+                    return '由于你拒绝了百事广告，没有发生烧伤事故，身体保持健康。';
+                }
+            }, {
+                condition: function() { return state.flags.isPepsiBurned === true; },
+                fallbackNext: '4_1',
+                options: [{
+                    text: 'A：积极康复但依赖止痛药',
+                    hint: '短期健康+10，但长期依赖',
+                    effects: { health: 10, stress: -10 },
+                    flags: { painkillerDependent: true },
+                    next: '4_1'
+                }, {
+                    text: 'B：寻求替代疗法，减少药物',
+                    hint: '健康+5，压力+15，但减少依赖',
+                    effects: { health: 5, stress: 15 },
+                    flags: { painkillerDependent: false },
+                    next: '4_1'
+                }]
+            });
+
+        createEvent('4_1', 1987, '🏰 购置梦幻庄园',
+            '1987年，你以约1700万美元购置加州圣巴巴拉县的庄园，命名为“梦幻庄园”（Neverland）。\n你打算如何使用？', [{
+                text: 'A：购买并打造成儿童乐园',
+                hint: '家庭+20，财富-30，后续可能引发争议',
+                effects: { family: 20, wealth: -30 },
+                flags: { neverlandType: 'public' },
+                next: '4_2'
+            }, {
+                text: 'B：购买但保持私密',
+                hint: '财富-20，家庭+5，减少争议',
+                effects: { wealth: -20, family: 5 },
+                flags: { neverlandType: 'private' },
+                next: '4_2'
+            }, {
+                text: 'C：不购买，保持财务健康',
+                hint: '财富+10，避免债务',
+                effects: { wealth: 10 },
+                flags: { neverlandType: 'none' },
+                next: '4_2'
+            }]
+        );
+
+        createEvent('4_2', 1987, '🎵 《Bad》专辑发行',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '《Bad》专辑发行，全球巡演开启，事业再攀高峰。';
+                } else {
+                    return '团体专辑《Bad》发行，兄弟同心，巡演反响热烈。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 15, wealth: 20, reputation: 10, stress: 15 };
+                    } else {
+                        return { art: 10, wealth: 15, reputation: 5, stress: 10 };
+                    }
+                },
+                next: '4_3'
+            });
+
+        createEvent('4_3', 1988, '📖 出版自传《月球漫步》',
+            '你的自传《月球漫步》出版，分享了你的音乐与人生故事。', {
+                effects: { reputation: 10, wealth: 5 },
+                next: '5_1'
+            });
+
+        createEvent('5_1', 1991, '💥 《Dangerous》专辑发行',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '《Dangerous》专辑发行，音乐风格更加成熟。';
+                } else {
+                    return '团体专辑《Dangerous》发行，兄弟合作依然默契。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 15, wealth: 15, reputation: 5 };
+                    } else {
+                        return { art: 8, wealth: 10, reputation: 3 };
+                    }
+                },
+                next: '5_2'
+            });
+
+        createEvent('5_2', 1992, '🌍 “危险之旅”世界巡演',
+            '巡演在全球引起轰动，但高强度演出给你带来巨大压力。', {
+                effects: { wealth: 25, stress: 20 },
+                next: '5_3'
+            });
+
+        createEvent('5_3', 1993, '⚖️ 1993 年民事指控',
+            function() {
+                if (state.flags.isSolo === true && state.flags.neverlandType !== 'none') {
+                    return '一名少年家属对你提出民事指控。警方搜查了你的住所。\n你将如何应对？';
+                } else {
+                    return '由于你没有购买梦幻庄园，或始终与兄弟在一起，没有发生民事指控。';
+                }
+            }, {
+                condition: function() { return state.flags.isSolo === true && state.flags.neverlandType !== 'none'; },
+                fallbackNext: '5_5',
+                options: [{
+                    text: 'A：庭外和解（历史路线）',
+                    hint: '财富-2600万，声誉-20，但快速平息',
+                    effects: { wealth: -2600, reputation: -20, stress: 20 },
+                    flags: { settlement1993: true },
+                    next: '5_4'
+                }, {
+                    text: 'B：应诉到底，交由法庭裁决',
+                    hint: '财富-500万律师费，压力+30，若声誉高则胜诉概率大',
+                    effects: { wealth: -500, stress: 30 },
+                    flags: { settlement1993: false },
+                    next: '5_4'
+                }, {
+                    text: 'C：公开透明配合调查',
+                    hint: '声誉-10，压力+25，取决于公众信任',
+                    effects: { reputation: -10, stress: 25 },
+                    flags: { settlement1993: false },
+                    next: '5_4'
+                }]
+            });
+
+        createEvent('5_4', 1993, '💊 药物成瘾公开',
+            function() {
+                if (state.flags.isPepsiBurned && state.flags.painkillerDependent) {
+                    return '由于长期依赖止痛药，你公开承认药物成瘾，取消全球巡演。\n声誉受损，健康恶化。';
+                } else {
+                    return '你没有药物依赖问题，身体状况良好。';
+                }
+            }, {
+                condition: function() { return state.flags.isPepsiBurned && state.flags.painkillerDependent; },
+                fallbackNext: '5_5',
+                effects: { reputation: -15, health: -10, stress: 20 },
+                next: '5_5'
+            });
+
+        createEvent('5_5', 1994, '💍 与莉莎·玛丽·普雷斯利结婚',
+            '1994年，你与猫王独生女莉莎·玛丽·普雷斯利结婚。\n你愿意步入婚姻吗？', [{
+                text: 'A：结婚（历史路线）',
+                hint: '家庭+15，声誉+10，但1996年离婚',
+                effects: { family: 15, reputation: 10 },
+                flags: { marriedLisa: true },
+                next: '6_1'
+            }, {
+                text: 'B：不结婚，保持单身',
+                hint: '家庭-5，个人生活不同',
+                effects: { family: -5 },
+                flags: { marriedLisa: false },
+                next: '6_1'
+            }]
+        );
+
+        createEvent('6_1', 1995, '📀 《HIStory》专辑发行',
+            function() {
+                if (state.flags.isSolo === true) {
+                    return '《HIStory》专辑发行，回顾过去，展望未来。';
+                } else {
+                    return '团体专辑《HIStory》发行，兄弟情谊在音乐中延续。';
+                }
+            }, {
+                effects: function() {
+                    if (state.flags.isSolo === true) {
+                        return { art: 10, wealth: 15, reputation: 5 };
+                    } else {
+                        return { art: 6, wealth: 10, reputation: 3 };
+                    }
+                },
+                next: '6_1b'     // 改为6_1b
+            });
+
+        // ---- 新增事件6_1b：与索尼合并音乐出版 ----
+        createEvent('6_1b', 1995, '🤝 与索尼合并音乐出版业务？',
+            '1995年，你将ATV音乐版权与索尼音乐出版合并，成立索尼/ATV音乐出版公司，各占50%股份。\n这是音乐史上最重要的商业合作之一。你愿意吗？', {
+                condition: function() { return state.flags.isSolo === true && state.flags.epicDeep === true; }, // 只有单飞且与Epic合作过才出现
+                fallbackNext: '6_2',
+                options: [{
+                    text: 'A：同意合并（历史路线）',
+                    hint: '财富+50，声誉+10，但深度绑定索尼',
+                    effects: { wealth: 50, reputation: 10 },
+                    flags: { sonyMerge: true },
+                    next: '6_2'
+                }, {
+                    text: 'B：拒绝合并，保留全部所有权',
+                    hint: '财富-10，家庭+5，保持独立',
+                    effects: { wealth: -10, family: 5 },
+                    flags: { sonyMerge: false },
+                    next: '6_2'
+                }]
+            });
+
+        createEvent('6_2', 1996, '👶 与黛比·罗结婚生子',
+            '1996年，你与黛比·罗结婚，育有儿子普里斯·迈克尔和女儿帕里斯·凯瑟琳。\n你愿意组建家庭吗？', [{
+                text: 'A：结婚，成为父亲（历史路线）',
+                hint: '家庭+20，1999年离婚',
+                effects: { family: 20 },
+                flags: { marriedDebbie: true },
+                next: '6_2b'    // 改为6_2b
+            }, {
+                text: 'B：不结婚，不生育',
+                hint: '家庭-10，无子女',
+                effects: { family: -10 },
+                flags: { marriedDebbie: false },
+                next: '6_2b'
+            }]
+        );
+
+        // ---- 新增事件6_2b：启动《Invincible》专辑项目 ----
+        createEvent('6_2b', 1997, '💿 启动《Invincible》专辑项目？',
+            '1997年，你计划启动新录音室专辑《Invincible》的制作，预计耗资3000万美元，是史上最昂贵的专辑之一。\n你愿意投入这个巨大的项目吗？', {
+                condition: function() { return state.flags.isSolo === true; },
+                fallbackNext: '6_3',
+                options: [{
+                    text: 'A：启动项目（投入巨资）',
+                    hint: '财富-2000万，艺术+15，压力+30',
+                    effects: { wealth: -2000, art: 15, stress: 30 },
+                    flags: { invincibleStarted: true },
+                    next: '6_3'
+                }, {
+                    text: 'B：暂时不启动，等待时机',
+                    hint: '财富+10，压力-10',
+                    effects: { wealth: 10, stress: -10 },
+                    flags: { invincibleStarted: false },
+                    next: '6_3'
+                }]
+            });
+
+        createEvent('6_3', 1999, '💔 与黛比·罗离婚',
+            function() {
+                if (state.flags.marriedDebbie) {
+                    return '1999年，你与黛比·罗离婚，家庭关系受到冲击。';
+                } else {
+                    return '你并未与黛比结婚，这段感情没有发生。';
+                }
+            }, {
+                condition: function() { return state.flags.marriedDebbie === true; },
+                fallbackNext: '6_3b',
+                effects: { family: -10 },
+                next: '6_3b'    // 改为6_3b
+            });
+
+        // ---- 新增事件6_3b：《Invincible》宣传纠纷 ----
+        createEvent('6_3b', 2001, '⚡ 《Invincible》宣传纠纷',
+            function() {
+                if (state.flags.invincibleStarted) {
+                    return '《Invincible》于2001年10月发行，全球销量800-1000万张，但美国仅200万张。\n你（迈克尔）认为索尼音乐宣传不力，且因种族原因未全力推广。\n你将如何应对？';
+                } else {
+                    return '由于你没有启动《Invincible》项目，这张专辑没有发生。';
+                }
+            }, {
+                condition: function() { return state.flags.invincibleStarted === true; },
+                fallbackNext: '6_4',
+                options: [{
+                    text: 'A：公开抗议（历史路线）',
+                    hint: '声誉-10，压力+20，财富-1000万（打官司）',
+                    effects: { reputation: -10, stress: 20, wealth: -1000 },
+                    flags: { invincibleProtest: true },
+                    next: '6_4'
+                }, {
+                    text: 'B：私下协商，寻求和解',
+                    hint: '声誉+5，财富-500万',
+                    effects: { reputation: 5, wealth: -500 },
+                    flags: { invincibleProtest: false },
+                    next: '6_4'
+                }, {
+                    text: 'C：接受现实，转向新项目',
+                    hint: '压力-20，艺术+5',
+                    effects: { stress: -20, art: 5 },
+                    flags: { invincibleProtest: false },
+                    next: '6_4'
+                }]
+            });
+
+        createEvent('6_4', 2002, '⚖️ 第二次刑事指控',
+            function() {
+                if (state.flags.isSolo === true && state.flags.neverlandType !== 'none') {
+                    let extra = '';
+                    if (state.flags.settlement1993) extra = ' 由于1993年已达成庭外和解，这次指控受到更多公众关注。';
+                    return '2002年，你再次面临刑事指控。' + extra + '你将如何应对？';
+                } else {
+                    return '由于你没有购买梦幻庄园，或始终在兄弟保护下，没有出现任何指控。';
+                }
+            }, {
+                condition: function() { return state.flags.isSolo === true && state.flags.neverlandType !== 'none'; },
+                fallbackNext: '7_1',
+                options: [{
+                    text: 'A：积极应对法律诉讼（历史路线）',
+                    hint: '财富-1000万，压力+30，最终裁定无罪',
+                    effects: { wealth: -1000, stress: 30 },
+                    flags: { secondCharge: true, secondVerdict: 'not_guilty' },
+                    next: '6_5'
+                }, {
+                    text: 'B：庭外和解（快速但声誉受损）',
+                    hint: '财富-2000万，声誉-30',
+                    effects: { wealth: -2000, reputation: -30 },
+                    flags: { secondCharge: true, secondVerdict: 'settled' },
+                    next: '7_1'
+                }, {
+                    text: 'C：依赖公众信任，坚持透明',
+                    hint: '若声誉>70则自动胜诉，否则败诉',
+                    effects: { stress: 20 },
+                    flags: { secondCharge: true },
+                    next: '6_5'
+                }]
+            });
+
+        createEvent('6_5', 2005, '⚖️ 2005 年庭审结果',
+            function() {
+                if (state.flags.secondCharge && state.flags.secondVerdict === 'not_guilty') {
+                    return '2005年，所有指控均被裁定不成立。你的声誉回升。';
+                } else if (state.flags.secondCharge && state.flags.secondVerdict === 'settled') {
+                    return '达成庭外和解，虽快速解决，但公众形象受损。';
+                } else {
+                    return '由于未触发第二次指控，你未经历这场庭审。';
+                }
+            }, {
+                condition: function() { return state.flags.secondCharge === true; },
+                fallbackNext: '7_1',
+                effects: function() {
+                    if (state.flags.secondVerdict === 'not_guilty') return { reputation: 10, stress: -20 };
+                    else if (state.flags.secondVerdict === 'settled') return { reputation: -30 };
+                    else return {};
+                },
+                next: '7_1'
+            });
+
+        // 7_1 梦幻庄园债务危机（已存在，不变）
+        createEvent('7_1', 2006, '🏚️ 梦幻庄园债务危机',
+            function() {
+                if (state.flags.neverlandType === 'none') {
+                    return '由于你从未购买梦幻庄园，没有债务危机。你财务状况良好。';
+                } else {
+                    return '2006年，因拖欠工资和债务，梦幻庄园面临被接管。\n你如何应对？';
+                }
+            }, {
+                condition: function() { return state.flags.neverlandType !== 'none'; },
+                fallbackNext: '7_2',
+                options: [{
+                    text: 'A：转让庄园（历史路线）',
+                    hint: '财富-50，家庭-15',
+                    effects: { wealth: -50, family: -15 },
+                    flags: { debtCrisis: true },
+                    next: '7_2'
+                }, {
+                    text: 'B：提前财务规划，尽力保留',
+                    hint: '若财富>5000万可保留，否则失败',
+                    effects: { wealth: -100, stress: 10 },
+                    flags: { debtCrisis: false },
+                    next: '7_2'
+                }]
+            });
+
+        createEvent('7_2', 2009, '🎤 《This Is It》告别演唱会',
+            function() {
+                let base = '2009年3月，你宣布在伦敦举办50场告别演唱会“This Is It”。\n门票四小时售罄，压力巨大。\n';
+                if (state.flags.isSolo === false) {
+                    base = '2009年，兄弟们提议举办“The Jacksons终演告别巡演”，只有20场。\n你如何决定？\n';
+                }
+                return base;
+            }, {
+                options: [{
+                    text: function() { return state.flags.isSolo === false ? 'A：举办20场团体告别巡演' : 'A：举办50场个人演唱会（历史路线）'; },
+                    hint: function() {
+                        if (state.flags.isSolo === false) return '压力较小，健康保障';
+                        else return '财富+100，压力+40，健康风险高';
+                    },
+                    effects: function() {
+                        if (state.flags.isSolo === false) return { wealth: 40, stress: 20, health: 5 };
+                        else return { wealth: 100, stress: 40 };
+                    },
+                    flags: { thisItHeld: true, thisItScale: 'full' },
+                    next: '7_3'
+                }, {
+                    text: function() { return state.flags.isSolo === false ? 'B：取消巡演，享受退休' : 'B：宣布不举办，违约放弃'; },
+                    hint: function() {
+                        if (state.flags.isSolo === false) return '健康+20，但无演出收入';
+                        else return '财富-3000万违约金，但保住生命';
+                    },
+                    effects: function() {
+                        if (state.flags.isSolo === false) return { health: 20, wealth: -30 };
+                        else return { wealth: -3000, health: 20, reputation: -10 };
+                    },
+                    flags: { thisItHeld: false },
+                    next: '7_3'
+                }, {
+                    text: function() { return state.flags.isSolo === false ? null : 'C：缩减规模至20场，降低压力'; },
+                    hint: function() { return state.flags.isSolo === false ? null : '财富+40，压力+20，健康风险降低'; },
+                    effects: function() { return state.flags.isSolo === false ? null : { wealth: 40, stress: 20, health: 10 }; },
+                    flags: { thisItHeld: true, thisItScale: 'reduced' },
+                    next: '7_3',
+                    condition: function() { return state.flags.isSolo !== false; }
+                }].filter(opt => {
+                    if (typeof opt.condition === 'function') return opt.condition();
+                    return true;
+                })
+            });
+
+        createEvent('7_3', 2009, '🏁 命运裁决',
+            '根据你一生的选择，命运将给出最终答案……', {
+                effects: {},
+                next: 'END_JUDGE'
+            });
+
+        // ----- 结局事件（保持不变）-----
+        function getEndingEventId() {
+            const f = state.flags;
+            if (state.currentEventId === 'END_PLAIN' || (state.currentEventId === '1_3' && state.flags.settledEarly)) {
+                return 'END_PLAIN';
+            }
+            if (f.isSolo === false) {
+                return 'END_FAMILY';
+            }
+            const health = state.health;
+            const isHeld = f.thisItHeld;
+            const scale = f.thisItScale;
+            const burned = f.isPepsiBurned;
+            const dependent = f.painkillerDependent;
+
+            if (!burned && health >= 70 && (!isHeld || scale === 'reduced')) {
+                return 'END_PERFECT';
+            }
+            if (burned && !dependent && isHeld && scale === 'full') {
+                return 'END_ART_PEAK';
+            }
+            if (burned && dependent && isHeld && scale === 'full') {
+                return 'END_TRAGIC';
+            }
+            if (state.wealth < 0 || (f.debtCrisis && state.wealth < 3000)) {
+                return 'END_FINANCIAL';
+            }
+            if (state.reputation < 30 && f.settlement1993) {
+                return 'END_CONTROVERSIAL';
+            }
+            if (!isHeld && state.wealth >= 0 && state.wealth < 5000) {
+                return 'END_SURVIVE_DEBT';
+            }
+            if (health > 60 && state.reputation > 50) {
+                return 'END_PERFECT';
+            } else {
+                return 'END_TRAGIC';
+            }
+        }
+
+        createEvent('END_JUDGE', 2009, '⚖️ 判定中', '正在根据你的选择计算最终命运……', {
+            effects: {},
+            next: function() { return getEndingEventId(); }
+        });
+
+        createEvent('END_PERFECT', 2009, '🌟 完美结局：活着的传奇',
+            '你拒绝了百事广告，避免了烧伤，身体保持健康。\n你以稳健的方式举办告别演出，功成身退，安享晚年，见证子女成长。\n你成为活着的传奇，永远被世人铭记。\n\n健康：' + state.health + ' | 声誉：' + state.reputation + ' | 家庭：' + state.family, {});
+        createEvent('END_TRAGIC', 2009, '💔 历史悲剧结局',
+            '你接受了百事广告，遭受烧伤，长期依赖止痛药。\n2009年6月25日，你在高强度排练中因急性异丙酚中毒猝然离世，终年50岁。\n世界失去了一位伟大的艺术家。\n\n健康：' + state.health + ' | 声誉：' + state.reputation + ' | 艺术：' + state.art, {});
+        createEvent('END_FAMILY', 2009, '👨‍👩‍👧‍👦 家庭幸福结局',
+            '你选择不单飞，与兄弟们始终在一起。\n家庭护盾让你远离争议，你与兄弟、子女共度幸福时光。\n虽然没有达到个人巅峰，但你拥有最珍贵的亲情和健康。\n\n家庭：' + state.family + ' | 健康：' + state.health, {});
+        createEvent('END_FINANCIAL', 2009, '🏚️ 财务崩溃结局',
+            '过度消费、法律费用和债务压垮了你。\n你失去梦幻庄园，甚至面临破产。\n金钱的困扰让你晚年不得安宁。\n\n财富：' + state.wealth, {});
+        createEvent('END_CONTROVERSIAL', 2009, '⚖️ 争议缠身结局',
+            '多次庭外和解与声誉应对不善，使公众对你的评价出现明显分歧。\n虽然你活着，但争议之声始终伴随，难以完全摆脱舆论的阴影。\n\n声誉：' + state.reputation, {});
+        createEvent('END_SURVIVE_DEBT', 2009, '💪 生存但负债结局',
+            '你取消了This Is It演唱会，保住了生命，但背负巨额违约金。\n你努力通过新专辑还债，虽然艰难，但你活着。\n\n财富：' + state.wealth + ' | 健康：' + state.health, {});
+        createEvent('END_PLAIN', 1969, '🌱 平凡人生结局',
+            '你选择留在盖瑞，没有成为国际巨星。\n你过着普通人的生活，远离聚光灯，宁静而平淡。\n没有辉煌，也没有伤痛。\n\n家庭：' + state.family + ' | 健康：' + state.health, {});
+        createEvent('END_ART_PEAK', 2009, '🎵 艺术巅峰结局',
+            '你经历了烧伤，但凭借顽强的意志克服了药物依赖。\n你成功举办了This Is It演唱会，艺术成就达到人类巅峰。\n虽然经历磨难，但你用音乐征服了世界。\n\n艺术：' + state.art + ' | 健康：' + state.health, {});
+
+        // ---------- 渲染引擎 ----------
+        function render() {
+            const eventId = state.currentEventId;
+            const evt = events[eventId];
+            if (!evt) {
+                document.getElementById('event-container').innerHTML = '<div style="color:#a09070;text-align:center;padding:40px;">事件加载错误</div>';
+                return;
+            }
+
+            document.getElementById('year').textContent = evt.year || state.year;
+            renderAttributes();
+
+            const container = document.getElementById('event-container');
+            let html = '';
+
+            const yearDisplay = evt.year ? `<div class="event-year">${evt.year}</div>` : '';
+            const title = typeof evt.title === 'function' ? evt.title() : evt.title;
+            const desc = typeof evt.description === 'function' ? evt.description() : evt.description;
+
+            html += `<div class="event-year">${yearDisplay}</div>`;
+            html += `<div class="event-title">${title}</div>`;
+            html += `<div class="event-desc">${desc}</div>`;
+
+            const hasOptions = evt.options && evt.options.length > 0;
+
+            if (hasOptions) {
+                html += `<div class="options">`;
+                evt.options.forEach((opt, idx) => {
+                    let text = typeof opt.text === 'function' ? opt.text() : opt.text;
+                    let hint = typeof opt.hint === 'function' ? opt.hint() : (opt.hint || '');
+                    if (!text) return;
+                    html += `<button class="option-btn" data-opt-index="${idx}">${text}`;
+                    if (hint) html += `<span class="hint">${hint}</span>`;
+                    html += `</button>`;
+                });
+                html += `</div>`;
+            } else {
+                if (eventId.startsWith('END_') && eventId !== 'END_JUDGE') {
+                    html += `<div class="ending-sub">点击下方「重新开始」体验不同人生</div>`;
+                } else {
+                    html += `<button class="continue-btn" id="continueBtn">▶ 继续</button>`;
+                }
+            }
+
+            container.innerHTML = html;
+
+            if (hasOptions) {
+                container.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.optIndex);
+                        handleChoice(idx);
+                    });
+                });
+            } else if (!eventId.startsWith('END_') || eventId === 'END_JUDGE') {
+                const contBtn = document.getElementById('continueBtn');
+                if (contBtn) {
+                    contBtn.addEventListener('click', function() {
+                        advanceManualEvent();
+                    });
+                }
+            }
+        }
+
+        function renderAttributes() {
+            const attrs = [
+                { label: '❤️ 健康', key: 'health' },
+                { label: '⭐ 声誉', key: 'reputation' },
+                { label: '💰 财富', key: 'wealth' },
+                { label: '👪 家庭', key: 'family' },
+                { label: '🎨 艺术', key: 'art' },
+                { label: '😰 压力', key: 'stress' }
+            ];
+            let html = '';
+            attrs.forEach(a => {
+                const val = state[a.key];
+                const pct = Math.min(100, Math.max(0, val));
+                const color = pct > 70 ? '#f0d080' : (pct > 40 ? '#c0a060' : '#a07050');
+                html += `
+                    <div class="attr-item">
+                        <span class="attr-label">${a.label}</span>
+                        <div class="attr-bar-bg">
+                            <div class="attr-bar" style="width:${pct}%;background:${color};"></div>
+                        </div>
+                        <span class="attr-value">${Math.round(val)}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('attributes').innerHTML = html;
+        }
+
+        // ---------- 游戏逻辑 ----------
+        function handleChoice(index) {
+            const evt = events[state.currentEventId];
+            if (!evt || !evt.options) return;
+            const opt = evt.options[index];
+            if (!opt) return;
+
+            let effects = typeof opt.effects === 'function' ? opt.effects() : opt.effects;
+            if (effects) applyEffects(effects);
+            if (opt.flags) setFlags(opt.flags);
+
+            let nextId = typeof opt.next === 'function' ? opt.next() : opt.next;
+            if (nextId) {
+                goToEvent(nextId);
+            }
+        }
+
+        function advanceManualEvent() {
+            const evt = events[state.currentEventId];
+            if (!evt) return;
+            if (evt.options && evt.options.length > 0) return;
+
+            let effects = typeof evt.effects === 'function' ? evt.effects() : evt.effects;
+            if (effects) applyEffects(effects);
+            if (evt.flags) setFlags(evt.flags);
+
+            let nextId = typeof evt.next === 'function' ? evt.next() : evt.next;
+            if (nextId) {
+                goToEvent(nextId);
+            }
+        }
+
+        function goToEvent(id) {
+            if (!id) return;
+            state.currentEventId = id;
+            if (id.startsWith('END_') && id !== 'END_JUDGE') {
+                state.gameEnded = true;
+                render();
+                return;
+            }
+            const evt = events[id];
+            if (!evt) {
+                console.error('事件不存在:', id);
+                return;
+            }
+            if (evt.condition && typeof evt.condition === 'function') {
+                if (!evt.condition()) {
+                    const fallback = typeof evt.fallbackNext === 'function' ? evt.fallbackNext() : evt.fallbackNext;
+                    if (fallback) {
+                        goToEvent(fallback);
+                        return;
+                    }
+                }
+            }
+            render();
+        }
+
+        // ---------- 重新开始 ----------
+        function resetGame() {
+            state.health = 70;
+            state.reputation = 50;
+            state.wealth = 20;
+            state.family = 60;
+            state.art = 30;
+            state.stress = 20;
+            state.flags = {
+                isSolo: null,
+                isPepsiBurned: false,
+                settlement1993: false,
+                neverlandType: 'public',
+                painkillerDependent: false,
+                marriedLisa: false,
+                marriedDebbie: false,
+                thisItHeld: false,
+                thisItScale: 'full',
+                secondCharge: false,
+                secondVerdict: null,
+                debtCrisis: false,
+                soloAlbum1972: false,
+                epicDeep: false,
+                sonyMerge: false,
+                invincibleStarted: false,
+                invincibleProtest: false,
+            };
+            state.currentEventId = 'start';
+            state.gameEnded = false;
+            render();
+        }
+
+        // ---------- 初始化 ----------
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('restart').addEventListener('click', resetGame);
+            resetGame();
+        });
+
+    })();
+</script>
+</body>
+</html>

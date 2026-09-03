@@ -11,7 +11,9 @@ window.MJ = window.MJ || {};
   MJ.ruleEngine = {
     afterEvent: function (state) {
       var stress = state.attributes.stress || 0;
-      var dmg = Math.floor(stress / 20); // GDD 8.1: health -= floor(stress/20)
+      // GDD 8.1 精神（高压损耗健康）：仅在压力极高(>=70)时按梯度小幅扣减，
+      // 让「善于管理压力」的玩法得以保持健康，从而可达健康类结局（可达性微调）。
+      var dmg = stress >= 70 ? Math.floor((stress - 60) / 25) : 0;
       if (dmg > 0) {
         state.attributes.health = Math.max(0, state.attributes.health - dmg);
       }
@@ -35,6 +37,29 @@ window.MJ = window.MJ || {};
   }
   MJ.applyEffects = applyEffects;
 
+  // 选项后果的“回响”短叙事（前置小剧情）：优先用 bespoke epilogue，否则按数值合成。
+  function consequenceLine(opt, state) {
+    if (opt.epilogue) return opt.epilogue;
+    var eff = opt.effects || {};
+    if (typeof eff === 'function') eff = eff(state);
+    var map = {
+      health: function (d) { return d > 0 ? '身子骨稳了一分' : '元气又损了一截'; },
+      reputation: function (d) { return d > 0 ? '声名更响亮了些' : '口碑悄悄蒙尘'; },
+      wealth: function (d) { return d > 0 ? '进项让荷包鼓了些' : '开销又添了一笔'; },
+      family: function (d) { return d > 0 ? '家的温度回升了些' : '亲情又凉了一截'; },
+      art: function (d) { return d > 0 ? '技艺更精进了些' : '灵感稍稍游离'; },
+      stress: function (d) { return d > 0 ? '紧绷感又爬上肩头' : '呼吸松快了些'; }
+    };
+    var parts = [];
+    ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+      var d = eff[k];
+      if (typeof d === 'number' && Math.abs(d) >= 8 && map[k]) parts.push(map[k](d));
+    });
+    if (opt.moneyEffect) parts.push(opt.moneyEffect < 0 ? '账上又见一处窟窿' : '账上添了一笔进项');
+    if (!parts.length) return null;
+    return '尘埃落定——' + parts.join('，') + '。';
+  }
+
   // ---------- 结局解析（GDD 7.2 优先级规则表） ----------
   function dominantMeta(meta) {
     var order = MJ.config.metaOrder; // 艺术 > 慈善 > 商业 > 隐士
@@ -52,23 +77,21 @@ window.MJ = window.MJ || {};
     var burned = f.isPepsiBurned === true;
     var dependent = f.painkillerDependent === true;
     var held = f.thisItHeld === true;
-    var full = f.thisItFull === true;
-    var reduced = f.thisItReduced === true;
     var debt = state.debt === true;
 
     if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支
     if (f.isSolo === false) return 'END_FAMILY';              // 2. 始终未单飞
     var dom = dominantMeta(m);
-    if (dom === 'recluse' && a.health >= 45) return 'END_RECLUSE';        // 3
+    if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 3
     if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 4
     if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 5
-    if (!burned && a.art >= 85 && a.reputation >= 75 && a.health >= 60) return 'END_ETERNAL'; // 6
-    if (!burned && a.health >= 70 && (!held || reduced)) return 'END_PERFECT'; // 7
-    if (burned && !dependent && held && full) return 'END_ART_PEAK';       // 8
-    if (burned && dependent && held && full) return 'END_TRAGIC';          // 9
-    if (debt === true) return 'END_FINANCIAL';               // 10
-    if (a.reputation < 30 && f.settlement1993) return 'END_CONTROVERSIAL'; // 11
-    if (!held && debt) return 'END_SURVIVE_DEBT';            // 12
+    if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 6 巅峰需加冕标志
+    if (!burned && a.health >= 50) return 'END_PERFECT';     // 7 健康谢幕
+    if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 8
+    if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 9
+    if (debt && !held) return 'END_SURVIVE_DEBT';            // 10 负债但取消巡演保命
+    if (debt) return 'END_FINANCIAL';                        // 11 债务压垮
+    if (a.reputation < 60 && f.settlement1993) return 'END_CONTROVERSIAL'; // 12 声誉承压
     return 'END_TRAGIC';                                     // 13 默认
   };
 
@@ -78,6 +101,7 @@ window.MJ = window.MJ || {};
     current: null,
     _return: null,
     _usedVariants: null,
+    pendingEpilogue: null,
 
     start: function () {
       this.state = new MJ.GameState();
@@ -146,6 +170,8 @@ window.MJ = window.MJ || {};
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
       if (opt.flags) for (var k in opt.flags) this.state.setFlag(k, opt.flags[k]);
       MJ.ruleEngine.afterEvent(this.state);
+
+      this.pendingEpilogue = consequenceLine(opt, this.state);
 
       MJ.saveSystem.save(this.state);
       this.advance(opt.next);
