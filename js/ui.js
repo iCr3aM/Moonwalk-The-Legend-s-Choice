@@ -398,7 +398,9 @@ window.MJ = window.MJ || {};
     var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
     var legend = MJ.legendScore(state);
     var all = MJ.achievementSystem.all();
-    var ach = all.filter(function (x) { return x.unlocked; }).length;
+    var thisRun = (MJ.config.achievements || []).filter(function (ac) {
+      try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
+    });
     var st = state.stats || { variants: 0, keyChoices: 0 };
     return [
       '我在《迈克尔·杰克逊：人生选择》中，走完了属于自己的传奇一生：',
@@ -407,7 +409,7 @@ window.MJ = window.MJ || {};
       '健康 ' + a.health + ' · 声誉 ' + a.reputation + ' · 艺术 ' + a.art + ' · 财富 ' + a.wealth + ' · 家庭 ' + a.family + ' · 压力 ' + a.stress,
       '主导路线：' + metaName + '　传奇评分 ' + legend.score + '（评级 ' + legend.grade + '）',
       '触发变体 ' + st.variants + ' 次　关键抉择 ' + st.keyChoices + ' 个',
-      '解锁成就 ' + ach + '/' + all.length,
+      '本局点亮 ' + thisRun.length + ' 枚成就',
       '',
       '每个人都是自己人生的词曲作者——来写下你的版本。'
     ].join('\n');
@@ -502,16 +504,34 @@ window.MJ = window.MJ || {};
     var startY = y - (lines.length - 1) * lh / 2;
     for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], cx, startY + j * lh);
   }
+  // 中文友好的段落换行（按字符量度，遇 \n 分段；返回绘制后的 y）
+  function wrapParagraph(ctx, text, x, y, maxW, lh) {
+    var paras = String(text).split('\n');
+    ctx.textAlign = 'left';
+    for (var p = 0; p < paras.length; p++) {
+      var line = '', chars = paras[p].split('');
+      for (var i = 0; i < chars.length; i++) {
+        var test = line + chars[i];
+        if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); y += lh; line = chars[i]; }
+        else line = test;
+      }
+      if (line) { ctx.fillText(line, x, y); y += lh; }
+      y += Math.round(lh * 0.3);
+    }
+    return y;
+  }
   function createPoster(state, endingId) {
-    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
+    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟', summary: '', monologue: '' };
     var a = state.attributes;
     var dm = MJ.dominantMeta(state.meta);
     var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
     var legend = MJ.legendScore(state);
-    var all = MJ.achievementSystem.all();
-    var unlocked = all.filter(function (x) { return x.unlocked; });
-    var st = state.stats || { variants: 0, keyChoices: 0, events: 0 };
-    var W = 720, H = 1080, S = 2;
+    var endYear = (state.stats && state.stats.endYear) || 2009;
+    // 本局达成成就：按最终状态判定条件，而非累计解锁（不展示历史已解锁总数）
+    var thisRun = (MJ.config.achievements || []).filter(function (ac) {
+      try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
+    });
+    var W = 720, H = 1280, S = 2;
     var cv = document.createElement('canvas');
     cv.width = W * S; cv.height = H * S;
     var ctx = cv.getContext('2d');
@@ -533,59 +553,88 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = '#d4af37'; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText('MICHAEL JACKSON · 人 生 选 择', W / 2, 78);
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
-    ctx.fillText('1958 — 2009', W / 2, 102);
+    ctx.fillText('1958 — ' + endYear, W / 2, 102);
 
-    ctx.beginPath(); ctx.arc(W / 2, 190, 62, 0, Math.PI * 2);
+    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
     ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.font = '64px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    ctx.font = '60px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
     ctx.textBaseline = 'middle';
-    try { ctx.fillText(e.icon, W / 2, 192); } catch (err) {}
+    try { ctx.fillText(e.icon, W / 2, 180); } catch (err) {}
     ctx.textBaseline = 'alphabetic';
 
-    ctx.fillStyle = '#f3e2b0'; ctx.font = '700 46px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(e.name, W / 2, 300);
-    ctx.fillStyle = '#caa84a'; ctx.font = 'italic 20px "PingFang SC",sans-serif';
-    ctx.fillText(e.tone, W / 2, 336);
+    ctx.fillStyle = '#f3e2b0'; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(e.name, W / 2, 286);
+    ctx.fillStyle = '#caa84a'; ctx.font = 'italic 19px "PingFang SC",sans-serif';
+    ctx.fillText(e.tone, W / 2, 320);
 
     var dims = [['健康', a.health], ['声誉', a.reputation], ['艺术', a.art], ['财富', a.wealth], ['家庭', a.family], ['压力', a.stress]];
-    var bx0 = 70, colW = (W - 140) / 2, rowH = 50, top = 392, barX = bx0 + 96, barW = colW - 96 - 16;
+    var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, barX = bx0 + 92, barW = colW - 92 - 16;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0;
       var x = bx0 + col * colW, y = top + row * rowH;
       ctx.textAlign = 'left';
-      ctx.fillStyle = '#b9a06a'; ctx.font = '16px "PingFang SC",sans-serif';
-      ctx.fillText(dims[i][0], x, y + 16);
+      ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
+      ctx.fillText(dims[i][0], x, y + 15);
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 16px sans-serif';
-      ctx.fillText(String(dims[i][1]), x + 80, y + 16);
+      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
+      ctx.fillText(String(dims[i][1]), x + 78, y + 15);
       var v = Math.max(0, Math.min(100, dims[i][1])) / 100;
       var bgx = barX + col * colW;
-      ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 10, 5); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
       var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);
       grad.addColorStop(0, '#caa84a'); grad.addColorStop(1, '#f3e2b0');
-      ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 10, 5); ctx.fill();
+      ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 9, 4); ctx.fill();
     }
 
-    var ly = top + 3 * rowH + 18;
+    var y = top + 3 * rowH + 14;
     ctx.textAlign = 'center';
     ctx.fillStyle = '#f3e2b0'; ctx.font = '600 18px "PingFang SC",sans-serif';
-    ctx.fillText('主导路线：' + metaName, W / 2, ly);
+    ctx.fillText('主导路线：' + metaName, W / 2, y);
     ctx.fillStyle = '#caa84a'; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText('主导路线：' + metaName + '　·　传奇 ' + legend.score + '（' + legend.grade + '）', W / 2, ly + 26);
+    ctx.fillText('传奇 ' + legend.score + '（' + legend.grade + '）', W / 2, y + 26);
 
-    var ay = ly + 60;
-    ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText('解锁成就 ' + unlocked.length + ' / ' + all.length, W / 2, ay);
-    var iconStr = unlocked.length ? unlocked.map(function (x) { return x.icon; }).join('   ') : '— 尚未点亮 —';
-    ctx.font = '24px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-    ctx.fillStyle = '#f3e2b0';
-    wrapText(ctx, iconStr, W / 2, ay + 34, W - 120, 32);
+    y += 54;
+    ctx.fillStyle = '#d4af37'; ctx.font = '600 16px "PingFang SC",sans-serif';
+    ctx.fillText('净资产　' + formatMoney(state.netWorth), W / 2, y);
 
-    ctx.fillStyle = '#d4af37'; ctx.font = 'italic 18px "PingFang SC",sans-serif';
-    ctx.fillText('每个人都是自己人生的词曲作者。', W / 2, H - 78);
+    y += 40;
+    ctx.fillStyle = '#f3e2b0'; ctx.font = '600 16px "PingFang SC",sans-serif';
+    ctx.fillText('本局点亮 ' + thisRun.length + ' 枚成就', W / 2, y);
+    y += 16;
+    var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
+    ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
+    ctx.textBaseline = 'middle';
+    if (thisRun.length) {
+      for (var k = 0; k < thisRun.length; k++) {
+        var c = k % perRow, r = (k / perRow) | 0;
+        ctx.fillStyle = '#f3e2b0';
+        try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {}
+      }
+      y += (((thisRun.length / perRow) | 0) + (thisRun.length % perRow ? 1 : 0)) * 42 + 18;
+    } else {
+      ctx.fillStyle = '#8a7a4a'; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
+      ctx.fillText('— 本局暂未点亮成就 —', W / 2, y + 18); y += 40;
+    }
+    ctx.textBaseline = 'alphabetic';
+
+    y += 24;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#d4af37'; ctx.font = '600 17px "PingFang SC",sans-serif';
+    ctx.fillText('结局 · 你的传奇', 60, y);
+    y += 14;
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
+    y += 24;
+    ctx.fillStyle = '#e8d6a6'; ctx.font = '16px "PingFang SC",sans-serif';
+    var narr = (e.summary ? e.summary + '\n' : '') + (e.monologue || '');
+    y = wrapParagraph(ctx, narr, 60, y, W - 120, 28);
+
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4af37'; ctx.font = 'italic 17px "PingFang SC",sans-serif';
+    ctx.fillText('每个人都是自己人生的词曲作者。', W / 2, H - 70);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText('MJ · 人生选择', W / 2, H - 52);
+    ctx.fillText('MJ · 人生选择', W / 2, H - 44);
 
     return cv;
   }
