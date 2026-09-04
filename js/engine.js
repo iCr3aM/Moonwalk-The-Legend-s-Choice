@@ -192,6 +192,9 @@ window.MJ = window.MJ || {};
   };
 
   // ---------- 事件引擎 ----------
+  // 变体平衡（§18.6 核心）：每章上限 + 变体间冷却，控制弹出频率/聚簇
+  var VARIANT_CAP_PER_CHAPTER = 6;   // 每章至多注入的变体数（密集章节额外收口；稀疏章节由冷却主导）
+  var VARIANT_COOLDOWN_NODES = 2;    // 两次变体之间至少间隔 2 个主线节点（强防聚簇/打断）
   var engine = {
     state: null,
     current: null,
@@ -203,6 +206,8 @@ window.MJ = window.MJ || {};
       this.state = new MJ.GameState();
       this._usedVariants = {};
       this._return = null;
+      this._chapterVariantCount = 0;
+      this._sinceVariant = 0;
       this.go('start');
     },
 
@@ -211,23 +216,43 @@ window.MJ = window.MJ || {};
       this.state.hydrate(data);
       this._usedVariants = {};
       this._return = null;
+      this._chapterVariantCount = 0;
+      this._sinceVariant = 0;
       var id = (data && data.currentId) ? data.currentId : 'start';
       this.go(id);
     },
 
-    // 尝试为当前章节插入一个变体事件（GDD 5.6）
+    // 尝试为当前章节注入一个变体事件（GDD 5.6 / §18.6 核心）
+    // 每个候选独立按自身 weight 掷骰（weight 即其单节点触发概率），在「本节点实际愿意触发」的候选中按 weight 加权随机选 1 个。
+    // 修复旧版 break 首个命中导致的「迭代序挤占」：使 weight 真正决定各变体触发率，而非被排在前面的候选霸占。
     pickVariant: function (year) {
-      var evs = MJ.EVENTS, best = null;
+      var evs = MJ.EVENTS, pool = [];
       for (var id in evs) {
         if (!evs.hasOwnProperty(id)) continue;
         var v = evs[id];
         if (!v.variant || this._usedVariants[id]) continue;
         if (year < v.window[0] || year > v.window[1]) continue;
         if (v.cond && !v.cond(this.state)) continue; // 变体亦可带条件门控
-        if (Math.random() * 100 < v.weight) { best = id; break; }
+        var w = (typeof v.weight === 'number' ? v.weight : 1);
+        if (Math.random() * 100 < w) pool.push({ id: id, weight: w }); // 独立掷骰：weight 决定单节点触发率
       }
-      if (best) { this._usedVariants[best] = true; this.state.stats.variants++; }
-      return best;
+      if (!pool.length) return null;
+      // 在愿意触发的候选中按 weight 加权随机选 1 个
+      var total = 0, i;
+      for (i = 0; i < pool.length; i++) total += pool[i].weight;
+      var r = Math.random() * total;
+      for (i = 0; i < pool.length; i++) {
+        r -= pool[i].weight;
+        if (r <= 0) {
+          this._usedVariants[pool[i].id] = true;
+          this.state.stats.variants++;
+          return pool[i].id;
+        }
+      }
+      var last = pool[pool.length - 1]; // 浮点残差兜底
+      this._usedVariants[last.id] = true;
+      this.state.stats.variants++;
+      return last.id;
     },
 
     go: function (id) {
@@ -242,7 +267,11 @@ window.MJ = window.MJ || {};
 
       // 变体事件插入（仅对主线非结局事件）
       if (!ev.variant && ev.kind !== 'ending') {
-        var vid = this.pickVariant(ev.year);
+        var vid = null;
+        // §18.6 核心：每章上限 + 变体间冷却，控制弹出频率与聚簇
+        if (this._chapterVariantCount < VARIANT_CAP_PER_CHAPTER && this._sinceVariant >= VARIANT_COOLDOWN_NODES) {
+          vid = this.pickVariant(ev.year);
+        }
         if (vid) {
           // 变体显示年份跟随父事件，避免时间线倒挂（GDD §6 时间一致性）
           var vinst = Object.assign({}, MJ.EVENTS[vid]);
@@ -253,10 +282,13 @@ window.MJ = window.MJ || {};
           this._return = id;
           this.state.stats.events = (this.state.stats.events || 0) + 1;
           if (vinst.onEnter) vinst.onEnter(this.state); // 变体分支同样在进入即结算
+          this._chapterVariantCount++;
+          this._sinceVariant = 0;
           MJ.saveSystem.save(this.state);
           MJ.ui.showEvent(vinst, this.state);
           return;
         }
+        this._sinceVariant++;
       }
 
       this.current = ev;
@@ -270,6 +302,8 @@ window.MJ = window.MJ || {};
         if (ch !== this.state.era) {
           this.state.era = ch;
           this._recordChapter(ch);
+          this._chapterVariantCount = 0; // 进入新章节，重置每章变体计数
+          this._sinceVariant = 0;
           MJ.saveSystem.save(this.state);
           var self = this;
           MJ.ui.showEraCard(MJ.config.chapters[ch], this.state, function () { MJ.ui.showEvent(ev, self.state); });
@@ -386,6 +420,23 @@ window.MJ = window.MJ || {};
     // 重置结局图鉴（清空已解锁记录，不影响进行中的存档）
     clearGallery: function () {
       try { localStorage.removeItem(this.galleryKey); } catch (e) {}
+    },
+    // ---------- 人生档案库（§18.7，与当前进行中存档解耦的历史只读快照） ----------
+    archiveKey: 'mj_lifechoices_archives_v1',
+    getArchives: function () {
+      try { var arr = JSON.parse(localStorage.getItem(this.archiveKey)); return Array.isArray(arr) ? arr : []; } catch (e) { return []; }
+    },
+    addArchive: function (snap) {
+      try {
+        var arr = this.getArchives();
+        arr.push(snap);
+        arr.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); }); // 按时间倒序
+        if (arr.length > 100) arr = arr.slice(0, 100); // 上限保护，保留最近 100 局
+        localStorage.setItem(this.archiveKey, JSON.stringify(arr));
+      } catch (e) {}
+    },
+    clearArchives: function () {
+      try { localStorage.removeItem(this.archiveKey); } catch (e) {}
     }
   };
 

@@ -370,6 +370,59 @@ window.MJ = window.MJ || {};
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('trivia-overlay'); });
     document.getElementById('trivia-close').addEventListener('click', function () { closeOverlay('trivia-overlay'); });
   }
+  // ---------- 人生档案库（§18.7） ----------
+  function archiveCount() {
+    try { return MJ.saveSystem.getArchives().length; } catch (e) { return 0; }
+  }
+  function archiveModal() {
+    closeOverlay('archive-overlay');
+    var arr = MJ.saveSystem.getArchives();
+    var overlay = document.createElement('div');
+    overlay.id = 'archive-overlay';
+    overlay.className = 'overlay modal-overlay';
+    var cards = arr.length ? '' :
+      '<div class="arc-empty">' + T('ui.archiveEmpty', null, '尚无存档人生。每一程落幕，都会在这里留一张传奇海报。') + '</div>';
+    arr.forEach(function (entry, idx) {
+      var ed = MJ.config.endings[entry.endingId] || { name: entry.endingId, icon: '🌟' };
+      var name = T('ending.' + entry.endingId + '.name', null, ed.name);
+      var dm = entry.dominantMeta ? T('meta.' + entry.dominantMeta, null, (MJ.config.metaDefs[entry.dominantMeta] || {}).name || '') : '—';
+      var d = new Date(entry.ts);
+      var dateStr = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+      cards += '<button class="g-cell arc-card" data-idx="' + idx + '">' +
+        '<div class="g-icon">' + ed.icon + '</div>' +
+        '<div class="g-name">' + escapeHtml(name) + '</div>' +
+        '<div class="arc-meta">' + dateStr + ' · ' + escapeHtml(dm) + '</div>' +
+        '<div class="arc-meta">' + T('ui.legendScore', null, '传奇评分') + ' ' + entry.legendScore + '（' + entry.legendGrade + '）· ' +
+        T('ui.archiveAch', { n: entry.achCount }, '{n} 成就') + '</div>' +
+        '</button>';
+    });
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>🗂️ ' + T('ui.archive', null, '人生档案库') + '</span><span class="spacer"></span>' +
+      (arr.length ? '<button class="btn ghost small" id="arc-clear">' + T('ui.archiveClear', null, '清空档案') + '</button>' : '') +
+      '<button class="btn ghost small" id="arc-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body"><div class="gallery arc-gallery"><div class="g-grid">' + cards + '</div></div></div></div>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('archive-overlay'); });
+    document.getElementById('arc-close').addEventListener('click', function () { closeOverlay('archive-overlay'); });
+    var ac = document.getElementById('arc-clear');
+    if (ac) ac.addEventListener('click', function () {
+      if (window.confirm(T('ui.archiveClearConfirm', null, '确定清空全部人生档案？此操作不可恢复。'))) {
+        MJ.saveSystem.clearArchives();
+        archiveModal();
+      }
+    });
+    Array.prototype.forEach.call(overlay.querySelectorAll('.arc-card'), function (btn) {
+      btn.addEventListener('click', function () {
+        var i = parseInt(btn.getAttribute('data-idx'), 10);
+        var entry = arr[i];
+        if (!entry) return;
+        closeOverlay('archive-overlay');
+        var st = new MJ.GameState();
+        st.hydrate(entry.state);
+        openPosterModal(st, entry.endingId);
+      });
+    });
+  }
   function triviaCount() {
     return (MJ.triviaSystem ? MJ.triviaSystem.count() : 0) + ' / ' + (MJ.triviaSystem ? MJ.triviaSystem.total() : 0);
   }
@@ -745,6 +798,57 @@ window.MJ = window.MJ || {};
     }
     ctx.textBaseline = 'alphabetic';
 
+    // §18.8 人生关键词标签云：主导元路线 + 属性降序前 2
+    y += 16;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4af37'; ctx.font = '600 14px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterKeywords', null, '人生关键词'), W / 2, y);
+    var _tags = [];
+    if (dm) _tags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
+    var _sorted = dims.slice().sort(function (a, b) { return b[2] - a[2]; });
+    _tags.push(_sorted[0][0], _sorted[1][0]);
+    ctx.font = '600 13px "PingFang SC",sans-serif';
+    var _pad = 14, _gap = 10, _ph = 28, _ws = [];
+    for (var _t = 0; _t < _tags.length; _t++) _ws.push(ctx.measureText(_tags[_t]).width + _pad * 2);
+    var _tot = _ws.reduce(function (s, w) { return s + w; }, 0) + _gap * (_tags.length - 1);
+    var _x = (W - _tot) / 2;
+    ctx.textBaseline = 'middle';
+    for (var _t2 = 0; _t2 < _tags.length; _t2++) {
+      var _px = _x, _pw = _ws[_t2];
+      ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 1;
+      ctx.fillStyle = 'rgba(212,175,55,0.10)';
+      roundRect(ctx, _px, y + 8, _pw, _ph, 14); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#f3e2b0';
+      ctx.fillText(_tags[_t2], _px + _pw / 2, y + 8 + _ph / 2);
+      _x += _pw + _gap;
+    }
+    ctx.textBaseline = 'alphabetic';
+    y += 8 + _ph + 18;
+
+    // §18.8 本局最关键 1–2 个抉择回看（取自 state.history 中 key 标记为真的节点）
+    y += 6;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#d4af37'; ctx.font = '600 15px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterKeyChoices', null, '关键抉择'), 60, y);
+    y += 12;
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
+    y += 20;
+    var _keys = (state.history || []).filter(function (h) { return h && h.key; });
+    if (!_keys.length) {
+      ctx.fillStyle = '#8a7a4a'; ctx.font = '13px sans-serif';
+      ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22;
+    } else {
+      var _picks = [_keys[0]]; if (_keys.length > 1) _picks.push(_keys[_keys.length - 1]);
+      for (var _ki = 0; _ki < _picks.length; _ki++) {
+        var _kk = _picks[_ki];
+        ctx.fillStyle = '#f3e2b0'; ctx.font = '600 13px "PingFang SC",sans-serif';
+        ctx.fillText((_kk.year || '') + ' · ' + (_kk.title || ''), 60, y); y += 19;
+        ctx.fillStyle = '#caa84a'; ctx.font = '13px "PingFang SC",sans-serif';
+        ctx.fillText('↳ ' + (_kk.choice || ''), 74, y); y += 23;
+      }
+    }
+
     y += 24;
     ctx.textAlign = 'left';
     ctx.fillStyle = '#d4af37'; ctx.font = '600 17px "PingFang SC",sans-serif';
@@ -841,6 +945,7 @@ window.MJ = window.MJ || {};
           '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
           '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
           '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
+          '<button class="btn block" id="btn-archive">🗂️ ' + T('ui.archive', null, '人生档案库') + ' <span class="m-cnt">' + archiveCount() + '</span></button>' +
         '</div>' +
         '<div class="intro-foot">' +
           '<div class="credit">Cr3aM 制作 · MJ Forever</div>' +
@@ -865,6 +970,7 @@ window.MJ = window.MJ || {};
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
     var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
     var bt = $('#btn-trivia'); if (bt) bt.addEventListener('click', triviaModal);
+    var barc = $('#btn-archive'); if (barc) barc.addEventListener('click', archiveModal);
     var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showIntro(hasSave); };
   };
@@ -948,6 +1054,25 @@ window.MJ = window.MJ || {};
   ui.showEnding = function (id, state) {
     var e = MJ.config.endings[id] || { name: id, icon: '🌟', tone: '', summary: '' };
     var legend = MJ.legendScore(state);
+    // §18.7 人生档案库：终局一次性写入历史快照（与当前进行中存档解耦）；
+    // 用 state._archived 防止切语言重渲染（_view 重跑 showEnding）时重复写入。
+    if (!state._archived) {
+      state._archived = true;
+      var _run = (MJ.config.achievements || []).filter(function (ac) {
+        try { return ac.check(state, { ending: id }); } catch (err) { return false; }
+      });
+      MJ.saveSystem.addArchive({
+        ts: Date.now(),
+        endingId: id,
+        state: state.serialize(),          // 完整快照，回看时可即时重绘海报
+        legendScore: legend.score,
+        legendGrade: legend.grade,
+        dominantMeta: MJ.dominantMeta(state.meta),
+        achCount: _run.length,
+        variants: (state.stats && state.stats.variants) || 0,
+        keyChoices: (state.stats && state.stats.keyChoices) || 0
+      });
+    }
     if (MJ.triviaSystem) MJ.triviaSystem.revealAll(state); // §17.11：结局时按人生状态解锁考据趣事
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;

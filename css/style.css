@@ -563,6 +563,19 @@ html, body {
   .modal .gallery.trivia-gallery .g-grid { grid-template-columns: 1fr; }
 }
 
+/* 人生档案库（§18.7） */
+.modal .gallery.arc-gallery .g-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.arc-card {
+  font: inherit; color: inherit; cursor: pointer; text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.arc-card:hover { border-color: var(--gold-soft); background: linear-gradient(180deg, rgba(212,175,55,0.14), rgba(0,0,0,0.14)); transform: translateY(-2px); }
+.arc-card .g-name { font-size: 12px; }
+.arc-meta { font-size: 10px; color: var(--ink-dim); margin-top: 4px; line-height: 1.5; }
+.arc-empty { padding: 30px 16px; text-align: center; color: var(--ink-dim); font-size: 13px; line-height: 1.8; }
+@media (max-width: 640px) { .modal .gallery.arc-gallery .g-grid { grid-template-columns: 1fr; } }
+
 /* 结局页回顾面板分组：桌面 2 列、移动端 1 列，减少竖向堆叠杂乱 */
 .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 @media (max-width: 640px) { .review-grid { grid-template-columns: 1fr; } }
