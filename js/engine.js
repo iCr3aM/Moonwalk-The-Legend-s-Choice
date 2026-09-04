@@ -174,9 +174,13 @@ window.MJ = window.MJ || {};
       if (a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';
       return 'END_TIMELESS_PRESENT';
     }
+    if (dom === 'recluse' && a.health >= 55 && (a.loneliness || 0) < 35) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
     if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 4
     if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5
+    if ((a.art || 0) >= 80 && (m.mogul || 0) >= 1 && (f.cp_innovation >= 80 || f.techVenture === true)) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
     if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 6
+    if ((m.collab || 0) >= 2 && (a.family || 0) >= 50 && (a.art || 0) >= 60) return 'END_MENTOR'; // 6a 提携后辈（§17.7）
+    if ((m.phil || 0) >= 2 && !debt && (a.reputation || 0) >= 70 && (a.family || 0) >= 55) return 'END_STATESMAN'; // 6b 文化大使（§17.7）
     if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
     if (!burned && a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';     // 8 健康谢幕（需声誉达标，否则归争议缠身）
     if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 9

@@ -284,7 +284,7 @@ try {
   console.log('模块联动：' + (moduleOk ? 'OK' : 'FAIL'));
 } catch (e) { console.log('模块联动 THROW ' + (e && e.stack)); }
 
-// 2b) 结局解析单元覆盖：直接构造状态，验证 12 结局按规则均可达成（权威可达性证明）
+// 2b) 结局解析单元覆盖：直接构造状态，验证 18 结局按规则均可达成（权威可达性证明）
 function mkEnding(over) {
   var st = new MJ.GameState();
   st.flags.isSolo = true;
@@ -308,13 +308,20 @@ var ucases = [
   ['END_SURVIVE_DEBT', { debt: true, thisItHeld: false, attr: { art: 50, reputation: 55, health: 60, family: 50, media: 60 } }],
   ['END_FINANCIAL', { debt: true, flags: { thisItHeld: true }, attr: { art: 50, reputation: 55, health: 60, family: 50, media: 60 } }],
   ['END_TRUE_ETERNAL', { flags: { thriller25: true, anniv2001: true }, attr: { art: 92, reputation: 92, health: 85, stress: 20, family: 50, media: 60 }, meta: { phil: 3, artPath: 2 }, debt: false }],
-  ['END_TIMELESS_PRESENT', { flags: { survived2009: true }, attr: { art: 70, reputation: 55, health: 45, wealth: 50, family: 30, media: 40 } }]
+  ['END_TIMELESS_PRESENT', { flags: { survived2009: true }, attr: { art: 70, reputation: 55, health: 45, wealth: 50, family: 30, media: 40 } }],
+  ['END_RECLUSE_SERENE', { meta: { recluse: 3 }, attr: { health: 60, loneliness: 10 } }],
+  ['END_INNOVATOR', { meta: { mogul: 1 }, attr: { art: 85 }, flags: { cp_innovation: 85 } }],
+  ['END_MENTOR', { meta: { collab: 2 }, attr: { family: 55, art: 65 } }],
+  ['END_STATESMAN', { meta: { phil: 2 }, attr: { reputation: 75, family: 60 } }]
 ];
 console.log('结局解析单元覆盖（构造状态 → resolveEnding）：');
+var _bad = [];
 ucases.forEach(function (c) {
   var got = mkEnding(c[1]);
+  if (got !== c[0]) _bad.push(c[0] + '→' + got);
   console.log('  ' + c[0] + ' => ' + (got === c[0] ? 'OK' : '实际=' + got));
 });
+if (_bad.length) { console.log('FAIL §17.7 结局解析：' + _bad.join(', ')); process.exit(1); }
 
 // 2c) 真·永恒隐藏结局可达性验证：贪心“巅峰”策略多轮抽样，确认有意玩家可稳定命中
 (function () {
@@ -379,7 +386,11 @@ ucases.forEach(function (c) {
     ACH_BIOPIC: { flags: { biopic2026: true } },
     ACH_BIOPIC_SELF: { flags: { biopicMJStar: true } },
     ACH_BEYOND: { flags: { survived2009: true } },
-    ACH_TRUE_ETERNAL: { ctxEnding: 'END_TRUE_ETERNAL' }
+    ACH_TRUE_ETERNAL: { ctxEnding: 'END_TRUE_ETERNAL' },
+    ACH_END_STATESMAN: { ctxEnding: 'END_STATESMAN' },
+    ACH_END_INNOVATOR: { ctxEnding: 'END_INNOVATOR' },
+    ACH_END_MENTOR: { ctxEnding: 'END_MENTOR' },
+    ACH_END_RECLUSE_SERENE: { ctxEnding: 'END_RECLUSE_SERENE' }
   };
   var fail = [];
   (MJ.config.achievements || []).forEach(function (a) {

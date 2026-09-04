@@ -1289,5 +1289,23 @@ window.MJ.i18n.dict.eventEn = {
   "event.V_BIO_911.text": "That autumn, the city still smoked. You stood on a makeshift stage, wanting to pass a little warmth to the panicked.",
   "event.V_BIO_911.branch0.text": "You knew better than anyone that music is what can grow atop the ruins.",
   "event.V_BIO_FREDDIE.text": "Chorus material left with a departed friend was rediscovered. Facing the empty studio, you completed that harmony.",
-  "event.V_BIO_FREDDIE.branch0.text": "Some voices wait for you across time."
+  "event.V_BIO_FREDDIE.branch0.text": "Some voices wait for you across time.",
+
+  "event.2_7.title": "Diana's Guiding Hand",
+  "event.2_7.text": "After going solo, in your first low spell, Diana Ross reached out with a warm hand. She remembered the boy from Gary who used to chase after her, yet now you stood atop the solo stage before she did.",
+  "event.2_7.branch0.text": "You suddenly understood: to guide is to lift the newcomer to a height of their own.",
+  "event.2_7.opt0.label": "A: Duet with her",
+  "event.2_7.opt0.hint": "Echoes of two generations (Art +10, Reputation +5, Family +3)",
+  "event.2_7.opt1.label": "B: Deepen the bond as a mentor",
+  "event.2_7.opt1.hint": "Keep this bond close (Family +5, Reputation +3)",
+  "event.2_7.opt2.label": "C: Focus on solo, lean on no one",
+  "event.2_7.opt2.hint": "Top alone (Art +8, Recluse +1)",
+
+  "event.V_BIO_SBOWL.title": "Super Bowl Halftime",
+  "event.V_BIO_SBOWL.text": "At the most-watched halftime on earth, you held the whole stage alone. When that line 'my dear friends' rang out, hundreds of millions before their TVs held their breath at once.",
+  "event.V_BIO_SBOWL.branch0.text": "You knew better than anyone that after this night, 'King of Pop' was no longer just an adjective.",
+  "event.V_BIO_SBOWL.opt0.label": "A: Push the performance to its peak",
+  "event.V_BIO_SBOWL.opt0.hint": "Define a generation's memory (Reputation +8, Art +5)",
+  "event.V_BIO_SBOWL.opt1.label": "B: Hold back, leave the stage to the band",
+  "event.V_BIO_SBOWL.opt1.hint": "Elevate others, and yourself (Reputation +5, Mentorship +1)"
 };

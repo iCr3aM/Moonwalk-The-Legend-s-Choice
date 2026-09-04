@@ -306,9 +306,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.2_6.opt0.label', null, 'A：与昆西举杯共庆'), hint: T('event.2_6.opt0.hint', null, '情谊与声名同酿（艺术+10，声誉+5，昆西好感+10）'), effects: { art: 10, reputation: 5, rel: { quincy: 10 } }, next: '3_1' },
-      { label: T('event.2_6.opt1.label', null, 'B：把奖杯献给家人'), hint: T('event.2_6.opt1.hint', null, '荣耀归家（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '3_1' },
-      { label: T('event.2_6.opt2.label', null, 'C：趁热规划下一张专辑'), hint: T('event.2_6.opt2.hint', null, '趁热打铁（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '3_1' }
+      { label: T('event.2_6.opt0.label', null, 'A：与昆西举杯共庆'), hint: T('event.2_6.opt0.hint', null, '情谊与声名同酿（艺术+10，声誉+5，昆西好感+10）'), effects: { art: 10, reputation: 5, rel: { quincy: 10 }, collab: 1 }, next: '2_7' },
+      { label: T('event.2_6.opt1.label', null, 'B：把奖杯献给家人'), hint: T('event.2_6.opt1.hint', null, '荣耀归家（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '2_7' },
+      { label: T('event.2_6.opt2.label', null, 'C：趁热规划下一张专辑'), hint: T('event.2_6.opt2.hint', null, '趁热打铁（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '2_7' }
+    ]
+  };
+
+  // —— §17.3 主线偏薄章节拓展（Diana Ross 合作深化；单飞线 2_6→2_7→3_1）——
+  E['2_7'] = {
+    id: '2_7', year: 1981, title: T('event.2_7.title', null, '戴安娜的引路'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.2_7.text', null, '单飞后的第一次低谷，戴安娜·罗斯递来一双温暖的手。她记得你还是盖瑞那个追着她跑的小男孩，如今却先于她站上了独唱的塔尖。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.2_7.branch0.text', null, '你忽然懂了：所谓引路，是把后来者托到自己所不及的高度。') }
+      ]);
+    },
+    options: [
+      { label: T('event.2_7.opt0.label', null, 'A：与她同台合唱'), hint: T('event.2_7.opt0.hint', null, '两代巨星的回声（艺术+10，声誉+5，家庭+3）'), effects: { art: 10, reputation: 5, family: 3 }, flags: { dianaBond: true }, next: '3_1' },
+      { label: T('event.2_7.opt1.label', null, 'B：把她当作引路人深交'), hint: T('event.2_7.opt1.hint', null, '把这份情谊收进心底（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3 }, flags: { dianaBond: true }, next: '3_1' },
+      { label: T('event.2_7.opt2.label', null, 'C：专注 solo，不依赖任何人'), hint: T('event.2_7.opt2.hint', null, '孤身登顶（艺术+8，隐士+1）'), effects: { art: 8, recluse: 1 }, next: '3_1' }
     ]
   };
 
@@ -528,7 +543,7 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.4_2b.opt0.label', null, 'A：电影化地呈现'), hint: T('event.4_2b.opt0.hint', null, '视听盛宴，口碑与疲惫齐来（艺术+12，声誉+8，压力+5）'), effects: { art: 12, reputation: 8, stress: 5 }, flags: { moonwalker: true }, next: '4_3' },
       { label: T('event.4_2b.opt1.label', null, 'B：只发单曲'), hint: T('event.4_2b.opt1.hint', null, '收束野心（艺术+8）'), effects: { art: 8 }, next: '4_3' },
-      { label: T('event.4_2b.opt2.label', null, 'C：邀童星搭档惹议'), hint: T('event.4_2b.opt2.hint', null, '话题升温，闲言也起（声誉+5，压力+5）'), effects: { reputation: 5, stress: 5 }, next: '4_3' }
+      { label: T('event.4_2b.opt2.label', null, 'C：邀童星搭档惹议'), hint: T('event.4_2b.opt2.hint', null, '话题升温，闲言也起（声誉+5，压力+5，提携+1）'), effects: { reputation: 5, stress: 5, collab: 1 }, next: '4_3' }
     ]
   };
 
@@ -1828,7 +1843,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_BIO_WIZ.opt0.label', null, 'A：全力打磨角色'), hint: T('event.V_BIO_WIZ.opt0.hint', null, '把舞台交给电影（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_WIZ.opt0.label', null, 'A：全力打磨角色'), hint: T('event.V_BIO_WIZ.opt0.hint', null, '把舞台交给电影（艺术+6，声誉+4，提携+1）'), effects: { art: 6, reputation: 4, collab: 1 }, next: '__RETURN__' },
       { label: T('event.V_BIO_WIZ.opt1.label', null, 'B：当作过渡，静待机会'), hint: T('event.V_BIO_WIZ.opt1.hint', null, '稳步积累（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
     ]
   };
@@ -1908,6 +1923,21 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_BIO_FREDDIE.opt0.label', null, 'A：以致敬之名发布'), hint: T('event.V_BIO_FREDDIE.opt0.hint', null, '让思念有了出口（艺术+5，声誉+5，慈善+1）'), effects: { art: 5, reputation: 5, phil: 1 }, next: '__RETURN__' },
       { label: T('event.V_BIO_FREDDIE.opt1.label', null, 'B：收进抽屉留作纪念'), hint: T('event.V_BIO_FREDDIE.opt1.hint', null, '把私心留给自己（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+
+  // —— §17.8 生平补全事件（忠于生平）：1993 超级碗中场秀（窗口 [1993,1993]）——
+  E.V_BIO_SBOWL = {
+    id: 'V_BIO_SBOWL', variant: true, window: [1993, 1993], weight: 40,
+    title: T('event.V_BIO_SBOWL.title', null, '超级碗中场秀'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_SBOWL.text', null, '全球瞩目的中场，你以一人之姿撑起整座舞台。当那句“我最亲爱的朋友们”响起，电视机前的几亿人同时屏住了呼吸。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_BIO_SBOWL.branch0.text', null, '你比谁都清楚，这一夜之后，“流行之王”不再只是形容词。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_SBOWL.opt0.label', null, 'A：把表演推向极致'), hint: T('event.V_BIO_SBOWL.opt0.hint', null, '定义一代人的记忆（声誉+8，艺术+5）'), effects: { reputation: 8, art: 5 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_SBOWL.opt1.label', null, 'B：克制留白，把舞台交给乐队'), hint: T('event.V_BIO_SBOWL.opt1.hint', null, '成全他人，也成全自己（声誉+5，提携+1）'), effects: { reputation: 5, collab: 1 }, next: '__RETURN__' }
     ]
   };
 

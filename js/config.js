@@ -32,7 +32,7 @@ window.MJ = window.MJ || {};
   C.initialFlags = {};
 
   // 元路线隐藏计数（非负整数）
-  C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0, grammyWins: 0 };
+  C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0, grammyWins: 0, collab: 0 };
 
   // 稀有度排序（图鉴/成就按 普通→传奇 自上而下排列）
   C.rarityRank = { common: 0, rare: 1, epic: 2, legendary: 3 };
@@ -41,7 +41,8 @@ window.MJ = window.MJ || {};
     END_PLAIN: 'common', END_FAMILY: 'common', END_RECLUSE: 'rare', END_MOGUL: 'rare',
     END_PHILANTHROPIST: 'rare', END_TRAGIC: 'common', END_ART_PEAK: 'epic', END_FINANCIAL: 'common',
     END_CONTROVERSIAL: 'rare', END_SURVIVE_DEBT: 'rare', END_PERFECT: 'epic', END_ETERNAL: 'legendary',
-    END_TRUE_ETERNAL: 'legendary', END_TIMELESS_PRESENT: 'legendary'
+    END_TRUE_ETERNAL: 'legendary', END_TIMELESS_PRESENT: 'legendary',
+    END_STATESMAN: 'rare', END_INNOVATOR: 'epic', END_MENTOR: 'rare', END_RECLUSE_SERENE: 'rare'
   };
 
   // 元路线破平次序：艺术 > 慈善 > 商业 > 隐士（GDD 7.2 注释）
@@ -124,6 +125,26 @@ window.MJ = window.MJ || {};
       name: '在场的不朽', icon: '♾️', tone: '在场、超越时间',
       summary: '你没在 2009 年停下；聚光灯之外，人生还有另一番写法。',
       monologue: '你没有在 2009 年的夏天谢幕。此后的岁月里，你仍会在录音室里哼出新旋律，仍会在某个深夜为孩子们盖上被子。\n世人谈起你，不再用过去式——因为在场的人，本就不必被写成传奇的注脚。你活成了自己的续集。'
+    },
+    END_STATESMAN: {
+      name: '文化大使', icon: '🤝', tone: '温和、受敬重',
+      summary: '以善意与声望行走于世，你成了不同族群之间的一座桥。',
+      monologue: '你周游世界，手里捧的不是王冠，而是张开的手。\n在猜疑曾经伫立的地方，你留下了一段人人能跟着哼唱的旋律。\n大使是被任命的，而你，是被每一双学会聆听的耳朵选中的。'
+    },
+    END_INNOVATOR: {
+      name: '音乐技术先驱', icon: '🚀', tone: '先锋、冷火',
+      summary: '你不止写歌，更把声音推向了未知的边境。',
+      monologue: '你从来不只写歌——你把声音的未来，拽进了现在。\n录音棚、舞台、机器，都成了你手里的乐器。\n后世记得的不只是你唱了什么，还有你敢让那个音符飞多远。'
+    },
+    END_MENTOR: {
+      name: '提携后辈', icon: '🌟', tone: '温厚、薪火相传',
+      summary: '你伸手拉过无数后来者，把光分给了更年轻的眼睛。',
+      monologue: '你知道，攀登最孤独时，是没有人伸手的那一段；于是你成了那只手。\n更年轻的眼睛，因你侧身让出位置而学会了发光。\n真正的传奇，不是站得最高的人，而是别人能站在他肩上的人。'
+    },
+    END_RECLUSE_SERENE: {
+      name: '平和隐士', icon: '🏔️', tone: '安宁、自在',
+      summary: '你退场却不枯萎，在静默里修成了一处安宁。',
+      monologue: '你从聚光灯下退开，这一次却没有苦涩。\n高墙围住的不是牢笼，而是一座花园。\n孤独，曾是你的影子，如今成了同伴——而这一次，寂静听来像休息。'
     }
   };
 
@@ -198,6 +219,15 @@ window.MJ = window.MJ || {};
       check: function (s) { return s.flags.biopicMJStar === true; } },
     { id: 'ACH_BEYOND', name: '超越时间的在场', icon: '♾️', rarity: 'legendary', desc: '你没在 2009 年停下——人生，还有续集。',
       check: function (s) { return s.flags.survived2009 === true; } },
+    // —— §17.7 更多结局候选（18 结局）专属成就 ——
+    { id: 'ACH_END_STATESMAN', name: '文化大使', icon: '🤝', rarity: 'rare', desc: '以善意与声望行走于世，你成了不同族群之间的一座桥。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_STATESMAN'; } },
+    { id: 'ACH_END_INNOVATOR', name: '音乐技术先驱', icon: '🚀', rarity: 'epic', desc: '你不止写歌，更把声音推向了未知的边境。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_INNOVATOR'; } },
+    { id: 'ACH_END_MENTOR', name: '提携后辈', icon: '🌟', rarity: 'rare', desc: '你伸手拉过无数后来者，把光分给了更年轻的眼睛。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_MENTOR'; } },
+    { id: 'ACH_END_RECLUSE_SERENE', name: '平和隐士', icon: '🏔️', rarity: 'rare', desc: '你退场却不枯萎，在静默里修成了一处安宁。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_RECLUSE_SERENE'; } },
     // —— §17.14 格莱美涌现联动验证成就（对齐 GDD §17.14.7）——
     { id: 'ACH_GRAMMY_SWEEP', name: '格莱美大满贯', icon: '🏆', rarity: 'epic', desc: '从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。',
       check: function (s) { return ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].every(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
