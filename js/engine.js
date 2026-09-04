@@ -470,7 +470,7 @@ window.MJ = window.MJ || {};
       var s = state || (MJ.engine && MJ.engine.state);
       if (s && s.meta && (s.meta.artPath || 0) >= 2 && s.flags && s.flags.anniv2001 && s.flags.thriller25) this.unlock('EGG_TRIBUTE');
       if (MJ.achievementSystem) {
-        try { MJ.achievementSystem.evaluate(s, { ending: endingId }); } catch (e) {}
+        // 成就已在 ui.showEnding 统一 evaluate 并串行弹窗；此处仅用于"集齐全部"判定，避免重复评估
         var all = MJ.achievementSystem.all(), got = all.filter(function (a) { return a.unlocked; }).length;
         if (all.length > 0 && got >= all.length) this.unlock('EGG_DEV');
       }

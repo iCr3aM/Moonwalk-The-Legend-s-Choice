@@ -321,34 +321,45 @@ window.MJ = window.MJ || {};
     return (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0);
   }
 
-  // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除）
+  // 成就/彩蛋解锁弹窗队列：一次解锁多个时串行展示，避免多个 toast 在同一固定位置重叠（"一次性弹出两个"）
+  var _toastQueue = [];
+  var _toastActive = false;
+  function _pumpToast() {
+    if (_toastActive) return;
+    if (_toastQueue.length === 0) { _toastActive = false; return; }
+    _toastActive = true;
+    var item = _toastQueue.shift();
+    var t = item.el;
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('show'); }, 20);
+    setTimeout(function () {
+      t.classList.remove('show');
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); _toastActive = false; _pumpToast(); }, 400);
+    }, item.hold);
+  }
+  function _enqueueToast(el, hold) {
+    _toastQueue.push({ el: el, hold: hold || 2800 });
+    _pumpToast();
+  }
+
+  // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除；经队列串行，避免重叠）
   function toastAchievement(a) {
     var t = document.createElement('div');
     t.className = 'ach-toast';
     t.innerHTML = '<div class="at-icon">' + a.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) + '</div>' +
       '<div class="at-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div></div>';
-    document.body.appendChild(t);
-    setTimeout(function () { t.classList.add('show'); }, 20);
-    setTimeout(function () {
-      t.classList.remove('show');
-      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400);
-    }, 3600);
+    _enqueueToast(t, 3000);
   }
 
-  // 彩蛋解锁即时弹窗（GDD §17.9）
+  // 彩蛋解锁即时弹窗（GDD §17.9；经队列串行）
   function toastEgg(e) {
     var t = document.createElement('div');
     t.className = 'egg-toast';
     t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.eggToast', null, '彩蛋发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
-    document.body.appendChild(t);
-    setTimeout(function () { t.classList.add('show'); }, 20);
-    setTimeout(function () {
-      t.classList.remove('show');
-      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400);
-    }, 4200);
+    _enqueueToast(t, 3600);
   }
 
   // 元路线倾向提示（GDD §9）：状态栏下方提示玩家“正在走向”哪条路

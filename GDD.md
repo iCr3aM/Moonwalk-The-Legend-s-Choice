@@ -420,6 +420,19 @@
 4. flag 不一致 → flags.json + Validator。
 5. **v0.5 新增**：原 8 结局偏窄 → 扩至 12（v0.5）→ 现 14（含 1 隐藏终极 + 1 续章，v0.7），并引入元路线/变体事件，判定优先级无冲突（已由 7.2 规则表约束）。
 
+### 16.1 构建 / 运行时踩坑记录（2026-09-04 修复归档）
+> 下列为上线过程中真实踩过的坑与修复，供后续维护避坑。
+
+1. **单文件构建黑屏（致命 · 已修复）**：`build_singlefile.cjs` 用 `html.replace(initRe, combined)` 把合并脚本当**替换字符串**注入，而 `combined` 内含 `js/ui.js` 的 `return sign + '$' + ...` 的 `'$'`，被 JS `String.replace` 解释成特殊模式 **`$'`（匹配项之后的文本 = 原 HTML 尾部的 `</body></html>`）**，从而把 `formatMoney` 那一行截断、`'</body></html>'` 被注入脚本，整段 `<script>` SyntaxError → `MJ` 未定义 → 单文件黑屏（模块化版正常，故曾误判为"环境性"）。**修复**：init 注入与 CSS 内联均改用函数式替换 `html.replace(re, function(){ return str; })`，返回值原样插入、不做 `$` 解释；并新增 `test/dist_check.cjs`（对真实 dist 做 `node --check` + HTML 隐患扫描）与 `test/dist_run.cjs`（用真实 dist 在 vm 执行验证 `MJ` 定义/初始化/完整游玩）作为回归守护。
+
+2. **成就/彩蛋弹窗"一次性弹出两个"（已修复）**：`showEvent` 与 `showEnding` 各调一次 `achievementSystem.evaluate`，`eggSystem.onEnding` 又调一次（结果丢弃）；当一次判定同时解锁多个成就/彩蛋时，多个 `.ach-toast`/`.egg-toast` 被同时 `appendChild` 到 `body` 同一固定位置 **重叠**，看起来像"一次性弹出两个"。**修复**：UI 增加 toast 队列（`_enqueueToast`/`_pumpToast`），多个解锁串行展示（每个约 3s），不再重叠；并移除 `onEnding` 中冗余的 `achievementSystem.evaluate` 调用（成就已在 `showEnding` 统一评估并弹窗）。方案见 §17.12。
+
+3. **CSS 内联 `$` 风险（已预防）**：CSS 内联替换同样改用函数式，避免 `style.css` 内 `$$`/`$&`/`$'`/`$\`` 被 `String.replace` 误解释。
+
+4. **静默黑屏 → 错误浮层**：`index.html` 与 `build_singlefile.cjs` 的初始化脚本加 `try{ MJ.ui.init() }catch(e){ 在 #app 渲染错误堆栈 }` + `window.addEventListener('error', ...)`，任何异常都**显式展示**而非黑屏——本次黑屏即由该浮层暴露 `MJ is not defined` 而定位。
+
+> 经验：**凡用 `String.prototype.replace(re, replacementString)` 且 replacement 来自代码/文本常量时，若内容可能含 `$&`/`$'`/`$\``/`$$`/`$n`，一律改用函数式替换 `replace(re, () => str)`**，否则会静默注入文档片段、造成诡异截断。单文件打包器尤甚。
+
 ---
 
 # 十七、后续扩展
@@ -552,7 +565,43 @@
 - **轻量数据可视化（替代已延迟的 g6）**：不引入雷达图/时间轴，而以**纯文本/字符**呈现"人生曲线"（各属性随年变化用 sparkline 字符或统计摘要），在结局页展示，零额外依赖。
 - **社交增强**：分享文案多模板（励志 / 自嘲 / 史诗）；海报多套色调与排版预设（暗金经典 / 极简黑白 / 续章冷蓝），提升传播欲。
 
-> 实施建议：上述规划项按"性价比 + 与现有系统耦合度"排期；优先落地 §17.9 彩蛋（复用 V_*/成就，成本低、惊喜感高）、§17.5 挑战/每日模式（重玩性杠杆）、§17.8 生平补全事件（忠于史实、低风险）。凡架空内容务必遵循 §15.1 中性化规范与"明确标注架空"。
+### 17.11 MJ 趣事与「MJ 可能会干的事」（flavor / 轶事系统）★规划
+> 目标：在"传记严肃性"之外，补一层**轻盈、有人情味、可收藏**的 MJ 侧写，强化粉丝向情感连接；全程遵守 §15.1 中性化与"明确标注架空"约束。
+
+- **趣事图鉴（Trivia Codex）**：新增 `MJ.triviaSystem`，内置 20–30 条考据趣事（真实可考 + 明确标注"坊间/轶事"），如：为慈善悄悄代付陌生人账单、排练到凌晨逐帧抠动作、给 Neverland 动物过生日、用拟声词给乐队讲编曲、收藏连环画与科幻片、给歌迷手写回信。图鉴可翻阅、可"分享一条趣事"。中性、零数值影响。
+
+- **偶发 flavor 事件（轻量变体 `V_TIDBIT`）**：以低概率插入"生活切片"——如「深夜录音棚的一杯热可可」「给猴子 Bubbles 写日记」「和侄子们打游戏」——纯 flavor（无属性变化或仅 ±1 软性），选项为轻互动/旁观，丰富"人"的温度。窗口随周目年份，权重低，不干扰主线 `next` 链。
+
+- **「MJ 可能会干的事」（hypothetical vignettes）**：按 `dominantMeta` + flag 程序化生成的"假如…"微片段，呼应 §2.2 蝴蝶效应与 §5.7 重玩性。例如艺术家路线"若当晚你没登台，是否会一个人看回放看到天亮？"；慈善家路线"若你建的不是庄园而是学校？"；隐士路线"若你关掉所有聚光灯，听见的第一种声音是什么？"。以第一人称、留白式短文呈现，可收藏进"人生手记"（扩展 M2）。**全部明确标注"（想象）"**，不与史实混同。
+
+- **实现建议**：趣事图鉴与 flavor 变体复用现有 `V_*` 机制 + 图鉴式 localStorage（仿 §17.9 彩蛋图鉴）；hypothetical vignettes 复用 M2 手记模板，在章节过场或结局页"人生手记"追加。成本低、惊喜感高、粉丝向强。
+
+### 17.12 更多成就 + 成就/彩蛋弹窗双发修复 ★规划/待落地
+> 现状：成就 30 项（§17 已实现，含稀有度排序与可重置图鉴）。目标：① 扩充主题化成就；② 修复"一次性弹出两个"的弹窗重叠（见 §16.1 第 2 条，UI 队列方案已落地于 `ui.js` 的 `_enqueueToast`/`_pumpToast`）。
+
+- **新增成就候选（建议 id / 名称 / 稀有度 / 触发 sketch）**：
+  | id | 名称 | 稀有度 | 触发 sketch |
+  | --- | --- | --- | --- |
+  | ACH_DANCE_GOD | 舞以载道 | epic | 单局内触发 ≥3 次"月球漫步/完美演绎"类选项（artPath 累计） |
+  | ACH_PHIL_3 | 仁心三叠 | rare | `phil>=3`（≥3 次慈善选择） |
+  | ACH_CHARITY_CONCERT | 义演之魂 | rare | 触发 ≥2 个慈善/义演事件（flag: charityConcert>=2） |
+  | ACH_CATALOG_KING | 版权之王 | epic | 同时持有 ATV + Sony/ATV 半数 + 自创厂牌（mogul>=2） |
+  | ACH_SMOOTH | 反重力先生 | rare | 在 `3_1b` 选"完美演绎"≥2 次（跨周目 `moonwalkPerfect`） |
+  | ACH_PEACE_3 | 和平使者·三 | rare | `phil>=3 && reputation>=70` |
+  | ACH_LONELY_KING | 高处孤光 | epic | `孤独>=50 && reputation>=80`（呼应 M6） |
+  | ACH_FAMILY_WARM | 灯火可亲 | rare | `family>=80` 且子女和解线达成 |
+  | ACH_COMEBACK_2 | 二度加冕 | epic | 经历 `health` 危机后 `art>=85` |
+  | ACH_EGG_HUNTER | 彩蛋猎人 | legendary | 集齐全部 8 彩蛋（`eggSystem.count()>=8`） |
+  | ACH_VARIANT_20 | 千面人生 | epic | 单局触发变体 ≥20 次（`state.stats.variants>=20`） |
+  | ACH_ALL_ENDINGS | 万相皆我 | legendary | 图鉴解锁全部 14 结局 |
+  | ACH_SPEEDRUN | 盖瑞到巅峰 | rare | 速通达成（节点数 ≤ N 且未走支线） |
+  | ACH_PACIFIST | 不羁之风 | rare | 全程零 `legal` 争议（未触发任何法律事件负面） |
+
+- **双发修复方案（已落地 UI 队列）**：见 §16.1 第 2 条。`showEvent`/`showEnding` 评估成就后，统一经 `toastAchievement` → `_enqueueToast` 串行弹窗；`eggSystem.onEnding` 移除冗余 `achievementSystem.evaluate`。新增成就时只需在 `config.achievements` 追加 `{id,name,icon,rarity,desc,check}`，弹窗与图鉴自动适配。
+
+- **验收**：新增成就须同步 ① `config.achievements` 条目 ② `ach.<id>.name/desc` i18n（含英文 `i18n_events_en.js`）③ 图鉴/海报展示 ④ 不破坏 30/总 计数与"集齐全部"判定。
+
+> 实施建议：上述规划项按"性价比 + 与现有系统耦合度"排期；优先落地 §17.9 彩蛋（复用 V_*/成就，成本低、惊喜感高）、§17.5 挑战/每日模式（重玩性杠杆）、§17.8 生平补全事件（忠于史实、低风险）、§17.11 趣事/轶事（粉丝向、低成本）。凡架空内容务必遵循 §15.1 中性化规范与"明确标注架空"。
 
 ---
 
