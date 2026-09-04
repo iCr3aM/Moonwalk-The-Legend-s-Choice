@@ -168,6 +168,10 @@ window.MJ = window.MJ || {};
       check: function (s) { return (s.attributes.media || 0) >= 80; } },
     { id: 'ACH_LONELY', name: '孤独王座', icon: '🌑', rarity: 'rare', desc: '站得越高，越听见自己的回声。',
       check: function (s) { return (s.attributes.loneliness || 0) >= 60; } },
+    { id: 'ACH_HOLOGRAM', name: '光影重逢', icon: '🌟', rarity: 'rare', desc: '2014 年 Billboard 颁奖礼，你以全息之姿重返舞台——科技让传奇在离世之外，另有一种复活。',
+      check: function (s) { return s.flags.hologramSeen === true; } },
+    { id: 'ACH_MUSICAL', name: '百老汇的回响', icon: '🎭', rarity: 'rare', desc: '以你为名的音乐剧在百老汇拉开帷幕，舞台上的“你”替你谢幕，掌声仍为你而响。',
+      check: function (s) { return s.flags.mjMusical === true; } },
     // —— 史诗 epic ——
     { id: 'ACH_MOGUL', name: '商业巨擘', icon: '💼', rarity: 'epic', desc: '用远见构筑起属于自己的音乐与版权帝国。',
       check: function (s) { return (s.meta.mogul || 0) >= 2 && !s.debt; } },

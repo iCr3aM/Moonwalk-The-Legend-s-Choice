@@ -1146,9 +1146,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_1b.opt0.label', null, 'A：拥抱这场科技奇观'), hint: T('event.8_1b.opt0.hint', null, '艺术与科技惊艳世人（艺术+10，声誉+8，artPath+1）'), effects: { art: 10, reputation: 8, artPath: 1 }, next: '8_2' },
-      { label: T('event.8_1b.opt1.label', null, 'B：低调收录为纪念'), hint: T('event.8_1b.opt1.hint', null, '把这一刻留给怀念的人（声誉+5，家庭+3）'), effects: { reputation: 5, family: 3 }, next: '8_2' },
-      { label: T('event.8_1b.opt2.label', null, 'C：婉拒全息噱头'), hint: T('event.8_1b.opt2.hint', null, '守住本真的边界（艺术+5，隐士+1）'), effects: { art: 5, recluse: 1 }, next: '8_2' }
+      { label: T('event.8_1b.opt0.label', null, 'A：拥抱这场科技奇观'), hint: T('event.8_1b.opt0.hint', null, '艺术与科技惊艳世人（艺术+10，声誉+8，artPath+1）'), effects: { art: 10, reputation: 8, artPath: 1 }, flags: { hologramSeen: true }, next: '8_2' },
+      { label: T('event.8_1b.opt1.label', null, 'B：低调收录为纪念'), hint: T('event.8_1b.opt1.hint', null, '把这一刻留给怀念的人（声誉+5，家庭+3）'), effects: { reputation: 5, family: 3 }, flags: { hologramSeen: true }, next: '8_2' },
+      { label: T('event.8_1b.opt2.label', null, 'C：婉拒全息噱头'), hint: T('event.8_1b.opt2.hint', null, '守住本真的边界（艺术+5，隐士+1）'), effects: { art: 5, recluse: 1 }, flags: { hologramSeen: true }, next: '8_2' }
     ]
   };
   E['8_2b'] = {
@@ -1198,8 +1198,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_4b.opt0.label', null, 'A：亲临首演站台'), hint: T('event.8_4b.opt0.hint', null, '为传奇添一笔温度（声誉+10，艺术+5）'), effects: { reputation: 10, art: 5 }, next: '8_4c' },
-      { label: T('event.8_4b.opt1.label', null, 'B：低调遥致祝贺'), hint: T('event.8_4b.opt1.hint', null, '退后半步，留白给舞台（声誉+5，隐士+1）'), effects: { reputation: 5, recluse: 1 }, next: '8_4c' },
+      { label: T('event.8_4b.opt0.label', null, 'A：亲临首演站台'), hint: T('event.8_4b.opt0.hint', null, '为传奇添一笔温度（声誉+10，艺术+5）'), effects: { reputation: 10, art: 5 }, flags: { mjMusical: true }, next: '8_4c' },
+      { label: T('event.8_4b.opt1.label', null, 'B：低调遥致祝贺'), hint: T('event.8_4b.opt1.hint', null, '退后半步，留白给舞台（声誉+5，隐士+1）'), effects: { reputation: 5, recluse: 1 }, flags: { mjMusical: true }, next: '8_4c' },
       { label: T('event.8_4b.opt2.label', null, 'C：投资并深度参与'), hint: T('event.8_4b.opt2.hint', null, '商与艺兼得（财富-5，艺术+8，商业巨擘+1）'), effects: { wealth: -5, art: 8, mogul: 1 }, flags: { mjMusical: true }, next: '8_4c' }
     ]
   };

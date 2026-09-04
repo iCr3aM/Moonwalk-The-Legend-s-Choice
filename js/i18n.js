@@ -273,6 +273,12 @@ window.MJ = window.MJ || {};
         'ach.ACH_BEYOND.name': 'Presence Beyond Time',
         'ach.ACH_BEYOND.desc': 'You did not stop in 2009 — life has a sequel.',
 
+        // ---------- §17.2 续章专属成就 ----------
+        'ach.ACH_HOLOGRAM.name': 'Return in Light',
+        'ach.ACH_HOLOGRAM.desc': 'At the 2014 Billboard Awards you returned to the stage as a hologram — technology granted the legend a resurrection beyond death.',
+        'ach.ACH_MUSICAL.name': 'Echoes on Broadway',
+        'ach.ACH_MUSICAL.desc': 'A musical bearing your name lifted its curtain on Broadway; the "you" on stage took the bow, while the applause below still rang for you.',
+
         // ---------- §17.13 / §17.14 新增成就（格莱美涌现 + 未竟梦想） ----------
         'ach.ACH_GRAMMY_SWEEP.name': 'Grammy Sweep',
         'ach.ACH_GRAMMY_SWEEP.desc': 'From Off The Wall to Invincible, you wrote your own name on every trophy.',
