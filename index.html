@@ -21,7 +21,17 @@
   <script src="js/ui.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      MJ.ui.init();
+      function showFatal(e) {
+        var app = document.getElementById('app');
+        if (!app || app.dataset.fatal) return;
+        app.dataset.fatal = '1';
+        var m = (e && e.error && e.error.stack) ? e.error.stack : ((e && e.message) ? e.message : String(e));
+        app.innerHTML = '<div style="padding:28px;color:#f3e2b0;font-family:sans-serif;line-height:1.6">' +
+          '<h2 style="color:#ffb4b4">运行时出错（请把这段信息反馈给开发者）</h2>' +
+          '<pre style="white-space:pre-wrap;word-break:break-word;color:#ffd2d2;font-size:13px">' + m + '</pre></div>';
+      }
+      window.addEventListener('error', showFatal);
+      try { MJ.ui.init(); } catch (e) { showFatal(e); throw e; }
     });
   </script>
 </body>
