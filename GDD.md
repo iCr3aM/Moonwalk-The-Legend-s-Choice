@@ -665,7 +665,7 @@
 
 > 实施建议：优先做 §17.13.2 格莱美全满贯（与现有 3_3 格莱美主线呼应、史实扎实、成本低）+ §17.13.3 中 V_PETERPAN / V_GREATWALL / V_THISISIT_DONE（考据明确、粉丝向强）；V_SPACE 等纯想象 vignette 作为后续点缀。
 
-### 17.14 创作企划器 + 巡演自定义 → 格莱美涌现联动 ★规划
+### 17.14 创作企划器 + 巡演自定义 → 格莱美涌现联动 【已落地 g6：六 era 全链路 + 2 成就】
 > 修订 §17.13：格莱美**不再写死逐年必拿**，改为由"创作企划（待定）+ 巡演自定义"在揭晓时**动态结算**。§17.13 的"全满贯"从"强制假设"降级为"可被玩家凭运营达成的涌现成就"——呼应需求"格莱美不一定摇年年拿"。
 > 全部复用现有模块（`flags` 数值化、`onEnter` 钩子、`meta` 计数、`achievementSystem`），**不新增子系统**。
 
@@ -709,7 +709,7 @@ MJ.planner.resolveGrammy = function (state, key) {
 #### 17.14.5 事件流改造（均主线，天然可达）
 - **专辑节点改企划 `choice`**：2_3(OTW)/3_1(Thriller)/4_2(Bad)/5_1(Dangerous)/6_1(HIStory)/6_3b(Invincible)。选项示例（Thriller）：A 概念史诗化 `{cp_vision:90,cp_innovation:85}` / B 商业稳赢 `{cp_craft:80,cp_collab:70}` / C 极简实验 `{cp_innovation:95,cp_craft:40}`。
 - **巡演节点补 `cp_stagecraft`**：4_2a(A 全力→st:85,stress+)/6_1e/5_2/3_2b。
-- **补 4 个格莱美揭晓节点**（`onEnter` 调解析，读取 `flags.grammy_<album>` 叙事）：Bad→4_x、Dangerous→5_x、HIStory→6_x、Invincible→6_xb；OTW 复用既有 2_6、Thriller 复用既有 3_3。
+- **补 4 个格莱美揭晓节点**（`onEnter` 调解析，读取 `flags.grammy_<album>` 叙事）：`4_2a_g`(Bad, 1988, 接 4_2b) / `5_2g`(Dangerous, **year=1992** 以规避时间倒挂，接 5_2b) / `6_1e_g`(HIStory, 1996, 接 6_2) / `6_3b_g`(Invincible, 2002, 接 6_4b)；OTW 复用既有 `2_6`(加 onEnter)、Thriller 复用既有 `3_3`。
 - 揭晓节点 `text` 按 `flags.grammy_<album>` 分档叙事（0=提名未中 / 1–2=小胜 / 3–5=多项 / 6+=大满贯），全部 `T()` 包裹 + EN 键。
 
 #### 17.14.6 最小代码改动
@@ -732,12 +732,13 @@ MJ.planner.resolveGrammy = function (state, key) {
 - 回归：smoke.cjs 年份单调断言不受影响（仅新增/改造主线节点，年份保持）；en_smoke 校验新事件 EN；serialise→hydrate 后 `grammyWins`/`grammy_*` 不丢（flags/meta 已序列化）。
 
 #### 17.14.9 验收清单
-- [ ] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表。
-- [ ] 500 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,8]、无异常。
-- [ ] 定向：低质企划→HIStory/Invincible 0 座；高质→可全满贯（成就解锁）。
-- [ ] i18n EN 全量、en_smoke 通过；存档往返后计数不丢。
+- [x] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表（全满贯 7–8、零企划 0）。
+- [x] 400 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,8]、0 异常、0 时间倒挂。
+- [x] 定向：低质企划→HIStory/Invincible 0 座；高质→可全满贯（两成就解锁）。
+- [x] i18n EN 全量（find_missing_en=0）、en_smoke 通过；存档往返后计数不丢（flags/meta 已序列化）。
 
 > 实施建议：先做 `planner.resolveGrammy` + engine `onEnter` 钩子 + Thriller 全链路（3_1 企划→3_3 揭晓）打通验证，再复制到其余五 era；权重用 §8 数值预算校准，使"全满贯"为小概率高光而非必然。
+> 【已落地 g6】Thriller 验证链路 + 其余五 era（OTW/Bad/Dangerous/HIStory/Invincible）全已实现：`2_3/4_2/5_1/6_1` 改企划 choice、`5_2` 由 auto 改 choice、`6_3b` 选项补 `cp_*`；巡演 `4_2a/5_2/6_1e/3_2b` 补 `cp_stagecraft`；揭晓 `2_6/3_3/4_2a_g/5_2g/6_1e_g/6_3b_g` 均挂 `onEnter`；新增成就 `ACH_GRAMMY_SWEEP`(六 era 均≥1) / `ACH_GRAMMY_LEGEND`(累计≥18 或单张≥6)。验证：node --check 全过；定向测试全满贯企划→六 era 均 7–8 座、累计 46、两成就可达；零企划→0 座；smoke 400 局 0 异常/0 时间倒挂；en_smoke 200 局 0 残留；find_missing_en 0；repro 单文件 zh+en 14/14 结局。
 
 ---
 

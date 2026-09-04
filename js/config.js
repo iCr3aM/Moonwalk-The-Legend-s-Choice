@@ -193,7 +193,12 @@ window.MJ = window.MJ || {};
     { id: 'ACH_BIOPIC_SELF', name: '银幕真我', icon: '🎞️', rarity: 'legendary', desc: '续章之中，你亲自走上银幕出演《Michael》——这世上唯一能演活你的，只有你自己。',
       check: function (s) { return s.flags.biopicMJStar === true; } },
     { id: 'ACH_BEYOND', name: '超越时间的在场', icon: '♾️', rarity: 'legendary', desc: '你没在 2009 年停下——人生，还有续集。',
-      check: function (s) { return s.flags.survived2009 === true; } }
+      check: function (s) { return s.flags.survived2009 === true; } },
+    // —— §17.14 格莱美涌现联动验证成就（对齐 GDD §17.14.7）——
+    { id: 'ACH_GRAMMY_SWEEP', name: '格莱美大满贯', icon: '🏆', rarity: 'epic', desc: '从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。',
+      check: function (s) { return ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].every(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
+    { id: 'ACH_GRAMMY_LEGEND', name: '格莱美传奇', icon: '🎖️', rarity: 'legendary', desc: '格莱美史上的奇观：你把自己活成了纪录本身。',
+      check: function (s) { return (s.meta.grammyWins || 0) >= 18 || ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 6; }); } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

@@ -246,8 +246,9 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 创作企划器：2_3 改为「企划」choice（写 cp_* 画像）——
   E['2_3'] = {
-    id: '2_3', year: 1979, title: T('event.2_3.title', null, '《Off The Wall》'), kind: 'auto',
+    id: '2_3', year: 1979, title: T('event.2_3.title', null, '《Off The Wall》'), kind: 'choice',
     text: function (s) {
       if (s.flags.isSolo) {
         return narr(T('event.2_3.text', null, '《Off The Wall》横空出世，迪斯科的霓虹里，你站上 solo 生涯的第一座高峰，整个世界开始跟着你的步点摇摆。'), s, [
@@ -256,8 +257,11 @@ window.MJ = window.MJ || {};
       }
       return T('event.2_3.ret0.text', null, '组合专辑反响不俗，你在团体的和声里稳步成长，掌声虽不独属于你，却也踏实。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 20, wealth: 20, reputation: 15 } : { art: 10, wealth: 10, reputation: 5 }; },
-    next: '2_4'
+    options: [
+      { label: T('event.2_3.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.2_3.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '2_4' },
+      { label: T('event.2_3.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.2_3.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '2_4' },
+      { label: T('event.2_3.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.2_3.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '2_4' }
+    ]
   };
 
   E['2_4'] = {
@@ -292,8 +296,10 @@ window.MJ = window.MJ || {};
   };
 
   // ---------- 主线偏薄章节拓展（g5：GDD §17.3） ----------
+  // —— §17.14 格莱美揭晓：2_6 进入即结算 otw（见 planner.resolveGrammy）——
   E['2_6'] = {
     id: '2_6', year: 1981, title: T('event.2_6.title', null, '格莱美加冕之夜'), kind: 'choice', key: true,
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'otw'); },
     text: function (s) {
       return narr(T('event.2_6.text', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。台下的昆西笑着鼓掌——这段黄金搭档，开始被世人记住。'), s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.2_6.branch0.text', null, '你握着奖杯，忽然明白，舞台之外还有人懂你的野心。') }
@@ -479,8 +485,9 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 创作企划器：4_2 改为「企划」choice（写 cp_* 画像）——
   E['4_2'] = {
-    id: '4_2', year: 1987, title: T('event.4_2.title', null, '《Bad》'), kind: 'auto',
+    id: '4_2', year: 1987, title: T('event.4_2.title', null, '《Bad》'), kind: 'choice',
     text: function (s) {
       if (s.flags.isSolo) {
         return narr(T('event.4_2.text', null, '《Bad》与空前规模的全球巡演接踵而至，体育场的人海为你起伏，巅峰的风景既壮美也孤独。'), s, [
@@ -489,8 +496,11 @@ window.MJ = window.MJ || {};
       }
       return T('event.4_2.ret0.text', null, '组合新专辑延续热度，和声里的你，仍在稳步向前。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 15, wealth: 20, reputation: 10, stress: 15 } : { art: 10, wealth: 15, reputation: 5, stress: 10 }; },
-    next: '4_2a'
+    options: [
+      { label: T('event.4_2.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.4_2.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '4_2a' },
+      { label: T('event.4_2.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.4_2.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '4_2a' },
+      { label: T('event.4_2.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.4_2.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '4_2a' }
+    ]
   };
 
   E['4_2a'] = {
@@ -502,9 +512,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.4_2a.opt0.label', null, 'A：倾尽所有燃爆现场'), hint: T('event.4_2a.opt0.hint', null, '传奇加身，身心透支（声誉+12，财富+20，压力+15）'), effects: { reputation: 12, wealth: 20, stress: 15 }, next: '4_2b' },
-      { label: T('event.4_2a.opt1.label', null, 'B：张弛有度保身体'), hint: T('event.4_2a.opt1.hint', null, '稳扎稳打（声誉+6，财富+10，压力+5）'), effects: { reputation: 6, wealth: 10, stress: 5 }, next: '4_2b' },
-      { label: T('event.4_2a.opt2.label', null, 'C：借巡演做慈善场'), hint: T('event.4_2a.opt2.hint', null, '把光分给更需要的人，爱心+1（声誉+8，慈善+1）'), effects: { reputation: 8, phil: 1 }, next: '4_2b' }
+      { label: T('event.4_2a.opt0.label', null, 'A：倾尽所有燃爆现场'), hint: T('event.4_2a.opt0.hint', null, '传奇加身，身心透支（声誉+12，财富+20，压力+15；巡演·舞台呈现极高）'), effects: { reputation: 12, wealth: 20, stress: 15 }, flags: { cp_stagecraft: 80 }, next: '4_2a_g' },
+      { label: T('event.4_2a.opt1.label', null, 'B：张弛有度保身体'), hint: T('event.4_2a.opt1.hint', null, '稳扎稳打（声誉+6，财富+10，压力+5；巡演·舞台呈现偏低）'), effects: { reputation: 6, wealth: 10, stress: 5 }, flags: { cp_stagecraft: 45 }, next: '4_2a_g' },
+      { label: T('event.4_2a.opt2.label', null, 'C：借巡演做慈善场'), hint: T('event.4_2a.opt2.hint', null, '把光分给更需要的人，爱心+1（声誉+8，慈善+1；巡演·舞台呈现偏高）'), effects: { reputation: 8, phil: 1 }, flags: { cp_stagecraft: 70 }, next: '4_2a_g' }
     ]
   };
   E['4_2b'] = {
@@ -547,8 +557,9 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 创作企划器：5_1 改为「企划」choice（写 cp_* 画像）——
   E['5_1'] = {
-    id: '5_1', year: 1991, title: T('event.5_1.title', null, '《Dangerous》'), kind: 'auto',
+    id: '5_1', year: 1991, title: T('event.5_1.title', null, '《Dangerous》'), kind: 'choice',
     text: function (s) {
       if (s.flags.isSolo) {
         return narr(T('event.5_1.text', null, '《Dangerous》延续着商业与艺术的双高峰，新的节拍里，你仍是那个定义潮流的人。'), s, [
@@ -557,8 +568,11 @@ window.MJ = window.MJ || {};
       }
       return T('event.5_1.ret0.text', null, '组合新专辑稳步前行，和声依旧稳当。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 15, wealth: 15, reputation: 5 } : { art: 8, wealth: 10, reputation: 3 }; },
-    next: '5_1b'
+    options: [
+      { label: T('event.5_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.5_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '5_1b' },
+      { label: T('event.5_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.5_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '5_1b' },
+      { label: T('event.5_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.5_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '5_1b' }
+    ]
   };
 
   E['5_1b'] = {
@@ -576,15 +590,20 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 巡演自定义：5_2 由 auto 改 choice，选项写 cp_stagecraft（舞台呈现）——
   E['5_2'] = {
-    id: '5_2', year: 1992, title: T('event.5_2.title', null, '危险之旅巡演'), kind: 'auto',
+    id: '5_2', year: 1992, title: T('event.5_2.title', null, '危险之旅巡演'), kind: 'choice',
     text: function (s) {
       return narr(T('event.5_2.text', null, '“危险之旅”全球巡演拉开帷幕，城市的名字在行程表上连成一条发光的线，连轴转的疲惫也跟着发光。'), s, [
         { cond: function (s) { return (s.attributes.wealth || 0) >= 70; }, text: T('event.5_2.branch0.text', null, '巡演的进账令人眩目，但连轴转的行程也在悄悄收利息。') },
         { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: T('event.5_2.branch1.text', null, '城市的名字在行程表上连成发光的线，也连成越来越长的疲惫。') }
       ]);
     },
-    effects: { wealth: 25, stress: 20 }, next: '5_2b'
+    options: [
+      { label: T('event.5_2.opt0.label', null, 'A：倾尽所有燃爆现场'), hint: T('event.5_2.opt0.hint', null, '传奇加身，身心透支（声誉+12，财富+25，压力+20；巡演·舞台呈现极高）'), effects: { reputation: 12, wealth: 25, stress: 20 }, flags: { cp_stagecraft: 80 }, next: '5_2g' },
+      { label: T('event.5_2.opt1.label', null, 'B：张弛有度保身体'), hint: T('event.5_2.opt1.hint', null, '稳扎稳打（声誉+6，财富+15，压力+10；巡演·舞台呈现偏低）'), effects: { reputation: 6, wealth: 15, stress: 10 }, flags: { cp_stagecraft: 45 }, next: '5_2g' },
+      { label: T('event.5_2.opt2.label', null, 'C：巡演结合公益'), hint: T('event.5_2.opt2.hint', null, '善名远播，爱心+1（声誉+8，慈善+1；巡演·舞台呈现偏高）'), effects: { reputation: 8, phil: 1 }, flags: { cp_stagecraft: 70 }, next: '5_2g' }
+    ]
   };
 
   E['5_2b'] = {
@@ -676,8 +695,9 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 创作企划器：6_1 改为「企划」choice（写 cp_* 画像）——
   E['6_1'] = {
-    id: '6_1', year: 1995, title: T('event.6_1.title', null, '《HIStory》'), kind: 'auto',
+    id: '6_1', year: 1995, title: T('event.6_1.title', null, '《HIStory》'), kind: 'choice',
     text: function (s) {
       if (s.flags.isSolo) {
         return narr(T('event.6_1.text', null, '双碟专辑《HIStory》问世，一半回望来路，一半叫板未来。封面上那个镀金身影，是你给时代的一记回响。'), s, [
@@ -686,8 +706,11 @@ window.MJ = window.MJ || {};
       }
       return T('event.6_1.ret0.text', null, '组合新作延续旅程，和声里依旧有你。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 10, wealth: 15, reputation: 5 } : { art: 6, wealth: 10, reputation: 3 }; },
-    next: '6_1b'
+    options: [
+      { label: T('event.6_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.6_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '6_1b' },
+      { label: T('event.6_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.6_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '6_1b' },
+      { label: T('event.6_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.6_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '6_1b' }
+    ]
   };
 
   E['6_1b'] = {
@@ -745,9 +768,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_1e.opt0.label', null, 'A：全力呈现视听盛宴'), hint: T('event.6_1e.opt0.hint', null, '王者归来，盛况空前（声誉+12，财富+20，压力+15）'), effects: { reputation: 12, wealth: 20, stress: 15 }, next: '6_2' },
-      { label: T('event.6_1e.opt1.label', null, 'B：精简场次护身体'), hint: T('event.6_1e.opt1.hint', null, '量力而行（声誉+6，财富+10，压力+5）'), effects: { reputation: 6, wealth: 10, stress: 5 }, next: '6_2' },
-      { label: T('event.6_1e.opt2.label', null, 'C：巡演结合公益'), hint: T('event.6_1e.opt2.hint', null, '善名远播，爱心+1（声誉+8，慈善+1）'), effects: { reputation: 8, phil: 1 }, next: '6_2' }
+      { label: T('event.6_1e.opt0.label', null, 'A：全力呈现视听盛宴'), hint: T('event.6_1e.opt0.hint', null, '王者归来，盛况空前（声誉+12，财富+20，压力+15；巡演·舞台呈现极高）'), effects: { reputation: 12, wealth: 20, stress: 15 }, flags: { cp_stagecraft: 80 }, next: '6_1e_g' },
+      { label: T('event.6_1e.opt1.label', null, 'B：精简场次护身体'), hint: T('event.6_1e.opt1.hint', null, '量力而行（声誉+6，财富+10，压力+5；巡演·舞台呈现偏低）'), effects: { reputation: 6, wealth: 10, stress: 5 }, flags: { cp_stagecraft: 45 }, next: '6_1e_g' },
+      { label: T('event.6_1e.opt2.label', null, 'C：巡演结合公益'), hint: T('event.6_1e.opt2.hint', null, '善名远播，爱心+1（声誉+8，慈善+1；巡演·舞台呈现偏高）'), effects: { reputation: 8, phil: 1 }, flags: { cp_stagecraft: 70 }, next: '6_1e_g' }
     ]
   };
   E['6_2'] = {
@@ -860,9 +883,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，压力+10）'), effects: { art: 12, reputation: 10, stress: 10 }, flags: { anniv2001: true }, next: '6_4b' },
-      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3）'), effects: { reputation: 3 }, next: '6_4b' },
-      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5）'), effects: { art: 8, family: 5 }, flags: { collab: true }, next: '6_4b' }
+      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，压力+10；企划·视野/创新极高）'), effects: { art: 12, reputation: 10, stress: 10 }, flags: { anniv2001: true, cp_vision: 90, cp_innovation: 75, cp_craft: 70 }, next: '6_3b_g' },
+      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3；企划·制作/合作偏低）'), effects: { reputation: 3 }, flags: { cp_craft: 60, cp_collab: 55 }, next: '6_3b_g' },
+      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5；企划·合作极高）'), effects: { art: 8, family: 5 }, flags: { collab: true, cp_collab: 85, cp_craft: 65 }, next: '6_3b_g' }
     ]
   };
 
@@ -1886,6 +1909,61 @@ window.MJ = window.MJ || {};
       { label: T('event.V_BIO_FREDDIE.opt0.label', null, 'A：以致敬之名发布'), hint: T('event.V_BIO_FREDDIE.opt0.hint', null, '让思念有了出口（艺术+5，声誉+5，慈善+1）'), effects: { art: 5, reputation: 5, phil: 1 }, next: '__RETURN__' },
       { label: T('event.V_BIO_FREDDIE.opt1.label', null, 'B：收进抽屉留作纪念'), hint: T('event.V_BIO_FREDDIE.opt1.hint', null, '把私心留给自己（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
     ]
+  };
+
+  // ---------- §17.14 格莱美揭晓节点（企划器+巡演 → 涌现结算，见 planner.resolveGrammy） ----------
+  // 由各自 era 的巡演/专辑节点后进入，onEnter 在展示前结算，text 按座数分档叙事。
+  E['4_2a_g'] = {
+    id: '4_2a_g', year: 1988, title: T('event.4_2a_g.title', null, '格莱美之夜'), kind: 'auto',
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'bad'); },
+    text: function (s) {
+      if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      var w = s.flags.grammy_bad || 0;
+      if (w >= 6) return T('event.4_2a_g.sweep.text', null, '凭《Bad》一夜独揽 ' + w + ' 座格莱美，那个靠《Thriller》登顶的人，又一次把天花板推高。');
+      if (w >= 3) return T('event.4_2a_g.multi.text', null, '《Bad》为你赢得 ' + w + ' 座格莱美，单飞后的你，依旧是乐坛的标尺。');
+      if (w >= 1) return T('event.4_2a_g.minor.text', null, '格莱美之夜，你捧回 ' + w + ' 座奖杯——不算横扫，却已登堂入室。');
+      return T('event.4_2a_g.none.text', null, '提名名单上有你的名字，但最终铩羽而归。闪光灯外的那一瞬，你听见了沉默。');
+    },
+    next: '4_2b'
+  };
+  E['5_2g'] = {
+    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '格莱美之夜'), kind: 'auto',
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'dangerous'); },
+    text: function (s) {
+      if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      var w = s.flags.grammy_dangerous || 0;
+      if (w >= 6) return T('event.5_2g.sweep.text', null, '凭《Dangerous》再揽 ' + w + ' 座格莱美，你用更先锋的节拍，续写着统治。');
+      if (w >= 3) return T('event.5_2g.multi.text', null, '《Dangerous》为你赢得 ' + w + ' 座格莱美，潮流的舵，还在你手里。');
+      if (w >= 1) return T('event.5_2g.minor.text', null, '格莱美之夜，你捧回 ' + w + ' 座奖杯——不算横扫，却已登堂入室。');
+      return T('event.5_2g.none.text', null, '提名名单上有你的名字，但最终铩羽而归。闪光灯外的那一瞬，你听见了沉默。');
+    },
+    next: '5_2b'
+  };
+  E['6_1e_g'] = {
+    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '格莱美之夜'), kind: 'auto',
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'history'); },
+    text: function (s) {
+      if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      var w = s.flags.grammy_history || 0;
+      if (w >= 6) return T('event.6_1e_g.sweep.text', null, '凭《HIStory》拿下 ' + w + ' 座格莱美，镀金的你，成了时代本身的一个注脚。');
+      if (w >= 3) return T('event.6_1e_g.multi.text', null, '《HIStory》为你赢得 ' + w + ' 座格莱美，传奇的回声仍在继续。');
+      if (w >= 1) return T('event.6_1e_g.minor.text', null, '格莱美之夜，你捧回 ' + w + ' 座奖杯——不算横扫，却已登堂入室。');
+      return T('event.6_1e_g.none.text', null, '提名名单上有你的名字，但最终铩羽而归。闪光灯外的那一瞬，你听见了沉默。');
+    },
+    next: '6_2'
+  };
+  E['6_3b_g'] = {
+    id: '6_3b_g', year: 2002, title: T('event.6_3b_g.title', null, '格莱美之夜'), kind: 'auto',
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'invincible'); },
+    text: function (s) {
+      if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      var w = s.flags.grammy_invincible || 0;
+      if (w >= 6) return T('event.6_3b_g.sweep.text', null, '凭《Invincible》斩获 ' + w + ' 座格莱美，在流水的榜单里，你仍是那个不肯将就的名字。');
+      if (w >= 3) return T('event.6_3b_g.multi.text', null, '《Invincible》为你赢得 ' + w + ' 座格莱美，迟暮的王者，仍有余威。');
+      if (w >= 1) return T('event.6_3b_g.minor.text', null, '格莱美之夜，你捧回 ' + w + ' 座奖杯——不算横扫，却已登堂入室。');
+      return T('event.6_3b_g.none.text', null, '提名名单上有你的名字，但最终铩羽而归。闪光灯外的那一瞬，你听见了沉默。');
+    },
+    next: '6_4b'
   };
 
   MJ.EVENTS = E;
