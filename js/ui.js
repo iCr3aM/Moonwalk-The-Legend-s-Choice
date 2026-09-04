@@ -192,7 +192,7 @@ window.MJ = window.MJ || {};
     var defs = MJ.config.endings;
     var rank = MJ.config.rarityRank || {};
     var keys = Object.keys(defs).sort(function (a, b) {
-      return (rank[defs[a].rarity] || 0) - (rank[defs[b].rarity] || 0);
+      return (rank[MJ.config.endingRarity[a]] || 0) - (rank[MJ.config.endingRarity[b]] || 0);
     });
     var total = keys.length;
     var got = keys.filter(function (k) { return g[k]; }).length;
@@ -205,7 +205,7 @@ window.MJ = window.MJ || {};
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" data-endkey="' + k + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="g-rarity">' + (on ? rarityLabel(e.rarity) : T('ui.locked', null, '未解锁')) + '</div>' +
+        '<div class="g-rarity">' + (on ? rarityLabel(MJ.config.endingRarity[k]) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
     html += '</div></div>';
@@ -290,36 +290,41 @@ window.MJ = window.MJ || {};
       closeOverlay('gallery-overlay'); galleryModal();
     });
   }
-  // 结局详情：显示独白 + 「如何达成」提示（隐藏结局未解锁时不泄露内容）
+  // 结局详情：已解锁显示全部；未解锁（非隐藏）仅显示「如何达成」；隐藏结局未解锁不泄露任何内容
   function endingDetailModal(key) {
     var e = MJ.config.endings[key];
     if (!e) return;
     closeOverlay('ending-detail-overlay');
     var g = MJ.saveSystem.getGallery();
     var on = !!g[key];
+    var hint = T('ending.' + key + '.hint', null, e.hint || '');
     var overlay = document.createElement('div');
     overlay.id = 'ending-detail-overlay';
     overlay.className = 'overlay modal-overlay';
-    if (e.hidden && !on) {
-      overlay.innerHTML = '<div class="modal ending-detail">' +
-        '<div class="modal-head"><span>❓ ' + T('ui.unknown', null, '？？？') + '</span><span class="spacer"></span>' +
-        '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
-        '<div class="modal-body"><div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div></div></div>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeOverlay('ending-detail-overlay'); });
-      document.getElementById('ed-close').addEventListener('click', function () { closeOverlay('ending-detail-overlay'); });
-      return;
-    }
-    var hint = T('ending.' + key + '.hint', null, e.hint || '');
-    overlay.innerHTML = '<div class="modal ending-detail">' +
-      '<div class="modal-head"><span>' + e.icon + ' ' + escapeHtml(T('ending.' + key + '.name', null, e.name)) + '</span><span class="spacer"></span>' +
-      '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
-      '<div class="modal-body">' +
-        (e.tone ? '<div class="ed-tone">' + escapeHtml(e.tone) + '</div>' : '') +
+    var headTxt, bodyHtml;
+    if (on) {
+      // 已解锁：名称 / 基调 / 简介 / 如何达成 / 独白 全部展示
+      headTxt = e.icon + ' ' + escapeHtml(T('ending.' + key + '.name', null, e.name));
+      bodyHtml =
+        (e.tone ? '<div class="ed-tone">' + escapeHtml(T('ending.' + key + '.tone', null, e.tone)) + '</div>' : '') +
         '<div class="ed-summary">' + escapeHtml(T('ending.' + key + '.summary', null, e.summary || '')) + '</div>' +
         (hint ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>' : '') +
-        (e.monologue ? '<div class="ed-monologue">' + escapeHtml(e.monologue) + '</div>' : '') +
-      '</div></div>';
+        (e.monologue ? '<div class="ed-monologue">' + escapeHtml(e.monologue) + '</div>' : '');
+    } else if (e.hidden) {
+      // 隐藏结局未解锁：不泄露任何内容
+      headTxt = '❓ ' + T('ui.unknown', null, '？？？');
+      bodyHtml = '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>';
+    } else {
+      // 未解锁（非隐藏）：只显示「如何达成」，名称/基调/简介/独白均不显示
+      headTxt = '❓ ' + T('ui.unknown', null, '？？？');
+      bodyHtml = hint
+        ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>'
+        : '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>';
+    }
+    overlay.innerHTML = '<div class="modal ending-detail">' +
+      '<div class="modal-head"><span>' + headTxt + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body">' + bodyHtml + '</div></div>';
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeOverlay('ending-detail-overlay'); });
     document.getElementById('ed-close').addEventListener('click', function () { closeOverlay('ending-detail-overlay'); });

@@ -36,13 +36,16 @@ window.MJ = window.MJ || {};
 
   // 稀有度排序（图鉴/成就按 普通→传奇 自上而下排列）
   C.rarityRank = { common: 0, rare: 1, epic: 2, legendary: 3 };
-  // 结局稀有度（普通在最上、传奇在最下）
+  // 结局稀有度（普通在最上、传奇在最下）。按用户反馈进一步下调：偏向"设计可达性/可达成感"
+  // （配合图鉴「如何达成」配方，让玩家觉得稀有结局也能 pursuit），而非纯随机命中率。
+  //   common 常规走向 | rare 需特定路线投入 | epic 高数值组合 | legendary 宿命/隐藏终极。
   C.endingRarity = {
-    END_PLAIN: 'common', END_FAMILY: 'common', END_RECLUSE: 'rare', END_MOGUL: 'rare',
-    END_PHILANTHROPIST: 'rare', END_TRAGIC: 'common', END_ART_PEAK: 'epic', END_FINANCIAL: 'common',
-    END_CONTROVERSIAL: 'rare', END_SURVIVE_DEBT: 'rare', END_PERFECT: 'epic', END_ETERNAL: 'legendary',
-    END_TRUE_ETERNAL: 'legendary', END_TIMELESS_PRESENT: 'legendary',
-    END_STATESMAN: 'rare', END_INNOVATOR: 'epic', END_MENTOR: 'rare', END_RECLUSE_SERENE: 'rare'
+    END_PLAIN: 'common', END_FAMILY: 'common', END_MOGUL: 'common',
+    END_PHILANTHROPIST: 'common', END_CONTROVERSIAL: 'common', END_TIMELESS_PRESENT: 'common',
+    END_INNOVATOR: 'rare', END_RECLUSE: 'rare', END_RECLUSE_SERENE: 'rare', END_MENTOR: 'rare',
+    END_ETERNAL: 'rare', END_SURVIVE_DEBT: 'rare', END_FINANCIAL: 'rare',
+    END_PERFECT: 'epic', END_STATESMAN: 'epic', END_ART_PEAK: 'epic',
+    END_TRAGIC: 'legendary', END_TRUE_ETERNAL: 'legendary'
   };
 
   // 元路线破平次序：艺术 > 慈善 > 商业 > 隐士（GDD 7.2 注释）
