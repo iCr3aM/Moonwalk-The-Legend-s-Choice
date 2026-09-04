@@ -42,11 +42,10 @@ python -m http.server 8000
 ```
 
 ### 可选：单文件构建（便于部署）
-源码保持「经典脚本 + 双击即运行」不变；如需一个便于分发的单文件产物，可用 Vite 打包：
+源码保持「经典脚本 + 双击即运行」不变；如需一个零依赖、便于分发的单文件产物，用内置脚本即可（无需安装任何依赖）：
 
 ```bash
-npm install      # 安装 vite 与 vite-plugin-singlefile（仅开发依赖）
-npm run build    # 产出 dist/index.html 单一文件（JS/CSS 全部内联）
+node build_singlefile.cjs   # 等价于 npm run build，产出 dist/index.html 单一文件（JS/CSS 全部内联）
 ```
 
 `dist/index.html` 已内联全部脚本与样式，**双击即可运行**，可直接托管到任意静态空间。

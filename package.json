@@ -6,7 +6,7 @@
   "description": "迈克尔·杰克逊：人生选择 — 文字人生模拟游戏（原生 JS，模块化，可选 Vite 单文件构建）",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node build_singlefile.cjs",
     "preview": "vite preview"
   },
   "devDependencies": {
