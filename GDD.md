@@ -412,7 +412,7 @@
 
 **长线 / 可选**
 - **M9 真·永恒隐藏结局（扩展 §7.1）**：需 艺术+声誉+健康+慈善 多方极致收敛 + 关键成就，作为终极目标。【✅ 已实现】 隐藏结局 `END_TRUE_ETERNAL`（§7.1/§7.2/§8.2），图鉴默认隐藏、达成后解锁，结局页专属金色辉光 +「真·永恒」成就（reachable：贪心巅峰策略 500 局命中 333 次）。
-- **续章·假设 MJ 未离世（2010–2026）**：用户本回合新增需求（非 M10–M12）。【✅ 已实现】 7_2 新增「续写人生」分支进入第六章，事件 8_0–8_6 覆盖 This Is It 驻演、Michael Prince 数字单曲计划、2016 索尼收购 Sony/ATV 半数股权（约 7.5 亿美元，现实参照）、2026 传记片《Michael》（侄子 Jaafar Jackson 主演）；结局 `END_TIMELESS_PRESENT` 等由 `survived2009` 标志驱动，永不归死亡结局（§7.2 规则 3b）。
+- **续章·假设 MJ 未离世（2010–2026）**：用户本回合新增需求（非 M10–M12）。【✅ 已实现】 7_2 新增「续写人生」分支进入第六章，事件 8_0–8_6 覆盖 This Is It 驻演、Michael Prince 数字单曲计划、2016 索尼收购 Sony/ATV 半数股权（约 7.5 亿美元，现实参照）、2026 传记片《Michael》（侄子 Jaafar Jackson 主演）；8_5 传记片事件现提供玩家选择：真实历史线由侄子 Jaafar Jackson 饰演（成就 `ACH_BIOPIC`），或架空续章线由 MJ 亲自出演银幕上的自己（成就 `ACH_BIOPIC_SELF`，结局页专属收束文案）；结局 `END_TIMELESS_PRESENT` 等由 `survived2009` 标志驱动，永不归死亡结局（§7.2 规则 3b）。
 - **M10 多周目传承（NG+）**：解锁"导演评论/幕后花絮"模式，或"传奇等级"解锁限定变体，强化重玩性。
 - **M11 成就叙事化**：部分成就解锁专属幕后片段（如"月球漫步诞生"花絮），让成就成为故事节拍。
 - **M12 关键抉择回放时间轴**：结局页"人生回放"带年份标记与"假如当初…"提示，呼应 §5.7 重玩性。
@@ -432,7 +432,7 @@
 | 合计 | 约 85+ |
 
 ## 附录 B：核心标志与元路线计数
-**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, survived2009。
+**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, biopicMJStar, survived2009。
 **元路线计数（非负整数）**：phil / mogul / recluse / artPath（隐藏，结局判定读取最高者）。
 
 ## 附录 C：结局情感矩阵

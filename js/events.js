@@ -989,13 +989,14 @@ window.MJ = window.MJ || {};
   E['8_5'] = {
     id: '8_5', year: 2026, title: '传记电影《Michael》', kind: 'choice', key: true,
     text: function (s) {
-      return narr('关于你一生的传记电影提上日程，由侄子 Jaafar Jackson 饰演银幕上的你。镜头要重走那些被千万次传颂的瞬间——这一次，你有机会亲手为它掌灯。', s, [
+      return narr('传记电影《Michael》提上日程：导演 Antoine Fuqua，Lionsgate 发行，定档 2026 年 4 月 24 日（IMAX 同步）。银幕上的你，原定由你侄子 Jaafar Jackson 饰演——镜头要重走那些被千万次传颂的瞬间。而这一次，你有机会亲手决定，谁来讲这个故事。', s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: '世人仍记得你的名字，这部电影，是给时代的回信。' }
       ]);
     },
     options: [
-      { label: 'A：亲自授权并参与', hint: '为传奇盖章（声誉+12，艺术+5）', effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_6' },
-      { label: 'B：拒绝介入，留白', hint: '把故事交给后人（声誉+3）', effects: { reputation: 3 }, next: '8_6' }
+      { label: 'A：由侄子 Jaafar Jackson 饰演（贴合真实历史）', hint: '亲人演绎，你亲自授权（声誉+12，艺术+5）', effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_6' },
+      { label: 'B：亲自出演银幕上的自己（架空续章）', hint: '传奇由传奇自己演绎（声誉+18，艺术+10，压力+5）', effects: { reputation: 18, art: 10, stress: 5 }, flags: { biopicMJStar: true }, next: '8_6' },
+      { label: 'C：低调回避，把故事交给后人', hint: '留白也是一种回答（声誉+3）', effects: { reputation: 3 }, next: '8_6' }
     ]
   };
   E['8_6'] = {
@@ -1007,6 +1008,7 @@ window.MJ = window.MJ || {};
       else if (dom === 'phil') base += '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。';
       else if (dom === 'mogul') base += '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。';
       else if (dom === 'recluse') base += '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。';
+      if (s.flags.biopicMJStar) base += '\n银幕之上，是你亲自重走自己的人生——这世上唯一能演活迈克尔·杰克逊的，终究只有迈克尔·杰克逊自己。';
       base += '\n谢幕之后，故事由听者续写。';
       return base;
     },

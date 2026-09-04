@@ -190,6 +190,8 @@ window.MJ = window.MJ || {};
       check: function (s, ctx) { return ctx && ctx.ending === 'END_TRUE_ETERNAL'; } },
     { id: 'ACH_BIOPIC', name: '银幕化身', icon: '🎬', rarity: 'legendary', desc: '2026 年，银幕上的你由亲人亲手演绎，传奇有了另一副面孔。',
       check: function (s) { return s.flags.biopic2026 === true; } },
+    { id: 'ACH_BIOPIC_SELF', name: '银幕真我', icon: '🎞️', rarity: 'legendary', desc: '续章之中，你亲自走上银幕出演《Michael》——这世上唯一能演活你的，只有你自己。',
+      check: function (s) { return s.flags.biopicMJStar === true; } },
     { id: 'ACH_BEYOND', name: '超越时间的在场', icon: '♾️', rarity: 'legendary', desc: '你没在 2009 年停下——人生，还有续集。',
       check: function (s) { return s.flags.survived2009 === true; } }
   ];

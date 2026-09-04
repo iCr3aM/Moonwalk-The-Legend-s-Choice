@@ -250,6 +250,7 @@ ucases.forEach(function (c) {
     ACH_TIMELESS_KING: { flags: { thisItHeld: true } },
     ACH_DIGITAL_PIONEER: { flags: { digitalSingles: true } },
     ACH_BIOPIC: { flags: { biopic2026: true } },
+    ACH_BIOPIC_SELF: { flags: { biopicMJStar: true } },
     ACH_BEYOND: { flags: { survived2009: true } },
     ACH_TRUE_ETERNAL: { ctxEnding: 'END_TRUE_ETERNAL' }
   };
