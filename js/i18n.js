@@ -309,15 +309,25 @@ window.MJ = window.MJ || {};
 
   MJ.i18n = i18n;
 
-  // 统一入口：当前语种 → zh → eventEn(事件英文，外部加载) → fallback → key
+  // 统一入口：当前语种字典 → （英文时查事件英文字典 eventEn）→ fallback → key
+  // 关键：eventEn 仅含英文事件正文；中文模式下必须优先使用代码内的中文字面量回退，
+  // 否则会因命中 eventEn 而把剧情/选项错误地显示成英文。
   MJ.t = function (key, vars, fallback) {
-    var d = i18n.dict[i18n.lang] || {};
+    var lang = i18n.lang;
+    var d = i18n.dict[lang] || {};
     if (d[key] != null) return subst(d[key], vars);
-    var zh = i18n.dict.zh || {};
-    if (zh[key] != null) return subst(zh[key], vars);
-    var ev = i18n.dict.eventEn;
-    if (ev && ev[key] != null) return subst(ev[key], vars);
+
+    if (lang === 'en') {
+      var ev = i18n.dict.eventEn;
+      if (ev && ev[key] != null) return subst(ev[key], vars);
+      if (fallback != null) return subst(fallback, vars);
+      return key;
+    }
+
+    // 中文（及任何非英文语种）：中文串以代码内字面量为回退，不取 eventEn 的英文
     if (fallback != null) return subst(fallback, vars);
+    var ev2 = i18n.dict.eventEn;
+    if (ev2 && ev2[key] != null) return subst(ev2[key], vars);
     return key;
   };
 
