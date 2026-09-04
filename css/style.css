@@ -530,6 +530,11 @@ html, body {
 .m-cnt { font-size: 12px; color: var(--gold); background: rgba(212,175,55,0.14); border-radius: 999px; padding: 1px 9px; }
 .btn.danger { border-color: var(--danger); color: #ffd9d9; background: rgba(200,60,60,0.18); }
 
+/* ---------- 主菜单图鉴区：第一行 3 个，第二行 2 个 ---------- */
+.menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.menu-grid .btn.block { min-width: 0; width: auto; flex: none; }
+@media (max-width: 640px) { .menu-grid { grid-template-columns: repeat(2, 1fr); } }
+
 /* ---------- 图鉴 / 成就 弹窗 ---------- */
 .modal-overlay { z-index: 70; align-items: flex-start; overflow: auto; padding-top: 6vh; }
 .modal {

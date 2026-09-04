@@ -1248,13 +1248,16 @@ window.MJ = window.MJ || {};
   E['8_7'] = {
     id: '8_7', year: 2026, title: T('event.8_7.title', null, '留给后人的话'), kind: 'auto',
     text: function (s) {
-      return narr(T('event.8_7.text', null, '走到这一程，你停下手，想给后来者留几句话。'), s, [
+      var base = narr(T('event.8_7.text', null, '走到这一程，你停下手，想给后来者留几句话。'), s, [
         { cond: function (s) { return MJ.dominantMeta(s.meta) === 'artPath'; }, text: T('event.8_7.branch0.text', null, '\n“别怕把整颗心交给一支舞、一首歌——那才是你真正活过的证据。”') },
         { cond: function (s) { return MJ.dominantMeta(s.meta) === 'phil'; }, text: T('event.8_7.branch1.text', null, '\n“若你手中有一点光，就分给暗处的人，这比任何奖杯都长久。”') },
         { cond: function (s) { return MJ.dominantMeta(s.meta) === 'mogul'; }, text: T('event.8_7.branch2.text', null, '\n“把热爱变成能握在手中的版图，也是一种写传奇的方式。”') },
         { cond: function (s) { return MJ.dominantMeta(s.meta) === 'recluse'; }, text: T('event.8_7.branch3.text', null, '\n“偶尔躲起来，听见自己的心跳，也挺好。”') },
         { cond: function (s) { return MJ.dominantMeta(s.meta) !== 'artPath' && MJ.dominantMeta(s.meta) !== 'phil' && MJ.dominantMeta(s.meta) !== 'mogul' && MJ.dominantMeta(s.meta) !== 'recluse'; }, text: T('event.8_7.branch4.text', null, '\n“无论走到哪，记得为何而唱。”') }
       ]);
+      if (s.flags.sfgDuet && (s.meta.phil || 0) >= 3) base += T('event.8_7.sfgDuet.text', null, '\n而你记得那年除夕，隔着屏幕与里奇、成龙同唱《We Are The World》——原来有些团圆，不必同框也能完成。');
+      if (s.flags.sfgDecline && (s.meta.recluse || 0) >= 1) base += T('event.8_7.sfgDecline.text', null, '\n而你记得那年除夕，你婉拒了喧闹的邀约，守在炉火边看直播——有些安宁，本就不需要被全世界看见。');
+      return base;
     },
     next: '8_6'
   };
@@ -1759,6 +1762,23 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_FLASHBACK.opt0.label', null, 'A：把思念写进歌里'), hint: T('event.V_FLASHBACK.opt0.hint', null, '温柔沉淀（艺术+5，孤独-8）'), effects: { art: 5, loneliness: -8 }, next: '__RETURN__' },
       { label: T('event.V_FLASHBACK.opt1.label', null, 'B：独自消化'), hint: T('event.V_FLASHBACK.opt1.hint', null, '内敛，却更孤（孤独+5，压力+3）'), effects: { loneliness: 5, stress: 3 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ---------- §17.16 2026 春晚 · 假如 MJ 受邀（架空想象，仅 survived2009 续章线） ----------
+  E.V_SFG_2026 = {
+    id: 'V_SFG_2026', variant: true, window: [2025, 2026], weight: 40,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_SFG_2026.title', null, '2026 春晚 · 假如你也在（想象）'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_SFG_2026.text', null, '2026 年的除夕，东方一场举国同看的晚会。莱昂纳尔·里奇与成龙同台，合唱起《We Are The World》——那一晚，有人想起，若你还在，会不会也收到那封邀约。\n这是一段想象：镜头没有真的找到你，但你仍被世界温柔地记挂着。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_SFG_2026.branch0.text', null, '你被世界温柔地记挂着；那一封迟来的邀约，像隔着年份的团圆。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_SFG_2026.opt0.label', null, 'A：云端同台（全息 / 预录）'), hint: T('event.V_SFG_2026.opt0.hint', null, '与里奇、成龙隔空合唱《We Are The World》（声誉+5，慈善+1，歌迷+8）'), effects: { reputation: 5, phil: 1 }, rel: { fans: 8 }, flags: { sfgDuet: true }, epilogue: T('event.V_SFG_2026.opt0.epilogue', null, '你点下那支虚拟的麦克风，与相隔半球的声音合成同一句“we are the world”。这一刻，距离被歌声抹平。'), next: '__RETURN__' },
+      { label: T('event.V_SFG_2026.opt1.label', null, 'B：致辞致敬和平'), hint: T('event.V_SFG_2026.opt1.hint', null, '发表“音乐无国界、童心即和平”的简短致辞（声誉+3，压力-3）'), effects: { reputation: 3, stress: -3 }, flags: { sfgSpeech: true }, epilogue: T('event.V_SFG_2026.opt1.epilogue', null, '你对着镜头只说了一句：“让童心，做这世上最长久的和平。”台下的掌声，隔着屏幕仍能听见。'), next: '__RETURN__' },
+      { label: T('event.V_SFG_2026.opt2.label', null, 'C：婉拒，守在家的炉火边'), hint: T('event.V_SFG_2026.opt2.hint', null, '更想安静地看直播（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, flags: { sfgDecline: true }, epilogue: T('event.V_SFG_2026.opt2.epilogue', null, '你关掉邀约，窝在沙发里看直播；屏幕里的合唱很暖，身边的炉火更暖。有些团圆，不必到场也算。'), next: '__RETURN__' }
     ]
   };
 

@@ -1390,5 +1390,21 @@ window.MJ.i18n.dict.eventEn = {
   "event.V_REL_KIDS.opt1.label": "B: Shield them publicly",
   "event.V_REL_KIDS.opt1.hint": "Step before the lens (Kids +15, Reputation +5, Stress +3)",
   "event.V_REL_KIDS.opt2.label": "C: Let them fly free",
-  "event.V_REL_KIDS.opt2.hint": "Let them soar (Kids +10, Recluse +1)"
+  "event.V_REL_KIDS.opt2.hint": "Let them soar (Kids +10, Recluse +1)",
+
+  // ---------- §17.16 2026 春晚 · 假如 MJ 受邀（架空想象，仅 survived2009 续章线） ----------
+  "event.V_SFG_2026.title": "2026 Spring Festival Gala · If You Were There (Imagined)",
+  "event.V_SFG_2026.text": "On New Year's Eve 2026, an East-Asian gala watched by the whole nation. Lionel Richie and Jackie Chan took the stage together, singing 'We Are The World' — that night, some wondered: if you were still here, would an invitation have found you too.\nThis is a flight of imagination: the camera never truly found you, yet the world still held you gently in its memory.",
+  "event.V_SFG_2026.branch0.text": "Held gently in the world's memory; that belated invitation felt like a reunion across the years.",
+  "event.V_SFG_2026.opt0.label": "A: A virtual duet (hologram / pre-record)",
+  "event.V_SFG_2026.opt0.hint": "Sing 'We Are The World' across the distance with Richie and Chan (Reputation +5, Philanthropy +1, Fans +8)",
+  "event.V_SFG_2026.opt0.epilogue": "You pressed that virtual microphone, blending your voice with others half a globe away into one 'we are the world.' In that moment, distance was smoothed flat by the song.",
+  "event.V_SFG_2026.opt1.label": "B: Deliver a peace tribute",
+  "event.V_SFG_2026.opt1.hint": "A short address — 'music knows no borders, childhood is the lasting peace' (Reputation +3, Stress -3)",
+  "event.V_SFG_2026.opt1.epilogue": "To the camera you said only: 'Let childhood be the world's longest peace.' The applause, though through a screen, could still be heard.",
+  "event.V_SFG_2026.opt2.label": "C: Decline, stay by the fireside at home",
+  "event.V_SFG_2026.opt2.hint": "Rather watch the broadcast in quiet (Family +5, Stress -5)",
+  "event.V_SFG_2026.opt2.epilogue": "You declined the invitation and curled on the sofa to watch. The on-screen chorus was warm; the fireside warmer. Some reunions count without being there.",
+  "event.8_7.sfgDuet.text": "\nAnd you remembered that New Year's Eve, singing 'We Are The World' with Richie and Chan through a screen — some reunions need no shared frame to be whole.",
+  "event.8_7.sfgDecline.text": "\nAnd you remembered that New Year's Eve, when you declined the noisy invitation and watched the broadcast by the fireside — some peace needs no witness from the whole world."
 };
