@@ -105,7 +105,8 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: 'A：跟着 Diana 奔赴洛杉矶', hint: '声名鹊起、进账可观，但乡愁与疏离渐生（声誉+15，财富+10，家庭-5，压力+15）', effects: { reputation: 15, wealth: 10, family: -5, stress: 15 }, next: '1_4' },
-      { label: 'B：留在盖瑞，过平凡一生', hint: '放下巨星梦，走向「平凡人生」结局', effects: {}, next: 'END_PLAIN' }
+      { label: 'B：留在盖瑞，过平凡一生', hint: '放下巨星梦，走向「平凡人生」结局', effects: {}, next: 'END_PLAIN' },
+      { label: 'C：留在盖瑞，但守着本地的舞台', hint: '亲情安稳，前程另谋（家庭+5，艺术+5）', effects: { family: 5, art: 5 }, next: '1_4' }
     ]
   };
 

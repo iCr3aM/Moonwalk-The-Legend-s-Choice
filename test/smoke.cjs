@@ -54,29 +54,144 @@ function pick(opts, keys) {
   return Math.floor(Math.random() * opts.length);
 }
 
-var SOLO = ['A：跟着 Diana']; // 1_3 跟随 Diana 才能继续单飞线
-var NO_MOGUL = ['C：放弃收购', 'B：独立运营']; // 避免 meta.mogul 累积（非商业巨擘结局）
-var NONEVER = ['C：暂不购置']; // 跳过 7_1 债务线（非负债结局）
-var PVT = ['A：对公众敞开大门']; // 触发 7_1 债务线（负债结局）
-var RECLUSE_AVOID = ['A：冷处理不理会', 'A：礼貌地侧身避开', 'A：正面回应', 'A：主动公关', 'A：冷处理']; // 变体里不选退隐项
+var SOLO = ['A：跟着 Diana']; // 1_3 跟随 Diana 才能继续单飞线（保留给模块联动抽查）
+
+// 稳健定向策略：按目标结局，在分支点做出正确选择 + 通用属性/标志推动，
+// 以"真实游玩链路"验证该结局可达（取代易漂移的 label 子串匹配）。
+// 每个目标结局的属性/标志推动画像（w 为 effects 权重；Bonus 为命中对应 flag 的加分）
+var PROFILE = {
+  END_MOGUL:           { w:{art:0.3,reputation:0.3,health:0.3,wealth:0.6,stress:-0.4,family:0.1,media:0.2}, mogulBonus:80, crownBonus:10, burnBonus:-20, avoidPhil:true, avoidRecluse:true },
+  END_PHILANTHROPIST:  { w:{art:0.3,reputation:0.4,health:0.3,wealth:0.2,stress:-0.3,family:0.3,phil:40,media:0.2}, philBonus:80, crownBonus:-5, burnBonus:-10, avoidMogul:true, avoidRecluse:true },
+  END_RECLUSE:         { w:{art:0.2,reputation:-0.2,health:0.4,wealth:0.1,stress:-0.3,family:-0.1,media:-0.3}, recluseBonus:60, crownBonus:-20, burnBonus:-10, avoidPhil:true, avoidMogul:true },
+  END_ETERNAL:         { w:{art:1.2,reputation:1.5,health:1.0,wealth:0.2,stress:-0.8,family:0.1,media:0.2}, crownBonus:60, burnBonus:-400, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_PERFECT:          { w:{art:1.0,reputation:1.2,health:1.5,wealth:0.2,stress:-1.5,family:0.2,media:0.2}, crownBonus:-20, burnBonus:-400, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_TRUE_ETERNAL:    { w:{art:1.5,reputation:1.8,health:1.4,wealth:0.2,stress:-1.0,family:0.1,phil:10,artPath:20,media:0.2}, crownBonus:80, burnBonus:-500, philBonus:20, avoidMogul:true, avoidRecluse:true },
+  END_TRAGIC:          { w:{art:0.2,reputation:-0.2,health:0.5,wealth:0.2,stress:0.2,family:0.1}, burnBonus:80, crownBonus:-20, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_ART_PEAK:         { w:{art:0.8,reputation:0.3,health:0.5,wealth:0.2,stress:0.1,family:0.1}, burnBonus:80, crownBonus:-20, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_CONTROVERSIAL:    { w:{art:0.1,reputation:-1.2,health:0.2,wealth:0.1,stress:0.3,family:0.0,media:-0.5}, burnBonus:-20, crownBonus:-30, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_FINANCIAL:        { w:{art:0.1,reputation:-0.3,health:-0.2,wealth:0.0,stress:0.3,family:-0.1,media:-0.2}, burnBonus:-400, crownBonus:-30, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_SURVIVE_DEBT:     { w:{art:0.1,reputation:-0.3,health:-0.1,wealth:0.0,stress:0.3,family:-0.1,media:-0.2}, burnBonus:60, crownBonus:-30, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_PLAIN:            { w:{art:0,reputation:0,health:0,wealth:0,stress:0,family:0,media:0}, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_FAMILY:           { w:{art:0,reputation:0,health:0,wealth:0,stress:0,family:0,media:0}, avoidMogul:true, avoidPhil:true, avoidRecluse:true },
+  END_TIMELESS_PRESENT: { w:{art:-0.6,reputation:-0.4,health:-0.3,wealth:0.1,stress:1.0,family:0.1,media:-0.2}, crownBonus:-60, avoidMogul:true, avoidPhil:true, avoidRecluse:true }
+};
+
+// 每个结局禁止累积的"非目标元路线"（一旦选项带该 flag 即重罚，确保 dominantMeta 归目标）
+var FORBID = {
+  END_MOGUL:           ['phil','recluse','artPath'],
+  END_PHILANTHROPIST:  ['mogul','recluse','artPath'],
+  END_RECLUSE:         ['mogul','phil','artPath'],
+  END_ETERNAL:         ['mogul','recluse','phil'],
+  END_TRUE_ETERNAL:    ['mogul','recluse','phil'],
+  END_TRAGIC:          ['mogul','phil','recluse','artPath'],
+  END_ART_PEAK:        ['mogul','phil','recluse','artPath'],
+  END_CONTROVERSIAL:   ['mogul','phil','recluse','artPath'],
+  END_FINANCIAL:       ['mogul','phil','recluse','artPath'],
+  END_SURVIVE_DEBT:    ['mogul','phil','recluse','artPath'],
+  END_PLAIN:           ['mogul','phil','recluse','artPath'],
+  END_FAMILY:          ['mogul','phil','recluse','artPath'],
+  END_TIMELESS_PRESENT:['mogul','phil','recluse','artPath']
+};
+
+function scoreOpt(target, ev, o, state) {
+  var e = o.effects || {}, fl = o.flags || {};
+  var sc = 0, id = ev.id;
+
+  // 禁止非目标元路线：元路线计数存于 effects（recluse/mogul/phil/artPath），选项带被禁计数即重罚
+  var fb = FORBID[target];
+  if (fb) { for (var fi = 0; fi < fb.length; fi++) { if (e[fb[fi]]) sc -= 1e6; } }
+
+  // 通用护栏：除目标外，避免早退与"不单飞"
+  if (o.next === 'END_PLAIN') sc += (target === 'END_PLAIN') ? 1e8 : -1e8;
+  if (fl.isSolo === false) sc += (target === 'END_FAMILY') ? 1e8 : -1e8;
+
+  // 关键分支点：按目标结局做出正确选择
+  if (id === '1_3') {
+    if (target === 'END_PLAIN' && o.next === 'END_PLAIN') sc += 1e9;
+    else if (o.next !== 'END_PLAIN') sc += 1e5;
+  }
+  if (id === '1_5') {
+    if (target === 'END_FAMILY' && fl.isSolo === false) sc += 1e9;
+    else if (fl.isSolo === true) sc += 1e9;
+  }
+  if (id === '3_2') {
+    var burned = (target === 'END_TRAGIC' || target === 'END_ART_PEAK' || target === 'END_SURVIVE_DEBT');
+    if (burned && fl.isPepsiBurned) sc += 1e9;
+    if (!burned && !fl.isPepsiBurned) sc += 1e9;
+  }
+  if (id === '3_4') {
+    if (target === 'END_TRAGIC' && fl.painkillerDependent) sc += 1e9;
+    if (target === 'END_ART_PEAK' && !fl.painkillerDependent) sc += 1e9;
+  }
+  if (id === '3_6') {
+    if (target === 'END_MOGUL' && (fl.atvBought || e.mogul)) sc += 1e7;
+    else if (target !== 'END_MOGUL' && !fl.atvBought && !e.mogul) sc += 1e5;
+  }
+  if (id === '4_1') {
+    if (target === 'END_RECLUSE' && fl.neverlandType === 'private') sc += 1e6;
+    else if (fl.neverlandType === 'public') sc += 1e6;
+  }
+  if (id === '5_3') {
+    if (target === 'END_CONTROVERSIAL' && fl.settlement1993) sc += 1e9;
+    else if (!fl.settlement1993) sc += 1e5;
+  }
+  if (id === '6_1b') {
+    if (target === 'END_MOGUL' && (fl.sonyMerge || e.mogul)) sc += 1e7;
+    else if (target !== 'END_MOGUL' && !fl.sonyMerge && !e.mogul) sc += 1e5;
+  }
+  if (id === '6_3b') {
+    if ((target === 'END_ETERNAL' || target === 'END_TRUE_ETERNAL') && fl.anniv2001 === true) sc += 1e7;
+    else if (fl.anniv2001 !== true) sc += 1e4;
+  }
+  if (id === '7_0') {
+    if (target === 'END_RECLUSE' && e.recluse) sc += 1e7;
+    else if ((target === 'END_ETERNAL' || target === 'END_TRUE_ETERNAL') && fl.thriller25 === true) sc += 1e7;
+    else if (fl.thriller25 !== true) sc += 1e4;
+  }
+  if (id === '5_2d') { if (target === 'END_RECLUSE' && e.recluse) sc += 1e7; }
+  if (id === '6_4c') { if (target === 'END_RECLUSE' && e.recluse) sc += 1e7; }
+  if (id === '6_4d') { if (target === 'END_RECLUSE' && e.recluse) sc += 1e7; }
+  if (id === '6_4e') { if (target === 'END_RECLUSE' && e.recluse) sc += 1e7; }
+  if (id === '7_1') {
+    if (target === 'END_FINANCIAL' || target === 'END_SURVIVE_DEBT') {
+      if (typeof o.moneyEffect === 'number' && o.moneyEffect < 0) sc += 1e7;
+    } else if (typeof o.moneyEffect === 'number' && o.moneyEffect >= 0) sc += 1e5;
+  }
+  if (id === '7_2') {
+    if (target === 'END_TIMELESS_PRESENT' && fl.survived2009 === true) sc += 1e10;
+    else if (target === 'END_SURVIVE_DEBT' && fl.thisItHeld === false) sc += 1e7;
+    else if (target === 'END_FINANCIAL' && fl.thisItHeld === true) sc += 1e7;
+  }
+
+  // 通用属性/标志推动（所有权重以 ||0 兜底，避免 undefined 污染分数为 NaN）
+  var P = PROFILE[target];
+  if (P) {
+    sc += (e.art||0)*(P.w.art||0) + (e.reputation||0)*(P.w.reputation||0) + (e.health||0)*(P.w.health||0)
+        + (e.wealth||0)*(P.w.wealth||0) + (e.family||0)*(P.w.family||0) + (e.stress||0)*(P.w.stress||0)
+        + (e.phil||0)*(P.w.phil||0) + (e.recluse||0)*(P.w.recluse||0) + (e.mogul||0)*(P.w.mogul||0)
+        + (e.artPath||0)*(P.w.artPath||0) + (e.media||0)*(P.w.media||0);
+    if (fl.atvBought || fl.sonyMerge || e.mogul) sc += (P.mogulBonus||0);
+    if (fl.weAreTheWorld || fl.healWorld || fl.charity99 || fl.phil || fl.earthSong) sc += (P.philBonus||0);
+    if (e.recluse) sc += (P.recluseBonus||0);
+    if (fl.thriller25 || fl.anniv2001) sc += (P.crownBonus||0);
+    if (fl.isPepsiBurned === true) sc += (P.burnBonus||0);
+    if (P.avoidMogul && (fl.atvBought || fl.sonyMerge || e.mogul)) sc -= 1e4;
+    if (P.avoidPhil && (fl.weAreTheWorld || fl.healWorld || fl.charity99 || fl.phil || fl.earthSong || e.phil)) sc -= 1e4;
+    if (P.avoidRecluse && e.recluse) sc -= 1e4;
+  }
+  return sc;
+}
 
 function stratFor(target) {
-  var map = {
-    END_PLAIN: ['B：留在盖瑞'],
-    END_FAMILY: ['A：跟着 Diana', 'B：守在 Jackson 5'],
-    END_MOGUL: SOLO.concat(['A：迈出单飞', 'A：深度绑定 Epic', 'A：全资收购', 'A：合并 Sony', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满', 'C：暂不购置']).concat(RECLUSE_AVOID),
-    END_PHILANTHROPIST: SOLO.concat(['A：迈出单飞'], NO_MOGUL, NONEVER, RECLUSE_AVOID, ['A：倾情义唱', 'A：全身心投入', 'A：倾力投入', 'A：奉上一场盛典', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_RECLUSE: SOLO.concat(NONEVER, ['A：迈出单飞', 'B：圈起私人天地', '拒访', 'B：保持距离', 'A：倾情义唱', 'B：低调处理', 'C：邀请童声', 'B：保持疏离', 'A：独自消化', 'B：死撑不卖', 'B：忍痛取消', 'A：20 场团体']),
-    END_ETERNAL: SOLO.concat(['A：迈出单飞'], NO_MOGUL, NONEVER, RECLUSE_AVOID, ['B：安全优先拒拍', 'A：倾尽所有去演', 'A：完美演绎月球漫步', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：坦诚聊', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_PERFECT: SOLO.concat(['A：迈出单飞'], NO_MOGUL, NONEVER, RECLUSE_AVOID, ['B：安全优先拒拍', 'A：倾尽所有去演', 'A：完美演绎月球漫步', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：坦诚聊', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_ART_PEAK: SOLO.concat(NO_MOGUL, NONEVER, RECLUSE_AVOID, ['A：迈出单飞', 'A：接拍并意外烧伤', 'B：硬扛着治疗', 'A：完美演绎月球漫步', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_TRAGIC: SOLO.concat(NO_MOGUL, NONEVER, RECLUSE_AVOID, ['A：迈出单飞', 'A：接拍并意外烧伤', 'A：依赖药物止痛', 'A：完美演绎月球漫步', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_CONTROVERSIAL: SOLO.concat(PVT, NO_MOGUL, RECLUSE_AVOID, ['A：迈出单飞', 'A：接拍并意外烧伤', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：达成庭外和解', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'A：转让部分权益', 'A：咬牙撑满']),
-    END_SURVIVE_DEBT: SOLO.concat(PVT, NO_MOGUL, RECLUSE_AVOID, ['A：迈出单飞', 'A：接拍并意外烧伤', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：达成庭外和解', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'B：死撑不卖', 'B：忍痛取消', 'A：20 场团体']),
-    END_FINANCIAL: SOLO.concat(PVT, NO_MOGUL, RECLUSE_AVOID, ['A：迈出单飞', 'A：接拍并意外烧伤', 'A：倾情义唱', 'A：全身心投入', 'A：奉上一场盛典', 'A：达成庭外和解', 'A：用心经营', 'A：全心经营家庭', 'A：全心陪伴他长大', 'A：盛大回归', 'B：死撑不卖', 'A：咬牙撑满', 'A：20 场团体'])
+  if (target === 'END_TRUE_ETERNAL') return stratPinnacle; // 贪心巅峰策略已验证可稳定命中
+  return function (ev, opts, state) {
+    var best = -1e18, bi = 0;
+    for (var i = 0; i < opts.length; i++) {
+      var sc = scoreOpt(target, ev, opts[i], state);
+      if (sc > best) { best = sc; bi = i; }
+    }
+    return bi;
   };
-  var keys = map[target] || [];
-  return function (ev, opts) { return pick(opts, keys); };
 }
 
 // 贪心“巅峰”策略：每步选对「真·永恒」目标贡献最大的选项，用于验证隐藏结局可被有意玩家命中
@@ -119,6 +234,8 @@ console.log('随机 400 局：异常', errors, '；结局分布', JSON.stringify
 
 // 2) 定向策略抽样（分布参考，非门槛）：观察真实事件链路下各结局的命中情况；
 //    14 结局“可达性”以第 2b 节「结局解析单元覆盖」为权威证明（直接构造状态验规则表）。
+//    关闭变体插入以获得确定性抽样：变体按概率/年份窗口强制元路线计数，会污染定向策略命中（见 §4 漂移修复）。
+MJ.engine.pickVariant = function () { return null; };
 var allEndings = Object.keys(MJ.config.endings);
 console.log('定向抽样（分布参考）：');
 allEndings.forEach(function (id) {
