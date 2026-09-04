@@ -4,17 +4,29 @@
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://www.ecma-international.org/)
 [![Vanilla JS](https://img.shields.io/badge/UI-Vanilla%20JS-2ea44f?style=flat-square)](https://developer.mozilla.org/)
-[![Design](https://img.shields.io/badge/design-GDD%20v0.6-8A2BE2?style=flat-square)](./GDD.md)
+[![Design](https://img.shields.io/badge/design-GDD%20v1.12-8A2BE2?style=flat-square)](./GDD.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
 [![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#许可证)
 
 ---
 
+## 📑 目录
+
+- [特性](#-特性)
+- [快速开始](#-快速开始)
+- [玩法简介](#-玩法简介)
+- [目录结构](#-目录结构)
+- [测试](#-测试)
+- [设计约束](#-设计约束)
+- [许可证](#-许可证)
+
+---
+
 ## ✨ 特性
 
-- **严格对齐设计文档**：所有玩法、分支、数值、结局均依据 [`GDD.md`](./GDD.md)（v0.6）实现。
+- **严格对齐设计文档**：所有玩法、分支、数值、结局均依据 [`GDD.md`](./GDD.md)（v1.12）实现。
 - **六维属性 + Economy 双轨**：健康 / 声誉 / 财富 / 家庭 / 艺术 / 压力（均 0–100）；大额金钱走 `netWorth` / `debt`（万元），修复早期「财富被 clamp 到 0」导致结局不可达的 bug。
-- **18 种结局**：12 种主线结局 + 1 个隐藏终极结局（真·永恒）+ 1 个续章结局，由优先级规则表 + 元路线破平次序解析。
+- **18 种结局**：含 1 个隐藏终极结局（真·永恒）与 1 个续章结局，由优先级规则表 + 元路线破平次序解析。
 - **四条隐藏元路线**：艺术家 / 慈善家 / 商业巨擘 / 隐士，由选择累积、实时提示「正在走向 X 之路」。
 - **变体事件系统（可能性系统）**：75 变体按「概率 + 年份窗口」在章节间插入，含稀有门控的隐藏 / 条件变体。
 - **60 项成就**：复用图鉴式 `localStorage` 持久化，游戏中实时弹窗解锁。
@@ -54,11 +66,11 @@ node build_singlefile.cjs   # 等价于 npm run build，产出 dist/index.html �
 
 ## 🧩 玩法简介
 
-1. **引导页**：查看操作说明，选择是否从存档继续，可切换语言，并生成文字 / 图片分享。
+1. **引导页**：查看操作说明，选择是否从存档继续，可切换语言。
 2. **状态栏**：实时显示六维属性、净资产、主导元路线与「当前年份 / 人生轨迹」。
 3. **事件卡**：每个历史节点给出 2–3 个选项，选项带有 `hint` 预览潜在影响（属性 / 金钱 / 标志）。
 4. **变体事件**：在主线之外，按概率与年代窗口插入的「可能性」事件，丰富时代纹理。
-5. **结局**：依据属性、标志与元路线，由规则表解析出 14 种结局之一；续章线永不归死亡结局。
+5. **结局**：依据属性、标志与元路线，由规则表解析出 18 种结局之一；续章线永不归死亡结局。
 6. **结局页**：展示传奇海报、关键抉择回顾、生涯数据统计与成就解锁。
 
 ---
@@ -89,6 +101,7 @@ test/en_smoke.cjs         英文文案 / 续章链路 / 新事件覆盖测试
 项目以 **Node 无 DOM 冒烟测试** 驱动引擎，验证「随机多局 0 异常且必到结局」以及「时间线显示年份单调非递减（无倒挂）」：
 
 ```bash
+npm test                  # 运行全部 13 项回归门禁（推荐）
 node test/smoke.cjs        # 随机 400 局 + 时间倒挂回归断言（倒挂将非零退出）
 node test/en_smoke.cjs     # 英文文案 / 续章链路 / 第二章 solo 链路 / 新事件覆盖
 ```
