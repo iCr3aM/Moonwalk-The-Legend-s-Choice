@@ -103,6 +103,11 @@ window.MJ = window.MJ || {};
     END_ETERNAL: {
       name: '永恒符号', icon: '👑', tone: '崇敬、不朽', summary: '艺术与声誉登峰，成为文化图腾。',
       monologue: '艺术登峰，声誉不朽，你成了超越个人的文化图腾。后来的人提起“流行之王”，想到的不再是一个名字，而是一种可能。\n你谢幕了，但那双缀着水钻的手套，永远停在时间里，闪光。'
+    },
+    END_TRUE_ETERNAL: {
+      name: '真·永恒符号', icon: '✨', tone: '不朽、至臻', hidden: true,
+      summary: '艺术、声誉、健康与善意在巅峰交汇，你成了超越时间的传奇本身。',
+      monologue: '当艺术、声誉、健康与善意同时抵达巅峰，你不再只是某个人，而是一种被时间反复确认的光。\n后来者的耳机里仍有你的节拍，孩子们的合唱里仍有你的和声——你超越了谢幕，成了永恒本身。'
     }
   };
 
@@ -123,6 +128,8 @@ window.MJ = window.MJ || {};
       check: function (s) { return (s.attributes.art || 0) >= 75 && (s.attributes.reputation || 0) >= 75; } },
     { id: 'ACH_ETERNAL', name: '永恒符号', icon: '👑', desc: '艺术与声誉不朽，成为时代的文化图腾。',
       check: function (s, ctx) { return ctx && ctx.ending === 'END_ETERNAL'; } },
+    { id: 'ACH_TRUE_ETERNAL', name: '真·永恒', icon: '✨', desc: '艺术、声誉、健康与善意于巅峰交汇，你超越了时间本身。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_TRUE_ETERNAL'; } },
     { id: 'ACH_SURVIVOR', name: '绝境求生', icon: '💪', desc: '在债务的阴影里，仍把命握在自己手里。',
       check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } },
     { id: 'ACH_RICH', name: '商业巨富', icon: '💰', desc: '把旋律酿成了泼天的财富，数字本身已成传奇。',
@@ -134,8 +141,8 @@ window.MJ = window.MJ || {};
     { id: 'ACH_DIGITAL', name: '数字公民', icon: '📡', desc: '在互联网的浪潮里，你是弄潮儿也是掌舵人。',
       check: function (s) { return s.flags.internetSavvy === true; } },
     { id: 'ACH_PEACEMAKER', name: '和平使者', icon: '🕊️', desc: '你让《Heal the World》不只是一首歌，而是一个承诺。',
-      check: function (s) { return s.flags.healedWorld === true; } },
-    { id: 'ACH_RECLUSE', name: '隐世智者', icon: '🌙', desc: '三度走进静默，你终于听见了自己。',
+      check: function (s) { return s.flags.healWorld === true; } },
+    { id: 'ACH_SAGE', name: '隐世智者', icon: '🌙', desc: '三度走进静默，你终于听见了自己。',
       check: function (s) { return (s.meta.recluse || 0) >= 3; } },
     { id: 'ACH_COMEBACK', name: '浴火重生', icon: '🔥', desc: '聚光灯熄灭过，你又亲手把它点亮。',
       check: function (s) { return s.flags.comebackSeen === true; } }

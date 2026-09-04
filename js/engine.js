@@ -147,20 +147,24 @@ window.MJ = window.MJ || {};
     var held = f.thisItHeld === true;
     var debt = state.debt === true;
 
-    if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支
+    if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支（1_5 留盖瑞早退）
     if (f.isSolo === false) return 'END_FAMILY';              // 2. 始终未单飞
+    // 3. 真·永恒隐藏结局（终极）：不烧伤/不负债 + 艺术&声誉&健康极致 + 慈善&艺术路线极致 + 双加冕标志（多方极致收敛）
+    if (!burned && !debt && (a.art || 0) >= 88 && (a.reputation || 0) >= 88 && (a.health || 0) >= 80 && (m.phil || 0) >= 3 && (m.artPath || 0) >= 2 && (f.thriller25 && f.anniv2001)) {
+      return 'END_TRUE_ETERNAL';
+    }
     var dom = dominantMeta(m);
-    if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 3
-    if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 4
-    if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 5
-    if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 6 巅峰需加冕标志
-    if (!burned && a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';     // 7 健康谢幕（需声誉达标，否则归争议缠身）
-    if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 8
-    if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 9
-    if (debt && !held) return 'END_SURVIVE_DEBT';            // 10 负债但取消巡演保命
-    if (debt) return 'END_FINANCIAL';                        // 11 债务压垮
-    if ((a.reputation < 60 && f.settlement1993) || ((a.media || 0) < 25 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL'; // 12 声誉承压（M5 媒体轴联动）
-    return 'END_TRAGIC';                                     // 13 默认
+    if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 4
+    if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5
+    if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 6
+    if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
+    if (!burned && a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';     // 8 健康谢幕（需声誉达标，否则归争议缠身）
+    if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 9
+    if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 10
+    if (debt && !held) return 'END_SURVIVE_DEBT';            // 11 负债但取消巡演保命
+    if (debt) return 'END_FINANCIAL';                        // 12 债务压垮
+    if ((a.reputation < 60 && f.settlement1993) || ((a.media || 0) < 25 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL'; // 13 声誉承压（M5 媒体轴联动）
+    return 'END_TRAGIC';                                     // 14 默认
   };
 
   // ---------- 事件引擎 ----------

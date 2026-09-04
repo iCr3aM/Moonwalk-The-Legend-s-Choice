@@ -696,7 +696,8 @@ window.MJ = window.MJ || {};
 
     var html =
       statusBar(state, { year: 2009 }) +
-      '<div class="panel ending">' +
+      '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
+        (e.hidden ? '<div class="badge-ultimate">★ 终极隐藏结局</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
         '<h2>' + e.name + '</h2>' +
         '<p class="tone">' + e.tone + '</p>' +

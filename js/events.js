@@ -871,7 +871,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：盛大回归', hint: '王者归来，艺术家之心+1（艺术+10，声誉+10）', effects: { art: 10, reputation: 10, artPath: 1, rel: { fans: 8 } }, flags: { thriller25: true }, next: '7_1' },
+      { label: 'A：盛大回归', hint: '王者归来，艺术家之心+1（艺术+10，声誉+10）', effects: { art: 10, reputation: 10, artPath: 1, rel: { fans: 8 } }, flags: { thriller25: true, comebackSeen: true }, next: '7_1' },
       { label: 'B：释出混音', hint: '温故而知新（艺术+5，声誉+5）', effects: { art: 5, reputation: 5 }, next: '7_1' },
       { label: 'C：婉拒亮相', hint: '退居幕后，隐士之心+1（声誉-3）', effects: { reputation: -3, recluse: 1 }, next: '7_1' }
     ]
@@ -1226,7 +1226,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: 'A：冷处理', hint: '任其沉底（声誉-3，压力+3）', effects: { reputation: -3, stress: 3, media: -3 }, epilogue: '你关掉屏幕，假装那些字句伤不到你，可夜里的辗转出卖了你。', next: '__RETURN__' },
-      { label: 'B：亲自辟谣', hint: '以正视听（声誉+5，压力+5）', effects: { reputation: 5, stress: 5, media: 5 }, epilogue: '你敲下一段郑重其事的回应，寄望真相能跑赢偏见。', next: '__RETURN__' }
+      { label: 'B：亲自辟谣', hint: '以正视听（声誉+5，压力+5）', effects: { reputation: 5, stress: 5, media: 5 }, flags: { internetSavvy: true }, epilogue: '你敲下一段郑重其事的回应，寄望真相能跑赢偏见。', next: '__RETURN__' }
     ]
   };
   E.V_COMEBACK = {

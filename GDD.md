@@ -121,7 +121,7 @@
 ## 5.3 关键事件与分支
 核心分歧（单飞、百事、庄园、两次指控、This Is It）、影响力事件（巡演/慈善/专辑投入）、象征事件（整容/结婚/坠婴）。另含**变体事件**（见 5.6）与**元路线**（见 5.5）。
 ## 5.4 结局系统
-12 种结局，标志优先 + 属性阈值 + 元路线（见第七章）。
+13 种结局（含 1 隐藏终极），标志优先 + 属性阈值 + 元路线（见第七章）。
 ## 5.5 元路线（Meta-Path）系统 ★新增
 玩家在全程的选择会累积出四条隐性元路线，决定中后段专属事件与可达成结局：
 - **艺术家路线**（artPath）：持续高艺术投入 → 解锁《Ghosts》《Thriller 25》等，导向艺术/永恒结局。
@@ -269,7 +269,7 @@
 
 # 七、结局设计
 
-## 7.1 结局列表（12 种）
+## 7.1 结局列表（13 种，含 1 隐藏终极）
 | 结局 | 名称 | 基调 | 简述 |
 | --- | --- | --- | --- |
 | END_PLAIN | 🌱 平凡人生 | 平静、遗憾 | 留盖瑞，普通一生 |
@@ -284,22 +284,24 @@
 | END_SURVIVE_DEBT | 💪 生存但负债 | 坚韧、无奈 | 取消巡演保命但负债 |
 | END_PERFECT | 🌟 完美传奇 | 圆满、传奇 | 避创伤，健康荣誉安享晚年 |
 | END_ETERNAL | 👑 永恒符号 | 崇敬、不朽 | 艺术与声誉登峰，文化图腾 |
+| END_TRUE_ETERNAL | ✨ 真·永恒符号 | 不朽、至臻（**隐藏**） | 艺术·声誉·健康·慈善 四方极致收束 + 双加冕，超越时间的终极传奇 |
 
 ## 7.2 结局判定逻辑（优先级规则表）
 ```
-1. END_PLAIN          若 eventId==END_PLAIN
+1. END_PLAIN          若 entryId==END_PLAIN（1_5 留盖瑞早退）
 2. END_FAMILY         若 isSolo===false
-3. END_RECLUSE        若 recluse 计数最高 且 health>=45
-4. END_MOGUL          若 mogul>=2 且 !debt 且 wealth>=60
-5. END_PHILANTHROPIST 若 phil>=3 且 !debt
-6. END_ETERNAL        若 !isPepsiBurned 且 art>=85 且 rep>=75 且 health>=60
-7. END_PERFECT        若 !isPepsiBurned 且 health>=70 且 (!held||reduced)
-8. END_ART_PEAK       若 isPepsiBurned && !dependent && held && full
-9. END_TRAGIC         若 isPepsiBurned && dependent && held && full
-10. END_FINANCIAL     若 economy.debt===true
-11. END_CONTROVERSIAL 若 rep<30 && settlement1993
-12. END_SURVIVE_DEBT  若 !held && debt
-13. 默认                END_TRAGIC
+3. END_TRUE_ETERNAL   若 !isPepsiBurned && !debt && art>=88 && rep>=88 && health>=80 && phil>=3 && artPath>=2 && (thriller25 && anniv2001)  【隐藏终极：多方极致收敛 + 双加冕】
+4. END_RECLUSE        若 recluse 计数最高 且 health>=40
+5. END_MOGUL          若 mogul>=2 且 !debt 且 wealth>=60
+6. END_PHILANTHROPIST 若 phil>=3 且 !debt
+7. END_ETERNAL        若 !isPepsiBurned 且 art>=75 且 rep>=65 且 health>=55 且 (thriller25 || anniv2001)
+8. END_PERFECT        若 !isPepsiBurned 且 health>=50 且 rep>=60
+9. END_ART_PEAK       若 isPepsiBurned && !dependent && held && health>=40
+10. END_TRAGIC        若 isPepsiBurned && dependent && held && health>=35
+11. END_SURVIVE_DEBT  若 debt && !held
+12. END_FINANCIAL     若 debt
+13. END_CONTROVERSIAL 若 (rep<60 && settlement1993) || (media<25 && (settlement1993||secondCharge))
+14. 默认                END_TRAGIC
 ```
 > 元路线计数并列时按"艺术>慈善>商业>隐士"次序破平。
 
@@ -322,8 +324,9 @@
 | END_RECLUSE | recluse 最高 & health≥45 | 多次拒访/拒拍/隐居 |
 | END_MOGUL | mogul≥2 & !debt & wealth≥60 | ATV+索尼+追加收购 |
 | END_PHILANTHROPIST | phil≥3 & !debt | We Are The World+Heal+1999 慈善 |
-| END_ETERNAL | !burned & art≥85 & rep≥75 & health≥60 | 拒百事+艺术满投入+控压 |
-| END_PERFECT | !burned & health≥70 & (!held‖reduced) | 拒百事+稳健谢幕 |
+| END_ETERNAL | !burned & art≥75 & rep≥65 & health≥55 & (thriller25∥anniv2001) | 拒百事+艺术满投入+控压+加冕标志 |
+| END_PERFECT | !burned & health≥50 & rep≥60 | 拒百事+健康声誉稳健 |
+| END_TRUE_ETERNAL | !burned & !debt & art≥88 & rep≥88 & health≥80 & phil≥3 & artPath≥2 & (thriller25&&anniv2001) | 四方极致+双加冕（**隐藏终极**） |
 | END_ART_PEAK | burned & !dep & held & full | 烧伤戒药+满规模 |
 | END_TRAGIC | burned & dep & held & full | 历史复刻 |
 | END_FINANCIAL | debt===true | 购庄园+巨和解+成本 |
@@ -405,7 +408,7 @@
 - **M8 章节主题色与音景分层（强化 §10）**：按章切换配色（童年暖→巅峰金→坠落冷→告别幽蓝）与氛围音动机；`压力`升高时音景收紧。**【✅ 已实现（主题色）】** 每段落主色切换（`#app[data-chapter]`）；音景增益分层为后续可选增强。
 
 **长线 / 可选**
-- **M9 真·永恒隐藏结局（扩展 §7.1）**：需 艺术+声誉+健康+慈善 多方极致收敛 + 关键成就，作为终极目标。
+- **M9 真·永恒隐藏结局（扩展 §7.1）**：需 艺术+声誉+健康+慈善 多方极致收敛 + 关键成就，作为终极目标。【✅ 已实现】 隐藏结局 `END_TRUE_ETERNAL`（§7.1/§7.2/§8.2），图鉴默认隐藏、达成后解锁，结局页专属金色辉光 +「真·永恒」成就（reachable：贪心巅峰策略 500 局命中 333 次）。
 - **M10 多周目传承（NG+）**：解锁"导演评论/幕后花絮"模式，或"传奇等级"解锁限定变体，强化重玩性。
 - **M11 成就叙事化**：部分成就解锁专属幕后片段（如"月球漫步诞生"花絮），让成就成为故事节拍。
 - **M12 关键抉择回放时间轴**：结局页"人生回放"带年份标记与"假如当初…"提示，呼应 §5.7 重玩性。
@@ -421,7 +424,7 @@
 | 自动事件 | 约 14 |
 | 条件事件 | 约 18 |
 | 变体事件 | 34（已扩，含隐藏/条件） |
-| 结局/判定 | 13（12 结局 + 判定） |
+| 结局/判定 | 14（13 结局 + 判定） |
 | 合计 | 约 85+ |
 
 ## 附录 B：核心标志与元路线计数
@@ -429,7 +432,7 @@
 **元路线计数（非负整数）**：phil / mogul / recluse / artPath（隐藏，结局判定读取最高者）。
 
 ## 附录 C：结局情感矩阵
-完美/希望、悲剧/悲伤、艺术巅峰/辉煌、家庭/温暖、财务/挫败、争议/压抑、生存负债/坚韧、平凡/平静、隐居/疏离、巨擘/冷峻、慈善/仁爱、永恒/崇敬。
+完美/希望、悲剧/悲伤、艺术巅峰/辉煌、家庭/温暖、财务/挫败、争议/压抑、生存负债/坚韧、平凡/平静、隐居/疏离、巨擘/冷峻、慈善/仁爱、永恒/崇敬、真·永恒/不朽至臻。
 
 ## 附录 D：属性初值（见 5.2）
 ## 附录 E：生平锚点（见 4.5）

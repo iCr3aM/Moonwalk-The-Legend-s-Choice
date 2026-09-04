@@ -355,6 +355,19 @@ html, body {
   border: 1px solid rgba(212, 175, 55, 0.35);
 }
 
+/* 真·永恒隐藏结局：专属金色辉光 */
+.ending.hidden-ending {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 1px var(--gold), 0 18px 50px rgba(212,175,55,0.35);
+  background: linear-gradient(180deg, rgba(212,175,55,0.12), var(--panel));
+}
+.badge-ultimate {
+  display: inline-block; margin: 0 auto 10px; padding: 4px 14px;
+  font-size: 12px; letter-spacing: 2px; color: #1a140a; font-weight: 700;
+  background: linear-gradient(90deg, #f6d365, #d4af37); border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(212,175,55,0.45);
+}
+
 /* ---------- M5/M6 体验轴次条（媒体 / 孤独） ---------- */
 .bars.soft { margin-top: 8px; grid-template-columns: repeat(2, 1fr); }
 .fill.media { background: linear-gradient(90deg, #3f6fae, #6fa6d4); }
