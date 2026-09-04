@@ -603,6 +603,68 @@
 
 > 实施建议：上述规划项按"性价比 + 与现有系统耦合度"排期；优先落地 §17.9 彩蛋（复用 V_*/成就，成本低、惊喜感高）、§17.5 挑战/每日模式（重玩性杠杆）、§17.8 生平补全事件（忠于史实、低风险）、§17.11 趣事/轶事（粉丝向、低成本）。凡架空内容务必遵循 §15.1 中性化规范与"明确标注架空"。
 
+### 17.13 「假如」时间线变体 + 未竟梦想（hypothetical / unrealized-dream variants）★规划
+> 目标（用户新需求）：① 把"假如 MJ 从 Off The Wall 到 Invincible 每张专辑都横扫格莱美"这类假设，做成**可触发、可到达、符合现有模块**的变体；② 把 MJ**生前未实现的梦想**（彼得潘电影、长城演唱会、生前音乐剧、完成 This Is It 驻演、太空演唱会…）也做成变体/成就，丰富"如果当初…"的蝴蝶效应。
+> 全部沿用既有 `V_*` 变体机制（`engine.pickVariant` + events.js `variant:true`），**不引入新子系统**；架空处严格遵循 §15.1（标题/正文含"（想象）"、不加法律/诽谤内容）。
+
+#### 17.13.1 机制：如何加入"假设/梦想"变体（复用现有模块）
+- 变体对象形态（与 `V_BIO_*`/`V_OFFER` 完全一致）：
+  ```js
+  E.V_GRAMMY_INVINCIBLE = {
+    id: 'V_GRAMMY_INVINCIBLE', variant: true, window: [2001, 2002], weight: 35,
+    title: T('event.V_GRAMMY_INVINCIBLE.title', null, '（想象）Invincible 的格莱美之夜'),
+    kind: 'choice',
+    text: function (s) { return '...'; },
+    options: [
+      { label: T('event.V_GRAMMY_INVINCIBLE.opt0.label', null, 'A：让《Invincible》也站上领奖台'),
+        next: '__RETURN__', flags: { grammy_invincible: true },
+        effects: { rep: 8, art: 6 } },
+      { label: T('event.V_GRAMMY_INVINCIBLE.opt1.label', null, 'B：让历史停留在它本来的样子'),
+        next: '__RETURN__' }
+    ]
+  };
+  ```
+- **可达性保证**：`engine.pickVariant(year)` 以"当前主线事件的 `year`"比对变体 `window`，命中则在该主线事件**之前**插入一次（显示年份继承父事件，避免时间倒挂，见 engine.js L214–253）。因此只要变体的 `window` **覆盖图里某个主线节点的年份**，玩家沿该路线推进时即可触发（再受 `weight` 概率与可选 `cond` 门控，`_usedVariants` 保证同周目不重复）。下表已逐条对齐主线年份。
+- **解锁联动**：选项写入 `flags:{grammy_*, dream_*}`；结局时由 `MJ.eggSystem.checkFlags`（扫描 `egg_` 前缀）或新增成就 `MJ.achievementSystem.evaluate`（读 `state.flags`）统一判定并**串行**弹窗（见 §16.1/§17.12 队列方案）。无需新增 UI。
+
+#### 17.13.2 「格莱美全满贯」假设变体（史实 vs 想象，逐项标注）
+> 史实校准（来源：GRAMMY 官方 / 传记年表）：OTW 1979→1980 获 **1** 座（最佳男 R&B《Don't Stop 'Til You Get Enough》）；Thriller 1982→1984 单夜 **8** 座（历史纪录，主线 3_3 已落地）；Bad 1987→1988 获 **2** 座；Dangerous 1991→1993 获 **1** 座（《Jam》最佳男 R&B）；HIStory 1995 专辑 **0** 座（但《Scream》MV 于 1996 获最佳短篇 MV 1 座）；Invincible 2001 **0** 座。即 1979–1991 每张个人专辑**均获奖**为史实，"连 HIStory/Invincible 也横扫"才是假设。
+
+| id | 锚定主线年 | window | 史实/想象 | 触发 flag | 软性效果 |
+| --- | --- | --- | --- | --- | --- |
+| V_GRAMMY_OTW | 2_3/2_4/2_5 (1979–80) | [1979,1980] | 史实(已获奖) | grammy_otw | rep+5,art+5 |
+| V_GRAMMY_THRILLER | 3_3 (1984) | [1983,1984] | 史实(已获奖) | grammy_thriller | rep+8,art+6 |
+| V_GRAMMY_BAD | 4_2 (1987) | [1987,1989] | 史实(已获奖) | grammy_bad | rep+5,art+5 |
+| V_GRAMMY_DANGEROUS | 5_1/5_2 (1991–92) | [1991,1993] | 史实(已获奖) | grammy_dangerous | rep+5,art+5 |
+| V_GRAMMY_HISTORY | 6_1/6_1c (1995–96) | [1995,1996] | 想象(专辑未 sweep) | grammy_history | rep+6,art+4 |
+| V_GRAMMY_INVINCIBLE | 6_3b (2001) | [2001,2002] | 想象(未获奖) | grammy_invincible | rep+6,art+4 |
+
+- 集齐 6 个 `grammy_*` flag（单周目）→ 成就 **ACH_GRAMMY_SWEEP（legendary）「格莱美大满贯」**："从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字——哪怕有些只存在于想象里。"
+
+#### 17.13.3 未竟梦想变体（生前未实现，皆标注"想象"）
+> 均基于可考的 MJ 生平意向（Peter Pan 版权与饰演执念、1987 长城演唱会设想、导演/制片抱负、儿童医院设想、2009 This Is It 驻演因离世取消、生前音乐剧设想、零重力/太空演出传言）。不做法律/诽谤表述。
+
+| id | 锚定主线年 | window | 梦想 | flag | 效果 / 备注 |
+| --- | --- | --- | --- | --- | --- |
+| V_PETERPAN | 4_1 之后 (1987–2005) | [1987,2005] | 饰演并拍摄《彼得潘》（他购入版权、曾含泪恳求；Neverland 得名由来） | dream_peterpan | art+8,family+5 |
+| V_GREATWALL | 4_1/4_2 (1987–88) | [1987,1988] | 在北京长城开唱（当年未获许可） | dream_greatwall | rep+10,art+6 |
+| V_FILMSTUDIO | 4_0 之后 (1986–1995) | [1986,1995] | 建立自己的制片厂 / 亲自执导 | dream_filmstudio | art+8,mogul+1 |
+| V_CHILDHOSP | 4_1 之后 (1987–2005) | [1987,2005] | 在 Neverland 建儿童医院 / 疗愈地 | dream_childhosp | phil+1,family+5,rep+5 |
+| V_THISISIT_DONE | 7_2 (2009) | [2009,2009] | 完成伦敦 O2 50 场驻演（史实因离世取消） | dream_thisisit | rep+12,art+10（cond：survived2009 或纯想象） |
+| V_MUSICAL | 6_1 之后 (1995–2005) | [1995,2005] | 生前推出百老汇音乐剧（史实 2022 追授） | dream_musical | art+8,rep+6 |
+| V_SPACE | 1990–2005 | [1990,2005] | 零重力 / 太空演唱会（与维珍合作传言） | dream_space | rep+10,art+6（纯想象 vignette） |
+
+- 集齐 ≥3 个 `dream_*` flag → 成就 **ACH_DREAMER（epic）「造梦者」**："你替那个男孩，把清单上没划掉的项，一一点亮了。"
+- 单项成就：**ACH_PETERPAN（rare）**、**ACH_GREATWALL（rare）**、**ACH_THISISIT（epic）「未竟之演」**。
+
+#### 17.13.4 验收与落地清单
+- 变体：在 `events.js` 追加上述 `V_*` 对象（沿用 `T()` 包裹 + `eventEn` 英文键，回退链兼容；i18n 同步译 EN，确保英文模式 0 残留）。
+- 成就：在 `config.achievements` 追加 ACH_GRAMMY_SWEEP / ACH_DREAMER / ACH_PETERPAN / ACH_GREATWALL / ACH_THISISIT（`{id,name,icon,rarity,desc,check}`），`check` 读 `state.flags`。
+- 回归：en_smoke 校验新事件 EN 无中文残留；smoke.cjs 年份单调断言不因新变体破；`_usedVariants` 保证同周目不重复触发。
+- 合规：所有"想象"变体标题/正文含"（想象）"前缀，遵循 §15.1 中性化。
+
+> 实施建议：优先做 §17.13.2 格莱美全满贯（与现有 3_3 格莱美主线呼应、史实扎实、成本低）+ §17.13.3 中 V_PETERPAN / V_GREATWALL / V_THISISIT_DONE（考据明确、粉丝向强）；V_SPACE 等纯想象 vignette 作为后续点缀。
+
 ---
 
 
