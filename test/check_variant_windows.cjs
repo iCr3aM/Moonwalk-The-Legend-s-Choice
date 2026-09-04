@@ -1,5 +1,5 @@
-// 变体年份窗口审计：同年多变体插入密度 / 同 flag 窗口重叠 检查
-// 用法：node test/check_variant_windows.cjs
+// 变体年份窗口审计（常态化）：检测 (1) 同年 ≥4 变体的密集插入告警 (2) 同 flag 窗口重叠（硬错误） (3) window 不覆盖任何主线年份的"永不触发"告警
+// 用法：node test/check_variant_windows.cjs  （npm test 调用；重叠冲突返回非零）
 global.window = global;
 var _store = {};
 global.localStorage = {
@@ -17,41 +17,42 @@ function flagsOf(ev) {
   return r;
 }
 
-var variants = Object.keys(EVENTS)
-  .filter(function (k) { return EVENTS[k] && EVENTS[k].variant; })
-  .map(function (k) {
-    var ev = EVENTS[k];
-    return { id: ev.id, win: ev.window, weight: ev.weight, flags: flagsOf(ev) };
-  });
+var all = Object.keys(EVENTS).map(function (k) { return EVENTS[k]; }).filter(Boolean);
+var mainlineYears = {};
+all.forEach(function (ev) { if (!ev.variant && typeof ev.year === 'number') mainlineYears[ev.year] = true; });
 
-console.log('变体总数:', variants.length);
-
-// 年份 -> 变体
-var byYear = {};
-variants.forEach(function (v) {
-  if (!v.win) return;
-  for (var y = v.win[0]; y <= v.win[1]; y++) { (byYear[y] = byYear[y] || []).push(v.id); }
+var variants = all.filter(function (ev) { return ev.variant; }).map(function (ev) {
+  return { id: ev.id, win: ev.window, weight: ev.weight, flags: flagsOf(ev) };
 });
-var dense = Object.keys(byYear).filter(function (y) { return byYear[y].length >= 3; }).sort(function (a, b) { return a - b; });
-console.log('\n[同年≥3 变体·潜在密集插入年份]', dense.length ? dense.map(function (y) { return y + '(' + byYear[y].join('/') + ')'; }).join('  ') : '无');
 
-// 同 flag 且窗口重叠（可能重复设标）
+var errs = 0, warns = 0;
+console.log('变体总数:', variants.length, '；主线事件年份数:', Object.keys(mainlineYears).length);
+
+// (1) 同年密集插入（阈值 ≥4 → 告警）
+var byYear = {};
+variants.forEach(function (v) { if (!v.win) return; for (var y = v.win[0]; y <= v.win[1]; y++) { (byYear[y] = byYear[y] || []).push(v.id); } });
+var dense = Object.keys(byYear).filter(function (y) { return byYear[y].length >= 4; }).sort(function (a, b) { return a - b; });
+if (dense.length) { warns++; console.log('[告警·同年≥4变体·密集插入]', dense.map(function (y) { return y + '(' + byYear[y].join('/') + ')'; }).join('  ')); }
+else console.log('[同年≥4变体] 无（✅）');
+
+// (2) 同 flag 且窗口重叠（硬错误）
 var flagMap = {};
 variants.forEach(function (v) { v.flags.forEach(function (f) { (flagMap[f] = flagMap[f] || []).push(v); }); });
 var conflict = [];
 Object.keys(flagMap).forEach(function (f) {
   var arr = flagMap[f];
   for (var i = 0; i < arr.length; i++) for (var j = i + 1; j < arr.length; j++) {
-    var a = arr[i], b = arr[j];
-    if (!a.win || !b.win) continue;
+    var a = arr[i], b = arr[j]; if (!a.win || !b.win) continue;
     if (a.win[0] <= b.win[1] && b.win[0] <= a.win[1]) conflict.push(f + ': ' + a.id + '[' + a.win + '] ~ ' + b.id + '[' + b.win + ']');
   }
 });
-console.log('[同 flag 且窗口重叠·可能重复设标]', conflict.length ? '\n  ' + conflict.join('\n  ') : '无');
+if (conflict.length) { errs += conflict.length; console.log('[错误·同flag窗口重叠·重复设标]'); conflict.forEach(function (c) { console.log('  ' + c); }); }
+else console.log('[同flag窗口重叠] 无（✅）');
 
-// 概览表（按起始年排序）
-console.log('\n[变体窗口概览]');
-variants.sort(function (a, b) { return (a.win ? a.win[0] : 0) - (b.win ? b.win[0] : 0); }).forEach(function (v) {
-  console.log('  ' + v.id + '  window=' + (v.win ? v.win.join('-') : '-') + '  w=' + (v.weight || '-') + '  flags=' + (v.flags.join(',') || '-'));
-});
-console.log('\n审计结束。');
+// (3) 永不触发：window 不覆盖任何主线事件年份
+var never = variants.filter(function (v) { if (!v.win) return false; for (var y = v.win[0]; y <= v.win[1]; y++) { if (mainlineYears[y]) return false; } return true; });
+if (never.length) { warns++; console.log('[告警·可能永不触发·window 无主线年] ' + never.map(function (v) { return v.id + '[' + (v.win ? v.win.join('-') : '-') + ']'; }).join('  ')); }
+else console.log('[window覆盖主线年] 全部可达（✅）');
+
+console.log('\n审计结束（告警 ' + warns + ' / 错误 ' + errs + '）');
+process.exit(errs ? 1 : 0);

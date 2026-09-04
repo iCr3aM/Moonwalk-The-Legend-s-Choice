@@ -1125,13 +1125,13 @@ window.MJ = window.MJ || {};
     id: '8_6', year: 2026, title: T('event.8_6.title', null, '命运裁决 · 续'), kind: 'ending',
     text: function (s) {
       var dom = MJ.dominantMeta(s.meta);
-      var base = '2010 年之后的岁月里，聚光灯没有在 2009 年熄灭。回望这一生，从盖瑞的廉价摇篮到横跨半个世纪的舞台，你的每一个选择，都写就了独一份的传奇。';
-      if (dom === 'artPath') base += '\n你留给世界的，是永远跳不完的舞步与听不腻的旋律——艺术，是你唯一不愿妥协的信仰。';
-      else if (dom === 'phil') base += '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。';
-      else if (dom === 'mogul') base += '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。';
-      else if (dom === 'recluse') base += '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。';
-      if (s.flags.biopicMJStar) base += '\n银幕之上，是你亲自重走自己的人生——这世上唯一能演活迈克尔·杰克逊的，终究只有迈克尔·杰克逊自己。';
-      base += '\n谢幕之后，故事由听者续写。';
+      var base = T('event.8_6.text', null, '2010 年之后的岁月里，聚光灯没有在 2009 年熄灭。回望这一生，从盖瑞的廉价摇篮到横跨半个世纪的舞台，你的每一个选择，都写就了独一份的传奇。');
+      if (dom === 'artPath') base += T('event.8_6.b_artPath', null, '\n你留给世界的，是永远跳不完的舞步与听不腻的旋律——艺术，是你唯一不愿妥协的信仰。');
+      else if (dom === 'phil') base += T('event.8_6.b_phil', null, '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。');
+      else if (dom === 'mogul') base += T('event.8_6.b_mogul', null, '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。');
+      else if (dom === 'recluse') base += T('event.8_6.b_recluse', null, '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。');
+      if (s.flags.biopicMJStar) base += T('event.8_6.b_biopicMJStar', null, '\n银幕之上，是你亲自重走自己的人生——这世上唯一能演活迈克尔·杰克逊的，终究只有迈克尔·杰克逊自己。');
+      base += T('event.8_6.b_end', null, '\n谢幕之后，故事由听者续写。');
       return base;
     },
     next: null
@@ -1234,12 +1234,12 @@ window.MJ = window.MJ || {};
     id: '7_3', year: 2009, title: T('event.7_3.title', null, '命运裁决'), kind: 'ending',
     text: function (s) {
       var dom = MJ.dominantMeta(s.meta);
-      var base = '2009 年 6 月 25 日，聚光灯骤然熄灭。回望这一生，从盖瑞的廉价摇篮到全世界的舞台，你的每一个选择，都写就了独一份的传奇。';
-      if (dom === 'artPath') base += '\n你留给世界的，是永远跳不完的舞步与听不腻的旋律——艺术，是你唯一不愿妥协的信仰。';
-      else if (dom === 'phil') base += '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。';
-      else if (dom === 'mogul') base += '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。';
-      else if (dom === 'recluse') base += '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。';
-      base += '\n谢幕之后，故事由听者续写。';
+      var base = T('event.7_3.text', null, '2009 年 6 月 25 日，聚光灯骤然熄灭。回望这一生，从盖瑞的廉价摇篮到全世界的舞台，你的每一个选择，都写就了独一份的传奇。');
+      if (dom === 'artPath') base += T('event.7_3.b_artPath', null, '\n你留给世界的，是永远跳不完的舞步与听不腻的旋律——艺术，是你唯一不愿妥协的信仰。');
+      else if (dom === 'phil') base += T('event.7_3.b_phil', null, '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。');
+      else if (dom === 'mogul') base += T('event.7_3.b_mogul', null, '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。');
+      else if (dom === 'recluse') base += T('event.7_3.b_recluse', null, '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。');
+      base += T('event.7_3.b_end', null, '\n谢幕之后，故事由听者续写。');
       return base;
     },
     next: null

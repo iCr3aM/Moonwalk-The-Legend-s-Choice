@@ -188,4 +188,31 @@ newIds.forEach(function (id) {
   if (zhOf(loc.text)) { covHit++; console.log('EN 残留 8_7(' + m + '):', loc.text); }
 });
 console.log('EN 新事件覆盖：事件', cov, '；中文残留', covHit);
+
+// 全面 EN 残留扫描：遍历所有事件 title/text/option(label+hint)，多 state 形态覆盖分支文本
+var allHit = 0, allCov = 0;
+var shapes = [{}, { artPath: 1 }, { phil: 1 }, { mogul: 1 }, { recluse: 1 }, { biopicMJStar: true }];
+function zhOf(x) { if (x == null) return false; if (typeof x === 'function') x = x(); return typeof x === 'string' && /[一-鿿]/.test(x); }
+Object.keys(MJ.EVENTS).forEach(function (id) {
+  var ev = MJ.EVENTS[id]; if (!ev) return;
+  allCov++;
+  shapes.forEach(function (meta) {
+    var st = new MJ.GameState();
+    if (meta.artPath) st.meta.artPath = 1;
+    if (meta.phil) st.meta.phil = 1;
+    if (meta.mogul) st.meta.mogul = 1;
+    if (meta.recluse) st.meta.recluse = 1;
+    if (meta.biopicMJStar) st.flags.biopicMJStar = true;
+    var loc;
+    try { loc = MJ.localizeEvent(ev, st); } catch (e) { allHit++; console.log('EN 解析异常 ' + id + ': ' + e.message); return; }
+    if (zhOf(loc.title)) { allHit++; console.log('EN 残留 ' + id + ' title:', loc.title); }
+    var t = (typeof loc.text === 'function') ? (function () { try { return loc.text(st); } catch (e) { return null; } })() : loc.text;
+    if (zhOf(t)) { allHit++; if (allHit <= 30) console.log('EN 残留 ' + id + ' text:', (t || '').slice(0, 36)); }
+    (loc.options || []).forEach(function (o) {
+      if (zhOf(o.label)) { allHit++; console.log('EN 残留 ' + id + ' label:', o.label); }
+      if (zhOf(o.hint)) { allHit++; console.log('EN 残留 ' + id + ' hint:', o.hint); }
+    });
+  });
+});
+console.log('EN 全面扫描：事件', allCov, '；中文残留', allHit);
 console.log('EN 测试结束。');
