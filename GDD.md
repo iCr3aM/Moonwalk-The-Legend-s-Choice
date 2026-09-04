@@ -175,7 +175,7 @@
 - 商业线：3_6(ATV)→6_1b(索尼)→追加收购→mogulPath→商业巨擘结局。
 - 隐士线：5_2d 拒访→6_4d 拒拍→reclusePath→隐居隐士结局。
 
-## 6.4 完整事件节点目录（v0.5 · 含三选与新增）
+## 6.4 完整事件节点目录（v0.6 · 含三选与新增）
 > A/B/C = 选项；→ 跳转；[flag] 设标志；{△} 属性变化；money=经 Economy 子系统。*`*`=v0.5 新增*。
 
 ### 第一章
@@ -189,8 +189,8 @@
 | 1_3 | 1969 | Motown/Diana Ross | 选择 | A 迁洛杉矶 {rep+15,wealth+10,family-5,stress+15} / B 留盖瑞 → END_PLAIN | 1_4 / END_PLAIN |
 | 1_4 | 1970 | 四首登顶 | 自动 | {rep+15,wealth+15,art+10,stress+10} | 1_5 |
 | 1_5 | 1971 | 是否单飞 | 选择 | A [isSolo=true] 单飞 {art+20,wealth+15,family-15,stress+15} / B [isSolo=false] 留兄弟 {family+20,art+5,wealth+5} / C [isSolo=false] 半单飞兼顾 {art+10,family+10,wealth+5} | 1_6 / 2_1 / 2_1 |
-| 1_6 | 1972 | 早期个人专辑 | 条件(仅单飞) | A [soloAlbum1972=true] {art+15,wealth+10,family-5} / B [soloAlbum1972=false] {family+5,art+5} | 2_1 |
-| 1_7 | 1972 | 《Ben》奥斯卡提名 | 选择 | A 出席 {rep+5,stress+5} / B 专注录音室 {art+5} / C 携宠物鼠营销 {rep+5,family+5} | 2_1 |
+| 1_6 | 1972 | 早期个人专辑 | 条件(仅单飞) | A [soloAlbum1972=true] {art+15,wealth+10,family-5} / B [soloAlbum1972=false] {family+5,art+5} | 1_7 |
+| 1_7 | 1972 | 《Ben》奥斯卡提名 | 选择 | A 出席 {rep+5,stress+5} / B 专注录音室 {art+5} / C 携宠物鼠营销 {rep+5,family+5} | 1_8 |
 | 1_8* | 1976 | 转投 CBS"The Jacksons" | 选择(文本随 isSolo) | A 拥抱团体新起点 {family+10,art+5} / B 借机推个人 {art+10,rep+5} / C 与父决裂 {family-15,stress+10} | 2_1 |
 
 ### 第二章
@@ -210,7 +210,7 @@
 | 3_1c | 1983 | 《Thriller》MV | 选择 | A 斥资长版 {art+10,wealth-10,rep+10} / B 传统宣传 {rep+5} / C 恐怖元素过界引争议 {rep+5,stress+5,rep-?} | 3_2 |
 | 3_2 | 1984 | 百事广告 | 选择 | A [isPepsiBurned=true] {wealth+20,rep+5} / B [isPepsiBurned=false] {health+10,wealth-20} / C [isPepsiBurned=false] 议价安全拍摄 {wealth+5,health+5} | 3_2b |
 | 3_2b* | 1984 | Victory 巡演（兄弟） | 选择 | A 全心 reunion {family+15,wealth+15,stress+10} / B 敷衍 {family+5,wealth+5} / C 借台推个人 {art+10,rep+5,family-5} | 3_3 |
-| 3_3 | 1984 | 格莱美 8 项 | 自动(随 isSolo) | 单飞 {art+20,rep+20} / 非 {art+8,rep+8} | 3_4 |
+| 3_3 | 1984 | 《Thriller》格莱美之夜 | 自动(随 isSolo) | 单飞 {art+20,rep+20} / 非 {art+8,rep+8} | 3_4 |
 | 3_4 | 1985 | 烧伤治疗 | 条件(仅烧伤) | A [painkillerDependent=true] {health+10,stress-10} / B [painkillerDependent=false] {health+5,stress+15} / C 全面康复疗养 {health+15,wealth-10,stress-5} | 3_5 |
 | 3_5 | 1985 | We Are The World | 选择 | A [weAreTheWorld=true] 积极义唱 {rep+15,family+5,phil+1} / B 婉拒 {art+5} / C 独自捐巨款 {rep+10,wealth-15,phil+1} | 3_6 |
 | 3_6 | 1985 | 收购 ATV | 条件(仅单飞) | A [atvBought=true] money -4750万 {wealth-15,rep+10,mogul+1} / B 不收购 {wealth+5} / C 联合财团分期购 {wealth-5,rep+5,mogul+1} | 4_0 |
@@ -222,7 +222,8 @@
 | 4_1 | 1987 | 梦幻庄园 | 选择 | A [neverlandType=public] {family+20,wealth-30} / B [neverlandType=private] {wealth-20,family+5} / C [neverlandType=none] {wealth+10} | 4_2 |
 | 4_2 | 1987 | 《Bad》 | 自动(随 isSolo) | 单飞 {art+15,wealth+20,rep+10,stress+15} / 非 {art+10,wealth+15,rep+5,stress+10} | 4_2b |
 | 4_2b* | 1988 | 《Moonwalker》/Smooth Criminal | 选择 | A 电影化呈现 [moonwalker=true] {art+12,rep+8,stress+5} / B 仅出单曲 {art+8} / C 与童星搭档引议论 {rep+5,stress+5} | 4_3 |
-| 4_3 | 1988 | 自传《月球漫步》 | 自动 | {rep+10,wealth+5} | 5_1 |
+| 4_3 | 1988 | 自传《月球漫步》 | 自动 | {rep+10,wealth+5} | 4_4 |
+| 4_4* | 1989 | 后《Bad》时代 | 选择 | A 商业版图 {wealth+15,rep+5,mogul+1} / B 回归家庭 {family+10,stress-5} / C 先锋作品 {art+12,stress+5} | 5_1 |
 
 ### 第五章
 | ID | 年 | 标题 | 类型 | 选项 / 效果 | 跳转 |
@@ -735,6 +736,8 @@ MJ.planner.resolveGrammy = function (state, key) {
 - [x] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表（全满贯 7–8、零企划 0）。
 - [x] 400 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,8]、0 异常、0 时间倒挂。
 - [x] 定向：低质企划→HIStory/Invincible 0 座；高质→可全满贯（两成就解锁）。
+
+> **v0.6 命名修订（已实现，提交 c919c6e）**：为消除"格莱美之夜"等 6 处字面值撞名，格莱美揭晓节点统一按专辑命名——《Thriller》/《Bad》/《Dangerous》/《HIStory》/《Invincible》格莱美之夜；`V_BIO_GRAMMY84`→「加冕余温」、`V_BIO_WIZ`→「《新绿野仙踪》幕后」、`V_BIO_BADTOUR`→「《Bad》巡演侧记」、`V_BIO_HISTORYTOUR`→「HIStory 巡演侧记」（英文 i18n 同步）。孤儿节点 `1_7/1_8/4_4` 已接回（`1_6→1_7→1_8→2_1`、`4_3→4_4→5_1`）。变体事件不得写入 `grammy_*` 标志、不得出现 `V_GRAMMY*` id（§17.14 涌现结算专有，防重复计奖，见 `test/check_dup_events.cjs`）。
 - [x] i18n EN 全量（find_missing_en=0）、en_smoke 通过；存档往返后计数不丢（flags/meta 已序列化）。
 
 > 实施建议：先做 `planner.resolveGrammy` + engine `onEnter` 钩子 + Thriller 全链路（3_1 企划→3_3 揭晓）打通验证，再复制到其余五 era；权重用 §8 数值预算校准，使"全满贯"为小概率高光而非必然。

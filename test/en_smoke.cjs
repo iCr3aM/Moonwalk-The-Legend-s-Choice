@@ -134,6 +134,39 @@ while (g2++ < 60) {
 MJ.engine.pickVariant = _origPick;
 console.log('EN 第二章 solo 链路(2_4→3_1) 途经', Object.keys(seen2).join('>'), '；是否经过 2_5/2_6:', !!(seen2['2_5'] && seen2['2_6']));
 
+// 确定性校验 1_6→1_7→1_8→2_1（solo 路径孤儿接回）
+MJ.engine.pickVariant = function () { return null; };
+MJ.engine.start();
+MJ.engine.state.flags.isSolo = true;
+MJ.engine.go('1_6');
+var g3 = 0, seen3 = {};
+while (g3++ < 30) {
+  var c3 = MJ.engine.current;
+  if (!c3) { break; }
+  if (c3.id === '2_1') { seen3['2_1'] = 1; break; }
+  if (c3.kind === 'auto') { MJ.engine.proceed(); continue; }
+  if (c3.kind === 'choice') { seen3[c3.id] = (seen3[c3.id] || 0) + 1; MJ.engine.choose(0); continue; }
+  break;
+}
+MJ.engine.pickVariant = _origPick;
+console.log('EN solo 孤儿链路(1_6→2_1) 途经', Object.keys(seen3).join('>'), '；经过 1_7/1_8:', !!(seen3['1_7'] && seen3['1_8']));
+
+// 确定性校验 4_3→4_4→5_1（g5 桥接孤儿接回）
+MJ.engine.pickVariant = function () { return null; };
+MJ.engine.start();
+MJ.engine.go('4_3');
+var g4 = 0, seen4 = {};
+while (g4++ < 30) {
+  var c4 = MJ.engine.current;
+  if (!c4) { break; }
+  if (c4.id === '5_1') { seen4['5_1'] = 1; break; }
+  if (c4.kind === 'auto') { MJ.engine.proceed(); continue; }
+  if (c4.kind === 'choice') { seen4[c4.id] = (seen4[c4.id] || 0) + 1; MJ.engine.choose(0); continue; }
+  break;
+}
+MJ.engine.pickVariant = _origPick;
+console.log('EN 第四章桥接(4_3→5_1) 途经', Object.keys(seen4).join('>'), '；经过 4_4:', !!seen4['4_4']);
+
 // 新事件（g4/g5）确定性覆盖：强制校验每个新事件/变体在 EN 下无中文残留
 var newIds = ['8_1b', '8_2b', '8_3b', '8_5b', '8_4b', '8_4c', '8_7', '2_6', '4_4', 'V_POST_TRIBUTE', 'V_POST_HOLO', 'V_POST_FAMILY'];
 var cov = 0, covHit = 0;

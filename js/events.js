@@ -1911,6 +1911,99 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ---------- §17.13.3 未竟梦想变体（皆标注"想象"，遵循 §15.1 中性化；落地 ACH_DREAMER/PETERPAN/GREATWALL/THISISIT） ----------
+  E.V_PETERPAN = {
+    id: 'V_PETERPAN', variant: true, window: [1987, 2005], weight: 35,
+    title: T('event.V_PETERPAN.title', null, '（想象）彼得潘之约'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_PETERPAN.text', null, '你买下了《彼得潘》的版权，也曾含泪恳求能亲自饰演那个不愿长大的男孩。Neverland 的名字，正由此而来。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_PETERPAN.branch0.text', null, '童心未泯的人，往往最懂如何造梦。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_PETERPAN.opt0.label', null, 'A：倾力筹备电影'), hint: T('event.V_PETERPAN.opt0.hint', null, '把童话搬上银幕（艺术+8，家庭+5）'), effects: { art: 8, family: 5 }, flags: { dream_peterpan: true }, next: '__RETURN__' },
+      { label: T('event.V_PETERPAN.opt1.label', null, 'B：只把版权收进抽屉'), hint: T('event.V_PETERPAN.opt1.hint', null, '留一份念想（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_GREATWALL = {
+    id: 'V_GREATWALL', variant: true, window: [1987, 1988], weight: 35,
+    title: T('event.V_GREATWALL.title', null, '（想象）长城演唱会'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_GREATWALL.text', null, '你想在古老的万里长城上开一场演唱会——那年没能拿到许可，但想象本身已经起飞。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_GREATWALL.branch0.text', null, '当舞台足够大，国界也会为之让路。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_GREATWALL.opt0.label', null, 'A：全力推进设想'), hint: T('event.V_GREATWALL.opt0.hint', null, '把想象唱给世界（声誉+10，艺术+6）'), effects: { reputation: 10, art: 6 }, flags: { dream_greatwall: true }, next: '__RETURN__' },
+      { label: T('event.V_GREATWALL.opt1.label', null, 'B：暂且搁置'), hint: T('event.V_GREATWALL.opt1.hint', null, '留作心底的远景（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_FILMSTUDIO = {
+    id: 'V_FILMSTUDIO', variant: true, window: [1986, 1995], weight: 35,
+    title: T('event.V_FILMSTUDIO.title', null, '（想象）自己的制片厂'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FILMSTUDIO.text', null, '你不满足于被别人镜头记录，想建一座属于自己的制片厂，亲自执导心中的画面。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_FILMSTUDIO.branch0.text', null, '把旋律变成画面，是另一种版图扩张。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FILMSTUDIO.opt0.label', null, 'A：创立制片厂'), hint: T('event.V_FILMSTUDIO.opt0.hint', null, '掌握自己的镜头（艺术+8，商业巨擘+1）'), effects: { art: 8, mogul: 1 }, flags: { dream_filmstudio: true }, next: '__RETURN__' },
+      { label: T('event.V_FILMSTUDIO.opt1.label', null, 'B：偶尔客串执导'), hint: T('event.V_FILMSTUDIO.opt1.hint', null, '浅尝辄止（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_CHILDHOSP = {
+    id: 'V_CHILDHOSP', variant: true, window: [1987, 2005], weight: 35,
+    title: T('event.V_CHILDHOSP.title', null, '（想象）Neverland 儿童医院'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CHILDHOSP.text', null, '你设想在 Neverland 里建一座儿童医院，让生病的孩子也能在童话里奔跑。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.V_CHILDHOSP.branch0.text', null, '你比谁都记得，孩子本该被温柔对待。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CHILDHOSP.opt0.label', null, 'A：斥资筹建'), hint: T('event.V_CHILDHOSP.opt0.hint', null, '把善意落成建筑（慈善+1，家庭+5，声誉+5）'), effects: { family: 5, reputation: 5, phil: 1 }, flags: { dream_childhosp: true }, next: '__RETURN__' },
+      { label: T('event.V_CHILDHOSP.opt1.label', null, 'B：只做定期探访'), hint: T('event.V_CHILDHOSP.opt1.hint', null, '量力而行（慈善+1）'), effects: { phil: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_THISISIT_DONE = {
+    id: 'V_THISISIT_DONE', variant: true, window: [2009, 2009], weight: 60,
+    title: T('event.V_THISISIT_DONE.title', null, '（想象）完成 This Is It 驻演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_THISISIT_DONE.text', null, '2009 年的那场伦敦 O2 驻演，史实因离世取消。在这一条假设里，你站上了那五十场的首夜。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) >= 60; }, text: T('event.V_THISISIT_DONE.branch0.text', null, '聚光灯还热，你还没打算谢幕。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_THISISIT_DONE.opt0.label', null, 'A：圆满完成驻演'), hint: T('event.V_THISISIT_DONE.opt0.hint', null, '把未竟之演唱完（声誉+12，艺术+10）'), effects: { reputation: 12, art: 10 }, flags: { dream_thisisit: true }, next: '__RETURN__' },
+      { label: T('event.V_THISISIT_DONE.opt1.label', null, 'B：留作心底的遗憾'), hint: T('event.V_THISISIT_DONE.opt1.hint', null, '让想象停在最美处（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_MUSICAL = {
+    id: 'V_MUSICAL', variant: true, window: [1995, 2005], weight: 35,
+    title: T('event.V_MUSICAL.title', null, '（想象）百老汇音乐剧'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_MUSICAL.text', null, '你设想在生前就推出一部以自己音乐为蓝本的百老汇音乐剧（史实 2022 年才追授）。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_MUSICAL.branch0.text', null, '让旋律在另一种舞台继续生长。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_MUSICAL.opt0.label', null, 'A：亲自操刀音乐剧'), hint: T('event.V_MUSICAL.opt0.hint', null, '把金曲搬上舞台（艺术+8，声誉+6）'), effects: { art: 8, reputation: 6 }, flags: { dream_musical: true }, next: '__RETURN__' },
+      { label: T('event.V_MUSICAL.opt1.label', null, 'B：授权他人改编'), hint: T('event.V_MUSICAL.opt1.hint', null, '放手让作品远行（声誉+3）'), effects: { reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_SPACE = {
+    id: 'V_SPACE', variant: true, window: [1990, 2005], weight: 30,
+    title: T('event.V_SPACE.title', null, '（想象）零重力演唱会'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_SPACE.text', null, '与维珍合作的传言里，你曾想办一场脱离地心引力的演唱会——让舞步真正漂浮起来。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_SPACE.branch0.text', null, '你本就是那个想把不可能变成舞台的人。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_SPACE.opt0.label', null, 'A：推进太空演出设想'), hint: T('event.V_SPACE.opt0.hint', null, '把想象推向极限（声誉+10，艺术+6）'), effects: { reputation: 10, art: 6 }, flags: { dream_space: true }, next: '__RETURN__' },
+      { label: T('event.V_SPACE.opt1.label', null, 'B：一笑置之'), hint: T('event.V_SPACE.opt1.hint', null, '让传言停留在传说里（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+
   // ---------- §17.14 格莱美揭晓节点（企划器+巡演 → 涌现结算，见 planner.resolveGrammy） ----------
   // 由各自 era 的巡演/专辑节点后进入，onEnter 在展示前结算，text 按座数分档叙事。
   E['4_2a_g'] = {

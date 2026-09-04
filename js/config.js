@@ -198,7 +198,16 @@ window.MJ = window.MJ || {};
     { id: 'ACH_GRAMMY_SWEEP', name: '格莱美大满贯', icon: '🏆', rarity: 'epic', desc: '从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。',
       check: function (s) { return ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].every(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
     { id: 'ACH_GRAMMY_LEGEND', name: '格莱美传奇', icon: '🎖️', rarity: 'legendary', desc: '格莱美史上的奇观：你把自己活成了纪录本身。',
-      check: function (s) { return (s.meta.grammyWins || 0) >= 18 || ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 6; }); } }
+      check: function (s) { return (s.meta.grammyWins || 0) >= 18 || ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 6; }); } },
+    // —— §17.13.3 未竟梦想成就（对齐 GDD §17.13.3）——
+    { id: 'ACH_DREAMER', name: '造梦者', icon: '🌠', rarity: 'epic', desc: '你替那个男孩，把清单上没划掉的项，一一点亮了。',
+      check: function (s) { return ['peterpan', 'greatwall', 'filmstudio', 'childhosp', 'thisisit', 'musical', 'space'].filter(function (k) { return s.flags['dream_' + k] === true; }).length >= 3; } },
+    { id: 'ACH_PETERPAN', name: '彼得潘之约', icon: '🪶', rarity: 'rare', desc: '你买下版权、恳求角色，把那个不愿长大的男孩留在了银幕上。',
+      check: function (s) { return s.flags.dream_peterpan === true; } },
+    { id: 'ACH_GREATWALL', name: '长城之唱', icon: '🧱', rarity: 'rare', desc: '你在想象里，把演唱会开上了万里长城。',
+      check: function (s) { return s.flags.dream_greatwall === true; } },
+    { id: 'ACH_THISISIT', name: '未竟之演', icon: '🎬', rarity: 'epic', desc: '2009 年的伦敦 O2，你终于站上了那五十场的首夜。',
+      check: function (s) { return s.flags.dream_thisisit === true; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

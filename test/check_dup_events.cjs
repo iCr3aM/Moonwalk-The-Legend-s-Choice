@@ -76,4 +76,18 @@ objKeys.forEach(function (k) {
 });
 var dangling = Object.keys(nextSet).filter(function (n) { return !EVENTS[n] && endingIds.indexOf(n) < 0 && n !== '__RETURN__'; });
 console.log('\n[next 悬空引用] ' + (dangling.length ? '\n  ' + dangling.join('\n  ') + '（指向不存在的事件）' : '无（全部命中已定义事件 / 结局 / __RETURN__）'));
+
+// —— 8. 防回归：变体不得写入 grammy_* 标志 / 不得出现 V_GRAMMY* id（§17.14 涌现结算专有，避免重复计奖）——
+var grammyFlagHit = [], grammyIdHit = [];
+objKeys.forEach(function (k) {
+  var ev = EVENTS[k];
+  if (!ev) return;
+  if (/^V_GRAMMY/i.test(ev.id || k)) grammyIdHit.push(k);
+  var opts = (typeof ev.options === 'function') ? [] : (ev.options || []);
+  opts.forEach(function (o) {
+    if (o.flags) Object.keys(o.flags).forEach(function (fk) { if (/^grammy_/.test(fk)) grammyFlagHit.push(k + '.' + fk); });
+  });
+});
+console.log('[防回归·grammy] 变体 id 含 V_GRAMMY: ' + (grammyIdHit.length ? grammyIdHit.join(', ') + ' ⚠ 禁止' : '无（✅）'));
+console.log('[防回归·grammy] 选项写入 grammy_* 标志: ' + (grammyFlagHit.length ? '\n  ' + grammyFlagHit.join('\n  ') + ' ⚠ 禁止' : '无（✅）'));
 console.log('\n检查结束。');
