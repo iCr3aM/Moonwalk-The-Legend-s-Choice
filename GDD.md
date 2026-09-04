@@ -665,6 +665,80 @@
 
 > 实施建议：优先做 §17.13.2 格莱美全满贯（与现有 3_3 格莱美主线呼应、史实扎实、成本低）+ §17.13.3 中 V_PETERPAN / V_GREATWALL / V_THISISIT_DONE（考据明确、粉丝向强）；V_SPACE 等纯想象 vignette 作为后续点缀。
 
+### 17.14 创作企划器 + 巡演自定义 → 格莱美涌现联动 ★规划
+> 修订 §17.13：格莱美**不再写死逐年必拿**，改为由"创作企划（待定）+ 巡演自定义"在揭晓时**动态结算**。§17.13 的"全满贯"从"强制假设"降级为"可被玩家凭运营达成的涌现成就"——呼应需求"格莱美不一定摇年年拿"。
+> 全部复用现有模块（`flags` 数值化、`onEnter` 钩子、`meta` 计数、`achievementSystem`），**不新增子系统**。
+
+#### 17.14.1 设计目标
+- 每张专辑的格莱美战绩 = f(企划质量, 巡演呈现, 当下声誉/艺术势头, 时代基线 bias)。
+- 低质企划 / 疲于奔命的巡演 / 低谷期 → 提名未中（贴合 HIStory/Invincible 史实 0 座）。
+- 高水平且稳定的多线运营 → 才有可能逐张收割，最终触发"全满贯"。
+
+#### 17.14.2 三阶段数据流
+1. **企划（待定）**：专辑发行节点改为 `choice`"企划"，选项写入 `cp_vision/cp_craft/cp_innovation/cp_collab`（0–100 绝对画像；不同维度=不同 flag，天然叠加）。
+2. **巡演自定义**：既有巡演节点（4_2a/5_2/6_1e/3_2b）的选项追加 `cp_stagecraft`（舞台呈现）与可选 `cp_craft` 微调。
+3. **揭晓（解析）**：格莱美揭晓节点加 `onEnter` 钩子 → 调 `MJ.planner.resolveGrammy(state, albumKey)`，读 `cp_*` + 属性 → 写 `flags.grammy_<album>`（座数，0=提名未中）、累加 `meta.grammyWins`、直接 `changeAttr` 给声誉/艺术加成。
+
+#### 17.14.3 数据 schema（零侵入）
+- 复用 `flags`：`cp_vision, cp_craft, cp_innovation, cp_collab, cp_stagecraft`（数值型 flag，沿用 `setFlag`/`serialize`，无需改 state.js）。
+- `flags.grammy_<album>`：`otw|thriller|bad|dangerous|history|invincible` → 座数（0–8）。
+- `meta.grammyWins`（新增非负计数）：`config.initialMeta` 加 `grammyWins:0`；解析时 `state.meta.grammyWins += wins`。
+- 解析函数位置：新增 `js/planner.js`（或并入 engine.js），`MJ.planner.resolveGrammy`。
+
+#### 17.14.4 resolveGrammy 公式（可实现，权重可按 §8 数值预算微调）
+```js
+MJ.planner.resolveGrammy = function (state, key) {
+  var f = state.flags, a = state.attributes;
+  var v=f.cp_vision||0, c=f.cp_craft||0, i=f.cp_innovation||0, co=f.cp_collab||0, st=f.cp_stagecraft||0;
+  var momentum = ((a.reputation||0)+(a.art||0))/2;
+  var q = 0.22*v + 0.18*c + 0.20*i + 0.12*co + 0.18*st + 0.10*momentum; // 0–100
+  var bias = { otw:0, thriller:6, bad:3, dangerous:0, history:-4, invincible:-6 }[key] || 0;
+  q = Math.max(0, Math.min(100, q + bias));
+  var wins = q>=88 ? 6+Math.round((q-88)/3)
+            : q>=75 ? 3+Math.round((q-75)/6)
+            : q>=60 ? (q>=68?2:1) : 0;
+  state.flags['grammy_'+key] = wins;
+  state.meta.grammyWins = (state.meta.grammyWins||0) + wins;
+  state.changeAttr('reputation', Math.min(20, wins*2));
+  state.changeAttr('art', Math.min(8, wins));
+  return wins;
+};
+```
+> `bias` 让 Thriller 易登顶、HIStory/Invincible 须超常企划才破零，呼应史实又不锁死。
+
+#### 17.14.5 事件流改造（均主线，天然可达）
+- **专辑节点改企划 `choice`**：2_3(OTW)/3_1(Thriller)/4_2(Bad)/5_1(Dangerous)/6_1(HIStory)/6_3b(Invincible)。选项示例（Thriller）：A 概念史诗化 `{cp_vision:90,cp_innovation:85}` / B 商业稳赢 `{cp_craft:80,cp_collab:70}` / C 极简实验 `{cp_innovation:95,cp_craft:40}`。
+- **巡演节点补 `cp_stagecraft`**：4_2a(A 全力→st:85,stress+)/6_1e/5_2/3_2b。
+- **补 4 个格莱美揭晓节点**（`onEnter` 调解析，读取 `flags.grammy_<album>` 叙事）：Bad→4_x、Dangerous→5_x、HIStory→6_x、Invincible→6_xb；OTW 复用既有 2_6、Thriller 复用既有 3_3。
+- 揭晓节点 `text` 按 `flags.grammy_<album>` 分档叙事（0=提名未中 / 1–2=小胜 / 3–5=多项 / 6+=大满贯），全部 `T()` 包裹 + EN 键。
+
+#### 17.14.6 最小代码改动
+| 文件 | 改动 | 风险 |
+| --- | --- | --- |
+| js/engine.js `go()` | 渲染前 `if (ev.onEnter) ev.onEnter(this.state);`（一行钩子，可复用于其他系统） | 低 |
+| js/planner.js（新） | `resolveGrammy` 解析函数 | 低 |
+| js/config.js | `initialMeta` 加 `grammyWins:0` | 低 |
+| js/events.js | 6 个专辑节点改 choice + 4 个揭晓节点 + 巡演节点补 `cp_stagecraft` | 中（数据量） |
+| i18n_events_en.js | 新文案 EN 键 | 低 |
+
+#### 17.14.7 成就联动（涌现式）
+- `ACH_GRAMMY_SWEEP`（改写 §17.13.2）：六张专辑 `grammy_*` 均 ≥1 → "从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。"
+- 新增 `ACH_GRAMMY_LEGEND`（epic）：`meta.grammyWins >= 18` 或单张 ≥6 → "格莱美史上的奇观：你把自己活成了纪录本身。"
+- `dream_*` 成就（§17.13.3）保持不变。
+
+#### 17.14.8 可达性 & 合规
+- 全部挂在**主线节点**，玩家沿主线推进必经过；解析由 `onEnter` 保证在揭晓前完成，无 `window` 依赖、无时间倒挂风险（规避 §17.13 `pickVariant` 的 `window` 对齐约束）。
+- 格莱美属非争议内容，§15.1 中性化无额外负担；新文案走 `T()`，en_smoke 校验 0 残留。
+- 回归：smoke.cjs 年份单调断言不受影响（仅新增/改造主线节点，年份保持）；en_smoke 校验新事件 EN；serialise→hydrate 后 `grammyWins`/`grammy_*` 不丢（flags/meta 已序列化）。
+
+#### 17.14.9 验收清单
+- [ ] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表。
+- [ ] 500 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,8]、无异常。
+- [ ] 定向：低质企划→HIStory/Invincible 0 座；高质→可全满贯（成就解锁）。
+- [ ] i18n EN 全量、en_smoke 通过；存档往返后计数不丢。
+
+> 实施建议：先做 `planner.resolveGrammy` + engine `onEnter` 钩子 + Thriller 全链路（3_1 企划→3_3 揭晓）打通验证，再复制到其余五 era；权重用 §8 数值预算校准，使"全满贯"为小概率高光而非必然。
+
 ---
 
 
