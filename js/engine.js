@@ -146,6 +146,7 @@ window.MJ = window.MJ || {};
     var dependent = f.painkillerDependent === true;
     var held = f.thisItHeld === true;
     var debt = state.debt === true;
+    var dom = dominantMeta(m);
 
     if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支（1_5 留盖瑞早退）
     if (f.isSolo === false) return 'END_FAMILY';              // 2. 始终未单飞
@@ -153,7 +154,15 @@ window.MJ = window.MJ || {};
     if (!burned && !debt && (a.art || 0) >= 88 && (a.reputation || 0) >= 88 && (a.health || 0) >= 80 && (m.phil || 0) >= 3 && (m.artPath || 0) >= 2 && (f.thriller25 && f.anniv2001)) {
       return 'END_TRUE_ETERNAL';
     }
-    var dom = dominantMeta(m);
+    // 3b. 续章（假设 2009 未离世）：永不归死亡结局，按人生状态收束（普通/稀有/史诗/传奇皆可抵达）
+    if (f.survived2009 === true) {
+      if ((a.art || 0) >= 75 && (a.reputation || 0) >= 65 && (a.health || 0) >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL';
+      if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';
+      if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';
+      if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';
+      if (a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';
+      return 'END_TIMELESS_PRESENT';
+    }
     if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 4
     if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5
     if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 6
@@ -331,6 +340,10 @@ window.MJ = window.MJ || {};
     },
     unlockEnding: function (id) {
       try { var g = this.getGallery(); g[id] = true; localStorage.setItem(this.galleryKey, JSON.stringify(g)); } catch (e) {}
+    },
+    // 重置结局图鉴（清空已解锁记录，不影响进行中的存档）
+    clearGallery: function () {
+      try { localStorage.removeItem(this.galleryKey); } catch (e) {}
     }
   };
 
@@ -354,12 +367,16 @@ window.MJ = window.MJ || {};
       });
       return newly;
     },
-    // 供图鉴面板使用：返回 [{id,name,icon,desc,unlocked}]
+    // 供图鉴面板使用：返回 [{id,name,icon,desc,rarity,unlocked}]
     all: function () {
       var self = this;
       return (MJ.config.achievements || []).map(function (a) {
-        return { id: a.id, name: a.name, icon: a.icon, desc: a.desc, unlocked: self.isUnlocked(a.id) };
+        return { id: a.id, name: a.name, icon: a.icon, desc: a.desc, rarity: a.rarity || 'common', unlocked: self.isUnlocked(a.id) };
       });
+    },
+    // 重置全部已解锁成就（图鉴式 localStorage 清除）
+    clear: function () {
+      try { localStorage.removeItem(this.key); } catch (e) {}
     }
   };
 })();

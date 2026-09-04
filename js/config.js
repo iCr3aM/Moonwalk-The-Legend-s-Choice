@@ -20,18 +20,29 @@ window.MJ = window.MJ || {};
   };
 
   // 财富属性（0–100）由净资产推导：wealth = clamp(round(netWorth / wealthScale), 0, 100)
-  // wealthScale = 150（万 / 财富点）。真实 MJ 在 80–90 年代净资产已达数亿至十数亿美元，
-  // 故净资产以“万”为单位时可达数万，使「财富」与「显示的净资产」始终一致且符合史实量级。
+  // wealthScale = 150（万 / 财富点）。现实参照：MJ 出身盖瑞工人家庭，1958 年出生时净资产≈0；
+  // 职业生涯（70s–00s）积累后峰值净资产约数亿至十余亿美元（本作以“万”为单位时可达数万）。
   C.wealthScale = 150;
 
-  // 净资产初值（单位：万）。走 Economy 子系统，与财富属性联动（不再各自为政）。
-  C.initialNetWorth = 2000;
+  // 净资产初值（单位：万）。MJ 1958 年出生时一贫如洗，故初值取 0；财富随人生选择逐步积累。
+  // 走 Economy 子系统，与财富属性联动（不再各自为政）。
+  C.initialNetWorth = 0;
 
   // 标志（flag）初值：多数在游玩中写入；此处仅占位
   C.initialFlags = {};
 
   // 元路线隐藏计数（非负整数）
   C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0 };
+
+  // 稀有度排序（图鉴/成就按 普通→传奇 自上而下排列）
+  C.rarityRank = { common: 0, rare: 1, epic: 2, legendary: 3 };
+  // 结局稀有度（普通在最上、传奇在最下）
+  C.endingRarity = {
+    END_PLAIN: 'common', END_FAMILY: 'common', END_RECLUSE: 'rare', END_MOGUL: 'rare',
+    END_PHILANTHROPIST: 'rare', END_TRAGIC: 'common', END_ART_PEAK: 'epic', END_FINANCIAL: 'common',
+    END_CONTROVERSIAL: 'rare', END_SURVIVE_DEBT: 'rare', END_PERFECT: 'epic', END_ETERNAL: 'legendary',
+    END_TRUE_ETERNAL: 'legendary', END_TIMELESS_PRESENT: 'legendary'
+  };
 
   // 元路线破平次序：艺术 > 慈善 > 商业 > 隐士（GDD 7.2 注释）
   C.metaOrder = ['artPath', 'phil', 'mogul', 'recluse'];
@@ -108,44 +119,79 @@ window.MJ = window.MJ || {};
       name: '真·永恒符号', icon: '✨', tone: '不朽、至臻', hidden: true,
       summary: '艺术、声誉、健康与善意在巅峰交汇，你成了超越时间的传奇本身。',
       monologue: '当艺术、声誉、健康与善意同时抵达巅峰，你不再只是某个人，而是一种被时间反复确认的光。\n后来者的耳机里仍有你的节拍，孩子们的合唱里仍有你的和声——你超越了谢幕，成了永恒本身。'
+    },
+    END_TIMELESS_PRESENT: {
+      name: '在场的不朽', icon: '♾️', tone: '在场、超越时间',
+      summary: '你没在 2009 年停下；聚光灯之外，人生还有另一番写法。',
+      monologue: '你没有在 2009 年的夏天谢幕。此后的岁月里，你仍会在录音室里哼出新旋律，仍会在某个深夜为孩子们盖上被子。\n世人谈起你，不再用过去式——因为在场的人，本就不必被写成传奇的注脚。你活成了自己的续集。'
     }
   };
 
   // 成就系统（GDD §17：慈善家/巡演王/法律斗士/隐士 等；复用图鉴式 localStorage 持久化）
   // check(state, ctx) 中 ctx = { ending?: 结局id }；返回 true 即解锁。
   C.achievements = [
-    { id: 'ACH_PHIL', name: '慈善家', icon: '🕊️', desc: '以善意照亮世界，把公益走成了第二份事业。',
-      check: function (s) { return (s.meta.phil || 0) >= 3; } },
-    { id: 'ACH_RECLUSE', name: '隐士', icon: '🏔️', desc: '一次次退向静默，把喧嚣关在门外。',
-      check: function (s) { return (s.meta.recluse || 0) >= 3; } },
-    { id: 'ACH_LEGAL', name: '法律斗士', icon: '⚖️', desc: '风波数度加身，却始终挺直脊背、不卑不亢。',
-      check: function (s) { return (s.flags.settlement1993 || s.flags.secondCharge || s.flags.secondVerdict) && (s.attributes.reputation || 0) >= 55; } },
-    { id: 'ACH_MOGUL', name: '商业巨擘', icon: '💼', desc: '用远见构筑起属于自己的音乐与版权帝国。',
-      check: function (s) { return (s.meta.mogul || 0) >= 2 && !s.debt; } },
-    { id: 'ACH_ARTIST', name: '艺术宗师', icon: '🎵', desc: '把一生淬炼成旋律，登临艺术之巅。',
-      check: function (s) { return (s.meta.artPath || 0) >= 2 && (s.attributes.art || 0) >= 75; } },
-    { id: 'ACH_TOUR', name: '舞台之王', icon: '🌟', desc: '在无数舞台上点燃世界，掌声即是王冠。',
-      check: function (s) { return (s.attributes.art || 0) >= 75 && (s.attributes.reputation || 0) >= 75; } },
-    { id: 'ACH_ETERNAL', name: '永恒符号', icon: '👑', desc: '艺术与声誉不朽，成为时代的文化图腾。',
-      check: function (s, ctx) { return ctx && ctx.ending === 'END_ETERNAL'; } },
-    { id: 'ACH_TRUE_ETERNAL', name: '真·永恒', icon: '✨', desc: '艺术、声誉、健康与善意于巅峰交汇，你超越了时间本身。',
-      check: function (s, ctx) { return ctx && ctx.ending === 'END_TRUE_ETERNAL'; } },
-    { id: 'ACH_SURVIVOR', name: '绝境求生', icon: '💪', desc: '在债务的阴影里，仍把命握在自己手里。',
-      check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } },
-    { id: 'ACH_RICH', name: '商业巨富', icon: '💰', desc: '把旋律酿成了泼天的财富，数字本身已成传奇。',
-      check: function (s) { return (s.attributes.wealth || 0) >= 90; } },
-    { id: 'ACH_BALANCED', name: '身心康泰', icon: '🍃', desc: '在名利场里也守住了一张安静的睡眠。',
-      check: function (s) { return (s.attributes.health || 0) >= 85 && (s.attributes.stress || 0) <= 30; } },
-    { id: 'ACH_FAMILYMAN', name: '情系家庭', icon: '🏡', desc: '无论舞台多大，心里总为家人留着一盏灯。',
-      check: function (s) { return (s.attributes.family || 0) >= 80; } },
-    { id: 'ACH_DIGITAL', name: '数字公民', icon: '📡', desc: '在互联网的浪潮里，你是弄潮儿也是掌舵人。',
+    // —— 普通 common ——
+    { id: 'ACH_ROOKIE', name: '初露锋芒', icon: '🌱', rarity: 'common', desc: '首张个人专辑面世，少年开始有了自己的名字。',
+      check: function (s) { return s.flags.soloAlbum1972 === true; } },
+    { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', rarity: 'common', desc: '纵使单飞，也始终把兄弟放在心上。',
+      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
+    { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', rarity: 'common', desc: '让一代人的青春里，都住着你的旋律。',
+      check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } },
+    // —— 稀有 rare ——
+    { id: 'ACH_CROWN', name: '加冕时刻', icon: '👑', rarity: 'rare', desc: '《Thriller 25》或 30 周年，让经典再度加冕。',
+      check: function (s) { return s.flags.thriller25 === true || s.flags.anniv2001 === true; } },
+    { id: 'ACH_NEVERLAND', name: '梦幻庄园主', icon: '🏰', rarity: 'rare', desc: '你为童心筑起一座名为 Neverland 的城堡。',
+      check: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
+    { id: 'ACH_BLOOD', name: '血色舞步', icon: '🩸', rarity: 'rare', desc: '《Blood on the Dance Floor》让你在舞池里再封神。',
+      check: function (s) { return s.flags.bloodDance === true; } },
+    { id: 'ACH_CATALOG', name: '版权巨擘', icon: '📜', rarity: 'rare', desc: 'ATV 或 Sony/ATV，你把旋律变成了版图。',
+      check: function (s) { return s.flags.atvBought === true || s.flags.sonyMerge === true; } },
+    { id: 'ACH_DIGITAL', name: '数字公民', icon: '📡', rarity: 'rare', desc: '在互联网的浪潮里，你是弄潮儿也是掌舵人。',
       check: function (s) { return s.flags.internetSavvy === true; } },
-    { id: 'ACH_PEACEMAKER', name: '和平使者', icon: '🕊️', desc: '你让《Heal the World》不只是一首歌，而是一个承诺。',
+    { id: 'ACH_PEACEMAKER', name: '和平使者', icon: '🕊️', rarity: 'rare', desc: '你让《Heal the World》不只是一首歌，而是一个承诺。',
       check: function (s) { return s.flags.healWorld === true; } },
-    { id: 'ACH_SAGE', name: '隐世智者', icon: '🌙', desc: '三度走进静默，你终于听见了自己。',
+    { id: 'ACH_SAGE', name: '隐世智者', icon: '🌙', rarity: 'rare', desc: '三度走进静默，你终于听见了自己。',
       check: function (s) { return (s.meta.recluse || 0) >= 3; } },
-    { id: 'ACH_COMEBACK', name: '浴火重生', icon: '🔥', desc: '聚光灯熄灭过，你又亲手把它点亮。',
-      check: function (s) { return s.flags.comebackSeen === true; } }
+    { id: 'ACH_RECLUSE', name: '隐士', icon: '🏔️', rarity: 'rare', desc: '一次次退向静默，把喧嚣关在门外。',
+      check: function (s) { return (s.meta.recluse || 0) >= 3; } },
+    { id: 'ACH_LEGAL', name: '法律斗士', icon: '⚖️', rarity: 'rare', desc: '风波数度加身，却始终挺直脊背、不卑不亢。',
+      check: function (s) { return (s.flags.settlement1993 || s.flags.secondCharge || s.flags.secondVerdict) && (s.attributes.reputation || 0) >= 55; } },
+    { id: 'ACH_PHIL', name: '慈善家', icon: '💗', rarity: 'rare', desc: '以善意照亮世界，把公益走成了第二份事业。',
+      check: function (s) { return (s.meta.phil || 0) >= 3; } },
+    { id: 'ACH_FAMILYMAN', name: '情系家庭', icon: '🏡', rarity: 'rare', desc: '无论舞台多大，心里总为家人留着一盏灯。',
+      check: function (s) { return (s.attributes.family || 0) >= 80; } },
+    { id: 'ACH_SURVIVOR', name: '绝境求生', icon: '💪', rarity: 'rare', desc: '在债务的阴影里，仍把命握在自己手里。',
+      check: function (s, ctx) { return s.debt === true && (ctx && ctx.ending === 'END_SURVIVE_DEBT' || (s.attributes.health || 0) >= 30); } },
+    { id: 'ACH_BALANCED', name: '身心康泰', icon: '🍃', rarity: 'rare', desc: '在名利场里也守住了一张安静的睡眠。',
+      check: function (s) { return (s.attributes.health || 0) >= 85 && (s.attributes.stress || 0) <= 30; } },
+    { id: 'ACH_MEDIA_DARLING', name: '媒体宠儿', icon: '🎤', rarity: 'rare', desc: '镜头追着你转，你却始终游刃有余。',
+      check: function (s) { return (s.attributes.media || 0) >= 80; } },
+    { id: 'ACH_LONELY', name: '孤独王座', icon: '🌑', rarity: 'rare', desc: '站得越高，越听见自己的回声。',
+      check: function (s) { return (s.attributes.loneliness || 0) >= 60; } },
+    // —— 史诗 epic ——
+    { id: 'ACH_MOGUL', name: '商业巨擘', icon: '💼', rarity: 'epic', desc: '用远见构筑起属于自己的音乐与版权帝国。',
+      check: function (s) { return (s.meta.mogul || 0) >= 2 && !s.debt; } },
+    { id: 'ACH_ARTIST', name: '艺术宗师', icon: '🎵', rarity: 'epic', desc: '把一生淬炼成旋律，登临艺术之巅。',
+      check: function (s) { return (s.meta.artPath || 0) >= 2 && (s.attributes.art || 0) >= 75; } },
+    { id: 'ACH_TOUR', name: '舞台之王', icon: '👑', rarity: 'epic', desc: '在无数舞台上点燃世界，掌声即是王冠。',
+      check: function (s) { return (s.attributes.art || 0) >= 75 && (s.attributes.reputation || 0) >= 75; } },
+    { id: 'ACH_RICH', name: '商业巨富', icon: '💰', rarity: 'epic', desc: '把旋律酿成了泼天的财富，数字本身已成传奇。',
+      check: function (s) { return (s.attributes.wealth || 0) >= 90; } },
+    { id: 'ACH_COMEBACK', name: '浴火重生', icon: '🔥', rarity: 'epic', desc: '聚光灯熄灭过，你又亲手把它点亮。',
+      check: function (s) { return s.flags.comebackSeen === true; } },
+    { id: 'ACH_TIMELESS_KING', name: '跨越时代', icon: '⏳', rarity: 'epic', desc: '《This Is It》的聚光灯下，你仍是那个不肯将就的匠人。',
+      check: function (s) { return s.flags.thisItHeld === true; } },
+    { id: 'ACH_DIGITAL_PIONEER', name: '数字先锋', icon: '🛰️', rarity: 'epic', desc: '你先于时代，把单曲汇成了唱片。',
+      check: function (s) { return s.flags.digitalSingles === true; } },
+    // —— 传奇 legendary ——
+    { id: 'ACH_ETERNAL', name: '永恒符号', icon: '👑', rarity: 'legendary', desc: '艺术与声誉不朽，成为时代的文化图腾。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ETERNAL'; } },
+    { id: 'ACH_TRUE_ETERNAL', name: '真·永恒', icon: '✨', rarity: 'legendary', desc: '艺术、声誉、健康与善意于巅峰交汇，你超越了时间本身。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_TRUE_ETERNAL'; } },
+    { id: 'ACH_BIOPIC', name: '银幕化身', icon: '🎬', rarity: 'legendary', desc: '2026 年，银幕上的你由亲人亲手演绎，传奇有了另一副面孔。',
+      check: function (s) { return s.flags.biopic2026 === true; } },
+    { id: 'ACH_BEYOND', name: '超越时间的在场', icon: '♾️', rarity: 'legendary', desc: '你没在 2009 年停下——人生，还有续集。',
+      check: function (s) { return s.flags.survived2009 === true; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------
@@ -155,7 +201,8 @@ window.MJ = window.MJ || {};
     { id: 1, start: 1970, end: 1981, title: '第二章 · 单飞与抉择', sub: '1970 – 1981　从组合到 Solo', flavor: '麦克风交到你一个人手里，身后的和声空了一块——也亮了一块。' },
     { id: 2, start: 1982, end: 1990, title: '第三章 · 巅峰时代', sub: '1982 – 1990　Thriller 与世界', flavor: '黑胶转动的声音，盖过了全世界的呼吸。你成了流行本身。' },
     { id: 3, start: 1991, end: 1999, title: '第四章 · 风暴与善意', sub: '1991 – 1999　争议、慈善与高墙', flavor: '掌声与议论同时涌来。你在高墙内建起乐园，也在法庭间走过暗廊。' },
-    { id: 4, start: 2000, end: 2009, title: '第五章 · 谢幕与告别', sub: '2000 – 2009　晚景、官司与 This Is It', flavor: '镜前的舞步慢了，但那双缀着水钻的手套，仍在时间里闪光。' }
+    { id: 4, start: 2000, end: 2009, title: '第五章 · 谢幕与告别', sub: '2000 – 2009　晚景、官司与 This Is It', flavor: '镜前的舞步慢了，但那双缀着水钻的手套，仍在时间里闪光。' },
+    { id: 5, start: 2010, end: 2026, title: '第六章 · 续写的传奇', sub: '2010 – 2026　假设未竟的人生', flavor: '如果 2009 年的那场排练没有成为终点，聚光灯之外，人生还有另一番写法。' }
   ];
 
   // M1 关系/羁绊系统：具名 NPC 好感（-100..100，初值 0）
@@ -209,13 +256,7 @@ window.MJ = window.MJ || {};
     { cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
   ];
 
-  // M1 关系相关成就
-  C.achievements.push(
-    { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', desc: '纵使单飞，也始终把兄弟放在心上。',
-      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
-    { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', desc: '让一代人的青春里，都住着你的旋律。',
-      check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } }
-  );
+  // M1 关系相关成就（ACH_BROTHERLY / ACH_IDOL）已并入上方 C.achievements 数组。
 
   MJ.config = C;
 })();

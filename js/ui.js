@@ -153,18 +153,23 @@ window.MJ = window.MJ || {};
   function galleryHtml() {
     var g = MJ.saveSystem.getGallery();
     var defs = MJ.config.endings;
-    var total = Object.keys(defs).length;
-    var got = Object.keys(g).length;
+    var rank = MJ.config.rarityRank || {};
+    var keys = Object.keys(defs).sort(function (a, b) {
+      return (rank[defs[a].rarity] || 0) - (rank[defs[b].rarity] || 0);
+    });
+    var total = keys.length;
+    var got = keys.filter(function (k) { return g[k]; }).length;
     var html = '<div class="panel gallery">' +
       '<div class="g-head">结局图鉴 <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
       '<div class="g-grid">';
-    Object.keys(defs).forEach(function (k) {
+    keys.forEach(function (k) {
       var e = defs[k];
       var on = !!g[k];
-      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? e.name : '未解锁') + '">' +
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" title="' + (on ? e.name : '未解锁') + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? e.name : '？？？') + '</div>' +
-        '</div>';
+        '<div class="g-rarity">' + rarityLabel(e.rarity) + '</div>' +
+      '</div>';
     });
     html += '</div></div>';
     return html;
@@ -172,6 +177,10 @@ window.MJ = window.MJ || {};
 
   function achievementsPanel(state) {
     var list = MJ.achievementSystem.all();
+    var rank = MJ.config.rarityRank || {};
+    list = list.slice().sort(function (a, b) {
+      return (rank[a.rarity] || 0) - (rank[b.rarity] || 0);
+    });
     var got = list.filter(function (a) { return a.unlocked; }).length;
     var total = list.length;
     var html = '<div class="panel ach-panel">' +
@@ -182,10 +191,80 @@ window.MJ = window.MJ || {};
       html += '<div class="ach-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(a.name + '：' + a.desc) : '未解锁') + '">' +
         '<div class="ach-icon">' + (on ? a.icon : '🔒') + '</div>' +
         '<div class="ach-name">' + (on ? a.name : '？？？') + '</div>' +
-        '</div>';
+        '<div class="ach-rarity">' + rarityLabel(a.rarity) + '</div>' +
+      '</div>';
     });
     html += '</div></div>';
     return html;
+  }
+
+  // ---------- 图鉴 / 成就 弹窗（主菜单各收为一个按钮；含多次确认重置） ----------
+  function rarityLabel(r) {
+    return ({ common: '普通', rare: '稀有', epic: '史诗', legendary: '传奇' })[r] || '普通';
+  }
+  function closeOverlay(id) { var o = document.getElementById(id); if (o) o.parentNode.removeChild(o); }
+  function galleryCount() {
+    var g = MJ.saveSystem.getGallery();
+    return Object.keys(g).length + ' / ' + Object.keys(MJ.config.endings).length;
+  }
+  function achCount() {
+    var all = MJ.achievementSystem.all();
+    return all.filter(function (a) { return a.unlocked; }).length + ' / ' + all.length;
+  }
+  // 两次点击确认（3 秒内再次点击才生效，超时自动取消），满足“多次确认”要求
+  function wireReset(btnId, doReset, reopen) {
+    var btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (!btn._orig) btn._orig = btn.textContent;
+    var armed = false, timer = null;
+    btn.addEventListener('click', function () {
+      if (!armed) {
+        armed = true;
+        btn.textContent = '再次点击确认（不可逆）';
+        btn.classList.add('danger');
+        timer = setTimeout(function () { armed = false; btn.textContent = btn._orig; btn.classList.remove('danger'); }, 3000);
+        return;
+      }
+      clearTimeout(timer); armed = false; btn.textContent = btn._orig; btn.classList.remove('danger');
+      doReset();
+      if (reopen) reopen();
+    });
+  }
+  function galleryModal() {
+    closeOverlay('gallery-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'gallery-overlay';
+    overlay.className = 'overlay modal-overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>📖 结局图鉴</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="gallery-reset">重置图鉴</button>' +
+      '<button class="btn ghost small" id="gallery-close">关闭 ✕</button></div>' +
+      '<div class="modal-body"></div></div>';
+    overlay.querySelector('.modal-body').innerHTML = galleryHtml();
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('gallery-overlay'); });
+    document.getElementById('gallery-close').addEventListener('click', function () { closeOverlay('gallery-overlay'); });
+    wireReset('gallery-reset', function () { MJ.saveSystem.clearGallery(); }, function () {
+      closeOverlay('gallery-overlay'); galleryModal();
+    });
+  }
+  function achievementsModal() {
+    closeOverlay('ach-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'ach-overlay';
+    overlay.className = 'overlay modal-overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>🏆 成就</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="ach-reset">重置成就</button>' +
+      '<button class="btn ghost small" id="ach-close">关闭 ✕</button></div>' +
+      '<div class="modal-body"></div></div>';
+    overlay.querySelector('.modal-body').innerHTML = achievementsPanel();
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('ach-overlay'); });
+    document.getElementById('ach-close').addEventListener('click', function () { closeOverlay('ach-overlay'); });
+    wireReset('ach-reset', function () { MJ.achievementSystem.clear(); }, function () {
+      closeOverlay('ach-overlay'); achievementsModal();
+    });
   }
 
   // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除）
@@ -577,8 +656,10 @@ window.MJ = window.MJ || {};
           '<p><b>机制</b>：多数事件为三选一，选项后的 <b>hint</b> 提示大概后果但不剧透全局；部分事件仅在满足前置条件时出现；隐藏的「元路线」（艺术家/慈善家/商业巨擘/隐士）会随选择累积，影响专属走向。</p>' +
           '<p><b>原则</b>：只呈现后果，不评判选择。法律相关事件以中性、程序化的方式叙述。</p>' +
         '</div>' +
-        galleryHtml() +
-        achievementsPanel() +
+        '<div class="menu-row">' +
+          '<button class="btn block" id="btn-gallery">📖 结局图鉴 <span class="m-cnt">' + galleryCount() + '</span></button>' +
+          '<button class="btn block" id="btn-ach">🏆 成就 <span class="m-cnt">' + achCount() + '</span></button>' +
+        '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">继续游戏</button>' : '') +
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">开始新人生</button>' +
@@ -604,6 +685,8 @@ window.MJ = window.MJ || {};
     });
     var si = $('#btn-share-intro');
     if (si) si.addEventListener('click', function () { openShare('分享《迈克尔·杰克逊：人生选择》', buildGameShareText()); });
+    var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
+    var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
   };
 
   ui.showEvent = function (ev, state) {
@@ -713,7 +796,10 @@ window.MJ = window.MJ || {};
         '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button>' +
         '<button class="btn ghost" id="btn-audio-end">♪ 环境音：关</button></div>' +
       '</div>' +
-      achievementsPanel() +
+      '<div class="menu-row">' +
+        '<button class="btn block" id="btn-gallery-end">📖 结局图鉴 <span class="m-cnt">' + galleryCount() + '</span></button>' +
+        '<button class="btn block" id="btn-ach-end">🏆 成就 <span class="m-cnt">' + achCount() + '</span></button>' +
+      '</div>' +
       keyReviewPanel(state) +
       diaryPanel(state) +
       echoesPanel(state) +
@@ -750,6 +836,8 @@ window.MJ = window.MJ || {};
       var on = MJ.audio.toggle();
       ebAudio.textContent = on ? '♪ 环境音：开' : '♪ 环境音：关';
     });
+    var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
+    var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }
     });

@@ -16,7 +16,7 @@
 
 | 项目 | 内容 |
 | --- | --- |
-| 文档版本 | 0.6（敏感内容中性化 + 选项/分支/变体系统/元路线/12 结局） |
+| 文档版本 | 0.7（续章 2010–2026 + 14 结局 + 图鉴/成就重置与稀有度排序 + 资产现实校准） |
 | 游戏名称 | 《迈克尔·杰克逊：人生选择》 |
 | 英文名称 | Michael Jackson: Life Choices |
 | 别名 | 《月球漫步：传奇的抉择》 / Moonwalk: The Legend's Choice |
@@ -121,7 +121,7 @@
 ## 5.3 关键事件与分支
 核心分歧（单飞、百事、庄园、两次指控、This Is It）、影响力事件（巡演/慈善/专辑投入）、象征事件（整容/结婚/坠婴）。另含**变体事件**（见 5.6）与**元路线**（见 5.5）。
 ## 5.4 结局系统
-13 种结局（含 1 隐藏终极），标志优先 + 属性阈值 + 元路线（见第七章）。
+14 种结局（含 1 隐藏终极 + 1 续章结局），标志优先 + 属性阈值 + 元路线（见第七章）。
 ## 5.5 元路线（Meta-Path）系统 ★新增
 玩家在全程的选择会累积出四条隐性元路线，决定中后段专属事件与可达成结局：
 - **艺术家路线**（artPath）：持续高艺术投入 → 解锁《Ghosts》《Thriller 25》等，导向艺术/永恒结局。
@@ -269,7 +269,7 @@
 
 # 七、结局设计
 
-## 7.1 结局列表（13 种，含 1 隐藏终极）
+## 7.1 结局列表（14 种，含 1 隐藏终极 + 1 续章结局）
 | 结局 | 名称 | 基调 | 简述 |
 | --- | --- | --- | --- |
 | END_PLAIN | 🌱 平凡人生 | 平静、遗憾 | 留盖瑞，普通一生 |
@@ -285,12 +285,14 @@
 | END_PERFECT | 🌟 完美传奇 | 圆满、传奇 | 避创伤，健康荣誉安享晚年 |
 | END_ETERNAL | 👑 永恒符号 | 崇敬、不朽 | 艺术与声誉登峰，文化图腾 |
 | END_TRUE_ETERNAL | ✨ 真·永恒符号 | 不朽、至臻（**隐藏**） | 艺术·声誉·健康·慈善 四方极致收束 + 双加冕，超越时间的终极传奇 |
+| END_TIMELESS_PRESENT | ♾️ 在场的不朽 | 在场、超越时间 | 假设 2009 未离世，续写人生；按真实状态收束（见 §7.2 规则 3b） |
 
 ## 7.2 结局判定逻辑（优先级规则表）
 ```
 1. END_PLAIN          若 entryId==END_PLAIN（1_5 留盖瑞早退）
 2. END_FAMILY         若 isSolo===false
 3. END_TRUE_ETERNAL   若 !isPepsiBurned && !debt && art>=88 && rep>=88 && health>=80 && phil>=3 && artPath>=2 && (thriller25 && anniv2001)  【隐藏终极：多方极致收敛 + 双加冕】
+3b. 续章收束           若 survived2009===true（7_2 选「续写人生」），则永不归死亡结局，按人生状态收束：ETERNAL > MOGUL > PHILANTHROPIST > RECLUSE > PERFECT > END_TIMELESS_PRESENT（见 §7.1/§8.2）
 4. END_RECLUSE        若 recluse 计数最高 且 health>=40
 5. END_MOGUL          若 mogul>=2 且 !debt 且 wealth>=60
 6. END_PHILANTHROPIST 若 phil>=3 且 !debt
@@ -316,7 +318,7 @@
 小事件 ±5~10；常规 ±10~20；关键分歧 ±20~30；货币走 Economy。**单事件单属性 ≤ ±40**。
 压力章节结算 `health -= floor(stress/20)`（RuleEngine）。
 
-## 8.2 十二结局可达性矩阵
+## 8.2 十四结局可达性矩阵
 | 结局 | 关键门槛 | 玩家路径 |
 | --- | --- | --- |
 | END_PLAIN | 1969 留盖瑞 | 非巨星线 |
@@ -327,6 +329,7 @@
 | END_ETERNAL | !burned & art≥75 & rep≥65 & health≥55 & (thriller25∥anniv2001) | 拒百事+艺术满投入+控压+加冕标志 |
 | END_PERFECT | !burned & health≥50 & rep≥60 | 拒百事+健康声誉稳健 |
 | END_TRUE_ETERNAL | !burned & !debt & art≥88 & rep≥88 & health≥80 & phil≥3 & artPath≥2 & (thriller25&&anniv2001) | 四方极致+双加冕（**隐藏终极**） |
+| END_TIMELESS_PRESENT | survived2009 & 非死亡收束 | 7_2 选「续写人生」→ 2010–2026 续章，按真实状态落幕 |
 | END_ART_PEAK | burned & !dep & held & full | 烧伤戒药+满规模 |
 | END_TRAGIC | burned & dep & held & full | 历史复刻 |
 | END_FINANCIAL | debt===true | 购庄园+巨和解+成本 |
@@ -409,6 +412,7 @@
 
 **长线 / 可选**
 - **M9 真·永恒隐藏结局（扩展 §7.1）**：需 艺术+声誉+健康+慈善 多方极致收敛 + 关键成就，作为终极目标。【✅ 已实现】 隐藏结局 `END_TRUE_ETERNAL`（§7.1/§7.2/§8.2），图鉴默认隐藏、达成后解锁，结局页专属金色辉光 +「真·永恒」成就（reachable：贪心巅峰策略 500 局命中 333 次）。
+- **续章·假设 MJ 未离世（2010–2026）**：用户本回合新增需求（非 M10–M12）。【✅ 已实现】 7_2 新增「续写人生」分支进入第六章，事件 8_0–8_6 覆盖 This Is It 驻演、Michael Prince 数字单曲计划、2016 索尼收购 Sony/ATV 半数股权（约 7.5 亿美元，现实参照）、2026 传记片《Michael》（侄子 Jaafar Jackson 主演）；结局 `END_TIMELESS_PRESENT` 等由 `survived2009` 标志驱动，永不归死亡结局（§7.2 规则 3b）。
 - **M10 多周目传承（NG+）**：解锁"导演评论/幕后花絮"模式，或"传奇等级"解锁限定变体，强化重玩性。
 - **M11 成就叙事化**：部分成就解锁专属幕后片段（如"月球漫步诞生"花絮），让成就成为故事节拍。
 - **M12 关键抉择回放时间轴**：结局页"人生回放"带年份标记与"假如当初…"提示，呼应 §5.7 重玩性。
@@ -424,15 +428,15 @@
 | 自动事件 | 约 14 |
 | 条件事件 | 约 18 |
 | 变体事件 | 34（已扩，含隐藏/条件） |
-| 结局/判定 | 14（13 结局 + 判定） |
+| 结局/判定 | 15（14 结局 + 判定） |
 | 合计 | 约 85+ |
 
 ## 附录 B：核心标志与元路线计数
-**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale。
+**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, survived2009。
 **元路线计数（非负整数）**：phil / mogul / recluse / artPath（隐藏，结局判定读取最高者）。
 
 ## 附录 C：结局情感矩阵
-完美/希望、悲剧/悲伤、艺术巅峰/辉煌、家庭/温暖、财务/挫败、争议/压抑、生存负债/坚韧、平凡/平静、隐居/疏离、巨擘/冷峻、慈善/仁爱、永恒/崇敬、真·永恒/不朽至臻。
+完美/希望、悲剧/悲伤、艺术巅峰/辉煌、家庭/温暖、财务/挫败、争议/压抑、生存负债/坚韧、平凡/平静、隐居/疏离、巨擘/冷峻、慈善/仁爱、永恒/崇敬、真·永恒/不朽至臻、续章/在场不朽。
 
 ## 附录 D：属性初值（见 5.2）
 ## 附录 E：生平锚点（见 4.5）

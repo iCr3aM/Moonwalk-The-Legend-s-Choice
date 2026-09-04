@@ -413,3 +413,29 @@ html, body {
 /* ---------- M7 传奇评分高亮 ---------- */
 .snapshot .s b { letter-spacing: .3px; }
 .legend-grade-S { color: #f0cf63; } .legend-grade-A { color: #d4af37; }
+
+/* ---------- 主菜单：图鉴 / 成就 收为按钮 ---------- */
+.menu-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin: 6px 0 2px; }
+.btn.block { flex: 1; min-width: 180px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; padding: 14px 16px; }
+.m-cnt { font-size: 12px; color: var(--gold); background: rgba(212,175,55,0.14); border-radius: 999px; padding: 1px 9px; }
+.btn.danger { border-color: var(--danger); color: #ffd9d9; background: rgba(200,60,60,0.18); }
+
+/* ---------- 图鉴 / 成就 弹窗 ---------- */
+.modal-overlay { z-index: 70; align-items: flex-start; overflow: auto; padding-top: 6vh; }
+.modal {
+  width: min(680px, 100%); max-height: 86vh; overflow: auto;
+  background: linear-gradient(180deg, var(--panel-2), var(--panel));
+  border: 1px solid var(--gold-soft); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px 16px 18px;
+  animation: fadeUp .25s ease both;
+}
+.modal-head {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--gold); font-weight: 700; letter-spacing: 1px;
+  padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--line);
+}
+.modal-head .spacer { flex: 1; }
+.modal-body { max-height: 70vh; overflow: auto; }
+.g-rarity, .ach-rarity { font-size: 10px; margin-top: 3px; color: var(--ink-dim); letter-spacing: 1px; }
+.gallery .g-cell.locked-hidden { border-style: dashed; }
+.modal .gallery .g-grid, .modal .ach-panel .ach-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }

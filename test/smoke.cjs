@@ -1,5 +1,5 @@
 /* Node 冒烟 + 平衡测试：无 DOM 环境下驱动引擎。
- * 验证：随机 400 局 0 异常且必到结局；「结局解析单元覆盖」(§2b) 为 12 结局可达性权威证明（构造状态直验规则表）；
+ * 验证：随机 400 局 0 异常且必到结局；「结局解析单元覆盖」(§2b) 为 14 结局可达性权威证明（构造状态直验规则表）；
  *      关系/手记/回响/媒体/孤独/传奇评分 等模块均被正确联动。
  */
 global.window = global;
@@ -118,7 +118,7 @@ for (var i = 0; i < 400; i++) {
 console.log('随机 400 局：异常', errors, '；结局分布', JSON.stringify(endingsSeen));
 
 // 2) 定向策略抽样（分布参考，非门槛）：观察真实事件链路下各结局的命中情况；
-//    12 结局“可达性”以第 2b 节「结局解析单元覆盖」为权威证明（直接构造状态验规则表）。
+//    14 结局“可达性”以第 2b 节「结局解析单元覆盖」为权威证明（直接构造状态验规则表）。
 var allEndings = Object.keys(MJ.config.endings);
 console.log('定向抽样（分布参考）：');
 allEndings.forEach(function (id) {
@@ -180,7 +180,8 @@ var ucases = [
   ['END_CONTROVERSIAL', { flags: { settlement1993: true }, attr: { reputation: 45, media: 60, health: 60 } }],
   ['END_SURVIVE_DEBT', { debt: true, thisItHeld: false, attr: { art: 50, reputation: 55, health: 60, family: 50, media: 60 } }],
   ['END_FINANCIAL', { debt: true, flags: { thisItHeld: true }, attr: { art: 50, reputation: 55, health: 60, family: 50, media: 60 } }],
-  ['END_TRUE_ETERNAL', { flags: { thriller25: true, anniv2001: true }, attr: { art: 92, reputation: 92, health: 85, stress: 20, family: 50, media: 60 }, meta: { phil: 3, artPath: 2 }, debt: false }]
+  ['END_TRUE_ETERNAL', { flags: { thriller25: true, anniv2001: true }, attr: { art: 92, reputation: 92, health: 85, stress: 20, family: 50, media: 60 }, meta: { phil: 3, artPath: 2 }, debt: false }],
+  ['END_TIMELESS_PRESENT', { flags: { survived2009: true }, attr: { art: 70, reputation: 55, health: 45, wealth: 50, family: 30, media: 40 } }]
 ];
 console.log('结局解析单元覆盖（构造状态 → resolveEnding）：');
 ucases.forEach(function (c) {
@@ -239,6 +240,17 @@ ucases.forEach(function (c) {
     ACH_COMEBACK: { flags: { comebackSeen: true } },
     ACH_BROTHERLY: { rel: { brothers: 20 } },
     ACH_IDOL: { rel: { fans: 30 } },
+    ACH_ROOKIE: { flags: { soloAlbum1972: true } },
+    ACH_CROWN: { flags: { thriller25: true } },
+    ACH_NEVERLAND: { flags: { neverlandType: 'public' } },
+    ACH_BLOOD: { flags: { bloodDance: true } },
+    ACH_CATALOG: { flags: { atvBought: true } },
+    ACH_MEDIA_DARLING: { attr: { media: 85 } },
+    ACH_LONELY: { attr: { loneliness: 65 } },
+    ACH_TIMELESS_KING: { flags: { thisItHeld: true } },
+    ACH_DIGITAL_PIONEER: { flags: { digitalSingles: true } },
+    ACH_BIOPIC: { flags: { biopic2026: true } },
+    ACH_BEYOND: { flags: { survived2009: true } },
     ACH_TRUE_ETERNAL: { ctxEnding: 'END_TRUE_ETERNAL' }
   };
   var fail = [];

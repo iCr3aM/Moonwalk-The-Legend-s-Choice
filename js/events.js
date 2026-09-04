@@ -908,14 +908,109 @@ window.MJ = window.MJ || {};
         return [
           { label: 'A：咬牙撑满 50 场', hint: '财富暴涨，身体濒临极限（财富+100，压力+40，净资产 +1.5 亿）', effects: { wealth: 100, stress: 40 }, flags: { thisItHeld: true, thisItFull: true }, epilogue: '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。', next: '7_3' },
           { label: 'B：忍痛取消', hint: '保住健康，声誉微损（健康+20，声誉-10）', effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, epilogue: '你按下暂停键，把命留给了自己，哪怕掌声因此远了。', next: '7_3' },
-          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10，净资产 +6000 万）', effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, epilogue: '你折中地数着场次，想既不负舞台，也不负这副身子。', next: '7_3' }
+          { label: 'C：缩减到 20 场', hint: '折中之选，张弛有度（财富+40，压力+20，健康+10，净资产 +6000 万）', effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, epilogue: '你折中地数着场次，想既不负舞台，也不负这副身子。', next: '7_3' },
+          { label: 'D：续写人生（假设未离世）', hint: '若 2009 没有成为终点，把这段传奇接着写下去（进入续章）', effects: { health: 5 }, flags: { survived2009: true }, epilogue: '你深吸一口气——这一次，故事不在这里落幕。', next: '8_0' }
         ];
       }
       return [
         { label: 'A：20 场团体巡演', hint: '兄弟同台，稳健收官（财富+40，压力+20，健康+5，净资产 +6000 万）', effects: { wealth: 40, stress: 20, health: 5 }, flags: { thisItHeld: true, thisItFull: false }, epilogue: '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。', next: '7_3' },
-        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，净资产 -4500 万）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。', next: '7_3' }
+        { label: 'B：取消退休巡演', hint: '安心养身，进账略损（健康+20，净资产 -4500 万）', effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。', next: '7_3' },
+        { label: 'D：续写人生（假设未离世）', hint: '若 2009 没有成为终点，把这段传奇接着写下去（进入续章）', effects: { health: 5 }, flags: { survived2009: true }, epilogue: '你深吸一口气——这一次，故事不在这里落幕。', next: '8_0' }
       ];
     }
+  };
+
+  // ---------- 续章：假设 2009 未离世（2010–2026） ----------
+  E['8_0'] = {
+    id: '8_0', year: 2010, title: '续章 · 新的十年', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('2009 年的夏天，你撑过了那场关乎性命的排练。聚光灯没有熄灭——它只是换了个方向。', s, [
+        { cond: function (s) { return (s.attributes.health || 0) <= 50; }, text: '身体仍需小心养护，但你终于学会了与时钟讲和。' },
+        { cond: function (s) { return (s.meta.artPath || 0) >= 1; }, text: '舞台仍在召唤，而这一次，你只想为自己而跳。' }
+      ]);
+    },
+    options: [
+      { label: 'A：把《This Is It》做成长期驻演', hint: '稳稳收成，家底更厚（财富+30，声誉+5）', effects: { wealth: 30, reputation: 5 }, next: '8_1' },
+      { label: 'B：退居幕后专注创作', hint: '蓄力沉淀（艺术+10，压力-5）', effects: { art: 10, stress: -5 }, next: '8_1' },
+      { label: 'C：一边巡演一边写歌', hint: '两条腿走路（艺术+8，财富+15）', effects: { art: 8, wealth: 15 }, next: '8_1' }
+    ]
+  };
+  E['8_1'] = {
+    id: '8_1', year: 2011, title: '数字单曲时代', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('录音师迈克尔·普林斯记得，大约在筹备《This Is It》的日子里，你下定决心：不再按老办法发专辑，而是每隔几个月放出一首数字单曲，日后再把它们汇编成一张唱片。“我不再发专辑了，我们打算每隔几个月发一首单曲。”你对他说。', s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 75; }, text: '每一首单曲，你都当成一封写给时代的短信。' }
+      ]);
+    },
+    options: [
+      { label: 'A：采纳“数字单曲 + 汇编专辑”', hint: '先锋之举，声誉与艺术双升（艺术+12，声誉+10）', effects: { art: 12, reputation: 10 }, flags: { digitalSingles: true }, next: '8_2' },
+      { label: 'B：坚持传统专辑模式', hint: '稳妥但守成（艺术+6，声誉+4）', effects: { art: 6, reputation: 4 }, next: '8_2' },
+      { label: 'C：两者兼顾', hint: '折中路线（艺术+8，声誉+6，财富+5）', effects: { art: 8, reputation: 6, wealth: 5 }, flags: { digitalSingles: true }, next: '8_2' }
+    ]
+  };
+  E['8_2'] = {
+    id: '8_2', year: 2014, title: '汇编专辑', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('那些年积攒的数字单曲，终于被你挑挑拣拣，汇编成一张全新的录音室专辑，像把散落的星斗收进一只匣子。', s, [
+        { cond: function (s) { return s.flags.digitalSingles === true; }, text: '你兑现了当年的承诺——单曲，真的汇成了专辑。' }
+      ]);
+    },
+    options: [
+      { label: 'A：精挑细选重磅发行', hint: '口碑爆棚（艺术+12，声誉+12）', effects: { art: 12, reputation: 12 }, next: '8_3' },
+      { label: 'B：原样打包图省事', hint: '量足但平庸（艺术+4，声誉+4）', effects: { art: 4, reputation: 4 }, next: '8_3' },
+      { label: 'C：加入未公开遗珠', hint: '惊喜彩蛋（艺术+8，声誉+8，财富+5）', effects: { art: 8, reputation: 8, wealth: 5 }, next: '8_3' }
+    ]
+  };
+  E['8_3'] = {
+    id: '8_3', year: 2016, title: '版权版图兑现', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('你早年布下的版权版图迎来关键时刻：索尼提出收购你持有的 Sony/ATV 半数股权，开出的价码以亿美元计。', s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '当年那笔 Catalog 投资，如今结出了最沉的果。' }
+      ]);
+    },
+    options: [
+      { label: 'A：套现离场', hint: '落袋为安，身家暴涨（净资产 +7.5 亿）', effects: { wealth: 50 }, moneyEffect: 75000, flags: { sonySold: true }, next: '8_4' },
+      { label: 'B：保留部分权益', hint: '留得青山（财富+15，声誉+3）', effects: { wealth: 15, reputation: 3 }, next: '8_4' }
+    ]
+  };
+  E['8_4'] = {
+    id: '8_4', year: 2020, title: '遗产与善意', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('新的一代在耳机里认识你。如何安放这份仍在生长的遗产，成了新的选择题。', s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '你早就把“善意”写进了人生底色。' }
+      ]);
+    },
+    options: [
+      { label: 'A：扩建公益基金会', hint: '善名远播，爱心+1（声誉+10，家庭+3，慈善+1）', effects: { reputation: 10, family: 3, phil: 1 }, next: '8_5' },
+      { label: 'B：守护家族与版权', hint: '稳妥传承（家庭+10，财富+10）', effects: { family: 10, wealth: 10 }, next: '8_5' },
+      { label: 'C：半退半隐享清闲', hint: '把日子还给自己（压力-10，隐士+1）', effects: { stress: -10, recluse: 1 }, next: '8_5' }
+    ]
+  };
+  E['8_5'] = {
+    id: '8_5', year: 2026, title: '传记电影《Michael》', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('关于你一生的传记电影提上日程，由侄子 Jaafar Jackson 饰演银幕上的你。镜头要重走那些被千万次传颂的瞬间——这一次，你有机会亲手为它掌灯。', s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: '世人仍记得你的名字，这部电影，是给时代的回信。' }
+      ]);
+    },
+    options: [
+      { label: 'A：亲自授权并参与', hint: '为传奇盖章（声誉+12，艺术+5）', effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_6' },
+      { label: 'B：拒绝介入，留白', hint: '把故事交给后人（声誉+3）', effects: { reputation: 3 }, next: '8_6' }
+    ]
+  };
+  E['8_6'] = {
+    id: '8_6', year: 2026, title: '命运裁决 · 续', kind: 'ending',
+    text: function (s) {
+      var dom = MJ.dominantMeta(s.meta);
+      var base = '2010 年之后的岁月里，聚光灯没有在 2009 年熄灭。回望这一生，从盖瑞的廉价摇篮到横跨半个世纪的舞台，你的每一个选择，都写就了独一份的传奇。';
+      if (dom === 'artPath') base += '\n你留给世界的，是永远跳不完的舞步与听不腻的旋律——艺术，是你唯一不愿妥协的信仰。';
+      else if (dom === 'phil') base += '\n你留给世界的，不只是一首首歌，还有无数双因为你的善意而重新亮起来的眼睛。';
+      else if (dom === 'mogul') base += '\n你留给世界的，是一张张写满名字的版权契约——流行乐的王座，你用商人的手腕也坐过。';
+      else if (dom === 'recluse') base += '\n你留给世界的，是一个越来越模糊的剪影——你终于学会，把最真实的自己藏进静默里。';
+      base += '\n谢幕之后，故事由听者续写。';
+      return base;
+    },
+    next: null
   };
 
   E['7_3'] = {
