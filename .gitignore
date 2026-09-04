@@ -10,3 +10,28 @@ debug_events.cjs
 event_keys.txt
 js/events.wrapped.js
 wrap_events.cjs
+
+# 系统 / 编辑器
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# 日志与缓存
+*.log
+npm-debug.log*
+.cache/
+.vite/
+coverage/
+
+# 环境变量（本项目暂未使用，提前占位）
+.env
+.env.local
+.env.*.local
+
+# 临时文件
+*.tmp
+tmp/
