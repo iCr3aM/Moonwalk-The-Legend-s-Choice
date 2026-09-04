@@ -569,7 +569,7 @@ window.MJ = window.MJ || {};
       T('share.game.2', null, '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，'),
       T('share.game.3', null, '导向 14 种截然不同的人生结局。你，会走出怎样的传奇？'),
       '',
-      T('share.game.4', null, '（纯网页，双击即玩；含 30 余项变体事件、30 项成就、关键抉择回顾。）')
+      T('share.game.4', null, '（纯网页，双击即玩；含 60 余项变体事件、56 项成就、关键抉择回顾。）')
     ].join('\n');
   }
   function flashBtn(btn, txt) { if (!btn) return; var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1500); }
