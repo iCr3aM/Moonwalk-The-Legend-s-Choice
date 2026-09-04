@@ -66,8 +66,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.0_0.opt0.label', null, 'A：跟着哥哥们偷学吉他'), hint: T('event.0_0.opt0.hint', null, '手足在和弦里越靠越近（艺术+3，家庭+5，手足+8）'), effects: { art: 3, family: 5, rel: { brothers: 8 } }, next: '0_1' },
-      { label: T('event.0_0.opt1.label', null, 'B：躲进母亲的祷告里'), hint: T('event.0_0.opt1.hint', null, '在信仰里寻得安稳（家庭+8，压力-3）'), effects: { family: 8, stress: -3 }, next: '0_1' },
+      { label: T('event.0_0.opt0.label', null, 'A：跟着哥哥们偷学吉他'), hint: T('event.0_0.opt0.hint', null, '手足在和弦里越靠越近（艺术+3，家庭+5，手足+8）'), effects: { art: 3, family: 5, rel: { brothers: 8 } }, flags: { garyRoots: true }, next: '0_1' },
+      { label: T('event.0_0.opt1.label', null, 'B：躲进母亲的祷告里'), hint: T('event.0_0.opt1.hint', null, '在信仰里寻得安稳（家庭+8，压力-3）'), effects: { family: 8, stress: -3 }, flags: { garyRoots: true }, next: '0_1' },
       { label: T('event.0_0.opt2.label', null, 'C：嫌炼钢厂的轰鸣太吵'), hint: T('event.0_0.opt2.hint', null, '童年的喧嚣让人烦躁（家庭-3，压力+3，艺术-2）'), effects: { family: -3, stress: 3, art: -2 }, next: '0_1' }
     ]
   };
@@ -96,8 +96,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.0_2.opt0.label', null, 'A：把奖杯举过哥哥们的头顶'), hint: T('event.0_2.opt0.hint', null, '荣耀属于这一家人（声誉+8，家庭+3，手足+8）'), effects: { reputation: 8, family: 3, rel: { brothers: 8 } }, next: '1_2' },
-      { label: T('event.0_2.opt1.label', null, 'B：独自享受聚光灯'), hint: T('event.0_2.opt1.hint', null, '少年锋芒初露（声誉+10，艺术+3）'), effects: { reputation: 10, art: 3 }, next: '1_2' },
+      { label: T('event.0_2.opt0.label', null, 'A：把奖杯举过哥哥们的头顶'), hint: T('event.0_2.opt0.hint', null, '荣耀属于这一家人（声誉+8，家庭+3，手足+8）'), effects: { reputation: 8, family: 3, rel: { brothers: 8 } }, flags: { apolloChampion: true }, next: '1_2' },
+      { label: T('event.0_2.opt1.label', null, 'B：独自享受聚光灯'), hint: T('event.0_2.opt1.hint', null, '少年锋芒初露（声誉+10，艺术+3）'), effects: { reputation: 10, art: 3 }, flags: { apolloChampion: true }, next: '1_2' },
       { label: T('event.0_2.opt2.label', null, 'C：谦虚地说“我们只是运气好”'), hint: T('event.0_2.opt2.hint', null, '谦逊换来好感（声誉+3，家庭+3）'), effects: { reputation: 3, family: 3 }, next: '1_2' }
     ]
   };
@@ -111,8 +111,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.0_3.opt0.label', null, 'A：与兄长们紧握着手上台'), hint: T('event.0_3.opt0.hint', null, '同心则无惧（声誉+8，艺术+3，手足+6）'), effects: { reputation: 8, art: 3, rel: { brothers: 6 } }, next: '1_2b' },
-      { label: T('event.0_3.opt1.label', null, 'B：把这次试唱当作历练'), hint: T('event.0_3.opt1.hint', null, '平常心对待（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, next: '1_2b' },
+      { label: T('event.0_3.opt0.label', null, 'A：与兄长们紧握着手上台'), hint: T('event.0_3.opt0.hint', null, '同心则无惧（声誉+8，艺术+3，手足+6）'), effects: { reputation: 8, art: 3, rel: { brothers: 6 } }, flags: { motownAudition: true }, next: '1_2b' },
+      { label: T('event.0_3.opt1.label', null, 'B：把这次试唱当作历练'), hint: T('event.0_3.opt1.hint', null, '平常心对待（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, flags: { motownAudition: true }, next: '1_2b' },
       { label: T('event.0_3.opt2.label', null, 'C：担心被 Motown 拒之门外'), hint: T('event.0_3.opt2.hint', null, '未战先怯（压力+5）'), effects: { stress: 5 }, next: '1_2b' }
     ]
   };
@@ -1898,6 +1898,148 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_POST_FAMILY.opt0.label', null, 'A：以情分化解分歧'), hint: T('event.V_POST_FAMILY.opt0.hint', null, '亲情为先（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3 }, next: '__RETURN__' },
       { label: T('event.V_POST_FAMILY.opt1.label', null, 'B：交由专业团队处理'), hint: T('event.V_POST_FAMILY.opt1.hint', null, '专业但疏远（财富-5，压力+5）'), effects: { wealth: -5, stress: 5 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ---------- 续章「续写传奇」扩展变体池（g5：假设 MJ 在世，锚定真实 2010–2026 乐坛事件） ----------
+  E.V_LEG_CATALOG = {
+    id: 'V_LEG_CATALOG', variant: true, window: [2010, 2026], weight: 28,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_CATALOG.title', null, '版权王朝'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_CATALOG.text', null, '2024 年，索尼以约 12 亿美元收购了你的音乐曲库——那些你亲手写下的旋律，成了流行音乐史上最昂贵的资产之一。关于这份版图，你面临抉择。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_LEG_CATALOG.branch0.text', null, '你的名字早已不只是歌手，而是一座仍在增值的版图。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_CATALOG.opt0.label', null, 'A：高位套现，落袋为安'), hint: T('event.V_LEG_CATALOG.opt0.hint', null, '把传奇换成泼天的财富（财富+30，声誉+3，艺术-3）'), effects: { wealth: 30, reputation: 3, art: -3 }, flags: { catalogSold: true }, epilogue: T('event.V_LEG_CATALOG.opt0.epilogue', null, '你签下那纸合约，旋律的所有权易了主，但故事仍由你续写。'), next: '__RETURN__' },
+      { label: T('event.V_LEG_CATALOG.opt1.label', null, 'B：保留完整艺术掌控'), hint: T('event.V_LEG_CATALOG.opt1.hint', null, '拒绝出售，把版图握在手中（艺术+5，声誉+5）'), effects: { art: 5, reputation: 5 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_STREAM = {
+    id: 'V_LEG_STREAM', variant: true, window: [2010, 2026], weight: 30,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_STREAM.title', null, '数字王朝'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_STREAM.text', null, '流媒体时代，你的一张新专辑首日播放量冲破纪录，屏幕里的数字像潮水。时代换了载体，旋律仍是主角。'), s, [
+        { cond: function (s) { return (s.attributes.media || 0) >= 70; }, text: T('event.V_LEG_STREAM.branch0.text', null, '你忽然明白，舞台早已不止于体育场——它在一块块发亮的屏幕里。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_STREAM.opt0.label', null, 'A：全面拥抱流媒体'), hint: T('event.V_LEG_STREAM.opt0.hint', null, '让旋律随数据流动（艺术+5，声誉+5，媒体+5）'), effects: { art: 5, reputation: 5, media: 5 }, next: '__RETURN__' },
+      { label: T('event.V_LEG_STREAM.opt1.label', null, 'B：坚守实体与黑胶的仪式感'), hint: T('event.V_LEG_STREAM.opt1.hint', null, '给听歌留一点重量（艺术+8，财富+3）'), effects: { art: 8, wealth: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_COLLAB = {
+    id: 'V_LEG_COLLAB', variant: true, window: [2010, 2026], weight: 30,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_COLLAB.title', null, '世代桥梁'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_COLLAB.text', null, '当红的新生代歌手寄来合作邀约，想与你同演绎一首跨越年代的歌。镜头两端，是两种时代的嗓音。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_LEG_COLLAB.branch0.text', null, '你听见当年的自己——也曾那样渴望被世界听见。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_COLLAB.opt0.label', null, 'A：欣然同台合作'), hint: T('event.V_LEG_COLLAB.opt0.hint', null, '薪火相传（艺术+5，声誉+5，媒体+4）'), effects: { art: 5, reputation: 5, media: 4 }, flags: { legCollab: true }, next: '__RETURN__' },
+      { label: T('event.V_LEG_COLLAB.opt1.label', null, 'B：独立创作，不赶潮流'), hint: T('event.V_LEG_COLLAB.opt1.hint', null, '守住自己的节奏（艺术+6，声誉+2）'), effects: { art: 6, reputation: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_THISISIT = {
+    id: 'V_LEG_THISISIT', variant: true, window: [2010, 2026], weight: 30,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_THISISIT.title', null, '真·This Is It'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_THISISIT.text', null, '2009 年那五十场伦敦之约，若没有在那个排练夜画上句号——如今，它终于成真，成为你生涯中最宏大的巡演。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) >= 60; }, text: T('event.V_LEG_THISISIT.branch0.text', null, '身体比当年更懂得节制，舞台却依旧滚烫。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_THISISIT.opt0.label', null, 'A：接下这趟史诗巡演'), hint: T('event.V_LEG_THISISIT.opt0.hint', null, '王者归来，耗神也封神（艺术+10，财富+20，压力+10，健康-5）'), effects: { art: 10, wealth: 20, stress: 10, health: -5 }, flags: { thisIsItReal: true }, epilogue: T('event.V_LEG_THISISIT.opt0.epilogue', null, '五十场的灯，终于一一亮起；你站在中央，像与当年的自己隔空击掌。'), next: '__RETURN__' },
+      { label: T('event.V_LEG_THISISIT.opt1.label', null, 'B：缩减规模，保重身体'), hint: T('event.V_LEG_THISISIT.opt1.hint', null, '把余力留给明天（艺术+5，财富+8，健康+3）'), effects: { art: 5, wealth: 8, health: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_BIOPIMG = {
+    id: 'V_LEG_BIOPIMG', variant: true, window: [2010, 2026], weight: 28,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_BIOPIMG.title', null, '银幕上的自己'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_BIOPIMG.text', null, '以你为名的音乐剧与传记影像接连筹备。镜头要重走你的一生，而这一次，你有机会决定，谁来讲这个故事。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_LEG_BIOPIMG.branch0.text', null, '你既是被讲述的人，也成了讲故事的人。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_BIOPIMG.opt0.label', null, 'A：亲自操刀创作'), hint: T('event.V_LEG_BIOPIMG.opt0.hint', null, '让传奇由传奇自己定义（声誉+8，艺术+5，压力+5）'), effects: { reputation: 8, art: 5, stress: 5 }, flags: { legBiopic: true }, next: '__RETURN__' },
+      { label: T('event.V_LEG_BIOPIMG.opt1.label', null, 'B：交由团队打磨'), hint: T('event.V_LEG_BIOPIMG.opt1.hint', null, '退居幕后，稳妥收尾（声誉+5，财富+5）'), effects: { reputation: 5, wealth: 5 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_HONOR = {
+    id: 'V_LEG_HONOR', variant: true, window: [2010, 2026], weight: 26,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_HONOR.title', null, '终身成就'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_HONOR.text', null, '学院将终身成就奖授予你——这一次，不是追授，而是你亲自走上领奖台，接住那一束迟来的光。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 75; }, text: T('event.V_LEG_HONOR.branch0.text', null, '你忽然觉得，这座奖杯，是给整整一个时代的回信。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_HONOR.opt0.label', null, 'A：亲临领奖致辞'), hint: T('event.V_LEG_HONOR.opt0.hint', null, '与一代人相拥（声誉+10，媒体+8）'), effects: { reputation: 10, media: 8 }, flags: { legHonor: true }, next: '__RETURN__' },
+      { label: T('event.V_LEG_HONOR.opt1.label', null, 'B：低调致谢'), hint: T('event.V_LEG_HONOR.opt1.hint', null, '把荣耀留在心里（声誉+5，压力-3）'), effects: { reputation: 5, stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_RESIDENCY = {
+    id: 'V_LEG_RESIDENCY', variant: true, window: [2010, 2026], weight: 26,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_RESIDENCY.title', null, '驻演帝国'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_RESIDENCY.text', null, '有人提议，在拉斯维加斯或澳门为你常设一场驻演——像把一座舞台，永远留给那个戴白手套的人。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_LEG_RESIDENCY.branch0.text', null, '你早已懂得，名字本身就可以是一座城。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_RESIDENCY.opt0.label', null, 'A：开启长期驻演'), hint: T('event.V_LEG_RESIDENCY.opt0.hint', null, '稳定进账，也少了漂泊（财富+25，艺术-3，压力-5）'), effects: { wealth: 25, art: -3, stress: -5 }, flags: { legResidency: true }, next: '__RETURN__' },
+      { label: T('event.V_LEG_RESIDENCY.opt1.label', null, 'B：婉拒，保留自由'), hint: T('event.V_LEG_RESIDENCY.opt1.hint', null, '舞台不该被钉在一处（艺术+3，声誉+3）'), effects: { art: 3, reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_AI = {
+    id: 'V_LEG_AI', variant: true, window: [2014, 2026], weight: 28,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_AI.title', null, 'AI 翻唱与深度伪造'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_AI.text', null, '你的声线被 AI 模仿，一首“从未录制过的歌”在网络疯传。关于“真实的你”能否被机器复制，争论四起。'), s, [
+        { cond: function (s) { return (s.attributes.media || 0) >= 70; }, text: T('event.V_LEG_AI.branch0.text', null, '你看着屏幕上那个由算法拼出的自己，竟有些陌生。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_AI.opt0.label', null, 'A：公开划清界限，拒绝被机器替代'), hint: T('event.V_LEG_AI.opt0.hint', null, '守住本真，立场鲜明（声誉+8，媒体+5，压力+5）'), effects: { reputation: 8, media: 5, stress: 5 }, flags: { legAntiAI: true }, epilogue: T('event.V_LEG_AI.opt0.epilogue', null, '你对着镜头说：能唱那些歌的，只有一个我——机器可以模仿声音，模仿不了心跳。'), next: '__RETURN__' },
+      { label: T('event.V_LEG_AI.opt1.label', null, 'B：授权正版 AI 合作'), hint: T('event.V_LEG_AI.opt1.hint', null, '顺势把潮流变成版图（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_HEAL = {
+    id: 'V_LEG_HEAL', variant: true, window: [2010, 2026], weight: 26,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_HEAL.title', null, 'Heal the World 2.0'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_HEAL.text', null, '你重启了那项全球慈善计划，把当年的诺言，写成更大的一封给世界的信。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: T('event.V_LEG_HEAL.branch0.text', null, '你早已明白，善意比任何奖杯都走得远。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_LEG_HEAL.opt0.label', null, 'A：大幅扩张慈善版图'), hint: T('event.V_LEG_HEAL.opt0.hint', null, '善意铺开（慈善+3，声誉+8，财富-10）'), effects: { phil: 3, reputation: 8, wealth: -10 }, flags: { healWorld2: true }, next: '__RETURN__' },
+      { label: T('event.V_LEG_HEAL.opt1.label', null, 'B：低调行善'), hint: T('event.V_LEG_HEAL.opt1.hint', null, '把温暖留给具体的孩子（慈善+2，家庭+3）'), effects: { phil: 2, family: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_LEG_REUNION = {
+    id: 'V_LEG_REUNION', variant: true, window: [2010, 2026], weight: 30,
+    cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_LEG_REUNION.title', null, '兄弟重聚巡演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_LEG_REUNION.text', null, '兄长们提议，把 Jackson 5 的合声，在时隔数十年后重新拼起。'), s, [
+        { cond: function (s) { return s.flags.brothersReunited === true; }, text: T('event.V_LEG_REUNION.branch0.text', null, '三十周年那晚台下的和解，如今成了重新同台的底气。') }
+      ]);
+    },
+    options: [
+      { cond: function (s) { return s.flags.brothersReunited === true; }, label: T('event.V_LEG_REUNION.opt0.label', null, 'A：与已和解的兄长同台'), hint: T('event.V_LEG_REUNION.opt0.hint', null, '完整的合声终于补全（家庭+10，手足+15，声誉+8）'), effects: { family: 10, reputation: 8, rel: { brothers: 15 } }, flags: { brothersTour: true }, epilogue: T('event.V_LEG_REUNION.opt0.epilogue', null, '麦克风交叠的瞬间，你听见了童年那支不完整的合声，终被补全。'), next: '__RETURN__' },
+      { label: T('event.V_LEG_REUNION.opt1.label', null, 'B：婉拒重聚，各自安好'), hint: T('event.V_LEG_REUNION.opt1.hint', null, '把往事收进心底（家庭+3，压力-3）'), effects: { family: 3, stress: -3 }, next: '__RETURN__' }
     ]
   };
 

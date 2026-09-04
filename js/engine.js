@@ -498,7 +498,9 @@ window.MJ = window.MJ || {};
       EGG_MOTOWN:   { icon: '💫', name: '老友重聚', desc: 'Motown 的老伙计们又聚到了一起，青春在合唱里复活了一瞬。' },
       EGG_DISCO:    { icon: '🪩', name: '迪斯科致敬', desc: '你对着霓虹扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。' },
       EGG_DEV:      { icon: '🛠️', name: '开发者留言', desc: '“谢谢你，把这一段人生，一遍遍活成了不同的样子。”' },
-      EGG_FOURTH:   { icon: '🪞', name: '第四面墙', desc: '“致每一位重写传奇的你——镜子里的那个孩子，一直在为你鼓掌。”' }
+      EGG_FOURTH:   { icon: '🪞', name: '第四面墙', desc: '“致每一位重写传奇的你——镜子里的那个孩子，一直在为你鼓掌。”' },
+      EGG_GARY:     { icon: '🏠', name: '盖瑞的孩子', desc: '盖瑞市杰克逊街的那栋小屋，九个孩子的笑声里，藏着一个巨星的起点。' },
+      EGG_APOLLO:   { icon: '🏅', name: '阿波罗之夜', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，你与兄弟们捧起了冠军奖杯。' }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
@@ -532,6 +534,8 @@ window.MJ = window.MJ || {};
           if (self.defs[id] && self.unlock(id)) n++;
         }
       });
+      if (state.flags.garyRoots) this.unlock('EGG_GARY');
+      if (state.flags.apolloChampion) this.unlock('EGG_APOLLO');
       return n;
     },
     // 跨周目累计：3_1b「完美演绎」累计 3 次 → 月球漫步起源
@@ -584,7 +588,10 @@ window.MJ = window.MJ || {};
       TRIVIA_COCOA:         { icon: '☕', name: '深夜录音棚的一杯热可可', desc: '凌晨的录音棚，一杯热可可捧在手里，这一夜忽然没那么冷了。' },
       TRIVIA_BUBBLES_DIARY: { icon: '🐒', name: '给猴子 Bubbles 写日记', desc: '你摊开画星星的日记本，给 Bubbles 画下今天歪头的它。' },
       TRIVIA_NEPHEWS:       { icon: '🎮', name: '和侄子们打游戏', desc: '难得清闲，几个侄子把手柄塞给你，屋里的笑声比配乐还热闹。' },
-      TRIVIA_QUIET_REPLAY:  { icon: '🎞️', name: '独自看演出回放', desc: '人散了，你独自把今晚的演出又看一遍，盯着某个走神的一秒出神。' }
+      TRIVIA_QUIET_REPLAY:  { icon: '🎞️', name: '独自看演出回放', desc: '人散了，你独自把今晚的演出又看一遍，盯着某个走神的一秒出神。' },
+      TRIVIA_GARY:          { icon: '🏠', name: '盖瑞巷口的水泥地', desc: '盖瑞的那条巷子，水泥地是你最初的舞台；你常扒着门缝，看兄长们拨弄吉他。', cond: function (s) { return s.flags.garyRoots === true; } },
+      TRIVIA_APOLLO:        { icon: '🏅', name: '阿波罗业余之夜', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，Jackson 5 拿下了冠军——那是写在黑人音乐史里的那一夜。', cond: function (s) { return s.flags.apolloChampion === true; } },
+      TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 的试唱前夜', desc: '试唱前夜，哥哥们在后台紧紧围住你；第二天，你推开了摩城那扇通往世界的大门。', cond: function (s) { return s.flags.motownAudition === true; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }

@@ -194,7 +194,7 @@ window.MJ = window.MJ || {};
     // —— 普通 common ——
     { id: 'ACH_ROOKIE', name: '初露锋芒', icon: '🌱', rarity: 'common', desc: '首张个人专辑面世，少年开始有了自己的名字。',
       check: function (s) { return s.flags.soloAlbum1972 === true; } },
-    { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', rarity: 'common', desc: '纵使单飞，也始终把兄弟放在心上。',
+    { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', rarity: 'uncommon', desc: '纵使单飞，也始终把兄弟放在心上。',
       check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
     { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', rarity: 'common', desc: '让一代人的青春里，都住着你的旋律。',
       check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } },
@@ -311,7 +311,17 @@ window.MJ = window.MJ || {};
     { id: 'ACH_SPEEDRUN', name: '速通人生', icon: '⚡', rarity: 'rare', desc: '以极简路径（极少节点）抵达任一结局。',
       check: function (s) { return (s.stats.events || 99) <= 24; } },
     { id: 'ACH_PACIFIST', name: '清白之躯', icon: '⚖️', rarity: 'rare', desc: '整局未卷入任何法律争议。',
-      check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict && !s.flags.legalTrouble; } }
+      check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict && !s.flags.legalTrouble; } },
+
+    // —— §17.16 童年补完 / 与兄长和解 专属成就（消除内容孤儿）——
+    { id: 'ACH_GARY', name: '盖瑞的孩子', icon: '🏠', rarity: 'common', desc: '盖瑞市杰克逊街的小屋，九个孩子的笑声里，藏着一个巨星的起点。',
+      check: function (s) { return s.flags.garyRoots === true; } },
+    { id: 'ACH_APOLLO', name: '阿波罗加冕', icon: '🏅', rarity: 'rare', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，你与兄弟们捧起了冠军。',
+      check: function (s) { return s.flags.apolloChampion === true; } },
+    { id: 'ACH_MOTOWN', name: '摩城之门', icon: '💫', rarity: 'rare', desc: '从 Steeltown 到 Motown，你推开了一扇通往世界的大门。',
+      check: function (s) { return s.flags.motownAudition === true; } },
+    { id: 'ACH_REUNITE', name: '破镜重圆', icon: '🪞', rarity: 'rare', desc: '三十周年舞台，你与兄长们把半生的隔阂留在了台下——不完整的合声，终于补全。',
+      check: function (s) { return s.flags.brothersReunited === true; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

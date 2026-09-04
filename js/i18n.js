@@ -330,6 +330,15 @@ window.MJ = window.MJ || {};
         'ach.ACH_HOLOGRAM.desc': 'At the 2014 Billboard Awards you returned to the stage as a hologram — technology granted the legend a resurrection beyond death.',
         'ach.ACH_MUSICAL.name': 'Echoes on Broadway',
         'ach.ACH_MUSICAL.desc': 'A musical bearing your name lifted its curtain on Broadway; the "you" on stage took the bow, while the applause below still rang for you.',
+        // ---------- §17.16 童年补完 / 与兄长和解 专属成就 ----------
+        'ach.ACH_GARY.name': 'A Child of Gary',
+        'ach.ACH_GARY.desc': 'In the little house on Jackson Street, Gary, among nine children’s laughter, lay the beginning of a superstar.',
+        'ach.ACH_APOLLO.name': 'Crowned at the Apollo',
+        'ach.ACH_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, you and your brothers lifted the champion trophy.',
+        'ach.ACH_MOTOWN.name': 'The Motown Door',
+        'ach.ACH_MOTOWN.desc': 'From Steeltown to Motown, you pushed open a door onto the wider world.',
+        'ach.ACH_REUNITE.name': 'Mended Mirror',
+        'ach.ACH_REUNITE.desc': 'On the 30th-anniversary stage you left a lifetime of estrangement offstage with your brothers — the incomplete harmony, at last made whole.',
 
         // ---------- §17.13 / §17.14 新增成就（格莱美涌现 + 未竟梦想） ----------
         'ach.ACH_GRAMMY_SWEEP.name': 'Grammy Sweep',
@@ -362,6 +371,10 @@ window.MJ = window.MJ || {};
         'egg.EGG_DEV.desc': '"Thank you for living this life again and again into so many different shapes."',
         'egg.EGG_FOURTH.name': 'The Fourth Wall',
         'egg.EGG_FOURTH.desc': '"To everyone rewriting the legend — the child in the mirror has been applauding for you all along."',
+        'egg.EGG_GARY.name': 'A Child of Gary',
+        'egg.EGG_GARY.desc': 'In the little house on Jackson Street, Gary, among nine children’s laughter, lay the beginning of a superstar.',
+        'egg.EGG_APOLLO.name': 'Apollo Night',
+        'egg.EGG_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, you and your brothers lifted the champion trophy.',
 
         // ---------- 趣事与轶事（GDD §17.11：Trivia & Anecdotes） ----------
         'ui.triviaCodex': 'Trivia Codex',
@@ -396,6 +409,9 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_BUBBLES_DIARY.name': 'Keeping a Diary for Bubbles', 'trivia.TRIVIA_BUBBLES_DIARY.desc': 'You opened a star-drawn journal and sketched Bubbles, head cocked, as today’s entry.',
         'trivia.TRIVIA_NEPHEWS.name': 'Video Games with the Nephews', 'trivia.TRIVIA_NEPHEWS.desc': 'On a rare free afternoon your nephews thrust a controller at you; their laughter out-rocked the soundtrack.',
         'trivia.TRIVIA_QUIET_REPLAY.name': 'Watching the Replay Alone', 'trivia.TRIVIA_QUIET_REPLAY.desc': 'When all left, you watched the night’s show again, lost in one second where your mind had wandered.',
+        'trivia.TRIVIA_GARY.name': 'The Concrete of Gary Alley', 'trivia.TRIVIA_GARY.desc': 'That Gary alley, its concrete your first stage; you’d peep through the doorframe, watching your brothers pick at the guitar.',
+        'trivia.TRIVIA_APOLLO.name': 'Apollo Amateur Night', 'trivia.TRIVIA_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, the Jackson 5 took the crown — a night written into Black music history.',
+        'trivia.TRIVIA_MOTOWN.name': 'The Night Before the Motown Audition', 'trivia.TRIVIA_MOTOWN.desc': 'The night before the audition, your brothers huddled tight around you backstage; the next day you pushed open Motown’s door onto the world.',
 
         // ---------- §17.4 决策风格 / 专项子维度（展示层，EN） ----------
         'ui.subDimTitle': 'Specialized Craft',
