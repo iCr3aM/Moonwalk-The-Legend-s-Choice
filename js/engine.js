@@ -233,7 +233,8 @@ window.MJ = window.MJ || {};
       this._chapterVariantCount = 0;
       this._sinceVariant = 0;
       var id = (data && data.currentId) ? data.currentId : 'start';
-      this.go(id);
+      this._suppressAchToast = true; // 续局首屏静默消化已解锁成就，避免重弹
+      try { this.go(id); } finally { this._suppressAchToast = false; }
     },
 
     // 尝试为当前章节注入一个变体事件（GDD 5.6 / §18.6 核心）
@@ -451,6 +452,15 @@ window.MJ = window.MJ || {};
     },
     clearArchives: function () {
       try { localStorage.removeItem(this.archiveKey); } catch (e) {}
+    },
+    // 删除单条档案（按当前列表索引；删后索引前移，重新打开档案库即自愈）
+    removeArchive: function (idx) {
+      try {
+        var arr = this.getArchives();
+        if (idx < 0 || idx >= arr.length) return;
+        arr.splice(idx, 1);
+        localStorage.setItem(this.archiveKey, JSON.stringify(arr));
+      } catch (e) {}
     }
   };
 
@@ -557,6 +567,10 @@ window.MJ = window.MJ || {};
     incPlaythroughs: function () {
       var d = this._load(); d.playthroughs = (d.playthroughs || 0) + 1; this._save(d);
       if (d.playthroughs >= 5) this.unlock('EGG_FOURTH');
+    },
+    // 重置全部已发现彩蛋（图鉴式 localStorage 清除）
+    clear: function () {
+      try { localStorage.removeItem(this.key); } catch (e) {}
     }
   };
 
@@ -633,6 +647,10 @@ window.MJ = window.MJ || {};
         var def = self.defs[k];
         if (def.cond) { try { if (def.cond(state)) self.unlock(k); } catch (e) {} }
       });
+    },
+    // 重置全部已发现趣事（图鉴式 localStorage 清除）
+    clear: function () {
+      try { localStorage.removeItem(this.key); } catch (e) {}
     }
   };
 

@@ -10,9 +10,13 @@ window.MJ = window.MJ || {};
   var T = function (k, v, fb) { return MJ.t(k, v, fb); };
   var _view = null; // 当前屏幕的重新渲染函数（语言切换时调用）
   function switchLang() {
+    // 防抖/重入保护：忽略 300ms 内的重复点击，避免快速连点导致语言被反复切换
+    if (ui._switching) return;
+    ui._switching = true;
     MJ.i18n.toggleLang();
-    document.body.classList.toggle('lang-en', MJ.i18n.lang === 'en');
+    syncLangClass();
     if (_view) _view();
+    setTimeout(function () { ui._switching = false; }, 300);
   }
   function syncLangClass() { document.body.classList.toggle('lang-en', MJ.i18n.lang === 'en'); }
 
@@ -379,12 +383,16 @@ window.MJ = window.MJ || {};
     overlay.className = 'overlay modal-overlay';
     overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="egg-reset">' + T('ui.resetEgg', null, '重置彩蛋') + '</button>' +
       '<button class="btn ghost small" id="egg-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"></div></div>';
     overlay.querySelector('.modal-body').innerHTML = eggHtml();
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('egg-overlay'); });
     document.getElementById('egg-close').addEventListener('click', function () { closeOverlay('egg-overlay'); });
+    wireReset('egg-reset', function () { MJ.eggSystem.clear(); }, function () {
+      closeOverlay('egg-overlay'); eggModal();
+    });
   }
   function eggCount() {
     return (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0);
@@ -416,12 +424,16 @@ window.MJ = window.MJ || {};
     overlay.className = 'overlay modal-overlay';
     overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="trivia-reset">' + T('ui.resetTrivia', null, '重置趣事') + '</button>' +
       '<button class="btn ghost small" id="trivia-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"></div></div>';
     overlay.querySelector('.modal-body').innerHTML = triviaHtml();
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('trivia-overlay'); });
     document.getElementById('trivia-close').addEventListener('click', function () { closeOverlay('trivia-overlay'); });
+    wireReset('trivia-reset', function () { MJ.triviaSystem.clear(); }, function () {
+      closeOverlay('trivia-overlay'); triviaModal();
+    });
   }
   // ---------- 人生档案库（§18.7） ----------
   function archiveCount() {
@@ -451,19 +463,11 @@ window.MJ = window.MJ || {};
     });
     overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>🗂️ ' + T('ui.archive', null, '人生档案库') + '</span><span class="spacer"></span>' +
-      (arr.length ? '<button class="btn ghost small" id="arc-clear">' + T('ui.archiveClear', null, '清空档案') + '</button>' : '') +
       '<button class="btn ghost small" id="arc-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"><div class="gallery arc-gallery"><div class="g-grid">' + cards + '</div></div></div></div>';
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('archive-overlay'); });
     document.getElementById('arc-close').addEventListener('click', function () { closeOverlay('archive-overlay'); });
-    var ac = document.getElementById('arc-clear');
-    if (ac) ac.addEventListener('click', function () {
-      if (window.confirm(T('ui.archiveClearConfirm', null, '确定清空全部人生档案？此操作不可恢复。'))) {
-        MJ.saveSystem.clearArchives();
-        archiveModal();
-      }
-    });
     Array.prototype.forEach.call(overlay.querySelectorAll('.arc-card'), function (btn) {
       btn.addEventListener('click', function () {
         var i = parseInt(btn.getAttribute('data-idx'), 10);
@@ -472,7 +476,7 @@ window.MJ = window.MJ || {};
         closeOverlay('archive-overlay');
         var st = new MJ.GameState();
         st.hydrate(entry.state);
-        openPosterModal(st, entry.endingId);
+        openPosterModal(st, entry.endingId, i);
       });
     });
   }
@@ -960,11 +964,12 @@ window.MJ = window.MJ || {};
   }
 
   // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图/「放大海报」再次打开（放大查看）
-  function openPosterModal(state, id) {
+  function openPosterModal(state, id, archiveIdx) {
     var old = document.getElementById('poster-overlay');
     if (old) old.parentNode.removeChild(old);
     var e = MJ.config.endings[id] || { name: id };
     var cv = createPoster(state, id);
+    var hasDelete = (typeof archiveIdx === 'number');
     var overlay = document.createElement('div');
     overlay.id = 'poster-overlay';
     overlay.className = 'overlay poster-modal';
@@ -972,13 +977,23 @@ window.MJ = window.MJ || {};
       '<div class="poster-canvas-wrap"></div>' +
       '<div class="poster-foot">' +
         '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
-        '<button class="btn primary" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
+        '<div class="poster-foot-actions' + (hasDelete ? ' has-delete' : '') + '">' +
+          (hasDelete ? '<button class="btn ghost danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
+          '<button class="btn primary" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
+        '</div>' +
       '</div>' +
     '</div>';
     overlay.querySelector('.poster-canvas-wrap').appendChild(cv);
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
+    if (hasDelete) {
+      // 二次确认（再次点击确认 + 3 秒超时复位），删除后回到档案库列表
+      wireReset('pm-delete', function () {
+        MJ.saveSystem.removeArchive(archiveIdx);
+        closePosterModal();
+      }, function () { archiveModal(); });
+    }
   }
   function closePosterModal() {
     var o = document.getElementById('poster-overlay');
@@ -1081,7 +1096,10 @@ window.MJ = window.MJ || {};
       });
     }
     bindEventKeys(ev);
-    MJ.achievementSystem.evaluate(state, {}).forEach(toastAchievement);
+    // 续局（resume）首屏静默消化已解锁成就，不重弹；正常推进时照常弹窗
+    var _newAch = MJ.achievementSystem.evaluate(state, {});
+    if (MJ.engine._suppressAchToast === true) { MJ.engine._suppressAchToast = false; }
+    else { _newAch.forEach(toastAchievement); }
     _view = function () { ui.showEvent(ev, state); };
     window.scrollTo(0, 0);
   };
@@ -1130,7 +1148,7 @@ window.MJ = window.MJ || {};
       });
     }
     if (MJ.triviaSystem) MJ.triviaSystem.revealAll(state); // §17.11：结局时按人生状态解锁考据趣事
-    var snap = '<div class="snapshot">';
+    var snapGrid = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
       var v = state.attributes[k] || 0;
@@ -1139,14 +1157,15 @@ window.MJ = window.MJ || {};
         var ov = (state.overflow && state.overflow[k]) || 0;
         if (ov > 0) extra = ' <span class="od">⭐+' + ov + '</span>';
       }
-      snap += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + v + '</b>' + extra + '</div>';
+      snapGrid += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + v + '</b>' + extra + '</div>';
     });
-    snap += '<div class="s">' + T('ui.networth', null, '净资产') + '：<b>' + formatMoney(state.netWorth) + '</b></div>';
+    snapGrid += '<div class="s">' + T('ui.networth', null, '净资产') + '：<b>' + formatMoney(state.netWorth) + '</b></div>';
     var dm = MJ.dominantMeta(state.meta);
-    snap += '<div class="s">' + T('ui.metaRoutePrefix', null, '主导路线：') + '<b>' + (dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—') + '</b></div>';
-    snap += '<div class="s">' + T('ui.legendScore', null, '传奇评分') + '：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
-    snap += '<div class="life-stat">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
-    snap += '</div>';
+    snapGrid += '<div class="s">' + T('ui.metaRoutePrefix', null, '主导路线：') + '<b>' + (dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—') + '</b></div>';
+    snapGrid += '<div class="s">' + T('ui.legendScore', null, '传奇评分') + '：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
+    snapGrid += '</div>';
+    var lifeStat = '<div class="life-stat-line">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
+    var snap = '<div class="stat-card"><div class="stat-card-h">📊 ' + T('ui.runStats', null, '本局战绩') + '</div>' + snapGrid + lifeStat + '</div>';
 
     var html =
       statusBar(state, { year: 2009 }) +
@@ -1158,11 +1177,13 @@ window.MJ = window.MJ || {};
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
         snap +
-        '<div class="poster-box" id="poster-box"></div>' +
-        '<div class="poster-actions">' +
-          '<button class="btn ghost" id="btn-copy">' + T('ui.copyText', null, '复制文案') + '</button>' +
+        '<div class="poster-section">' +
+          '<div class="poster-box" id="poster-box"></div>' +
+          '<div class="poster-actions">' +
+            '<button class="btn ghost" id="btn-copy">' + T('ui.copyText', null, '复制文案') + '</button>' +
+          '</div>' +
+          '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
         '</div>' +
-        '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button></div>' +
       '</div>' +
       '<div class="menu-row">' +
