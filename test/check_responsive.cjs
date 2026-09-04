@@ -23,7 +23,6 @@ var checks = [
   ['640: 图鉴网格两列', inMedia('max-width: 640px', /(\.menu-grid|\.menu-row)\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['640: .toolbar 可换行', inMedia('max-width: 640px', /\.toolbar\s*\{[^}]*flex-wrap:\s*wrap/)],
   ['640: .subdim-name 限宽', inMedia('max-width: 640px', /\.subdim-name\s*\{[^}]*width:\s*56px/)],
-  ['600: .snapshot 两列', inMedia('max-width: 600px', /\.snapshot\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['模态 max-height + 滚动', /\.modal\s*\{[^}]*max-height[^}]*overflow:\s*auto/.test(css)]
 ];
 

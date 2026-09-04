@@ -403,7 +403,6 @@ window.MJ = window.MJ || {};
 
     showEnding: function (entryId) {
       var id = MJ.resolveEnding(this.state, entryId);
-      if (this.current) this.state.stats.endYear = MJ.eventYear(this.current); // 记录本局结束年份（海报用）
       MJ.saveSystem.unlockEnding(id); // 记录已解锁结局到图鉴
       MJ.saveSystem.clear(); // 结局后清档，避免“继续”恢复已结束的局
       MJ.ui.showEnding(id, this.state);

@@ -139,12 +139,13 @@ window.MJ = window.MJ || {};
     var styleLabel = style ? T('style.' + style.s, null, style.zh) : '';
     var bars = subs.map(function (d) {
       var pct = Math.max(0, Math.min(100, d.val));
-      return '<div class="subdim-row"><span class="subdim-name">' + T('subdim.' + d.key, null, d.name) + '</span>' +
-        '<span class="subdim-bar"><i style="width:' + pct + '%"></i></span>' +
-        '<span class="subdim-val">' + pct + '</span></div>';
+      return '<div class="subdim-item">' +
+        '<div class="subdim-lab"><span>' + T('subdim.' + d.key, null, d.name) + '</span><span>' + pct + '</span></div>' +
+        '<div class="subdim-bar"><i style="width:' + pct + '%"></i></div></div>';
     }).join('');
     return '<div class="panel subdim"><div class="panel-h">' + T('ui.subDimTitle', null, '专项造诣') +
-      (styleLabel ? ' <span class="style-tag">' + styleLabel + '</span>' : '') + '</div>' + bars + '</div>';
+      (styleLabel ? ' <span class="style-tag">' + styleLabel + '</span>' : '') + '</div>' +
+      '<div class="subdim-grid">' + bars + '</div></div>';
   }
 
   // 关键抉择回顾：仅汇总被标记为关键节点的选择/经历（复用 history 数据）
@@ -686,7 +687,7 @@ window.MJ = window.MJ || {};
     var dm = MJ.dominantMeta(state.meta);
     var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
     var legend = MJ.legendScore(state);
-    var endYear = (state.stats && state.stats.endYear) || 2009;
+    var endYear = 2009; // 海报寿命语义固定为 1958—2009，不随续章触发年份漂移（GDD v1.11）
     // 本局达成成就：按最终状态判定条件，而非累计解锁（不展示历史已解锁总数）
     var thisRun = (MJ.config.achievements || []).filter(function (ac) {
       try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
@@ -915,11 +916,11 @@ window.MJ = window.MJ || {};
   }
 
   // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
-  function openPosterModal(state, id, archiveIdx) {
+  function openPosterModal(state, id, archiveIdx, prebuilt) {
     var old = document.getElementById('poster-overlay');
     if (old) old.parentNode.removeChild(old);
     var e = MJ.config.endings[id] || { name: id };
-    var cv = createPoster(state, id);
+    var cv = prebuilt || createPoster(state, id);
     var hasDelete = (typeof archiveIdx === 'number');
     var overlay = document.createElement('div');
     overlay.id = 'poster-overlay';
@@ -1115,6 +1116,7 @@ window.MJ = window.MJ || {};
         '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
         '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
         '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
+        '<button class="btn block" id="btn-lang-end">🌐 ' + (MJ.i18n.lang === 'zh' ? '语言切换：中文' : 'Language: English') + '</button>' +
       '</div>' +
       '<div class="review-grid">' +
       subDimPanel(state) +
@@ -1143,11 +1145,12 @@ window.MJ = window.MJ || {};
       thumb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(thumb);
     }
-    openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
+    openPosterModal(state, id, undefined, posterCanvas); // 结局默认弹出海报（复用缩略图同一张画布），可关闭后点击缩略图放大
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
     var bte = $('#btn-trivia-end'); if (bte) bte.addEventListener('click', triviaModal);
+    var ble = $('#btn-lang-end'); if (ble) ble.addEventListener('click', switchLang);
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }

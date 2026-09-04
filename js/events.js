@@ -1182,7 +1182,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，身家暴涨（净资产 +7.5 亿）'), effects: { wealth: 50 }, moneyEffect: 75000, flags: { sonySold: true }, next: '8_3b' },
+      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，净资产暴涨（净资产 +7.5 亿）'), moneyEffect: 75000, flags: { sonySold: true }, next: '8_3b' },
       { label: T('event.8_3.opt1.label', null, 'B：保留部分权益'), hint: T('event.8_3.opt1.hint', null, '留得青山（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3 }, next: '8_3b' }
     ]
   };
