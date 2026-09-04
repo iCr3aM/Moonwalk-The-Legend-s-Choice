@@ -19,6 +19,7 @@
 
 > - **v1.8（移除 MJ 语录图鉴，2026-09-04）**：用户质疑 MJ 名言/歌词准确性。核查：12 条中 6 条为逐字正确的歌曲歌词（Man in the Mirror / Heal the World / Billie Jean / Beat It / Thriller / Smooth Criminal），另 6 条为转述型"名言"（意译非原话，且把歌词当"名言"归类不当）。按"先去掉"意向，从 engine(MJ.quoteSystem) / ui(4 函数 + 2 按钮 + 2 监听 + 结局页注入) / i18n(12 词条 + 3 ui 键) / events(quote_mirror 标志) / test(check_i18n_coverage 语录组) 全量删除；EN 字段 318→306，五图鉴→四图鉴（结局/彩蛋/趣事/成就）。npm test 全绿。若未来重做，建议仅保留逐字歌词并标注出处。
 > - **v1.9（结局稀有度进一步下调 + 英文补全，2026-09-05）**：用户反馈多数结局可达性偏低。① 稀有度在上一轮分档基础上再次整体下调——common 6 / rare 7 / epic 3 / legendary 2（仅 END_TRAGIC 与隐藏终极 END_TRUE_ETERNAL），取向转为"设计可达性/可达成感"而非纯随机命中率，`config.endingRarity` 与 §8.2 矩阵同步。② 补全结局英文：新增 18 个 `ending.END_*.hint` EN 键，并修复结局详情弹窗 `tone` 未走 `T()` 的中文回退 bug（name/tone/summary/monologue 英文键早已具备）。③ 重跑 `npm test` 与 `check_balance_reach` 确认 18 结局可达、无优先级抢占；lints 0、测试全绿。
+> - **v1.10（结局真实可达性提升：轨迹优先重排 + dom 门控，2026-09-05）**：用户要求"随机玩也更容易撞见特殊结局"（真正提高 `resolveEnding` 可达性，非仅改标签）。① 重构 `resolveEnding` 为轨迹优先：烧伤/负债轨迹先于成功型结局判定，消除抢占；各路线型结局（MOGUL/INNOVATOR/PHIL/STATESMAN）要求该路线为主导（dom），使"无主导路线且健康声誉俱佳"的局流向 `PERFECT` 兜底。② 放宽门槛：ETERNAL(art75→66/rep65→56/health55→46)、STATESMAN(rep70→58/fam55→45)、MENTOR(collab2→1/fam50→40/art60→50)、ART_PEAK/TRAGIC(health40/35→28)、RECLUSE_SERENE(health55→50)、INNOVATOR(art80→70)；并修复 PERFECT 漏 `!debt`、RECLUSE_SERENE 曾宽于 RECLUSE、PHIL 降 phil3→2 吞 STATESMAN 等回归。③ 5000 局随机分布 15/18 出现，STATESMAN≈2.3%/ART_PEAK≈1.3%/TRAGIC≈2.1%/INNOVATOR≈3.9%/MOGUL≈4.1%/负债≈5%（上轮 PERFECT/STATESMAN/ART_PEAK/TRAGIC 仅≈0.04%）；PERFECT 在均匀随机为 0 属设计内禀（随机局多堆叠慈善→归 STATESMAN，其 hint 即"不走慈善、健康声誉俱佳"刻意玩法可达）。`npm test` 全绿、lints 0。
 
 ---
 
@@ -376,24 +377,24 @@
 | --- | --- | --- | --- |
 | END_PLAIN | 1_5 留盖瑞（硬性分支） | 非巨星线 | common |
 | END_FAMILY | isSolo=false | 始终兄弟 | common |
-| END_MOGUL | mogul≥2 & !debt & wealth≥60 | ATV+索尼+追加收购 | common |
-| END_PHILANTHROPIST | phil≥3 & !debt | We Are The World+Heal+1999 慈善 | common |
-| END_CONTROVERSIAL | rep<72 或 media<40，且 settlement1993/secondCharge | 1993 和解或 2005 指控留污点 | common |
+| END_MOGUL | dom==='mogul' & mogul≥2 & !debt & wealth≥60 | ATV+索尼+追加收购 | common |
+| END_PHILANTHROPIST | dom==='phil' & phil≥3 & !debt | We Are The World+Heal+1999 慈善 | common |
+| END_CONTROVERSIAL | (rep<72 & settlement1993) ∥ (media<40 & (settlement1993∥secondCharge)) | 1993 和解或 2005 指控留污点 | common |
 | END_TIMELESS_PRESENT | survived2009 & 非死亡收束 | 7_2 选「续写人生」→ 2010–2026 续章 | common |
-| END_INNOVATOR | art≥80 & mogul≥1 & (cp_innovation≥80 ∥ techVenture) | 音乐技术先驱（巨擘之后） | rare |
-| END_RECLUSE | dom==='recluse' & health≥40 | 多次拒访/拒拍/隐居 | rare |
-| END_RECLUSE_SERENE | dom==='recluse' & health≥55 & 孤独<50 | 平和隐士（隐居之后） | rare |
-| END_MENTOR | collab≥2 & family≥50 & art≥60 | 提携后辈（慈善之后） | rare |
-| END_ETERNAL | !burned & art≥75 & rep≥65 & health≥55 & (thriller25∥anniv2001) | 拒百事+艺术满投入+控压+加冕标志 | rare |
-| END_SURVIVE_DEBT | !held & debt | 取消巡演保命负债 | rare |
-| END_FINANCIAL | debt===true | 购庄园+巨和解+成本 | rare |
-| END_PERFECT | !burned & health≥50 & rep≥60 | 拒百事+健康声誉稳健 | epic |
-| END_STATESMAN | phil≥2 & rep≥70 & family≥55 & !debt | 文化大使线 | epic |
-| END_ART_PEAK | burned & !dep & held & health≥40 | 烧伤戒药+满规模 | epic |
-| END_TRAGIC | burned & dep & held & health≥35，或未命中任何前置结局的默认收束 | 历史复刻 / 默认落点 | legendary |
+| END_INNOVATOR | art≥70 & mogul≥1 & (cp_innovation≥80 ∥ techVenture) | 音乐技术先驱（巨擘之后） | rare |
+| END_RECLUSE | dom==='recluse' & health≥35 | 多次拒访/拒拍/隐居 | rare |
+| END_RECLUSE_SERENE | dom==='recluse' & health≥50 & 孤独<50 | 平和隐士（隐居之后） | rare |
+| END_MENTOR | collab≥1 & family≥40 & art≥50 | 提携后辈（慈善之后） | rare |
+| END_ETERNAL | !burned & art≥66 & rep≥56 & health≥46 & (thriller25∥anniv2001) | 拒百事+艺术满投入+控压+加冕标志 | rare |
+| END_SURVIVE_DEBT | debt & !held（轨迹优先：烧伤/负债先于成功型结局判定） | 取消巡演保命负债 | rare |
+| END_FINANCIAL | debt===true（轨迹优先） | 购庄园+巨和解+成本 | rare |
+| END_PERFECT | !burned & !debt & health≥40 & rep≥48（兜底好结局：无主导路线且健康声誉俱佳） | 拒百事+健康声誉稳健（非慈善主导的清白人生） | epic |
+| END_STATESMAN | dom==='phil' & phil≥2 & !debt & rep≥58 & family≥45 | 文化大使线 | epic |
+| END_ART_PEAK | burned & !dep & held & health≥28（轨迹优先） | 烧伤戒药+满规模 | epic |
+| END_TRAGIC | burned & dep & held & health≥28，或烧伤默认收束（轨迹优先） | 历史复刻 / 默认落点 | legendary |
 | END_TRUE_ETERNAL | !burned & !debt & art≥85 & rep≥85 & health≥75 & phil≥3 & artPath≥2 & (thriller25&&anniv2001) | 四方极致+双加冕（**隐藏终极**） | legendary（隐藏） |
 
-> 稀有度档位按「设计可达性 / 可达成感」进一步下调（用户反馈：稀有结局不应让玩家觉得遥不可及），并配合图鉴「如何达成」配方，让玩家明确如何 pursuit。档位：**common 常规走向（6）/ rare 需特定路线投入（7）/ epic 高数值组合（3）/ legendary 仅宿命或隐藏终极（2：END_TRAGIC 与隐藏终极 END_TRUE_ETERNAL）**。极稀有结局（PERFECT/STATESMAN/ART_PEAK/TRAGIC 随机命中 ≈0.02–0.06%）靠定向配方可达，随机单局波动属预期，由 `check_endings_new.cjs` 定向用例保证 18/18 可达；`check_balance_reach.cjs` 随机分布仅作信息型报告，不硬 FAIL 结局可达性（已重跑确认无结局因优先级抢占而恒为 0）。
+> 稀有度档位按「设计可达性 / 可达成感」进一步下调（用户反馈：稀有结局不应让玩家觉得遥不可及），并配合图鉴「如何达成」配方。`resolveEnding` 已于 2026-09-05 重构为**轨迹优先**：烧伤 / 负债 轨迹先判定（避免被"成功型结局"抢占而恒为 0），再处理 `!burned&!debt` 的成功/普通结局；各路线型结局要求该路线为**主导**（dom），使"无主导路线且健康声誉俱佳"的局流向 `PERFECT` 兜底。5000 局随机分布：STATESMAN≈2.3% / ART_PEAK≈1.3% / TRAGIC≈2.1% / INNOVATOR≈3.9% / MOGUL≈4.1% / 负债结局≈5%，**15/18 随机出现**（缺 PERFECT=刻意"非慈善清白人生"路径、TIMELESS_PRESENT=续章稀有分支、TRUE_ETERNAL=隐藏终极≈0.04%，均属设计预期）；`check_endings_new.cjs` 定向用例保证 18/18 可达，`check_balance_reach.cjs` 仅作信息型报告、不硬 FAIL。
 
 ## 8.3 平衡校验
 - **优先级唯一**：1→13 顺序保证不重叠。
@@ -475,6 +476,13 @@
 - **结局英文补全（已落地）**：`i18n.js` 结局 `name/tone/summary/monologue` EN 键此前已存在，但 **`hint` 的 EN 键完全缺失**，且结局详情弹窗 `endingDetailModal` 的 `tone` 直接用中文 `e.tone` 未走 `T()`——故英文模式下「如何达成」与「基调」仍回退中文。本次补全 18 个 `ending.END_*.hint` EN 键，并将弹窗 `tone` 改为 `T('ending.'+key+'.tone', ...)`；已用 Node 校验 EN 模式解析为英文、无中文回退。结局页（`showEnding`）与图鉴卡片本就用 `T()`，无需改动。
 - **平衡测试重跑确认无抢占（已落地）**：`npm test` 全绿（`check_endings_new` 定向用例保证 18/18 可达、`check_balance_reach` 概率校准 PASS）；随机分布本局 17/18（仅缺隐藏终极 `TRUE_ETERNAL`，其随机命中率约 0.04%，单次波动正常，定向用例覆盖）。各结局计数分布与改前一致，说明本次仅下调标签、未动引擎；优先级规则表确保无结局因高优先级结局抢占而恒为 0（详见 §8.3）。
 - **状态**：【已落地（2026-09-05）】lints 0；`npm test` 全绿（FAIL:0）。
+
+### 18.11 结局真实可达性提升（轨迹优先 + dom 门控，2026-09-05）
+- 用户要求"随机玩也更容易撞见特殊结局"——真正放宽 `engine.resolveEnding` 阈值，而非仅下调稀有度标签。
+- 重构为**轨迹优先**：烧伤 / 负债 轨迹先于"成功型结局"判定，避免被 MOGUL/PHIL/ETERNAL 等抢占而恒为 0（此前 ART_PEAK/TRAGIC 仅≈0.04%）。各路线型结局要求该路线为**主导（dom）**，使无主导路线且健康声誉俱佳的局流向 `PERFECT` 兜底。
+- 门槛放宽：ETERNAL(art75→66/rep65→56/health55→46)、STATESMAN(rep70→58/fam55→45)、MENTOR(collab2→1/fam50→40/art60→50)、ART_PEAK/TRAGIC(health→28)、RECLUSE_SERENE(health55→50)、INNOVATOR(art80→70)；并修复 PERFECT 漏 `!debt`、RECLUSE_SERENE 曾宽于 RECLUSE、PHIL 降 phil 吞 STATESMAN 等回归（均经 `check_endings_new` 18 定向用例验证）。
+- 效果（5000 局固定种子）：15/18 随机出现；STATESMAN≈2.3% / ART_PEAK≈1.3% / TRAGIC≈2.1% / INNOVATOR≈3.9% / MOGUL≈4.1% / 负债结局≈5%（上轮 PERFECT/STATESMAN/ART_PEAK/TRAGIC≈0.04%）。`PERFECT` 在均匀随机为 0 属设计内禀：随机局多堆叠慈善→归 STATESMAN；其图鉴 hint 即"不走慈善、健康声誉俱佳"的刻意玩法，按配方可稳定达成。
+- 状态：【已落地（2026-09-05）】lints 0；`npm test` 全绿（FAIL:0）；§8.2 矩阵门槛与注释已同步。
 
 # 十、美术与听觉（同前：暗金复古、符号化、原创/公共领域 BGM）
 

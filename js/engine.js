@@ -167,29 +167,41 @@ window.MJ = window.MJ || {};
     }
     // 3b. 续章（假设 2009 未离世）：永不归死亡结局，按人生状态收束（普通/稀有/史诗/传奇皆可抵达）
     if (f.survived2009 === true) {
-      if ((a.art || 0) >= 75 && (a.reputation || 0) >= 65 && (a.health || 0) >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL';
+      if (debt && !held) return 'END_SURVIVE_DEBT';
+      if (debt) return 'END_FINANCIAL';
+      if ((a.art || 0) >= 66 && (a.reputation || 0) >= 56 && (a.health || 0) >= 46 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL';
       if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';
-      if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';
-      if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';
+      if ((m.phil || 0) >= 3 && !debt) return 'END_PHILANTHROPIST';
+      if (dom === 'recluse' && a.health >= 35) return 'END_RECLUSE';
       if (a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';
       return 'END_TIMELESS_PRESENT';
     }
-    if (dom === 'recluse' && a.health >= 55 && (a.loneliness || 0) < 50) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
-    if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 4
+    // 轨迹优先：烧伤 / 负债 先判定，避免被"成功型结局"抢占而恒为 0（§17.7 可达性）。
+    if (burned) {
+      if (debt && !held) return 'END_SURVIVE_DEBT';
+      if (debt) return 'END_FINANCIAL';
+      if (dependent && held && (a.health || 0) >= 28) return 'END_TRAGIC';        // 10 烧伤+依赖+坚持巡演
+      if (!dependent && held && (a.health || 0) >= 28) return 'END_ART_PEAK';    // 9 烧伤戒药+坚持巡演
+      if (dependent && (a.health || 0) >= 28) return 'END_TRAGIC';               // 烧伤+依赖（未坚持巡演）
+      return 'END_TRAGIC';                                                       // 烧伤默认收束
+    }
+    if (debt) {
+      if (!held) return 'END_SURVIVE_DEBT';
+      return 'END_FINANCIAL';
+    }
+    // 以下仅 !burned & !debt：成功型 / 普通型结局（按"更具体者优先"排序）
+    if (dom === 'recluse' && a.health >= 50 && (a.loneliness || 0) < 50) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
+    if (dom === 'recluse' && a.health >= 35) return 'END_RECLUSE';        // 4
     // 13 声誉承压（M5 媒体轴联动）：有丑闻标志且声誉/媒体仍偏低 → 丑闻定义legacy；
     //    前置到「成功型结局」之前，否则会被 MOGUL/PHIL/PERFECT 等抢走而永远不可达。
     if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
-    if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5
-    if ((a.art || 0) >= 80 && (m.mogul || 0) >= 1 && (f.cp_innovation >= 80 || f.techVenture === true)) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
-    if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 6
-    if ((m.collab || 0) >= 2 && (a.family || 0) >= 50 && (a.art || 0) >= 60) return 'END_MENTOR'; // 6a 提携后辈（§17.7）
-    if ((m.phil || 0) >= 2 && !debt && (a.reputation || 0) >= 70 && (a.family || 0) >= 55) return 'END_STATESMAN'; // 6b 文化大使（§17.7）
-    if (!burned && a.art >= 75 && a.reputation >= 65 && a.health >= 55 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
-    if (!burned && a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';     // 8 健康谢幕（需声誉达标，否则归争议缠身）
-    if (burned && !dependent && held && a.health >= 40) return 'END_ART_PEAK'; // 9
-    if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 10
-    if (debt && !held) return 'END_SURVIVE_DEBT';            // 11 负债但取消巡演保命
-    if (debt) return 'END_FINANCIAL';                        // 12 债务压垮
+    if (m.mogul >= 2 && dom === 'mogul' && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5 商业须为主导路线，避免吞掉普通好结局池
+    if ((a.art || 0) >= 70 && (m.mogul || 0) >= 1 && (f.cp_innovation >= 80 || f.techVenture === true)) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
+    if ((m.phil || 0) >= 2 && dom === 'phil' && !debt && (a.reputation || 0) >= 58 && (a.family || 0) >= 45) return 'END_STATESMAN'; // 6b 文化大使（§17.7，须慈善主导且在 PHIL 前）
+    if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST';   // 6 须慈善主导
+    if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 50) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可）
+    if (a.art >= 66 && a.reputation >= 56 && a.health >= 46 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
+    if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（需声誉达标，否则归争议缠身）
     return 'END_TRAGIC';                                     // 14 默认
   };
 
