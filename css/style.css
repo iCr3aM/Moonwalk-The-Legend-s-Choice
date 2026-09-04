@@ -55,7 +55,7 @@ html, body {
   color: var(--gold);
   text-shadow: 0 2px 12px rgba(212, 175, 55, 0.25);
 }
-.intro .sub { color: var(--ink-dim); margin: 0 0 18px; letter-spacing: 1px; }
+.intro .sub { color: var(--ink-dim); margin: 0 0 18px; letter-spacing: 1px; text-align: center; }
 .intro p { color: var(--ink-dim); line-height: 1.8; font-size: 14px; text-align: left; }
 .intro .how { text-align: left; background: rgba(0,0,0,0.25); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin: 14px 0 22px; }
 .intro .how b { color: var(--gold); }
