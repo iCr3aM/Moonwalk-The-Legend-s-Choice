@@ -865,54 +865,18 @@ window.MJ = window.MJ || {};
 
     return cv;
   }
-  // 保存图片：优先 toBlob + 锚点下载（可被系统“分享/存储”捕获）；失败回退 data: URI；再失败静默放弃
   function downloadPoster(cv, base) {
     var name = base + '.png';
-    function _anchor(url) {
+    function go(blob) {
+      var url = URL.createObjectURL(blob);
       var a = document.createElement('a'); a.href = url; a.download = name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
     }
-    function _fallback() {
-      try { _anchor(cv.toDataURL('image/png')); } catch (e) {}
-    }
-    if (cv.toBlob) {
-      try {
-        cv.toBlob(function (blob) {
-          if (!blob) { _fallback(); return; }
-          try { var u = URL.createObjectURL(blob); _anchor(u); setTimeout(function () { URL.revokeObjectURL(u); }, 1500); }
-          catch (e) { _fallback(); }
-        }, 'image/png');
-        return;
-      } catch (e) {}
-    }
-    _fallback();
+    if (cv.toBlob) cv.toBlob(go, 'image/png');
+    else { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
   }
 
-
-  // 画布转 <img> src：兼容性优先。同步 toDataURL 在 Android/桌面必成功出图；
-  // 再尝试 Blob URL 以兼容 iOS Safari 长按保存（data: URI 在 iOS 不弹菜单）。
-  // 任何一步失败（toBlob 抛错 / 回调不来 / blob 为空 / blob 加载失败）都回退到 data: URI，确保图片一定显示。
-  function setPosterSrc(imgEl, cv) {
-    var _settled = false, _triedData = false;
-    function _setData() {
-      if (_settled || _triedData) return;
-      _triedData = true;
-      try { imgEl.src = cv.toDataURL('image/png'); _settled = true; } catch (e) {}
-    }
-    function _setBlob(blob) {
-      if (_settled) return;
-      if (!blob) { _setData(); return; }
-      try { imgEl.src = URL.createObjectURL(blob); _settled = true; } catch (e) { _setData(); }
-    }
-    imgEl.onerror = function () { if (!_settled) _setData(); };
-    if (cv.toBlob) {
-      try { cv.toBlob(_setBlob, 'image/png'); }
-      catch (e) { _setData(); }
-      setTimeout(function () { if (!_settled) _setData(); }, 600);
-    } else {
-      _setData();
-    }
-  }
 
   // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
   function openPosterModal(state, id, archiveIdx, prebuilt) {
@@ -935,13 +899,13 @@ window.MJ = window.MJ || {};
         '</div>' +
       '</div>' +
     '</div>';
-    // 移动端长按「保存图片」原生菜单只对 <img> 生效；且 iOS Safari 对 data: URI 不弹保存项，故用 Blob URL
+    // 移动端长按「保存图片」原生菜单只对 <img> 生效，<canvas> 无效；故将画布转为 <img> 再插入
     var _posterImg = document.createElement('img');
+    _posterImg.src = cv.toDataURL('image/png');
     _posterImg.alt = T('ui.posterOfTag', null, '传奇海报');
     _posterImg.className = 'poster-img';
     _posterImg.title = T('ui.zoomHint', null, '点击放大海报');
     overlay.querySelector('.poster-canvas-wrap').appendChild(_posterImg);
-    setPosterSrc(_posterImg, cv);
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
@@ -957,11 +921,7 @@ window.MJ = window.MJ || {};
   }
   function closePosterModal() {
     var o = document.getElementById('poster-overlay');
-    if (o) {
-      var _im = o.querySelector('.poster-canvas-wrap img');
-      if (_im && _im.src && _im.src.indexOf('blob:') === 0) { try { URL.revokeObjectURL(_im.src); } catch (e) {} }
-      o.parentNode.removeChild(o);
-    }
+    if (o) o.parentNode.removeChild(o);
   }
 
   ui.showIntro = function (hasSave) {
@@ -1150,7 +1110,7 @@ window.MJ = window.MJ || {};
     var pbox = document.getElementById('poster-box');
     if (pbox) {
       var thumb = document.createElement('img');
-      setPosterSrc(thumb, posterCanvas);
+      thumb.src = posterCanvas.toDataURL('image/png');
       thumb.alt = T('ui.posterOfTag', null, '传奇海报');
       thumb.className = 'poster-thumb';
       thumb.title = T('ui.zoomHint', null, '点击放大海报');
