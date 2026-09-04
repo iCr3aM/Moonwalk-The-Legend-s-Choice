@@ -557,25 +557,24 @@ window.MJ = window.MJ || {};
       [T('attr.family', null, '家庭'), 'family', a.family],
       [T('attr.stress', null, '压力'), 'stress', a.stress]
     ];
-    var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, barX = bx0 + 92, barW = colW - 92 - 16;
+    var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, labelW = 82, gutter = 96;
+    var barXoff = labelW, barW = colW - labelW - gutter - 10;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0;
       var x = bx0 + col * colW, y = top + row * rowH;
+      var bgx = x + barXoff;
       ctx.textAlign = 'left';
       ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
       ctx.fillText(dims[i][0], x, y + 15);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
       var numStr = String(dims[i][2]);
       if (dims[i][1] === 'reputation' || dims[i][1] === 'art') {
         var ov = (state.overflow && state.overflow[dims[i][1]]) || 0;
         if (ov > 0) numStr += ' ⭐+' + ov;
-      } else if (dims[i][1] === 'wealth') {
-        numStr += ' · ' + formatMoney(state.netWorth);
       }
-      ctx.fillText(numStr, x + 78, y + 15);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
+      ctx.fillText(numStr, x + colW - 10, y + 15);
       var v = Math.max(0, Math.min(100, dims[i][2])) / 100;
-      var bgx = barX + col * colW;
       ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
       var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);
       grad.addColorStop(0, '#caa84a'); grad.addColorStop(1, '#f3e2b0');
