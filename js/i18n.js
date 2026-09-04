@@ -24,7 +24,7 @@ window.MJ = window.MJ || {};
       zh: {}, // 中文以各处现有字面量为回退，无需在此重复
       en: {
         // ---------- UI 通用 chrome ----------
-        'ui.title': 'Michael Jackson: Life Choices',
+        'ui.title': 'Moonwalk: The Legend\'s Choice',
         'ui.networth': 'Net Worth',
         'ui.metaRoutePrefix': 'Path: ',
         'ui.metaRouteSuffix': '',
@@ -70,10 +70,10 @@ window.MJ = window.MJ || {};
         'ui.relNeutral': 'Neutral',
         'ui.achToast': 'Achievement Unlocked: ',
         'ui.foot': 'Every choice you made wrote a one-of-a-kind legend.',
-        'ui.posterHeader': 'MICHAEL JACKSON · LIFE CHOICES',
+        'ui.posterHeader': 'MOONWALK · THE LEGEND\'S CHOICE',
         'ui.posterEndingLabel': 'Ending · Your Legend',
         'ui.posterTagline': 'Everyone is the songwriter of their own life.',
-        'ui.posterSigned': 'MJ · Life Choices',
+        'ui.posterSigned': 'Moonwalk · The Legend\'s Choice',
         'ui.posterNoAch': '— No achievements lit this run —',
         'ui.posterAch': 'Achievements lit this run: {n}',
         'ui.posterOf': '{n} · Legend Poster',
@@ -403,11 +403,11 @@ window.MJ = window.MJ || {};
         'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute all run.',
 
         // ---------- 分享文案 ----------
-        'share.game.1': '“Michael Jackson: Life Choices” — a text-based life simulation game.',
+        'share.game.1': '“Moonwalk: The Legend\'s Choice” — a text-based life simulation game.',
         'share.game.2': 'From the crib in Gary to the world’s stages, make choices at every real historical crossroad,',
         'share.game.3': 'leading to 14 radically different life endings. What legend will you walk?',
         'share.game.4': '(Pure web, double-click to play; 30+ variation events, 30 achievements, key-choice review.)',
-        'share.ending.lead': 'In “Michael Jackson: Life Choices”, I lived my own legendary life:',
+        'share.ending.lead': 'In “Moonwalk: The Legend\'s Choice”, I lived my own legendary life:',
         'share.ending.dimLine': 'Health {health} · Reputation {reputation} · Art {art} · Wealth {wealth} · Family {family} · Stress {stress}',
         'share.ending.routeLine': 'Dominant path: {path}　Legend Score {score} (Grade {grade})',
         'share.ending.variantLine': 'Variants triggered: {v}　Key choices: {k}',

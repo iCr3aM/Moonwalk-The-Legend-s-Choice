@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "迈克尔·杰克逊：人生选择 — 文字人生模拟游戏（原生 JS，模块化，可选 Vite 单文件构建）",
+  "description": "月球漫步：传奇的抉择 — 文字人生模拟游戏（原生 JS，模块化，可选 Vite 单文件构建）",
   "scripts": {
     "dev": "vite",
     "build": "node build_singlefile.cjs",

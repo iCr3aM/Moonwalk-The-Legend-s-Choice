@@ -422,10 +422,45 @@ html, body {
 /* ---------- M8 章节主题色（童年暖→巅峰金→风暴沉→告别幽蓝） ---------- */
 .app[data-chapter="0"] { --gold: #e3a64a; --gold-soft: #b9822f; }
 .app[data-chapter="1"] { --gold: #e6b94a; --gold-soft: #bd8a2f; }
-.app[data-chapter="2"] { --gold: #f0cf63; --gold-soft: #c79a2c; }
-.app[data-chapter="3"] { --gold: #c9a23e; --gold-soft: #9c7a2c; }
-.app[data-chapter="4"] { --gold: #a9c2dc; --gold-soft: #7e96ad; }
-.app { transition: filter .4s ease; }
+/* ============ §18 章节 / 时代 差异化配色（M3 章节主题） ============ */
+/* 配色键：0 盖瑞(琥珀) / 1 单飞(靛紫) / 2 巅峰(经典金) / 3 风暴(青碧) / 4 谢幕(帝王紫) / 5 续章(冰蓝) */
+.app[data-chapter="0"] { --gold:#e0a85a; --gold-soft:#bd8438; --gold-dim:#6e4a22; --line:rgba(224,168,90,0.24); }
+.app[data-chapter="1"] { --gold:#9d8cff; --gold-soft:#7a6fd6; --gold-dim:#4a3f90; --line:rgba(157,140,255,0.24); }
+.app[data-chapter="2"] { --gold:#e6c24e; --gold-soft:#c79a2c; --gold-dim:#6e5a23; --line:rgba(212,175,55,0.24); }
+.app[data-chapter="3"] { --gold:#54c2b0; --gold-soft:#3a9b8c; --gold-dim:#236058; --line:rgba(84,194,176,0.24); }
+.app[data-chapter="4"] { --gold:#b48cff; --gold-soft:#8f6fd6; --gold-dim:#5a4690; --line:rgba(180,140,255,0.24); }
+.app[data-chapter="5"] { --gold:#7cc7e6; --gold-soft:#54a6c8; --gold-dim:#2f6e88; --line:rgba(124,199,230,0.24); }
+/* 每章给事件卡一道顶部主题色描边，强化"时代感" */
+.app[data-chapter] .panel.event { box-shadow: var(--shadow), inset 0 3px 0 var(--gold); }
+/* 配色随章节平滑过渡（按钮/选项本就有过渡，这里补齐面板与进度条） */
+.panel { transition: border-color .3s ease, box-shadow .3s ease; }
+.fill { transition: width .35s ease, background .3s ease; }
+
+/* ============ 响应式：手机 / 电脑 双端适配 ============ */
+.menu-row { display: flex; flex-direction: column; gap: 10px; }
+@media (min-width: 1080px) { .app { max-width: 1000px; } }
+@media (max-width: 640px) {
+  .app { padding: 10px 10px 26px; gap: 12px; }
+  .intro { padding: 24px 16px; }
+  .intro h1 { font-size: 23px; letter-spacing: 1px; }
+  .intro .sub { font-size: 13px; }
+  .intro p { font-size: 13px; }
+  .btn { padding: 11px 16px; font-size: 14px; }
+  .btn-row { flex-direction: column; }
+  .btn-row .btn { width: 100%; }
+  .status { padding: 10px 12px; }
+  .bars { grid-template-columns: repeat(2, 1fr); gap: 8px 12px; }
+  .event { padding: 18px 14px; }
+  .event h2 { font-size: 19px; }
+  .event .body { font-size: 14px; line-height: 1.8; }
+  .option { padding: 13px 14px; }
+  .option .ot { font-size: 14px; }
+  .menu-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .menu-row .btn.block { width: 100%; }
+  .toolbar { flex-wrap: wrap; }
+  .subdim-name { width: 56px; }
+  .subdim-row { font-size: 12px; }
+}
 
 /* §17.6 语录/歌词 Toast（靛紫调，区别于趣事青绿调） */
 .quote-toast {

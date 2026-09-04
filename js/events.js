@@ -387,7 +387,7 @@ window.MJ = window.MJ || {};
       { label: T('event.3_2.opt0.label', null, 'A：接拍并意外烧伤'), hint: T('event.3_2.opt0.hint', null, '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）'), effects: { wealth: 20, reputation: 5, rel: { fans: 5 } }, flags: { isPepsiBurned: true }, epilogue: T('event.3_2.opt0.epilogue', null, '片场的火苗舔过皮肤，那一刻的惊呼，成了此后多年都挥不去的回音。'), next: '3_2b' },
       { label: T('event.3_2.opt1.label', null, 'B：安全优先拒拍'), hint: T('event.3_2.opt1.hint', null, '护住身体，丢了广告费（健康+10，财富-20）'), effects: { health: 10, wealth: -20 }, flags: { isPepsiBurned: false }, epilogue: T('event.3_2.opt1.epilogue', null, '你绕开了那簇火，却也错过了一次让名字更深入人心的机会。'), next: '3_2b' },
       { label: T('event.3_2.opt2.label', null, 'C：议价安全拍摄'), hint: T('event.3_2.opt2.hint', null, '皆大欢喜的折中（财富+5，健康+5）'), effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, epilogue: T('event.3_2.opt2.epilogue', null, '你在安全与曝光间找到了平衡点，片场圆满收工。'), next: '3_2b' },
-      { label: T('event.3_2.opt3.label', null, 'D：若那簇火没烧到你（架空想象）'), hint: T('event.3_2.opt3.hint', null, '改写此后数十年的伏笔（健康+8，压力-5）'), effects: { health: 8, stress: -5 }, flags: { isPepsiBurned: false }, epilogue: T('event.3_2.opt3.epilogue', null, '你闭上眼，想象片场那一捧火苗没有舔到皮肤——有些痛，本可以不开始。'), next: '3_2b' }
+      { label: T('event.3_2.opt3.label', null, 'D：若那簇火没烧到你（架空想象）'), hint: T('event.3_2.opt3.hint', null, '（架空想象）不触发真实伏笔，仅作心理慰藉（健康+8，压力-5）'), effects: { health: 8, stress: -5 }, flags: { isPepsiBurned: false, pepsiWhatIf: true }, epilogue: T('event.3_2.opt3.epilogue', null, '你闭上眼，想象片场那一捧火苗没有舔到皮肤——有些痛，本可以不开始。'), next: '3_2b' }
     ]
   };
 

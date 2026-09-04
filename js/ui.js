@@ -164,7 +164,7 @@ window.MJ = window.MJ || {};
     var yearTxt = ev ? MJ.eventYear(ev) : '';
     return '<div class="panel status">' +
       '<div class="status-top">' +
-        '<span class="title">' + T('ui.title', null, '迈克尔·杰克逊：人生选择') + '</span>' +
+        '<span class="title">' + T('ui.title', null, '月球漫步：传奇的抉择') + '</span>' +
         '<span><span class="year">' + yearTxt + '</span> &nbsp; <span class="' + debtCls + '">' + T('ui.networth', null, '净资产') + ' ' + formatMoney(net) + '</span></span>' +
         '<button class="btn ghost small lang-btn" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
       '</div>' +
@@ -549,7 +549,7 @@ window.MJ = window.MJ || {};
     var endName = T('ending.' + endingId + '.name', null, e.name);
     var endTone = T('ending.' + endingId + '.tone', null, e.tone);
     return [
-      T('share.ending.lead', null, '我在《迈克尔·杰克逊：人生选择》中，走完了属于自己的传奇一生：'),
+      T('share.ending.lead', null, '我在《月球漫步：传奇的抉择》中，走完了属于自己的传奇一生：'),
       '',
       e.icon + ' ' + endName + '（' + endTone + '）',
       T('share.ending.dimLine', { health: a.health, reputation: a.reputation, art: a.art, wealth: a.wealth, family: a.family, stress: a.stress },
@@ -565,7 +565,7 @@ window.MJ = window.MJ || {};
   }
   function buildGameShareText() {
     return [
-      T('share.game.1', null, '“迈克尔·杰克逊：人生选择”——一款文字人生模拟游戏。'),
+      T('share.game.1', null, '“月球漫步：传奇的抉择”——一款文字人生模拟游戏。'),
       T('share.game.2', null, '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，'),
       T('share.game.3', null, '导向 14 种截然不同的人生结局。你，会走出怎样的传奇？'),
       '',
@@ -623,7 +623,7 @@ window.MJ = window.MJ || {};
     document.getElementById('share-copy').addEventListener('click', function () { copyText(full, this); });
     if (navigator.share) {
       document.getElementById('share-native').addEventListener('click', function () {
-        var data = { title: T('ui.title', null, '迈克尔·杰克逊：人生选择'), text: summary };
+        var data = { title: T('ui.title', null, '月球漫步：传奇的抉择'), text: summary };
         if (url) data.url = url;
         if (navigator.canShare && !navigator.canShare(data)) { /* 仍尝试分享 */ }
         navigator.share(data).catch(function () {});
@@ -800,7 +800,7 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = '#d4af37'; ctx.font = 'italic 17px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 70);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText(T('ui.posterSigned', null, 'MJ · 人生选择'), W / 2, H - 44);
+    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 44);
 
     return cv;
   }
@@ -822,7 +822,7 @@ window.MJ = window.MJ || {};
       if (!blob) return;
       var file = new File([blob], 'MJ人生传奇_' + endingId + '.png', { type: 'image/png' });
       if (navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: T('ui.title', null, '迈克尔·杰克逊：人生选择'), text: buildEndingShareText(state, endingId) }).catch(function () {});
+        navigator.share({ files: [file], title: T('ui.title', null, '月球漫步：传奇的抉择'), text: buildEndingShareText(state, endingId) }).catch(function () {});
       }
     }, 'image/png');
   }
@@ -852,7 +852,7 @@ window.MJ = window.MJ || {};
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
-    document.getElementById('pm-save').addEventListener('click', function () { downloadPoster(cv, 'MJ人生传奇_' + id); });
+    document.getElementById('pm-save').addEventListener('click', function () { downloadPoster(cv, '月球漫步传奇_' + id); });
     var pms = document.getElementById('pm-share');
     if (pms) pms.addEventListener('click', function () { sharePosterImage(state, id); });
   }
@@ -864,8 +864,8 @@ window.MJ = window.MJ || {};
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
-        '<h1>' + T('ui.title', null, '迈克尔·杰克逊：人生选择') + '</h1>' +
-        '<p class="sub">Michael Jackson: Life Choices</p>' +
+        '<h1>' + T('ui.title', null, '月球漫步：传奇的抉择') + '</h1>' +
+        '<p class="sub">Moonwalk: The Legend\'s Choice</p>' +
         '<div class="how">' +
           '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 14 种不同的人生结局。') + '</p>' +
         '</div>' +
@@ -895,7 +895,7 @@ window.MJ = window.MJ || {};
       MJ.engine.start();
     });
     var si = $('#btn-share-intro');
-    if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '迈克尔·杰克逊：人生选择'), buildGameShareText()); });
+    if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '月球漫步：传奇的抉择'), buildGameShareText()); });
     var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
     var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
