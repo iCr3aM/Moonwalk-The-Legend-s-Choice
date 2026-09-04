@@ -284,6 +284,43 @@ window.MJ = window.MJ || {};
     });
   }
 
+  // ---------- 彩蛋图鉴（GDD §17.9） ----------
+  function eggHtml() {
+    var defs = (MJ.eggSystem ? MJ.eggSystem.defs : {});
+    var list = (MJ.eggSystem ? MJ.eggSystem.foundList() : []);
+    var html = '<div class="panel gallery">' +
+      '<div class="g-head">' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="g-prog">' + (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0) + '</span></div>' +
+      '<div class="g-grid">';
+    Object.keys(defs).forEach(function (k) {
+      var e = defs[k], on = false;
+      for (var i = 0; i < list.length; i++) { if (list[i].id === k) { on = true; break; } }
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
+        '<div class="g-icon">' + (on ? e.icon : '🥚') + '</div>' +
+        '<div class="g-name">' + (on ? escapeHtml(e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-rarity">' + (on ? escapeHtml(e.desc) : T('ui.locked', null, '未解锁')) + '</div>' +
+      '</div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+  function eggModal() {
+    closeOverlay('egg-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'egg-overlay';
+    overlay.className = 'overlay modal-overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="egg-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body"></div></div>';
+    overlay.querySelector('.modal-body').innerHTML = eggHtml();
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('egg-overlay'); });
+    document.getElementById('egg-close').addEventListener('click', function () { closeOverlay('egg-overlay'); });
+  }
+  function eggCount() {
+    return (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0);
+  }
+
   // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除）
   function toastAchievement(a) {
     var t = document.createElement('div');
@@ -297,6 +334,21 @@ window.MJ = window.MJ || {};
       t.classList.remove('show');
       setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400);
     }, 3600);
+  }
+
+  // 彩蛋解锁即时弹窗（GDD §17.9）
+  function toastEgg(e) {
+    var t = document.createElement('div');
+    t.className = 'egg-toast';
+    t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
+      '<div class="at-body"><div class="at-title">' + T('ui.eggToast', null, '彩蛋发现 · ') + escapeHtml(e.name) + '</div>' +
+      '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('show'); }, 20);
+    setTimeout(function () {
+      t.classList.remove('show');
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 400);
+    }, 4200);
   }
 
   // 元路线倾向提示（GDD §9）：状态栏下方提示玩家“正在走向”哪条路
@@ -700,6 +752,7 @@ window.MJ = window.MJ || {};
         '<div class="menu-row">' +
           '<button class="btn block" id="btn-gallery">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
           '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
+          '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
@@ -723,6 +776,7 @@ window.MJ = window.MJ || {};
     if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '迈克尔·杰克逊：人生选择'), buildGameShareText()); });
     var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
+    var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
     var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showIntro(hasSave); };
   };
@@ -849,6 +903,7 @@ window.MJ = window.MJ || {};
       '<div class="menu-row">' +
         '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
         '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
+        '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
       '</div>' +
       keyReviewPanel(state) +
       diaryPanel(state) +
@@ -857,6 +912,7 @@ window.MJ = window.MJ || {};
       '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
     app.innerHTML = html;
     MJ.achievementSystem.evaluate(state, { ending: id }).forEach(toastAchievement);
+    if (MJ.eggSystem) MJ.eggSystem.onEnding(state, id);
     $('#btn-restart').addEventListener('click', function () {
       MJ.saveSystem.clear();
       ui.showIntro(false);
@@ -883,6 +939,7 @@ window.MJ = window.MJ || {};
     openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
+    var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
     var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {

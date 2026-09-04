@@ -1747,5 +1747,47 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ----- 隐藏彩蛋变体（GDD §17.9：系统化 Easter Eggs，选项写入 egg_* 标志触发图鉴） -----
+  E.V_EGG_MOTOWN = {
+    id: 'V_EGG_MOTOWN', variant: true, window: [1969, 1976], weight: 28,
+    title: T('event.V_EGG_MOTOWN.title', null, '老友重聚'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_EGG_MOTOWN.text', null, '一通越洋电话，把 Motown 年代的老伙计们又唤到了一起。几把不再年轻的声音凑近麦克风，青春在合唱里复活了一瞬。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: T('event.V_EGG_MOTOWN.branch0.text', null, '你忽然觉得，那些年的和声，从没真的散过。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_EGG_MOTOWN.opt0.label', null, 'A：与他们同唱一曲'), hint: T('event.V_EGG_MOTOWN.opt0.hint', null, '把青春唱回来（艺术+5，家庭+5）'), effects: { art: 5, family: 5 }, flags: { egg_motown: true }, next: '__RETURN__' },
+      { label: T('event.V_EGG_MOTOWN.opt1.label', null, 'B：遥寄祝福'), hint: T('event.V_EGG_MOTOWN.opt1.hint', null, '把怀念留在心里（声誉+3）'), effects: { reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_EGG_DISCO = {
+    id: 'V_EGG_DISCO', variant: true, window: [1978, 1982], weight: 28,
+    title: T('event.V_EGG_DISCO.title', null, '迪斯科致敬'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_EGG_DISCO.text', null, '街头的霓虹随迪斯科鼓点晃动。你站在潮流门口，忽然很想对那个年代的前辈们，郑重地鞠一躬。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: T('event.V_EGG_DISCO.branch0.text', null, '你听见身体里那股想跟着跳的冲动，比以为的更诚实。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_EGG_DISCO.opt0.label', null, 'A：对着霓虹扭一扭肩'), hint: T('event.V_EGG_DISCO.opt0.hint', null, '向前辈致意（艺术+5，声誉+3）'), effects: { art: 5, reputation: 3 }, flags: { egg_disco: true }, next: '__RETURN__' },
+      { label: T('event.V_EGG_DISCO.opt1.label', null, 'B：安静旁观'), hint: T('event.V_EGG_DISCO.opt1.hint', null, '把这一阵风记进歌里（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_EGG_WATW = {
+    id: 'V_EGG_WATW', variant: true, window: [1985, 1986], weight: 55,
+    cond: function (s) { return s.flags.weAreTheWorld === true; },
+    title: T('event.V_EGG_WATW.title', null, '同一个和弦'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_EGG_WATW.text', null, '录音棚里，你在《We Are The World》的合唱段落按下了一个特别的和弦——一个只有你自己听得出温度的处理。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.V_EGG_WATW.branch0.text', null, '你想起写这首歌的初衷：音乐本就不该有国界。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_EGG_WATW.opt0.label', null, 'A：保留这个私密的和弦'), hint: T('event.V_EGG_WATW.opt0.hint', null, '把温柔藏进歌里（艺术+5，慈善+1）'), effects: { art: 5, phil: 1 }, flags: { egg_watw: true }, epilogue: T('event.V_EGG_WATW.opt0.epilogue', null, '多年后，仍有人声称在那段合唱里听出了一层别处没有的温柔——那是你留给世界的暗号。'), next: '__RETURN__' },
+      { label: T('event.V_EGG_WATW.opt1.label', null, 'B：改用常规编配'), hint: T('event.V_EGG_WATW.opt1.hint', null, '稳妥收尾（声誉+3）'), effects: { reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+
   MJ.EVENTS = E;
 })();

@@ -211,6 +211,21 @@ html, body {
 .ach-toast .at-title { color: var(--gold); font-weight: 700; font-size: 14px; letter-spacing: 1px; }
 .ach-toast .at-desc { color: var(--ink-dim); font-size: 12px; line-height: 1.5; margin-top: 3px; }
 
+/* 彩蛋解锁弹窗（GDD §17.9） */
+.egg-toast {
+  position: fixed; right: 18px; bottom: 70px; z-index: 51;
+  display: flex; gap: 12px; align-items: center;
+  max-width: 320px; padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(70,40,90,0.96), rgba(30,18,45,0.96));
+  border: 1px solid #b98ce0; border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  opacity: 0; transform: translateY(20px); transition: opacity .4s ease, transform .4s ease;
+}
+.egg-toast.show { opacity: 1; transform: translateY(0); }
+.egg-toast .at-icon { font-size: 30px; line-height: 1; }
+.egg-toast .at-title { color: #e7c9ff; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+.egg-toast .at-desc { color: var(--ink-dim); font-size: 12px; line-height: 1.5; margin-top: 3px; }
+
 /* ---------- 轻量级动效 ---------- */
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(10px); }

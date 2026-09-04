@@ -51,6 +51,17 @@ window.MJ = window.MJ || {};
   }
   MJ.applyEffects = applyEffects;
 
+  // 彩蛋：连续“完美演出”计数（用于 §17.9 歌词反向彩蛋）
+  function _bumpStreak(state, isPerfect) {
+    if (!state._mw) state._mw = 0;
+    if (isPerfect) {
+      state._mw += 1;
+      if (state._mw >= 4 && MJ.eggSystem) MJ.eggSystem.unlock('EGG_LYRIC');
+    } else {
+      state._mw = 0;
+    }
+  }
+
   // 选项后果的“回响”短叙事（前置小剧情）：优先用 bespoke epilogue，否则按数值合成。
   function consequenceLine(opt, state) {
     if (opt.epilogue) return opt.epilogue;
@@ -292,6 +303,14 @@ window.MJ = window.MJ || {};
       if (opt.flags) for (var k in opt.flags) this.state.setFlag(k, opt.flags[k]);
       MJ.ruleEngine.afterEvent(this.state);
 
+      // §17.9 彩蛋触发检测（月球漫步起源 / 歌词反向 / egg_* 标志）
+      if (MJ.eggSystem) {
+        if (ev.id === '3_1b' && optIndex === 0) MJ.eggSystem.incMoonwalkPerfect();
+        var _mwSet = { '3_1b': 1, '3_2b': 1, '4_2b': 1, '6_1c': 1 };
+        _bumpStreak(this.state, !!(_mwSet[ev.id] && optIndex === 0));
+        MJ.eggSystem.checkFlags(this.state);
+      }
+
       this.pendingEpilogue = consequenceLine(opt, this.state);
 
       MJ.saveSystem.save(this.state);
@@ -391,6 +410,75 @@ window.MJ = window.MJ || {};
     // 重置全部已解锁成就（图鉴式 localStorage 清除）
     clear: function () {
       try { localStorage.removeItem(this.key); } catch (e) {}
+    }
+  };
+
+  // ---------- 彩蛋系统（GDD §17.9：系统化 Easter Eggs） ----------
+  MJ.eggSystem = {
+    key: 'mj_lifechoices_eggs_v1',
+    defs: {
+      EGG_MOONWALK: { icon: '🌕', name: '月球漫步起源', desc: '你一次次把脚尖点地、向后滑行——原来神话，是从盖瑞巷口的水泥地开始的。' },
+      EGG_LYRIC:    { icon: '🎶', name: '反向的歌词', desc: '“Annie, are you OK?” 你笑着把歌词倒着唱，时光也跟着倒流了一秒。' },
+      EGG_TRIBUTE:  { icon: '🤝', name: '梦幻同台', desc: '聚光灯下，你与猫王、与披头士隔空合唱——这世上所有的传奇，本就该同台。' },
+      EGG_WATW:     { icon: '🕊️', name: '同一首歌', desc: '你按下那个特别的和弦，让《We Are The World》多了一层只有你自己听得出的温柔。' },
+      EGG_MOTOWN:   { icon: '💫', name: '老友重聚', desc: 'Motown 的老伙计们又聚到了一起，青春在合唱里复活了一瞬。' },
+      EGG_DISCO:    { icon: '🪩', name: '迪斯科致敬', desc: '你对着霓虹扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。' },
+      EGG_DEV:      { icon: '🛠️', name: '开发者留言', desc: '“谢谢你，把这一段人生，一遍遍活成了不同的样子。”' },
+      EGG_FOURTH:   { icon: '🪞', name: '第四面墙', desc: '“致每一位重写传奇的你——镜子里的那个孩子，一直在为你鼓掌。”' }
+    },
+    _load: function () {
+      try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
+      catch (e) { return { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
+    },
+    _save: function (d) { try { localStorage.setItem(this.key, JSON.stringify(d)); } catch (e) {} },
+    isFound: function (id) { return !!this._load().found[id]; },
+    total: function () { return Object.keys(this.defs).length; },
+    count: function () { return Object.keys(this._load().found).length; },
+    foundList: function () {
+      var d = this._load(), self = this, out = [];
+      Object.keys(this.defs).forEach(function (k) { if (d.found[k]) out.push({ id: k, icon: self.defs[k].icon, name: self.defs[k].name, desc: self.defs[k].desc }); });
+      return out;
+    },
+    // 解锁彩蛋；返回是否「新解锁」并弹窗
+    unlock: function (id) {
+      var def = this.defs[id]; if (!def) return false;
+      var d = this._load();
+      if (d.found[id]) return false;
+      d.found[id] = true; this._save(d);
+      if (MJ.ui && MJ.ui.toastEgg) MJ.ui.toastEgg({ icon: def.icon, name: def.name, desc: def.desc });
+      return true;
+    },
+    // 扫描 state.flags 中 egg_* 前缀 → 解锁对应彩蛋（变体事件选项写入 egg_xxx 时触发）
+    checkFlags: function (state) {
+      if (!state || !state.flags) return 0;
+      var self = this, n = 0;
+      Object.keys(state.flags).forEach(function (k) {
+        if (k.indexOf('egg_') === 0 && state.flags[k]) {
+          var id = 'EGG_' + k.slice(4).toUpperCase();
+          if (self.defs[id] && self.unlock(id)) n++;
+        }
+      });
+      return n;
+    },
+    // 跨周目累计：3_1b「完美演绎」累计 3 次 → 月球漫步起源
+    incMoonwalkPerfect: function () {
+      var d = this._load(); d.moonwalkPerfect = (d.moonwalkPerfect || 0) + 1; this._save(d);
+      if (d.moonwalkPerfect >= 3) this.unlock('EGG_MOONWALK');
+    },
+    // 结局时：致敬联动 + 元彩蛋（集齐 30 成就）+ 周目计数
+    onEnding: function (state, endingId) {
+      var s = state || (MJ.engine && MJ.engine.state);
+      if (s && s.meta && (s.meta.artPath || 0) >= 2 && s.flags && s.flags.anniv2001 && s.flags.thriller25) this.unlock('EGG_TRIBUTE');
+      if (MJ.achievementSystem) {
+        try { MJ.achievementSystem.evaluate(s, { ending: endingId }); } catch (e) {}
+        var all = MJ.achievementSystem.all(), got = all.filter(function (a) { return a.unlocked; }).length;
+        if (all.length > 0 && got >= all.length) this.unlock('EGG_DEV');
+      }
+      this.incPlaythroughs();
+    },
+    incPlaythroughs: function () {
+      var d = this._load(); d.playthroughs = (d.playthroughs || 0) + 1; this._save(d);
+      if (d.playthroughs >= 5) this.unlock('EGG_FOURTH');
     }
   };
 })();
