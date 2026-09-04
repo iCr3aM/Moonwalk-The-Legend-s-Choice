@@ -215,15 +215,15 @@ window.MJ = window.MJ || {};
     });
     var got = list.filter(function (a) { return a.unlocked; }).length;
     var total = list.length;
-    var html = '<div class="panel ach-panel">' +
+    var html = '<div class="panel gallery">' +
       '<div class="g-head">' + T('ui.achievements', null, '成就') + ' <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
-      '<div class="ach-grid">';
+      '<div class="g-grid">';
     list.forEach(function (a) {
       var on = a.unlocked;
-      html += '<div class="ach-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(T('ach.' + a.id + '.name', null, a.name) + '：' + T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '">' +
-        '<div class="ach-icon">' + (on ? a.icon : '🔒') + '</div>' +
-        '<div class="ach-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="ach-rarity">' + rarityLabel(a.rarity) + '</div>' +
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(T('ach.' + a.id + '.name', null, a.name) + '：' + T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '">' +
+        '<div class="g-icon">' + (on ? a.icon : '🏆') + '</div>' +
+        '<div class="g-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
+        (on ? '<div class="g-rarity">' + rarityLabel(a.rarity) + '</div>' : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
       '</div>';
     });
     html += '</div></div>';
@@ -570,7 +570,7 @@ window.MJ = window.MJ || {};
     return [
       T('share.game.1', null, '“月球漫步：传奇的抉择”——一款文字人生模拟游戏。'),
       T('share.game.2', null, '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，'),
-      T('share.game.3', null, '导向 14 种截然不同的人生结局。你，会走出怎样的传奇？'),
+      T('share.game.3', null, '导向 18 种截然不同的人生结局。你，会走出怎样的传奇？'),
       '',
       T('share.game.4', null, '（纯网页，双击即玩；含 60 余项变体事件、56 项成就、关键抉择回顾。）')
     ].join('\n');
@@ -870,7 +870,7 @@ window.MJ = window.MJ || {};
         '<h1>' + T('ui.title', null, '月球漫步：传奇的抉择') + '</h1>' +
         '<p class="sub">Moonwalk: The Legend\'s Choice</p>' +
         '<div class="how">' +
-          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 14 种不同的人生结局。') + '</p>' +
+          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 18 种不同的人生结局。') + '</p>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
