@@ -196,7 +196,7 @@ window.MJ = window.MJ || {};
     //    前置到「成功型结局」之前，否则会被 MOGUL/PHIL/PERFECT 等抢走而永远不可达。
     if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
     if (m.mogul >= 2 && dom === 'mogul' && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5 商业须为主导路线，避免吞掉普通好结局池
-    if ((a.art || 0) >= 70 && (m.mogul || 0) >= 1 && (f.cp_innovation >= 80 || f.techVenture === true)) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
+    if ((a.art || 0) >= 70 && (m.mogul || 0) >= 1 && f.cp_innovation >= 80) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
     if ((m.phil || 0) >= 2 && dom === 'phil' && !debt && (a.reputation || 0) >= 58 && (a.family || 0) >= 45) return 'END_STATESMAN'; // 6b 文化大使（§17.7，须慈善主导且在 PHIL 前）
     if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST';   // 6 须慈善主导
     if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 50) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可）
@@ -229,7 +229,7 @@ window.MJ = window.MJ || {};
       this.state = new MJ.GameState();
       this.state.hydrate(data);
       this._usedVariants = {};
-      this._return = null;
+      this._return = (data && data.returnId) || null;
       this._chapterVariantCount = 0;
       this._sinceVariant = 0;
       var id = (data && data.currentId) ? data.currentId : 'start';

@@ -244,10 +244,10 @@ window.MJ = window.MJ || {};
         'ending.END_CONTROVERSIAL.hint': 'In 1993 choose "settlement" or face the 2005 charge, and avoid maxing out reputation/media (leave a blemish).',
         'ending.END_SURVIVE_DEBT.hint': 'After falling into debt, cancel the This Is It tour to save your life (rather than pushing through).',
         'ending.END_PERFECT.hint': 'Avoid the Pepsi burn and debt; keep health and reputation high all the way to the end.',
-        'ending.END_ETERNAL.hint': 'Push art (>=75), reputation (>=65) and health (>=55) high, stay unburned throughout, and trigger the Thriller 25 coronation or the 30th-anniversary memorial (one of the two crowns).',
-        'ending.END_TRUE_ETERNAL.hint': 'Ultimate route: art/reputation >=85, health >=72, philanthropist >=3, artist >=2, and earn BOTH the Thriller 25 and 30th-anniversary double coronation, staying unburned and debt-free throughout.',
+        'ending.END_ETERNAL.hint': 'Push art (>=66), reputation (>=56) and health (>=46) high, stay unburned throughout, and trigger the Thriller 25 coronation or the 30th-anniversary memorial (one of the two crowns).',
+        'ending.END_TRUE_ETERNAL.hint': 'Ultimate route: art/reputation >=85, health >=75, philanthropist >=3, artist >=2, and earn BOTH the Thriller 25 and 30th-anniversary double coronation, staying unburned and debt-free throughout.',
         'ending.END_TIMELESS_PRESENT.hint': 'At the 2009 finale choose "Continue the life" to enter the 2019+ sequel line.',
-        'ending.END_STATESMAN.hint': 'Balance charity (>=2), high reputation (>=70) and a harmonious family (>=55), while staying debt-free.',
+        'ending.END_STATESMAN.hint': 'Balance charity (>=2), high reputation (>=58) and a harmonious family (>=45), while staying debt-free.',
         'ending.END_INNOVATOR.hint': 'Business + artistic-innovation route: meta-route "Mogul" >=2, enough wealth, high art — then bet on innovation/tech options.',
         'ending.END_MENTOR.hint': 'While balancing charity, family (>=50) and art (>=60), choose options that mentor/help the younger generation.',
         'ending.END_RECLUSE_SERENE.hint': 'Make recluse your dominant route, but keep health >=50, family/media from sinking, and avoid excessive loneliness.',
@@ -432,17 +432,6 @@ window.MJ = window.MJ || {};
         'ach.ACH_SPEEDRUN.name': 'Speedrun Life', 'ach.ACH_SPEEDRUN.desc': 'Reach any ending via a minimal path.',
         'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute all run.',
 
-        // ---------- 分享文案 ----------
-        'share.game.1': '“Moonwalk: The Legend\'s Choice” — a text-based life simulation game.',
-        'share.game.2': 'From the crib in Gary to the world’s stages, make choices at every real historical crossroad,',
-        'share.game.3': 'leading to 18 radically different life endings. What legend will you walk?',
-        'share.game.4': '(Pure web, double-click to play; 60+ variation events, 50+ achievements, key-choice review.)',
-        'share.ending.lead': 'In “Moonwalk: The Legend\'s Choice”, I lived my own legendary life:',
-        'share.ending.dimLine': 'Health {health} · Reputation {reputation} · Art {art} · Wealth {wealth} · Family {family} · Stress {stress}',
-        'share.ending.routeLine': 'Dominant path: {path}　Legend Score {score} (Grade {grade})',
-        'share.ending.variantLine': 'Variants triggered: {v}　Key choices: {k}',
-        'share.ending.achLine': 'Achievements lit this run: {n}',
-        'share.ending.tail': 'Everyone is the songwriter of their own life — come write your version.'
       }
     },
 

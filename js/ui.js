@@ -319,7 +319,7 @@ window.MJ = window.MJ || {};
         (e.tone ? '<div class="ed-tone">' + escapeHtml(T('ending.' + key + '.tone', null, e.tone)) + '</div>' : '') +
         '<div class="ed-summary">' + escapeHtml(T('ending.' + key + '.summary', null, e.summary || '')) + '</div>' +
         (hint ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>' : '') +
-        (e.monologue ? '<div class="ed-monologue">' + escapeHtml(e.monologue) + '</div>' : '');
+        (e.monologue ? '<div class="ed-monologue">' + escapeHtml(T('ending.' + key + '.monologue', null, e.monologue)) + '</div>' : '');
     } else if (e.hidden) {
       // 隐藏结局未解锁：不泄露任何内容
       headTxt = '❓ ' + T('ui.unknown', null, '？？？');
@@ -604,34 +604,7 @@ window.MJ = window.MJ || {};
   }
 
 
-  // ---------- 社交分享（GDD §17） ----------
-  function buildEndingShareText(state, endingId) {
-    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
-    var a = state.attributes;
-    var dm = MJ.dominantMeta(state.meta);
-    var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
-    var legend = MJ.legendScore(state);
-    var thisRun = (MJ.config.achievements || []).filter(function (ac) {
-      try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
-    });
-    var st = state.stats || { variants: 0, keyChoices: 0 };
-    var endName = T('ending.' + endingId + '.name', null, e.name);
-    var endTone = T('ending.' + endingId + '.tone', null, e.tone);
-    return [
-      T('share.ending.lead', null, '我在《月球漫步：传奇的抉择》中，走完了属于自己的传奇一生：'),
-      '',
-      e.icon + ' ' + endName + '（' + endTone + '）',
-      T('share.ending.dimLine', { health: a.health, reputation: a.reputation, art: a.art, wealth: a.wealth, family: a.family, stress: a.stress },
-        '健康 {health} · 声誉 {reputation} · 艺术 {art} · 财富 {wealth} · 家庭 {family} · 压力 {stress}'),
-      T('share.ending.routeLine', { path: metaName, score: legend.score, grade: legend.grade },
-        '主导路线：{path}　传奇评分 {score}（评级 {grade}）'),
-      T('share.ending.variantLine', { v: st.variants, k: st.keyChoices },
-        '触发变体 {v} 次　关键抉择 {k} 个'),
-      T('share.ending.achLine', { n: thisRun.length }, '本局点亮 {n} 枚成就'),
-      '',
-      T('share.ending.tail', null, '每个人都是自己人生的词曲作者——来写下你的版本。')
-    ].join('\n');
-  }
+
   // ---------- 传奇海报（Canvas 自动生成，可保存/分享的图片） ----------
   function roundRect(ctx, x, y, w, h, r) {
     if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
@@ -903,17 +876,7 @@ window.MJ = window.MJ || {};
     if (cv.toBlob) cv.toBlob(go, 'image/png');
     else { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
   }
-  function sharePosterImage(state, endingId) {
-    if (!navigator.canShare) return;
-    var cv = createPoster(state, endingId);
-    cv.toBlob(function (blob) {
-      if (!blob) return;
-      var file = new File([blob], 'MJ人生传奇_' + endingId + '.png', { type: 'image/png' });
-      if (navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: T('ui.title', null, '月球漫步：传奇的抉择'), text: buildEndingShareText(state, endingId) }).catch(function () {});
-      }
-    }, 'image/png');
-  }
+
 
   // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
   function openPosterModal(state, id, archiveIdx, prebuilt) {

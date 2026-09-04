@@ -92,7 +92,8 @@ window.MJ = window.MJ || {};
       history: this.history,
       stats: this.stats,
       overflow: this.overflow,
-      currentId: cur
+      currentId: cur,
+      returnId: (MJ.engine && MJ.engine._return) ? MJ.engine._return : null
     };
   };
 
