@@ -214,8 +214,13 @@ window.MJ = window.MJ || {};
 
   function achievementsPanel(state) {
     var list = MJ.achievementSystem.all();
+    var reach = MJ.config.achievementReach || {};
     var rank = MJ.config.rarityRank || {};
+    // 按「实际可达性」排序：实测命中率高的（易得）在前；同可达率再按稀有度兜底
     list = list.slice().sort(function (a, b) {
+      var ra = (reach[a.id] != null) ? reach[a.id] : 0;
+      var rb = (reach[b.id] != null) ? reach[b.id] : 0;
+      if (rb !== ra) return rb - ra;
       return (rank[a.rarity] || 0) - (rank[b.rarity] || 0);
     });
     var got = list.filter(function (a) { return a.unlocked; }).length;
@@ -752,6 +757,11 @@ window.MJ = window.MJ || {};
     // 本局达成成就：按最终状态判定条件，而非累计解锁（不展示历史已解锁总数）
     var thisRun = (MJ.config.achievements || []).filter(function (ac) {
       try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
+    });
+    // 海报上按实际可达性排序（与图鉴一致）
+    var _reach = MJ.config.achievementReach || {};
+    thisRun = thisRun.slice().sort(function (a, b) {
+      return ((_reach[b.id] != null ? _reach[b.id] : 0) - (_reach[a.id] != null ? _reach[a.id] : 0));
     });
     var W = 720, H = 1280, S = 2;
     var cv = document.createElement('canvas');

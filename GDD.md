@@ -484,6 +484,13 @@
 - 效果（5000 局固定种子）：15/18 随机出现；STATESMAN≈2.3% / ART_PEAK≈1.3% / TRAGIC≈2.1% / INNOVATOR≈3.9% / MOGUL≈4.1% / 负债结局≈5%（上轮 PERFECT/STATESMAN/ART_PEAK/TRAGIC≈0.04%）。`PERFECT` 在均匀随机为 0 属设计内禀：随机局多堆叠慈善→归 STATESMAN；其图鉴 hint 即"不走慈善、健康声誉俱佳"的刻意玩法，按配方可稳定达成。
 - 状态：【已落地（2026-09-05）】lints 0；`npm test` 全绿（FAIL:0）；§8.2 矩阵门槛与注释已同步。
 
+### 18.12 成就图鉴按「实际可达性」排序（2026-09-05）
+- 用户要求成就图鉴不再按手写稀有度档位排序，而按**真实可达性**排序。稀有度标签与实际触发率严重不符（例：`ACH_BROTHERLY` 标 `common` 却 0% 触发；`ACH_SMOOTH` 标 `rare` 却 99.7%）。
+- 实现：新增 `test/compute_ach_reach.cjs`（复用 smoke 跑局循环 + localStorage 垫片，`saveSystem.save` 置空加速），均匀随机跑 **5000 局**，对终局状态逐成就调用 `check(state,{ending})`，统计命中率。结果烘焙进 `config.achievementReach`（56 项全覆盖，与 `config.achievements` id 一一对齐）。
+- `ui.js`：`achievementsPanel`（成就图鉴）与结局海报 `thisRun`（成就图标）均改为按 `achievementReach` 降序排序（实际可达性高的在前 = 易得者先；同可达率再按 `rarityRank` 兜底）。分享文案仅用计数，不受影响。
+- 实测谱（降序摘录）：SMOOTH 99.7% / PACIFIST 85.9% / FAMILYMAN 72.5% / TOUR 63.3% / PHIL 61.3% / … / 末端 0% 组为跨周目或刻意玩法成就（TRUE_ETERNAL / GRAMMY_SWEEP / ALL_ENDINGS / EGG_HUNTER / CHARITY_CONCERT / LONELY_KING / BROTHERLY）。
+- 状态：【已落地（2026-09-05）】lints 0；`npm test` / `test:full` 全绿；dist 已重建。
+
 # 十、美术与听觉（同前：暗金复古、符号化、原创/公共领域 BGM）
 
 ---
