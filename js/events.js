@@ -1882,7 +1882,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BIO_MOTOWN25 = {
-    id: 'V_BIO_MOTOWN25', variant: true, window: [1983, 1983], weight: 50,
+    id: 'V_BIO_MOTOWN25', variant: true, window: [1983, 1984], weight: 50,
     title: T('event.V_BIO_MOTOWN25.title', null, 'Motown 25 后台'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_MOTOWN25.text', null, '纪念演出前夜，你决定在串烧里加一段谁也没见过的滑行。后台有人笑你疯了。'), s, [
@@ -1934,7 +1934,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BIO_911 = {
-    id: 'V_BIO_911', variant: true, window: [2001, 2001], weight: 55,
+    id: 'V_BIO_911', variant: true, window: [2001, 2002], weight: 55,
     title: T('event.V_BIO_911.title', null, '废墟旁的歌声'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_911.text', null, '那一年秋天，城市还冒着烟。你站在临时搭起的台子上，想把一点温度递给惊慌的人。'), s, [

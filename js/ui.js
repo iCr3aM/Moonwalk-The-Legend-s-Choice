@@ -9,7 +9,12 @@ window.MJ = window.MJ || {};
   var app;
   var T = function (k, v, fb) { return MJ.t(k, v, fb); };
   var _view = null; // 当前屏幕的重新渲染函数（语言切换时调用）
-  function switchLang() { MJ.i18n.toggleLang(); if (_view) _view(); }
+  function switchLang() {
+    MJ.i18n.toggleLang();
+    document.body.classList.toggle('lang-en', MJ.i18n.lang === 'en');
+    if (_view) _view();
+  }
+  function syncLangClass() { document.body.classList.toggle('lang-en', MJ.i18n.lang === 'en'); }
 
   function $(sel) { return app.querySelector(sel); }
 
@@ -166,7 +171,6 @@ window.MJ = window.MJ || {};
       '<div class="status-top">' +
         '<span class="title">' + T('ui.title', null, '月球漫步：传奇的抉择') + '</span>' +
         '<span><span class="year">' + yearTxt + '</span> &nbsp; <span class="' + debtCls + '">' + T('ui.networth', null, '净资产') + ' ' + formatMoney(net) + '</span></span>' +
-        '<button class="btn ghost small lang-btn" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
       '</div>' +
       attrBars(state) +
       softBars(state) +
@@ -178,6 +182,7 @@ window.MJ = window.MJ || {};
 
   ui.init = function () {
     app = document.getElementById('app');
+    syncLangClass();
     var save = MJ.saveSystem.load();
     ui.showIntro(!!save);
   };
@@ -197,7 +202,7 @@ window.MJ = window.MJ || {};
     keys.forEach(function (k) {
       var e = defs[k];
       var on = !!g[k];
-      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" data-endkey="' + k + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         '<div class="g-rarity">' + (on ? rarityLabel(e.rarity) : T('ui.locked', null, '未解锁')) + '</div>' +
@@ -274,12 +279,50 @@ window.MJ = window.MJ || {};
       '<button class="btn ghost small" id="gallery-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"></div></div>';
     overlay.querySelector('.modal-body').innerHTML = galleryHtml();
+    overlay.querySelector('.modal-body').addEventListener('click', function (ev) {
+      var cell = ev.target.closest ? ev.target.closest('.g-cell') : null;
+      if (cell && cell.getAttribute('data-endkey')) endingDetailModal(cell.getAttribute('data-endkey'));
+    });
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('gallery-overlay'); });
     document.getElementById('gallery-close').addEventListener('click', function () { closeOverlay('gallery-overlay'); });
     wireReset('gallery-reset', function () { MJ.saveSystem.clearGallery(); }, function () {
       closeOverlay('gallery-overlay'); galleryModal();
     });
+  }
+  // 结局详情：显示独白 + 「如何达成」提示（隐藏结局未解锁时不泄露内容）
+  function endingDetailModal(key) {
+    var e = MJ.config.endings[key];
+    if (!e) return;
+    closeOverlay('ending-detail-overlay');
+    var g = MJ.saveSystem.getGallery();
+    var on = !!g[key];
+    var overlay = document.createElement('div');
+    overlay.id = 'ending-detail-overlay';
+    overlay.className = 'overlay modal-overlay';
+    if (e.hidden && !on) {
+      overlay.innerHTML = '<div class="modal ending-detail">' +
+        '<div class="modal-head"><span>❓ ' + T('ui.unknown', null, '？？？') + '</span><span class="spacer"></span>' +
+        '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+        '<div class="modal-body"><div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div></div></div>';
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeOverlay('ending-detail-overlay'); });
+      document.getElementById('ed-close').addEventListener('click', function () { closeOverlay('ending-detail-overlay'); });
+      return;
+    }
+    var hint = T('ending.' + key + '.hint', null, e.hint || '');
+    overlay.innerHTML = '<div class="modal ending-detail">' +
+      '<div class="modal-head"><span>' + e.icon + ' ' + escapeHtml(T('ending.' + key + '.name', null, e.name)) + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body">' +
+        (e.tone ? '<div class="ed-tone">' + escapeHtml(e.tone) + '</div>' : '') +
+        '<div class="ed-summary">' + escapeHtml(T('ending.' + key + '.summary', null, e.summary || '')) + '</div>' +
+        (hint ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>' : '') +
+        (e.monologue ? '<div class="ed-monologue">' + escapeHtml(e.monologue) + '</div>' : '') +
+      '</div></div>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (ev) { if (ev.target === overlay) closeOverlay('ending-detail-overlay'); });
+    document.getElementById('ed-close').addEventListener('click', function () { closeOverlay('ending-detail-overlay'); });
   }
   function achievementsModal() {
     closeOverlay('ach-overlay');
@@ -668,17 +711,24 @@ window.MJ = window.MJ || {};
     for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], cx, startY + j * lh);
   }
   // 中文友好的段落换行（按字符量度，遇 \n 分段；返回绘制后的 y）
-  function wrapParagraph(ctx, text, x, y, maxW, lh) {
+  function wrapParagraph(ctx, text, x, y, maxW, lh, maxY) {
     var paras = String(text).split('\n');
     ctx.textAlign = 'left';
-    for (var p = 0; p < paras.length; p++) {
+    var done = false;
+    for (var p = 0; p < paras.length && !done; p++) {
       var line = '', chars = paras[p].split('');
       for (var i = 0; i < chars.length; i++) {
         var test = line + chars[i];
-        if (ctx.measureText(test).width > maxW && line) { ctx.fillText(line, x, y); y += lh; line = chars[i]; }
-        else line = test;
+        if (ctx.measureText(test).width > maxW && line) {
+          if (maxY && y >= maxY) { ctx.fillText(line + '…', x, y); done = true; break; }
+          ctx.fillText(line, x, y); y += lh; line = chars[i];
+        } else line = test;
       }
-      if (line) { ctx.fillText(line, x, y); y += lh; }
+      if (done) break;
+      if (line) {
+        if (maxY && y >= maxY) { ctx.fillText(line + '…', x, y); done = true; break; }
+        ctx.fillText(line, x, y); y += lh;
+      }
       y += Math.round(lh * 0.3);
     }
     return y;
@@ -859,15 +909,15 @@ window.MJ = window.MJ || {};
     y += 24;
     ctx.fillStyle = '#e8d6a6'; ctx.font = '16px "PingFang SC",sans-serif';
     var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
-    y = wrapParagraph(ctx, narr, 60, y, W - 120, 28);
+    y = wrapParagraph(ctx, narr, 60, y, W - 120, 28, H - 130);
 
     ctx.textAlign = 'center';
     ctx.fillStyle = '#d4af37'; ctx.font = 'italic 17px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 70);
+    ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 96);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 44);
+    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 70);
     ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif';
-    ctx.fillText('Cr3aM 制作 · MJ Forever', W / 2, H - 20);
+    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, H - 46);
 
     return cv;
   }
@@ -900,28 +950,20 @@ window.MJ = window.MJ || {};
     if (old) old.parentNode.removeChild(old);
     var e = MJ.config.endings[id] || { name: id };
     var cv = createPoster(state, id);
-    var canShareImg = false;
-    try { canShareImg = typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([new Uint8Array(1)], 'x.png', { type: 'image/png' })] }); } catch (err) {}
     var overlay = document.createElement('div');
     overlay.id = 'poster-overlay';
     overlay.className = 'overlay poster-modal';
     overlay.innerHTML = '<div class="poster-frame">' +
-      '<div class="poster-tools">' +
-        '<span class="pf-title">' + escapeHtml(T('ending.' + id + '.name', null, e.name)) + ' · ' + T('ui.posterOfTag', null, '传奇海报') + '</span>' +
-        '<span class="pf-spacer"></span>' +
-        '<button class="btn primary" id="pm-save">' + T('ui.savePoster', null, '保存图片') + '</button>' +
-        (canShareImg ? '<button class="btn ghost" id="pm-share">' + T('ui.shareImg', null, '分享图片') + '</button>' : '') +
-        '<button class="btn ghost" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
-      '</div>' +
       '<div class="poster-canvas-wrap"></div>' +
+      '<div class="poster-foot">' +
+        '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
+        '<button class="btn primary" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
+      '</div>' +
     '</div>';
     overlay.querySelector('.poster-canvas-wrap').appendChild(cv);
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
-    document.getElementById('pm-save').addEventListener('click', function () { downloadPoster(cv, '月球漫步传奇_' + id); });
-    var pms = document.getElementById('pm-share');
-    if (pms) pms.addEventListener('click', function () { sharePosterImage(state, id); });
   }
   function closePosterModal() {
     var o = document.getElementById('poster-overlay');
@@ -929,6 +971,7 @@ window.MJ = window.MJ || {};
   }
 
   ui.showIntro = function (hasSave) {
+    var langLabel = '🌐 ' + (MJ.i18n.lang === 'zh' ? '语言切换：中文' : 'Language: English');
     var html =
       '<div class="panel intro">' +
         '<h1>' + T('ui.title', null, '月球漫步：传奇的抉择') + '</h1>' +
@@ -946,11 +989,11 @@ window.MJ = window.MJ || {};
           '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
           '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
           '<button class="btn block" id="btn-archive">🗂️ ' + T('ui.archive', null, '人生档案库') + ' <span class="m-cnt">' + archiveCount() + '</span></button>' +
+          '<button class="btn block" id="btn-lang">' + langLabel + '</button>' +
         '</div>' +
         '<div class="intro-foot">' +
-          '<div class="credit">Cr3aM 制作 · MJ Forever</div>' +
+          '<div class="credit">' + T('ui.credit', null, 'Cr3aM 制作 · MJ Forever') + '</div>' +
           '<div class="toolbar">' +
-            '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
             '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
           '</div>' +
         '</div>' +
@@ -1024,7 +1067,6 @@ window.MJ = window.MJ || {};
     }
     bindEventKeys(ev);
     MJ.achievementSystem.evaluate(state, {}).forEach(toastAchievement);
-    var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showEvent(ev, state); };
     window.scrollTo(0, 0);
   };
@@ -1046,7 +1088,6 @@ window.MJ = window.MJ || {};
     try { app.setAttribute('data-chapter', chapter.id); } catch (e) {}
     var btn = document.getElementById('btn-era');
     if (btn) btn.addEventListener('click', function () { onContinue(); });
-    var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showEraCard(chapter, state, onContinue); };
     window.scrollTo(0, 0);
   };
@@ -1092,9 +1133,6 @@ window.MJ = window.MJ || {};
     snap += '<div class="life-stat">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
     snap += '</div>';
 
-    var canShareImg = false;
-    try { canShareImg = typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([new Uint8Array(1)], 'x.png', { type: 'image/png' })] }); } catch (e) {}
-
     var html =
       statusBar(state, { year: 2009 }) +
       '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
@@ -1107,12 +1145,10 @@ window.MJ = window.MJ || {};
         snap +
         '<div class="poster-box" id="poster-box"></div>' +
         '<div class="poster-actions">' +
-          '<button class="btn primary" id="btn-save-poster">' + T('ui.savePoster', null, '保存图片海报') + '</button>' +
           '<button class="btn ghost" id="btn-copy">' + T('ui.copyText', null, '复制文案') + '</button>' +
-          (canShareImg ? '<button class="btn ghost" id="btn-share-img">' + T('ui.shareImg', null, '分享图片') + '</button>' : '') +
         '</div>' +
-        '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button>' +
-        '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button></div>' +
+        '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
+        '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button></div>' +
       '</div>' +
       '<div class="menu-row">' +
         '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
@@ -1151,16 +1187,12 @@ window.MJ = window.MJ || {};
       vb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(vb);
     }
-    $('#btn-save-poster').addEventListener('click', function () { downloadPoster(posterCanvas, 'MJ人生传奇_' + id); });
     $('#btn-copy').addEventListener('click', function () { copyText(buildEndingShareText(state, id), this); });
-    var sib = $('#btn-share-img');
-    if (sib) sib.addEventListener('click', function () { sharePosterImage(state, id); });
     openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
     var bte = $('#btn-trivia-end'); if (bte) bte.addEventListener('click', triviaModal);
-    var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }

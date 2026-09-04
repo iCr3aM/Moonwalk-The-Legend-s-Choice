@@ -162,7 +162,7 @@ window.MJ = window.MJ || {};
     if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支（1_5 留盖瑞早退）
     if (f.isSolo === false) return 'END_FAMILY';              // 2. 始终未单飞
     // 3. 真·永恒隐藏结局（终极）：不烧伤/不负债 + 艺术&声誉&健康极致 + 慈善&艺术路线极致 + 双加冕标志（多方极致收敛）
-    if (!burned && !debt && (a.art || 0) >= 88 && (a.reputation || 0) >= 88 && (a.health || 0) >= 80 && (m.phil || 0) >= 3 && (m.artPath || 0) >= 2 && (f.thriller25 && f.anniv2001)) {
+    if (!burned && !debt && (a.art || 0) >= 85 && (a.reputation || 0) >= 85 && (a.health || 0) >= 75 && (m.phil || 0) >= 3 && (m.artPath || 0) >= 2 && (f.thriller25 && f.anniv2001)) {
       return 'END_TRUE_ETERNAL';
     }
     // 3b. 续章（假设 2009 未离世）：永不归死亡结局，按人生状态收束（普通/稀有/史诗/传奇皆可抵达）
@@ -174,8 +174,11 @@ window.MJ = window.MJ || {};
       if (a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';
       return 'END_TIMELESS_PRESENT';
     }
-    if (dom === 'recluse' && a.health >= 55 && (a.loneliness || 0) < 35) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
+    if (dom === 'recluse' && a.health >= 55 && (a.loneliness || 0) < 50) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
     if (dom === 'recluse' && a.health >= 40) return 'END_RECLUSE';        // 4
+    // 13 声誉承压（M5 媒体轴联动）：有丑闻标志且声誉/媒体仍偏低 → 丑闻定义legacy；
+    //    前置到「成功型结局」之前，否则会被 MOGUL/PHIL/PERFECT 等抢走而永远不可达。
+    if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
     if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5
     if ((a.art || 0) >= 80 && (m.mogul || 0) >= 1 && (f.cp_innovation >= 80 || f.techVenture === true)) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
     if (m.phil >= 3 && !debt) return 'END_PHILANTHROPIST';   // 6
@@ -187,7 +190,6 @@ window.MJ = window.MJ || {};
     if (burned && dependent && held && a.health >= 35) return 'END_TRAGIC';    // 10
     if (debt && !held) return 'END_SURVIVE_DEBT';            // 11 负债但取消巡演保命
     if (debt) return 'END_FINANCIAL';                        // 12 债务压垮
-    if ((a.reputation < 60 && f.settlement1993) || ((a.media || 0) < 25 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL'; // 13 声誉承压（M5 媒体轴联动）
     return 'END_TRAGIC';                                     // 14 默认
   };
 
