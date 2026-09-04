@@ -166,8 +166,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.1_6.opt0.label', null, 'A：反复打磨到完美'), hint: T('event.1_6.opt0.hint', null, '奠定个人风格，钱包与亲情各付代价（艺术+15，财富+10，家庭-5）'), effects: { art: 15, wealth: 10, family: -5 }, flags: { soloAlbum1972: true }, next: '2_1' },
-      { label: T('event.1_6.opt1.label', null, 'B：轻松录完交差'), hint: T('event.1_6.opt1.hint', null, '留更多时间给家人（家庭+5，艺术+5）'), effects: { family: 5, art: 5 }, flags: { soloAlbum1972: false }, next: '2_1' }
+      { label: T('event.1_6.opt0.label', null, 'A：反复打磨到完美'), hint: T('event.1_6.opt0.hint', null, '奠定个人风格，钱包与亲情各付代价（艺术+15，财富+10，家庭-5）'), effects: { art: 15, wealth: 10, family: -5 }, flags: { soloAlbum1972: true }, next: '1_7' },
+      { label: T('event.1_6.opt1.label', null, 'B：轻松录完交差'), hint: T('event.1_6.opt1.hint', null, '留更多时间给家人（家庭+5，艺术+5）'), effects: { family: 5, art: 5 }, flags: { soloAlbum1972: false }, next: '1_7' }
     ]
   };
 
@@ -180,9 +180,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.1_7.opt0.label', null, 'A：盛装出席颁奖礼'), hint: T('event.1_7.opt0.hint', null, '体面亮相，聚光灯再添热度（声誉+5，压力+5）'), effects: { reputation: 5, stress: 5 }, next: '2_1' },
-      { label: T('event.1_7.opt1.label', null, 'B：闷头泡在录音室'), hint: T('event.1_7.opt1.hint', null, '把荣誉换作下一段旋律（艺术+5）'), effects: { art: 5 }, next: '2_1' },
-      { label: T('event.1_7.opt2.label', null, 'C：借话题度营销'), hint: T('event.1_7.opt2.hint', null, '借势涨粉，也暖了人心（声誉+5，家庭+5）'), effects: { reputation: 5, family: 5 }, next: '2_1' }
+      { label: T('event.1_7.opt0.label', null, 'A：盛装出席颁奖礼'), hint: T('event.1_7.opt0.hint', null, '体面亮相，聚光灯再添热度（声誉+5，压力+5）'), effects: { reputation: 5, stress: 5 }, next: '1_8' },
+      { label: T('event.1_7.opt1.label', null, 'B：闷头泡在录音室'), hint: T('event.1_7.opt1.hint', null, '把荣誉换作下一段旋律（艺术+5）'), effects: { art: 5 }, next: '1_8' },
+      { label: T('event.1_7.opt2.label', null, 'C：借话题度营销'), hint: T('event.1_7.opt2.hint', null, '借势涨粉，也暖了人心（声誉+5，家庭+5）'), effects: { reputation: 5, family: 5 }, next: '1_8' }
     ]
   };
 
@@ -394,7 +394,7 @@ window.MJ = window.MJ || {};
 
   // —— §17.14 格莱美揭晓：onEnter 在展示前结算（见 planner.resolveGrammy），text 按座数分档叙事 ——
   E['3_3'] = {
-    id: '3_3', year: 1984, title: T('event.3_3.title', null, '格莱美之夜'), kind: 'auto',
+    id: '3_3', year: 1984, title: T('event.3_3.title', null, '《Thriller》格莱美之夜'), kind: 'auto',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'thriller'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -540,7 +540,7 @@ window.MJ = window.MJ || {};
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.4_3.branch1.text', null, '功成名就后再回望，笔下的自己竟也有了几分陌生。') }
       ]);
     },
-    effects: { reputation: 10, wealth: 5 }, next: '5_1'
+    effects: { reputation: 10, wealth: 5 }, next: '4_4'
   };
 
   E['4_4'] = {
@@ -1821,7 +1821,7 @@ window.MJ = window.MJ || {};
   // ----- 生平补全事件（GDD §17.8 A：忠于 MJ 真实年表，窗口化变体自然插入主线） -----
   E.V_BIO_WIZ = {
     id: 'V_BIO_WIZ', variant: true, window: [1977, 1979], weight: 45,
-    title: T('event.V_BIO_WIZ.title', null, '《新绿野仙踪》'), kind: 'choice',
+    title: T('event.V_BIO_WIZ.title', null, '《新绿野仙踪》幕后'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_WIZ.text', null, '一部童话音乐电影，让你与昆西·琼斯并肩工作。镜头外的他，正悄悄打量这个安静到发光的孩子。'), s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: T('event.V_BIO_WIZ.branch0.text', null, '你隐约觉得，这次相遇会改写之后的一切。') }
@@ -1847,7 +1847,7 @@ window.MJ = window.MJ || {};
   };
   E.V_BIO_GRAMMY84 = {
     id: 'V_BIO_GRAMMY84', variant: true, window: [1984, 1984], weight: 45,
-    title: T('event.V_BIO_GRAMMY84.title', null, '格莱美之夜'), kind: 'choice',
+    title: T('event.V_BIO_GRAMMY84.title', null, '加冕余温'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_GRAMMY84.text', null, '《Thriller》在这一夜横扫奖项。聚光灯太亮，你却想起小时候在盖瑞，连一盏像样的台灯都没有。'), s, [
         { cond: function (s) { return (s.attributes.health || 0) <= 60; }, text: T('event.V_BIO_GRAMMY84.branch0.text', null, '荣耀越大，失眠越久。') }
@@ -1860,7 +1860,7 @@ window.MJ = window.MJ || {};
   };
   E.V_BIO_BADTOUR = {
     id: 'V_BIO_BADTOUR', variant: true, window: [1988, 1988], weight: 45,
-    title: T('event.V_BIO_BADTOUR.title', null, '《Bad》世界巡演'), kind: 'choice',
+    title: T('event.V_BIO_BADTOUR.title', null, '《Bad》巡演侧记'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_BADTOUR.text', null, '单飞后的首次全球远征。每一座城市的灯牌都写着一个名字，你第一次感到，孤独也可以被万人共享。'), s, [
         { cond: function (s) { return (s.attributes.stress || 0) >= 50; }, text: T('event.V_BIO_BADTOUR.branch0.text', null, '连轴转的日程，让镜中的人越来越陌生。') }
@@ -1873,7 +1873,7 @@ window.MJ = window.MJ || {};
   };
   E.V_BIO_HISTORYTOUR = {
     id: 'V_BIO_HISTORYTOUR', variant: true, window: [1996, 1997], weight: 45,
-    title: T('event.V_BIO_HISTORYTOUR.title', null, 'HIStory 世界巡演'), kind: 'choice',
+    title: T('event.V_BIO_HISTORYTOUR.title', null, 'HIStory 巡演侧记'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_HISTORYTOUR.text', null, '当时 solo 艺人规模最大的巡演。巨型雕像被立在世界各地的广场，你站在自己脚下，第一次觉得自己像一座符号。'), s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_BIO_HISTORYTOUR.branch0.text', null, '符号越大，真实的你越难被看见。') }
@@ -1914,7 +1914,7 @@ window.MJ = window.MJ || {};
   // ---------- §17.14 格莱美揭晓节点（企划器+巡演 → 涌现结算，见 planner.resolveGrammy） ----------
   // 由各自 era 的巡演/专辑节点后进入，onEnter 在展示前结算，text 按座数分档叙事。
   E['4_2a_g'] = {
-    id: '4_2a_g', year: 1988, title: T('event.4_2a_g.title', null, '格莱美之夜'), kind: 'auto',
+    id: '4_2a_g', year: 1988, title: T('event.4_2a_g.title', null, '《Bad》格莱美之夜'), kind: 'auto',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'bad'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -1927,7 +1927,7 @@ window.MJ = window.MJ || {};
     next: '4_2b'
   };
   E['5_2g'] = {
-    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '格莱美之夜'), kind: 'auto',
+    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '《Dangerous》格莱美之夜'), kind: 'auto',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'dangerous'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -1940,7 +1940,7 @@ window.MJ = window.MJ || {};
     next: '5_2b'
   };
   E['6_1e_g'] = {
-    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '格莱美之夜'), kind: 'auto',
+    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '《HIStory》格莱美之夜'), kind: 'auto',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'history'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -1953,7 +1953,7 @@ window.MJ = window.MJ || {};
     next: '6_2'
   };
   E['6_3b_g'] = {
-    id: '6_3b_g', year: 2002, title: T('event.6_3b_g.title', null, '格莱美之夜'), kind: 'auto',
+    id: '6_3b_g', year: 2002, title: T('event.6_3b_g.title', null, '《Invincible》格莱美之夜'), kind: 'auto',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'invincible'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
