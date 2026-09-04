@@ -43,6 +43,7 @@ Object.keys(flagMap).forEach(function (f) {
   var arr = flagMap[f];
   for (var i = 0; i < arr.length; i++) for (var j = i + 1; j < arr.length; j++) {
     var a = arr[i], b = arr[j]; if (!a.win || !b.win) continue;
+    if (a.id === b.id) continue; // 同一变体的多个选项写入同一 flag 属正常，不算冲突
     if (a.win[0] <= b.win[1] && b.win[0] <= a.win[1]) conflict.push(f + ': ' + a.id + '[' + a.win + '] ~ ' + b.id + '[' + b.win + ']');
   }
 });

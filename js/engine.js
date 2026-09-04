@@ -317,6 +317,7 @@ window.MJ = window.MJ || {};
         _bumpStreak(this.state, !!(_mwSet[ev.id] && optIndex === 0));
         MJ.eggSystem.checkFlags(this.state);
       }
+      if (MJ.triviaSystem) MJ.triviaSystem.checkFlags(this.state); // §17.11 趣事：扫描 tidbit_* 标志解锁图鉴
 
       this.pendingEpilogue = consequenceLine(opt, this.state);
 
@@ -487,5 +488,92 @@ window.MJ = window.MJ || {};
       var d = this._load(); d.playthroughs = (d.playthroughs || 0) + 1; this._save(d);
       if (d.playthroughs >= 5) this.unlock('EGG_FOURTH');
     }
+  };
+
+  // ---------- 趣事与轶事系统（GDD §17.11：Trivia & Anecdotes） ----------
+  // 中性、零数值影响、可收藏的 MJ 侧写；与彩蛋系统同构，复用 localStorage 持久化与 toast 队列。
+  MJ.triviaSystem = {
+    key: 'mj_lifechoices_trivia_v1',
+    defs: {
+      TRIVIA_CHARITY:        { icon: '🤝', name: '匿名代付陌生人账单', desc: '你曾悄悄为排队的陌生人结清账单，不留姓名——善意于你，本就是日常。', cond: function (s) { return s.flags.healWorld || (s.meta.phil || 0) >= 1; } },
+      TRIVIA_REHEARSE:       { icon: '🎯', name: '逐帧抠动作到凌晨', desc: '录音棚的灯亮到天明，你把一个转身反复磨了十遍，只为那 0.1 秒的精准。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 60; } },
+      TRIVIA_NEVERLAND_ANIMALS: { icon: '🐾', name: '给动物过生日', desc: '梦幻庄园里，你给每一只动物都过了生日，蜡烛比客人还多。', cond: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
+      TRIVIA_ONOMATOPOEIA:  { icon: '🎶', name: '用拟声词讲编曲', desc: '你说不清和弦时，就“咚呲哒哒”地比划给乐手听，他们竟真听懂了。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_FANMAIL:       { icon: '✉️', name: '手写回信给歌迷', desc: '面对成山的来信，你挑出几封亲手回了字句，落款总是“Love, Michael”。', cond: function (s) { return (s.relations.fans || 0) >= 20; } },
+      TRIVIA_COMIC:         { icon: '📚', name: '收藏连环画与科幻片', desc: '名利场之外，你囤了一柜子连环画和老科幻片，是只有孩子才懂的快乐。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_BLANKET:       { icon: '🛝', name: '陪 Blanket 玩空中秋千', desc: '你托着小儿子在怀里晃啊晃，说这是“世界上最稳的秋千”。', cond: function (s) { return s.flags.blanketBorn || s.flags.surrogacy; } },
+      TRIVIA_THISISIT:      { icon: '🎬', name: '为《This Is It》逐帧打磨走位', desc: '五十场演唱会的每个走位，你都和编舞师一帧帧对过，哪怕身体已亮起红灯。', cond: function (s) { return s.flags.thisItHeld || s.flags.thisItScale; } },
+      TRIVIA_GRAMMY:        { icon: '🏆', name: '把奖杯让给团队', desc: '领奖台上的聚光灯很亮，你却把奖杯先递给了身后沉默的乐手们。', cond: function (s) { return (s.meta.grammyWins || 0) >= 1 || ['otw','thriller','bad','dangerous','history','invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
+      TRIVIA_WATW:          { icon: '🕊️', name: '为《We Are The World》熬夜合声', desc: '那一夜录音棚挤满巨星，你最后一个离开，反复确认每一句合声都严丝合缝。', cond: function (s) { return s.flags.weAreTheWorld; } },
+      TRIVIA_PEACE:         { icon: '🌍', name: '在战乱之地抱起陌生孩童', desc: '镜头之外，你蹲下身把当地的孩子抱起来，那张照片从没用来宣传。', cond: function (s) { return (s.meta.phil || 0) >= 2; } },
+      TRIVIA_STUDIO_LATE:   { icon: '☕', name: '深夜给乐手留热汤', desc: '你记得谁胃不好，半夜差人端去一碗热汤，说“嗓子要紧”。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_DISCO:         { icon: '🪩', name: '向迪斯科前辈致敬', desc: '你对着霓虹扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。', cond: function (s) { return (s.attributes.art || 0) >= 60; } },
+      TRIVIA_PETERPAN:      { icon: '🪶', name: '相信彼得潘不愿长大', desc: '你说自己心里也住着个不肯长大的男孩，所以才懂童话的重量。', cond: function (s) { return s.flags.dream_peterpan; } },
+      TRIVIA_CHILDREN:      { icon: '🎠', name: '在 Neverland 办睡衣派对', desc: '庄园的草坪上，孩子们穿着睡衣看露天电影，你是那个递爆米花的大孩子。', cond: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
+      TRIVIA_HUMBLE:        { icon: '🏠', name: '成名后仍回盖瑞老宅探望', desc: '再亮的舞台也抵不过盖瑞那条巷子，你常偷偷回去，看童年住过的窗。', cond: function (s) { return (s.relations.brothers || 0) >= 10; } },
+      TRIVIA_QUINCY:        { icon: '🎼', name: '与昆西为一个和弦争到天亮', desc: '你和昆西为了一个转调红过脸，又在日出时击掌——最好的搭档都这样。', cond: function (s) { return (s.relations.quincy || 0) >= 10; } },
+      TRIVIA_PEPSI:         { icon: '🔥', name: '百事火场后先安慰吓哭的粉丝', desc: '84 年那场火还没散尽，你先弯腰哄住了旁边吓哭的小歌迷。', cond: function (s) { return s.flags.isPepsiBurned; } },
+      TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 老友重聚弹起旧曲', desc: '老伙计们一来，你便坐到琴边，把几十年前的调子又弹了一遍。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || s.flags.isSolo === true; } },
+      TRIVIA_BIOPIC:        { icon: '🎬', name: '2026 银幕上的自己由亲人演绎', desc: '传记电影里演你的，是流着你血脉的人——传奇换了张脸，仍未褪色。', cond: function (s) { return s.flags.biopic2026 || s.flags.biopicMJStar; } },
+      TRIVIA_COCOA:         { icon: '☕', name: '深夜录音棚的一杯热可可', desc: '凌晨的录音棚，一杯热可可捧在手里，这一夜忽然没那么冷了。' },
+      TRIVIA_BUBBLES_DIARY: { icon: '🐒', name: '给猴子 Bubbles 写日记', desc: '你摊开画星星的日记本，给 Bubbles 画下今天歪头的它。' },
+      TRIVIA_NEPHEWS:       { icon: '🎮', name: '和侄子们打游戏', desc: '难得清闲，几个侄子把手柄塞给你，屋里的笑声比配乐还热闹。' },
+      TRIVIA_QUIET_REPLAY:  { icon: '🎞️', name: '独自看演出回放', desc: '人散了，你独自把今晚的演出又看一遍，盯着某个走神的一秒出神。' }
+    },
+    _load: function () {
+      try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }
+    },
+    _save: function (d) { try { localStorage.setItem(this.key, JSON.stringify(d)); } catch (e) {} },
+    isFound: function (id) { return !!this._load().found[id]; },
+    total: function () { return Object.keys(this.defs).length; },
+    count: function () { return Object.keys(this._load().found).length; },
+    foundList: function () {
+      var d = this._load(), self = this, out = [];
+      Object.keys(this.defs).forEach(function (k) { if (d.found[k]) out.push({ id: k, icon: self.defs[k].icon, name: self.defs[k].name, desc: self.defs[k].desc }); });
+      return out;
+    },
+    // 解锁趣事；返回「是否新解锁」并弹窗（与彩蛋同队列，避免重叠）
+    unlock: function (id) {
+      var def = this.defs[id]; if (!def) return false;
+      var d = this._load();
+      if (d.found[id]) return false;
+      d.found[id] = true; this._save(d);
+      if (MJ.ui && MJ.ui.toastTrivia) MJ.ui.toastTrivia({ icon: def.icon, name: T('trivia.' + id + '.name', null, def.name), desc: T('trivia.' + id + '.desc', null, def.desc) });
+      return true;
+    },
+    // 扫描 state.flags 中 tidbit_ 前缀 → 解锁对应 TRIVIA_<UPPER>（由 V_TIDBIT 轻量变体写入）
+    checkFlags: function (state) {
+      if (!state || !state.flags) return 0;
+      var self = this, n = 0;
+      Object.keys(state.flags).forEach(function (k) {
+        if (k.indexOf('tidbit_') === 0 && state.flags[k]) {
+          var id = 'TRIVIA_' + k.slice(7).toUpperCase();
+          if (self.defs[id] && self.unlock(id)) n++;
+        }
+      });
+      return n;
+    },
+    // 结局时按各条目 cond 扫描玩家人生，解锁「考据趣事」（与玩法状态联动）
+    revealAll: function (state) {
+      var self = this;
+      Object.keys(this.defs).forEach(function (k) {
+        var def = self.defs[k];
+        if (def.cond) { try { if (def.cond(state)) self.unlock(k); } catch (e) {} }
+      });
+    }
+  };
+
+  // M2 扩展：假如…（想象）微片段（GDD §17.11 hypothetical vignettes），按主导元路线程序化生成
+  MJ.buildVignettes = function (state) {
+    var tpls = (MJ.config.vignetteTemplates) || {};
+    var dom = MJ.dominantMeta(state.meta);
+    var out = [];
+    (tpls[dom] || []).forEach(function (t) {
+      try { if (!t.cond || t.cond(state)) out.push(MJ.t(t.key, null, t.zh)); } catch (e) {}
+    });
+    (tpls.default || []).forEach(function (t) {
+      try { out.push(MJ.t(t.key, null, t.zh)); } catch (e) {}
+    });
+    return out;
   };
 })();

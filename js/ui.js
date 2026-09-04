@@ -321,6 +321,59 @@ window.MJ = window.MJ || {};
     return (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0);
   }
 
+  // ---------- §17.11 趣事与轶事：图鉴 / Toast / 假如…(想象) 面板 ----------
+  function triviaHtml() {
+    var defs = (MJ.triviaSystem ? MJ.triviaSystem.defs : {});
+    var list = (MJ.triviaSystem ? MJ.triviaSystem.foundList() : []);
+    var html = '<div class="panel gallery">' +
+      '<div class="g-head">' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="g-prog">' + (MJ.triviaSystem ? MJ.triviaSystem.count() : 0) + ' / ' + (MJ.triviaSystem ? MJ.triviaSystem.total() : 0) + '</span></div>' +
+      '<div class="g-grid">';
+    Object.keys(defs).forEach(function (k) {
+      var e = defs[k], on = false;
+      for (var i = 0; i < list.length; i++) { if (list[i].id === k) { on = true; break; } }
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
+        '<div class="g-icon">' + (on ? e.icon : '📝') + '</div>' +
+        '<div class="g-name">' + (on ? escapeHtml(T('trivia.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-rarity">' + (on ? escapeHtml(T('trivia.' + k + '.desc', null, e.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
+        '</div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+  function triviaModal() {
+    closeOverlay('trivia-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'trivia-overlay';
+    overlay.className = 'overlay modal-overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="trivia-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body"></div></div>';
+    overlay.querySelector('.modal-body').innerHTML = triviaHtml();
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('trivia-overlay'); });
+    document.getElementById('trivia-close').addEventListener('click', function () { closeOverlay('trivia-overlay'); });
+  }
+  function triviaCount() {
+    return (MJ.triviaSystem ? MJ.triviaSystem.count() : 0) + ' / ' + (MJ.triviaSystem ? MJ.triviaSystem.total() : 0);
+  }
+  function toastTrivia(e) {
+    var t = document.createElement('div');
+    t.className = 'trivia-toast';
+    t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
+      '<div class="at-body"><div class="at-title">' + T('ui.triviaToast', null, '趣事发现 · ') + escapeHtml(e.name) + '</div>' +
+      '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
+    _enqueueToast(t, 3600);
+  }
+  function vignettePanel(state) {
+    var list = MJ.buildVignettes(state);
+    var inner = '<details class="panel history vignette" open><summary>' + T('ui.vignetteTitle', null, '假如…（想象）') + ' <span class="cnt">(' + list.length + ')</span></summary><div class="vignette-list">';
+    if (!list.length) inner += '<div class="empty">' + T('ui.vignetteEmpty', null, '这一程，你没给“假如”留太多缝隙。') + '</div>';
+    else list.forEach(function (t) { inner += '<div class="vignette-item"><span class="v-tag">' + T('ui.vignetteTag', null, '（想象）') + '</span>' + escapeHtml(t) + '</div>'; });
+    inner += '</div></details>';
+    return inner;
+  }
+
   // 成就/彩蛋解锁弹窗队列：一次解锁多个时串行展示，避免多个 toast 在同一固定位置重叠（"一次性弹出两个"）
   var _toastQueue = [];
   var _toastActive = false;
@@ -764,6 +817,7 @@ window.MJ = window.MJ || {};
           '<button class="btn block" id="btn-gallery">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
           '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
           '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
+          '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
@@ -788,6 +842,7 @@ window.MJ = window.MJ || {};
     var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
     var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
+    var bt = $('#btn-trivia'); if (bt) bt.addEventListener('click', triviaModal);
     var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showIntro(hasSave); };
   };
@@ -871,6 +926,7 @@ window.MJ = window.MJ || {};
   ui.showEnding = function (id, state) {
     var e = MJ.config.endings[id] || { name: id, icon: '🌟', tone: '', summary: '' };
     var legend = MJ.legendScore(state);
+    if (MJ.triviaSystem) MJ.triviaSystem.revealAll(state); // §17.11：结局时按人生状态解锁考据趣事
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
@@ -915,9 +971,11 @@ window.MJ = window.MJ || {};
         '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
         '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
         '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
+        '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
       '</div>' +
       keyReviewPanel(state) +
       diaryPanel(state) +
+      vignettePanel(state) +
       echoesPanel(state) +
       historyPanel(state) +
       '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
@@ -951,6 +1009,7 @@ window.MJ = window.MJ || {};
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
+    var bte = $('#btn-trivia-end'); if (bte) bte.addEventListener('click', triviaModal);
     var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {

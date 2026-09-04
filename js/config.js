@@ -306,6 +306,28 @@ window.MJ = window.MJ || {};
     { cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
   ];
 
+  // M2 扩展：假如…（想象）微片段模板（GDD §17.11），按主导元路线程序化生成，全部标注"想象"
+  C.vignetteTemplates = {
+    artist: [
+      { key: 'vignette.artist.0', zh: '若当晚你没登台，是否会一个人看回放看到天亮？' },
+      { key: 'vignette.artist.1', zh: '若你从没学过那套舞步，镜子里的男孩会不会更自由？' }
+    ],
+    phil: [
+      { key: 'vignette.phil.0', zh: '若你建的不是庄园而是学校，孩子们会不会在操场上跳起你的舞？' },
+      { key: 'vignette.phil.1', zh: '若你把每一分版税都换成疫苗，世界会不会少一些哭声？' }
+    ],
+    mogul: [
+      { key: 'vignette.mogul.0', zh: '若你买下的不是唱片公司而是整座电台，全世界的清晨会不会都放你的歌？' }
+    ],
+    recluse: [
+      { key: 'vignette.recluse.0', zh: '若你关掉所有聚光灯，听见的第一种声音是什么？' },
+      { key: 'vignette.recluse.1', zh: '若你把自己藏进一张旧唱片，谁会第一个把唱针放上去？' }
+    ],
+    default: [
+      { key: 'vignette.default.0', zh: '若时光肯倒流一秒，你最想回到哪一个舞台？' }
+    ]
+  };
+
   // M1 关系相关成就（ACH_BROTHERLY / ACH_IDOL）已并入上方 C.achievements 数组。
 
   MJ.config = C;

@@ -2103,5 +2103,73 @@ window.MJ = window.MJ || {};
     next: '6_4b'
   };
 
+  // ---------- §17.11 趣事与轶事：偶发 flavor 轻量变体 V_TIDBIT（低权重、纯氛围、写入 tidbit_* 标志解锁趣事图鉴） ----------
+  E.V_TIDBIT_COCOA = {
+    id: 'V_TIDBIT_COCOA', variant: true, window: [1979, 1995], weight: 16,
+    title: T('event.V_TIDBIT_COCOA.title', null, '深夜录音棚的一杯热可可'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_COCOA.text', null, '凌晨的录音棚只剩设备低鸣。助理悄悄塞来一杯热可可，你捧着，忽然觉得这一夜也不算太冷。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_COCOA.opt0.label', null, 'A：接过，继续打磨副歌'), hint: T('event.V_TIDBIT_COCOA.opt0.hint', null, '一点暖意（艺术+1）'), effects: { art: 1 }, flags: { tidbit_cocoa: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_COCOA.opt1.label', null, 'B：推给身旁乐手'), hint: T('event.V_TIDBIT_COCOA.opt1.hint', null, '把暖意分出去（家庭+1）'), effects: { family: 1 }, flags: { tidbit_cocoa: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_BUBBLES = {
+    id: 'V_TIDBIT_BUBBLES', variant: true, window: [1985, 1993], weight: 16,
+    title: T('event.V_TIDBIT_BUBBLES.title', null, '给 Bubbles 写日记'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_BUBBLES.text', null, '你摊开一本画着星星的日记本，给猴子 Bubbles 画下今天的它——它歪着头，像在嫌弃你的画技。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_BUBBLES.opt0.label', null, 'A：认真画完一页'), hint: T('event.V_TIDBIT_BUBBLES.opt0.hint', null, '安静的一笔（艺术+1）'), effects: { art: 1 }, flags: { tidbit_bubbles: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_BUBBLES.opt1.label', null, 'B：念给 Bubbles 听'), hint: T('event.V_TIDBIT_BUBBLES.opt1.hint', null, '一点温柔（家庭+1）'), effects: { family: 1 }, flags: { tidbit_bubbles: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_NEPHEWS = {
+    id: 'V_TIDBIT_NEPHEWS', variant: true, window: [1997, 2005], weight: 16,
+    title: T('event.V_TIDBIT_NEPHEWS.title', null, '和侄子们打游戏'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_NEPHEWS.text', null, '难得清闲的午后，几个侄子围着你，手柄争着递过来。屏幕里的角色蹦跳，屋子里的笑声比配乐还热闹。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_NEPHEWS.opt0.label', null, 'A：陪他们通关'), hint: T('event.V_TIDBIT_NEPHEWS.opt0.hint', null, '家人时光（家庭+1）'), effects: { family: 1 }, flags: { tidbit_nephews: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_NEPHEWS.opt1.label', null, 'B：偷偷放水让他们赢'), hint: T('event.V_TIDBIT_NEPHEWS.opt1.hint', null, '让他们发光（家庭+1）'), effects: { family: 1 }, flags: { tidbit_nephews: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_QUIET = {
+    id: 'V_TIDBIT_QUIET', variant: true, window: [1983, 2009], weight: 14,
+    title: T('event.V_TIDBIT_QUIET.title', null, '独自看回放'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_QUIET.text', null, '所有人都散了，你独自坐在放映室，把今晚的演出又看了一遍。镜头里的自己完美无瑕，你却盯着某个走神的一秒出神。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_QUIET.opt0.label', null, 'A：记下那一秒的遗憾'), hint: T('event.V_TIDBIT_QUIET.opt0.hint', null, '从中学习（艺术+1）'), effects: { art: 1 }, flags: { tidbit_quiet: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_QUIET.opt1.label', null, 'B：关灯，静静坐一会儿'), hint: T('event.V_TIDBIT_QUIET.opt1.hint', null, '喘口气（压力-1）'), effects: { stress: -1 }, flags: { tidbit_quiet: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_GARDEN = {
+    id: 'V_TIDBIT_GARDEN', variant: true, window: [1988, 2003], weight: 14,
+    title: T('event.V_TIDBIT_GARDEN.title', null, 'Neverland 的生日会'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_GARDEN.text', null, '梦幻庄园的草地上摆着蛋糕，几只动物和孩子们一起吹灭蜡烛。你蹲下来，和它们平视，像回到自己也想长大的年纪。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_GARDEN.opt0.label', null, 'A：一起切蛋糕'), hint: T('event.V_TIDBIT_GARDEN.opt0.hint', null, '共享喜悦（家庭+1）'), effects: { family: 1 }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_GARDEN.opt1.label', null, 'B：在树下多坐一会儿'), hint: T('event.V_TIDBIT_GARDEN.opt1.hint', null, '喘口气（压力-1）'), effects: { stress: -1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_REHEARSE = {
+    id: 'V_TIDBIT_REHEARSE', variant: true, window: [1982, 1995], weight: 14,
+    title: T('event.V_TIDBIT_REHEARSE.title', null, '逐帧抠动作'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_REHEARSE.text', null, '你把一段舞步反复放了十遍，逐帧比对自己的重心。编舞师打趣你“较真得像在修钟表”，你笑着又来了一遍。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_REHEARSE.opt0.label', null, 'A：继续打磨到满意'), hint: T('event.V_TIDBIT_REHEARSE.opt0.hint', null, '较真到底（艺术+1）'), effects: { art: 1 }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_REHEARSE.opt1.label', null, 'B：留一点不完美'), hint: T('event.V_TIDBIT_REHEARSE.opt1.hint', null, '留点人情味（艺术+1，压力-1）'), effects: { art: 1, stress: -1 }, next: '__RETURN__' }
+    ]
+  };
+
   MJ.EVENTS = E;
 })();
