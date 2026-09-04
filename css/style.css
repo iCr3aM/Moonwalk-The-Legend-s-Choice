@@ -427,6 +427,41 @@ html, body {
 .app[data-chapter="4"] { --gold: #a9c2dc; --gold-soft: #7e96ad; }
 .app { transition: filter .4s ease; }
 
+/* §17.6 语录/歌词 Toast（靛紫调，区别于趣事青绿调） */
+.quote-toast {
+  position: fixed; right: 18px; bottom: 70px; z-index: 51;
+  display: flex; gap: 12px; align-items: center;
+  max-width: 320px; padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(58,42,92,0.96), rgba(30,22,54,0.96));
+  border: 1px solid rgba(170,140,230,0.5); border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  opacity: 0; transform: translateY(20px); transition: opacity .4s ease, transform .4s ease;
+}
+.quote-toast.show { opacity: 1; transform: translateY(0); }
+.quote-toast .at-icon { font-size: 30px; line-height: 1; }
+.quote-toast .at-title { color: #c9b3f0; font-weight: 700; font-size: 14px; letter-spacing: 1px; }
+.quote-toast .at-desc { color: var(--ink-dim); font-size: 12px; line-height: 1.5; margin-top: 3px; }
+
+/* §17.4 专项子维度 + 决策风格 */
+.panel.subdim { margin-top: 12px; }
+.subdim-row { display: flex; align-items: center; gap: 10px; margin: 7px 0; font-size: 13px; }
+.subdim-name { width: 70px; color: var(--ink-dim); flex: none; }
+.subdim-bar { flex: 1; height: 8px; background: rgba(0,0,0,0.3); border-radius: 999px; overflow: hidden; }
+.subdim-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--gold-soft), var(--gold)); border-radius: 999px; }
+.subdim-val { width: 30px; text-align: right; color: var(--gold); font-weight: 700; flex: none; }
+.style-tag { display: inline-block; margin-left: 8px; padding: 2px 10px; font-size: 12px; color: #c9b3f0; border: 1px solid rgba(170,140,230,0.5); border-radius: 999px; }
+
+/* §17.6 结局语录注入 */
+.ending-quote {
+  margin: 14px 0 4px; padding: 12px 14px; text-align: center;
+  background: linear-gradient(180deg, rgba(58,42,92,0.14), rgba(0,0,0,0.12));
+  border: 1px dashed rgba(170,140,230,0.4); border-radius: 12px;
+  font-style: italic; line-height: 1.8;
+}
+.ending-quote .eq-ic { font-size: 18px; margin-right: 6px; }
+.ending-quote .eq-tx { color: var(--ink); }
+.ending-quote .eq-tag { display: block; margin-top: 4px; font-size: 11px; color: #c9b3f0; letter-spacing: 1px; font-style: normal; }
+
 /* §17.11 趣事与轶事：解锁 Toast（青绿调，区别于彩蛋紫调） */
 .trivia-toast {
   position: fixed; right: 18px; bottom: 70px; z-index: 51;

@@ -340,9 +340,9 @@ window.MJ = window.MJ || {};
       return T('event.3_1.ret0.text', null, '你在团体中参与了这张里程碑专辑的创作，历史的页码里，有你写下的一行。');
     },
     options: [
-      { label: T('event.3_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.3_1.opt0.hint', null, '艺术与野心拉满，预算承压（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '3_1b' },
-      { label: T('event.3_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.3_1.opt1.hint', null, '制作精良、人脉加成，野心稍收（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '3_1b' },
-      { label: T('event.3_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.3_1.opt2.hint', null, '创新拉满、制作克制，赌一把（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '3_1b' }
+      { label: T('event.3_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.3_1.opt0.hint', null, '艺术与野心拉满，预算承压（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, quote_mirror: true }, next: '3_1b' },
+      { label: T('event.3_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.3_1.opt1.hint', null, '制作精良、人脉加成，野心稍收（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, quote_mirror: true }, next: '3_1b' },
+      { label: T('event.3_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.3_1.opt2.hint', null, '创新拉满、制作克制，赌一把（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, quote_mirror: true }, next: '3_1b' }
     ]
   };
 
@@ -448,7 +448,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.3_5.opt0.label', null, 'A：倾情义唱'), hint: T('event.3_5.opt0.hint', null, '善名远扬，爱心+1（声誉+15，家庭+5，慈善+1）'), effects: { reputation: 15, family: 5, phil: 1, rel: { fans: 8 } }, flags: { weAreTheWorld: true }, next: '3_6' },
+      { label: T('event.3_5.opt0.label', null, 'A：倾情义唱'), hint: T('event.3_5.opt0.hint', null, '善名远扬，爱心+1（声誉+15，家庭+5，慈善+1）'), effects: { reputation: 15, family: 5, phil: 1, rel: { fans: 8 } }, flags: { weAreTheWorld: true, charityConcert: 1 }, next: '3_6' },
       { label: T('event.3_5.opt1.label', null, 'B：婉拒这份邀约'), hint: T('event.3_5.opt1.hint', null, '退回自己的旋律里（艺术+5）'), effects: { art: 5 }, next: '3_6' },
       { label: T('event.3_5.opt2.label', null, 'C：独自捐出巨款'), hint: T('event.3_5.opt2.hint', null, '不露面也行善，爱心+1（声誉+10，财富-15，慈善+1）'), effects: { reputation: 10, wealth: -15, phil: 1 }, next: '3_6' }
     ]
@@ -630,7 +630,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.5_2b.opt0.label', null, 'A：全身心投入'), hint: T('event.5_2b.opt0.hint', null, '善名与牵挂同增，爱心+1（声誉+15，家庭+5，压力+5，慈善+1）'), effects: { reputation: 15, family: 5, stress: 5, phil: 1, rel: { fans: 12 } }, flags: { healWorld: true }, next: '5_2c' },
+      { label: T('event.5_2b.opt0.label', null, 'A：全身心投入'), hint: T('event.5_2b.opt0.hint', null, '善名与牵挂同增，爱心+1（声誉+15，家庭+5，压力+5，慈善+1）'), effects: { reputation: 15, family: 5, stress: 5, phil: 1, rel: { fans: 12 } }, flags: { healWorld: true, charityConcert: 1 }, next: '5_2c' },
       { label: T('event.5_2b.opt1.label', null, 'B：仅挂名参与'), hint: T('event.5_2b.opt1.hint', null, '轻描淡写（声誉+5）'), effects: { reputation: 5 }, next: '5_2c' },
       { label: T('event.5_2b.opt2.label', null, 'C：高调营销慈善'), hint: T('event.5_2b.opt2.hint', null, '流量与爱心齐涨，爱心+1（声誉+10，压力+5，慈善+1）'), effects: { reputation: 10, stress: 5, phil: 1 }, next: '5_2c' }
     ]
@@ -2168,6 +2168,37 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_TIDBIT_REHEARSE.opt0.label', null, 'A：继续打磨到满意'), hint: T('event.V_TIDBIT_REHEARSE.opt0.hint', null, '较真到底（艺术+1）'), effects: { art: 1 }, next: '__RETURN__' },
       { label: T('event.V_TIDBIT_REHEARSE.opt1.label', null, 'B：留一点不完美'), hint: T('event.V_TIDBIT_REHEARSE.opt1.hint', null, '留点人情味（艺术+1，压力-1）'), effects: { art: 1, stress: -1 }, next: '__RETURN__' }
+    ]
+  };
+
+  // —— §17.4 关系网深化：昆西·琼斯 决裂/和解 flavor 变体（写入 rel + 关系标志）——
+  E.V_REL_QUINCY = {
+    id: 'V_REL_QUINCY', variant: true, window: [1983, 1991], weight: 16,
+    title: T('event.V_REL_QUINCY.title', null, '与昆西的分歧'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_QUINCY.text', null, '你和昆西·琼斯，这对缔造了无数金曲的搭档，也走到了分岔口。版税与方向的分歧，像一根看不见的刺。'), s, [
+        { cond: function (s) { return (s.relations.quincy || 0) >= 10; }, text: T('event.V_REL_QUINCY.branch0.text', null, '曾经的击掌还在掌心发烫，如今却要为利益红了脸。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_QUINCY.opt0.label', null, 'A：公开决裂'), hint: T('event.V_REL_QUINCY.opt0.hint', null, '各走各路（昆西 -30，声誉 -5，商业 +1）'), effects: { reputation: -5, mogul: 1, rel: { quincy: -30 } }, flags: { relQuincyRift: true }, next: '__RETURN__' },
+      { label: T('event.V_REL_QUINCY.opt1.label', null, 'B：私下和解'), hint: T('event.V_REL_QUINCY.opt1.hint', null, '把刺拔掉（昆西 +20，家庭 +3）'), effects: { family: 3, rel: { quincy: 20 } }, flags: { relQuincyMend: true }, next: '__RETURN__' },
+      { label: T('event.V_REL_QUINCY.opt2.label', null, 'C：保持距离'), hint: T('event.V_REL_QUINCY.opt2.hint', null, '各自安好（昆西 -10，压力 -3）'), effects: { stress: -3, rel: { quincy: -10 } }, next: '__RETURN__' }
+    ]
+  };
+  // —— §17.4 关系网深化：与子女和解 flavor 变体 ——
+  E.V_REL_KIDS = {
+    id: 'V_REL_KIDS', variant: true, window: [2002, 2009], weight: 16,
+    title: T('event.V_REL_KIDS.title', null, '把时间还给孩子'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_KIDS.text', null, '镜头之外，你最在意的始终是那几个小小的身影。你暗下决心，要把被行程偷走的时间，一点一点还回去。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_REL_KIDS.branch0.text', null, '家的温度，是你最想守住的舞台。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_KIDS.opt0.label', null, 'A：放下工作陪他们'), hint: T('event.V_REL_KIDS.opt0.hint', null, '亲子时光（子女 +25，家庭 +5）'), effects: { family: 5, rel: { kids: 25 } }, flags: { kidsReconciled: true }, next: '__RETURN__' },
+      { label: T('event.V_REL_KIDS.opt1.label', null, 'B：公开维护孩子'), hint: T('event.V_REL_KIDS.opt1.hint', null, '挡在镜头前（子女 +15，声誉 +5，压力 +3）'), effects: { reputation: 5, stress: 3, rel: { kids: 15 } }, flags: { kidsReconciled: true }, next: '__RETURN__' },
+      { label: T('event.V_REL_KIDS.opt2.label', null, 'C：放手让他们独立'), hint: T('event.V_REL_KIDS.opt2.hint', null, '让他们自己飞（子女 +10，隐士 +1）'), effects: { recluse: 1, rel: { kids: 10 } }, next: '__RETURN__' }
     ]
   };
 

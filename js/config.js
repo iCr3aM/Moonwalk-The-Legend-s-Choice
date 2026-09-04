@@ -241,7 +241,37 @@ window.MJ = window.MJ || {};
     { id: 'ACH_GREATWALL', name: '长城之唱', icon: '🧱', rarity: 'rare', desc: '你在想象里，把演唱会开上了万里长城。',
       check: function (s) { return s.flags.dream_greatwall === true; } },
     { id: 'ACH_THISISIT', name: '未竟之演', icon: '🎬', rarity: 'epic', desc: '2009 年的伦敦 O2，你终于站上了那五十场的首夜。',
-      check: function (s) { return s.flags.dream_thisisit === true; } }
+      check: function (s) { return s.flags.dream_thisisit === true; } },
+
+    // —— §17.12 更多成就（候选清单落地）——
+    { id: 'ACH_DANCE_GOD', name: '舞王', icon: '🕺', rarity: 'rare', desc: '单局内累计 ≥3 次月球漫步/完美演绎类选项。',
+      check: function (s) { return (s.meta.artPath || 0) >= 3; } },
+    { id: 'ACH_PHIL_3', name: '慈善三重奏', icon: '🤲', rarity: 'rare', desc: '单局内 爱心 累计 ≥3。',
+      check: function (s) { return (s.meta.phil || 0) >= 3; } },
+    { id: 'ACH_CHARITY_CONCERT', name: '义演行者', icon: '🎗️', rarity: 'rare', desc: '单局内触发 ≥2 次慈善/义演事件。',
+      check: function (s) { return (s.flags.charityConcert || 0) >= 2; } },
+    { id: 'ACH_CATALOG_KING', name: '版权之王', icon: '👑', rarity: 'epic', desc: '同时持有 ATV + Sony/ATV 半数 + 自创厂牌。',
+      check: function (s) { return s.flags.atvBought === true && s.flags.sonyMerge === true && (s.meta.mogul || 0) >= 2; } },
+    { id: 'ACH_SMOOTH', name: '完美月球漫步', icon: '🌠', rarity: 'rare', desc: '跨周目在 3_1b 选“完美演绎” ≥2 次。',
+      check: function () { try { return MJ.eggSystem && MJ.eggSystem._load && MJ.eggSystem._load().moonwalkPerfect >= 2; } catch (e) { return false; } } },
+    { id: 'ACH_PEACE_3', name: '和平使者', icon: '🕊️', rarity: 'rare', desc: '爱心 ≥3 且 声誉 ≥70。',
+      check: function (s) { return (s.meta.phil || 0) >= 3 && (s.attributes.reputation || 0) >= 70; } },
+    { id: 'ACH_LONELY_KING', name: '孤独的王', icon: '🥀', rarity: 'rare', desc: '孤独感 ≥50 且 声誉 ≥80。',
+      check: function (s) { return (s.flags.loneliness || 0) >= 50 && (s.attributes.reputation || 0) >= 80; } },
+    { id: 'ACH_FAMILY_WARM', name: '暖心家长', icon: '🏡', rarity: 'rare', desc: '家庭 ≥80 且 与子女和解。',
+      check: function (s) { return (s.attributes.family || 0) >= 80 && (s.flags.blanketBorn || s.flags.surrogacy || s.flags.kidsReconciled); } },
+    { id: 'ACH_COMEBACK_2', name: '王者归来', icon: '🔥', rarity: 'epic', desc: '经历健康危机后 艺术 ≥85。',
+      check: function (s) { return s.flags.comebackSeen === true && (s.attributes.art || 0) >= 85; } },
+    { id: 'ACH_EGG_HUNTER', name: '彩蛋猎人', icon: '🥚', rarity: 'epic', desc: '解锁 ≥8 个彩蛋。',
+      check: function () { try { return MJ.eggSystem && MJ.eggSystem.count && MJ.eggSystem.count() >= 8; } catch (e) { return false; } } },
+    { id: 'ACH_VARIANT_20', name: '变体收藏家', icon: '🎲', rarity: 'epic', desc: '单局内触发 ≥20 次变体事件。',
+      check: function (s) { return (s.stats.variants || 0) >= 20; } },
+    { id: 'ACH_ALL_ENDINGS', name: '人生百态', icon: '🗺️', rarity: 'legendary', desc: '解锁全部 18 个结局。',
+      check: function () { try { var g = MJ.saveSystem.getGallery ? MJ.saveSystem.getGallery() : {}; return Object.keys(g).length >= Object.keys(MJ.config.endings).length; } catch (e) { return false; } } },
+    { id: 'ACH_SPEEDRUN', name: '速通人生', icon: '⚡', rarity: 'rare', desc: '以极简路径（极少节点）抵达任一结局。',
+      check: function (s) { return (s.stats.events || 99) <= 24; } },
+    { id: 'ACH_PACIFIST', name: '清白之躯', icon: '⚖️', rarity: 'rare', desc: '整局未卷入任何法律争议。',
+      check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict && !s.flags.legalTrouble; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

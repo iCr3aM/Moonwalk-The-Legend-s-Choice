@@ -1370,5 +1370,25 @@ window.MJ.i18n.dict.eventEn = {
   "vignette.mogul.0": "If you’d bought not a label but a whole radio network, would the world’s mornings all play your songs?",
   "vignette.recluse.0": "If you switched off every spotlight, what would be the first sound you heard?",
   "vignette.recluse.1": "If you hid yourself inside an old record, who would set the needle down first?",
-  "vignette.default.0": "If time turned back one second, which stage would you most want to return to?"
+  "vignette.default.0": "If time turned back one second, which stage would you most want to return to?",
+
+  // ---------- §17.4 关系网深化：昆西 / 子女 flavor 变体 ----------
+  "event.V_REL_QUINCY.title": "The Friction with Quincy",
+  "event.V_REL_QUINCY.text": "You and Quincy Jones — the duo behind countless gold records — reached a fork. Royalties and direction became an invisible splinter.",
+  "event.V_REL_QUINCY.branch0.text": "The high-fives still warm in your palm, now you’re red-faced over money.",
+  "event.V_REL_QUINCY.opt0.label": "A: Go public with the rift",
+  "event.V_REL_QUINCY.opt0.hint": "Each his own (Quincy -30, Reputation -5, Mogul +1)",
+  "event.V_REL_QUINCY.opt1.label": "B: Patch it up privately",
+  "event.V_REL_QUINCY.opt1.hint": "Pull the splinter (Quincy +20, Family +3)",
+  "event.V_REL_QUINCY.opt2.label": "C: Keep distance",
+  "event.V_REL_QUINCY.opt2.hint": "Each to his own (Quincy -10, Stress -3)",
+  "event.V_REL_KIDS.title": "Giving Time Back to the Kids",
+  "event.V_REL_KIDS.text": "Off-camera, what mattered most were those small figures. You resolved to win back, bit by bit, the time stolen by the schedule.",
+  "event.V_REL_KIDS.branch0.text": "The warmth of home was the stage you most wanted to hold.",
+  "event.V_REL_KIDS.opt0.label": "A: Set work aside for them",
+  "event.V_REL_KIDS.opt0.hint": "Parent time (Kids +25, Family +5)",
+  "event.V_REL_KIDS.opt1.label": "B: Shield them publicly",
+  "event.V_REL_KIDS.opt1.hint": "Step before the lens (Kids +15, Reputation +5, Stress +3)",
+  "event.V_REL_KIDS.opt2.label": "C: Let them fly free",
+  "event.V_REL_KIDS.opt2.hint": "Let them soar (Kids +10, Recluse +1)"
 };

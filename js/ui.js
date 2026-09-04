@@ -122,6 +122,22 @@ window.MJ = window.MJ || {};
     return inner;
   }
 
+  // §17.4 专项子维度：把"创作企划器"写入的 cp_* 画像转成展示层（不改核心结局逻辑）
+  function subDimPanel(state) {
+    if (!MJ.buildSubDims) return '';
+    var subs = MJ.buildSubDims(state);
+    var style = (MJ.decisionStyle ? MJ.decisionStyle(state) : null);
+    var styleLabel = style ? T('style.' + style.s, null, style.zh) : '';
+    var bars = subs.map(function (d) {
+      var pct = Math.max(0, Math.min(100, d.val));
+      return '<div class="subdim-row"><span class="subdim-name">' + T('subdim.' + d.key, null, d.name) + '</span>' +
+        '<span class="subdim-bar"><i style="width:' + pct + '%"></i></span>' +
+        '<span class="subdim-val">' + pct + '</span></div>';
+    }).join('');
+    return '<div class="panel subdim"><div class="panel-h">' + T('ui.subDimTitle', null, '专项造诣') +
+      (styleLabel ? ' <span class="style-tag">' + styleLabel + '</span>' : '') + '</div>' + bars + '</div>';
+  }
+
   // 关键抉择回顾：仅汇总被标记为关键节点的选择/经历（复用 history 数据）
   function keyReviewPanel(state) {
     var h = state.history || [];
@@ -364,6 +380,46 @@ window.MJ = window.MJ || {};
       '<div class="at-body"><div class="at-title">' + T('ui.triviaToast', null, '趣事发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
     _enqueueToast(t, 3600);
+  }
+  function quoteCount() {
+    return (MJ.quoteSystem ? MJ.quoteSystem.count() : 0) + ' / ' + (MJ.quoteSystem ? MJ.quoteSystem.total() : 0);
+  }
+  function toastQuote(e) {
+    if (!e) return;
+    var t = document.createElement('div');
+    t.className = 'quote-toast';
+    t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
+      '<div class="at-body"><div class="at-title">' + T('ui.quoteToast', null, '语录解锁 · ') + escapeHtml(e.name) + '</div>' +
+      '<div class="at-desc">' + escapeHtml(e.text) + '</div></div>';
+    _enqueueToast(t, 3600);
+  }
+  function quoteHtml() {
+    var defs = (MJ.quoteSystem ? MJ.quoteSystem.defs : {});
+    var html = '<div class="panel gallery">' +
+      '<div class="g-head">' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="g-prog">' + (MJ.quoteSystem ? MJ.quoteSystem.count() : 0) + ' / ' + (MJ.quoteSystem ? MJ.quoteSystem.total() : 0) + '</span></div>' +
+      '<div class="g-grid">';
+    Object.keys(defs).forEach(function (k) {
+      var e = defs[k], on = MJ.quoteSystem.isFound(k);
+      html += '<div class="g-cell ' + (on ? 'on' : '') + '">' +
+        '<div class="g-ic">' + e.icon + '</div>' +
+        '<div class="g-nm">' + escapeHtml(e.name) + '</div>' +
+        '<div class="g-ds">' + escapeHtml(on ? e.text : T('ui.locked', null, '？？？')) + '</div></div>';
+    });
+    html += '</div></div>';
+    return html;
+  }
+  function quoteModal() {
+    closeOverlay('quote-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'quote-overlay';
+    overlay.className = 'modal-overlay overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>🗣️ ' + T('ui.quoteCodex', null, '语录图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="quote-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body"></div></div>';
+    overlay.querySelector('.modal-body').innerHTML = quoteHtml();
+    document.body.appendChild(overlay);
+    overlay.querySelector('#quote-close').addEventListener('click', function () { closeOverlay('quote-overlay'); });
   }
   function vignettePanel(state) {
     var list = MJ.buildVignettes(state);
@@ -818,6 +874,7 @@ window.MJ = window.MJ || {};
           '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
           '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
           '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
+          '<button class="btn block" id="btn-quote">🗣️ ' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="m-cnt">' + quoteCount() + '</span></button>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
@@ -843,6 +900,7 @@ window.MJ = window.MJ || {};
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
     var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
     var bt = $('#btn-trivia'); if (bt) bt.addEventListener('click', triviaModal);
+    var bq = $('#btn-quote'); if (bq) bq.addEventListener('click', quoteModal);
     var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
     _view = function () { ui.showIntro(hasSave); };
   };
@@ -927,6 +985,7 @@ window.MJ = window.MJ || {};
     var e = MJ.config.endings[id] || { name: id, icon: '🌟', tone: '', summary: '' };
     var legend = MJ.legendScore(state);
     if (MJ.triviaSystem) MJ.triviaSystem.revealAll(state); // §17.11：结局时按人生状态解锁考据趣事
+    if (MJ.quoteSystem) MJ.quoteSystem.revealAll(state); // §17.6：结局时静默补齐语录图鉴
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
@@ -945,6 +1004,13 @@ window.MJ = window.MJ || {};
     snap += '<div class="life-stat">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
     snap += '</div>';
 
+    var eqHtml = '';
+    try {
+      var qKey = MJ.quoteSystem.endingQuote(id, state);
+      var qd = MJ.quoteSystem.defs[qKey];
+      if (qd) eqHtml = '<div class="ending-quote"><span class="eq-ic">' + qd.icon + '</span><span class="eq-tx">' + escapeHtml(T('quote.' + qKey + '.text', null, qd.text)) + '</span><span class="eq-tag">' + T('ui.quoteTag', null, '（语录）') + '</span></div>';
+    } catch (e) {}
+
     var canShareImg = false;
     try { canShareImg = typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([new Uint8Array(1)], 'x.png', { type: 'image/png' })] }); } catch (e) {}
 
@@ -957,6 +1023,7 @@ window.MJ = window.MJ || {};
         '<p class="tone">' + T('ending.' + id + '.tone', null, e.tone) + '</p>' +
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
+        eqHtml +
         snap +
         '<div class="poster-box" id="poster-box"></div>' +
         '<div class="poster-actions">' +
@@ -972,7 +1039,9 @@ window.MJ = window.MJ || {};
         '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
         '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
         '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
+        '<button class="btn block" id="btn-quote-end">🗣️ ' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="m-cnt">' + quoteCount() + '</span></button>' +
       '</div>' +
+      subDimPanel(state) +
       keyReviewPanel(state) +
       diaryPanel(state) +
       vignettePanel(state) +
@@ -1010,6 +1079,7 @@ window.MJ = window.MJ || {};
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
     var bte = $('#btn-trivia-end'); if (bte) bte.addEventListener('click', triviaModal);
+    var bqe = $('#btn-quote-end'); if (bqe) bqe.addEventListener('click', quoteModal);
     var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {
