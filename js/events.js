@@ -325,7 +325,8 @@ window.MJ = window.MJ || {};
     options: [
       { label: 'A：接拍并意外烧伤', hint: '进账与名气兼得，却埋下伤痛伏笔（触发烧伤线）（财富+20，声誉+5）', effects: { wealth: 20, reputation: 5, rel: { fans: 5 } }, flags: { isPepsiBurned: true }, epilogue: '片场的火苗舔过皮肤，那一刻的惊呼，成了此后多年都挥不去的回音。', next: '3_2b' },
       { label: 'B：安全优先拒拍', hint: '护住身体，丢了广告费（健康+10，财富-20）', effects: { health: 10, wealth: -20 }, flags: { isPepsiBurned: false }, epilogue: '你绕开了那簇火，却也错过了一次让名字更深入人心的机会。', next: '3_2b' },
-      { label: 'C：议价安全拍摄', hint: '皆大欢喜的折中（财富+5，健康+5）', effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, epilogue: '你在安全与曝光间找到了平衡点，片场圆满收工。', next: '3_2b' }
+      { label: 'C：议价安全拍摄', hint: '皆大欢喜的折中（财富+5，健康+5）', effects: { wealth: 5, health: 5 }, flags: { isPepsiBurned: false }, epilogue: '你在安全与曝光间找到了平衡点，片场圆满收工。', next: '3_2b' },
+      { label: 'D：若那簇火没烧到你（架空想象）', hint: '改写此后数十年的伏笔（健康+8，压力-5）', effects: { health: 8, stress: -5 }, flags: { isPepsiBurned: false }, epilogue: '你闭上眼，想象片场那一捧火苗没有舔到皮肤——有些痛，本可以不开始。', next: '3_2b' }
     ]
   };
 
@@ -447,9 +448,23 @@ window.MJ = window.MJ || {};
       return '组合新专辑延续热度，和声里的你，仍在稳步向前。';
     },
     effects: function (s) { return s.flags.isSolo ? { art: 15, wealth: 20, reputation: 10, stress: 15 } : { art: 10, wealth: 15, reputation: 5, stress: 10 }; },
-    next: '4_2b'
+    next: '4_2a'
   };
 
+  E['4_2a'] = {
+    id: '4_2a', year: 1988, title: '《Bad》世界巡演', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('《Bad》世界巡演横跨四大洲、逾百场，是你单飞后第一次全球 solo 远征。体育场的人海为你起伏，也把孤独放大成回声。', s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '空前的巡演规模背后，是空前的疲惫，你在掌声里偷偷数着还能撑多久。' },
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: '每一场落幕，你都更确信：舞台，是你与世界对话的唯一语言。' }
+      ]);
+    },
+    options: [
+      { label: 'A：倾尽所有燃爆现场', hint: '传奇加身，身心透支（声誉+12，财富+20，压力+15）', effects: { reputation: 12, wealth: 20, stress: 15 }, next: '4_2b' },
+      { label: 'B：张弛有度保身体', hint: '稳扎稳打（声誉+6，财富+10，压力+5）', effects: { reputation: 6, wealth: 10, stress: 5 }, next: '4_2b' },
+      { label: 'C：借巡演做慈善场', hint: '把光分给更需要的人，爱心+1（声誉+8，慈善+1）', effects: { reputation: 8, phil: 1 }, next: '4_2b' }
+    ]
+  };
   E['4_2b'] = {
     id: '4_2b', year: 1988, title: '《Moonwalker》', kind: 'choice',
     text: function (s) {
@@ -659,12 +674,26 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: 'A：坚持原词不改', hint: '风骨凛然，争议缠身（声誉-5，艺术+8，压力+5）', effects: { reputation: -5, art: 8, stress: 5 }, next: '6_2' },
-      { label: 'B：稍作修改平息', hint: '息事宁人（声誉+3）', effects: { reputation: 3 }, next: '6_2' },
-      { label: 'C：转向《Earth Song》环保', hint: '把怒火化作大地之诗，爱心+1（声誉+10，慈善+1）', effects: { reputation: 10, phil: 1 }, flags: { earthSong: true }, next: '6_2' }
+      { label: 'A：坚持原词不改', hint: '风骨凛然，争议缠身（声誉-5，艺术+8，压力+5）', effects: { reputation: -5, art: 8, stress: 5 }, next: '6_1e' },
+      { label: 'B：稍作修改平息', hint: '息事宁人（声誉+3）', effects: { reputation: 3 }, next: '6_1e' },
+      { label: 'C：转向《Earth Song》环保', hint: '把怒火化作大地之诗，爱心+1（声誉+10，慈善+1）', effects: { reputation: 10, phil: 1 }, flags: { earthSong: true }, next: '6_1e' }
     ]
   };
 
+  E['6_1e'] = {
+    id: '6_1e', year: 1996, title: 'HIStory 世界巡演', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('《HIStory》世界巡演启程，巨型雕像与万人合唱，把你的名字写进一座座城市的夜空。这也是你单飞后规模最浩大的远征。', s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 50; }, text: '舆论的噪音没能盖过现场的合唱，你忽然觉得，舞台比法庭更懂你。' },
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '你在巡演沿途探望病童，把聚光灯外的温柔也带去了。' }
+      ]);
+    },
+    options: [
+      { label: 'A：全力呈现视听盛宴', hint: '王者归来，盛况空前（声誉+12，财富+20，压力+15）', effects: { reputation: 12, wealth: 20, stress: 15 }, next: '6_2' },
+      { label: 'B：精简场次护身体', hint: '量力而行（声誉+6，财富+10，压力+5）', effects: { reputation: 6, wealth: 10, stress: 5 }, next: '6_2' },
+      { label: 'C：巡演结合公益', hint: '善名远播，爱心+1（声誉+8，慈善+1）', effects: { reputation: 8, phil: 1 }, next: '6_2' }
+    ]
+  };
   E['6_2'] = {
     id: '6_2', year: 1996, title: '与黛比·罗结婚', kind: 'choice',
     text: function (s) {
@@ -749,9 +778,23 @@ window.MJ = window.MJ || {};
         { cond: function (s) { return (s.attributes.family || 0) <= 50; }, text: '本就稀薄的家庭温度，又降了一度。' }
       ]);
     },
-    effects: { family: -10 }, next: '6_3b'
+    effects: { family: -10 }, next: '6_3a'
   };
 
+  E['6_3a'] = {
+    id: '6_3a', year: 2001, title: '9·11 与三十周年', kind: 'choice', key: true,
+    text: function (s) {
+      return narr('出道三十周年的演唱会遇上 9·11 的阴霾。你在哀伤的国土上登台，为受难者献唱，把个人的加冕，唱成了众人的疗愈。', s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: '你比谁都清楚，此刻歌声该献给谁。' },
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: '聚光灯重新有了温度，世人记得你站在废墟旁的那个夜晚。' }
+      ]);
+    },
+    options: [
+      { label: 'A：投身公益义演', hint: '用歌声疗愈国殇，爱心+1（声誉+12，慈善+1，压力+5）', effects: { reputation: 12, phil: 1, stress: 5 }, next: '6_3b' },
+      { label: 'B：低调完成周年庆典', hint: '专注音乐本身（声誉+6，艺术+5）', effects: { reputation: 6, art: 5 }, next: '6_3b' },
+      { label: 'C：借势推《Number Ones》', hint: '经典汇编再掀热度（声誉+8，财富+10）', effects: { reputation: 8, wealth: 10 }, next: '6_3b' }
+    ]
+  };
   E['6_3b'] = {
     id: '6_3b', year: 2001, title: '《Invincible》与 30 周年', kind: 'choice', key: true,
     text: function (s) {
