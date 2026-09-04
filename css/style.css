@@ -607,3 +607,5 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 /* 结局页回顾面板分组：桌面 2 列、移动端 1 列，减少竖向堆叠杂乱 */
 .review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 @media (max-width: 640px) { .review-grid { grid-template-columns: 1fr; } }
+/* 专项造诣跨满整行（桌面 2 列网格下整宽，移动端本就整宽），条形更宽易读 */
+.panel.subdim { grid-column: 1 / -1; }

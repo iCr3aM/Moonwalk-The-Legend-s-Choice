@@ -11,7 +11,7 @@ var ui = fs.readFileSync(uiPath, 'utf8');
 var css = fs.readFileSync(cssPath, 'utf8');
 
 // 已知动态拼接 / 非 CSS 的合法 token（如状态栏里 'panel ' + 章节 id 等），显式放行
-var ALLOW = new Set(['MJ', 'Forever', 'posterOfTag', 'zoomHint', 'shareFriend', 'coverConfirm', 'lang-btn', 'at-body', 'kreview', 'echoes']);
+var ALLOW = new Set(['MJ', 'Forever', 'posterOfTag', 'zoomHint', 'coverConfirm', 'lang-btn', 'at-body', 'kreview', 'echoes']);
 
 var re = /(?:class|className)\s*=\s*["']([^"']*)["']/g;
 var m, raw = [];

@@ -167,7 +167,7 @@ window.MJ = window.MJ || {};
         'chapter.5.sub': '2010 – 2026　A Life That Might Have Been',
         'chapter.5.flavor': 'If the rehearsal of 2009 had not been the end, beyond the spotlight life had another way of being written.',
 
-        // ---------- 14 结局（名称/基调/简述/独白） ----------
+        // ---------- 18 结局（名称/基调/简述/独白） ----------
         'ending.END_PLAIN.name': 'An Ordinary Life',
         'ending.END_PLAIN.tone': 'Calm, with regret',
         'ending.END_PLAIN.summary': 'You stayed in Gary and lived a quiet, ordinary life.',
@@ -267,7 +267,7 @@ window.MJ = window.MJ || {};
         'ach.ACH_END_RECLUSE_SERENE.name': 'The Serene Recluse',
         'ach.ACH_END_RECLUSE_SERENE.desc': 'Stepping away yet not withering, you found calm in the quiet.',
 
-        // ---------- 30 成就 ----------
+        // ---------- 60 成就 ----------
         'ach.ACH_ROOKIE.name': 'Rising Star',
         'ach.ACH_ROOKIE.desc': 'Your first solo album arrives; the boy begins to have his own name.',
         'ach.ACH_BROTHERLY.name': 'Brotherly Bond',

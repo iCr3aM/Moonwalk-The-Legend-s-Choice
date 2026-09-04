@@ -604,9 +604,6 @@ window.MJ = window.MJ || {};
 
 
   // ---------- 社交分享（GDD §17） ----------
-  function escapeText(s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
   function buildEndingShareText(state, endingId) {
     var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
     var a = state.attributes;
@@ -634,74 +631,6 @@ window.MJ = window.MJ || {};
       T('share.ending.tail', null, '每个人都是自己人生的词曲作者——来写下你的版本。')
     ].join('\n');
   }
-  function buildGameShareText() {
-    return [
-      T('share.game.1', null, '“月球漫步：传奇的抉择”——一款文字人生模拟游戏。'),
-      T('share.game.2', null, '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，'),
-      T('share.game.3', null, '导向 18 种截然不同的人生结局。你，会走出怎样的传奇？'),
-      '',
-      T('share.game.4', null, '（纯网页，双击即玩；含 60 余项变体事件、56 项成就、关键抉择回顾。）')
-    ].join('\n');
-  }
-  function flashBtn(btn, txt) { if (!btn) return; var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1500); }
-  function legacyCopy(text, ok, fail) {
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; ta.style.top = '0';
-      document.body.appendChild(ta); ta.focus(); ta.select();
-      var done = document.execCommand('copy');
-      document.body.removeChild(ta);
-      done ? ok() : fail();
-    } catch (e) { fail(); }
-  }
-  function copyText(text, btn) {
-    function ok() { flashBtn(btn, T('ui.copied', null, '已复制 ✓')); }
-    function fail() { flashBtn(btn, T('ui.copyManual', null, '请手动复制')); }
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(ok, function () { legacyCopy(text, ok, fail); });
-      } else legacyCopy(text, ok, fail);
-    } catch (e) { legacyCopy(text, ok, fail); }
-  }
-  function openShare(title, summary) {
-    var old = document.getElementById('share-overlay');
-    if (old) old.parentNode.removeChild(old);
-    var isFile = location.href.indexOf('file:') === 0;
-    var url = isFile ? '' : location.href;
-    var full = summary + (url ? '\n' + url : '');
-    var encoded = encodeURIComponent(full);
-    var overlay = document.createElement('div');
-    overlay.id = 'share-overlay';
-    overlay.className = 'overlay';
-    var html = '<div class="share-card">' +
-      '<div class="sc-head">' + escapeHtml(title) + '</div>' +
-      '<textarea class="sc-text" id="share-text" readonly>' + escapeText(summary) + '</textarea>' +
-      '<div class="sc-actions">' +
-        '<button class="btn" id="share-copy">' + T('ui.shareCopy', null, '复制文案') + '</button>' +
-        (navigator.share ? '<button class="btn primary" id="share-native">' + T('ui.shareNative', null, '系统分享…') + '</button>' : '') +
-        '<button class="btn ghost" id="share-close">' + T('ui.close', null, '关闭') + '</button>' +
-      '</div>' +
-      '<div class="sc-links">' +
-        (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://service.weibo.com/share/share.php?title=' + encoded + '">微博</a>' : '') +
-        (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=' + encoded + '">X / Twitter</a>' : '') +
-      '</div>' +
-      '<div class="sc-tip">' + (url ? T('ui.shareTipUrl', null, '复制文案或点「系统分享」后，可粘贴到任意社交平台；也可直接分享本页链接。') : T('ui.shareTipFile', null, '复制文案或点「系统分享」后，可粘贴到任意社交平台（本地文件无链接，可手动分享游戏地址）。')) + '</div>' +
-      '</div>';
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
-    overlay.addEventListener('click', function (e) { if (e.target === overlay) overlay.parentNode.removeChild(overlay); });
-    document.getElementById('share-close').addEventListener('click', function () { overlay.parentNode.removeChild(overlay); });
-    document.getElementById('share-copy').addEventListener('click', function () { copyText(full, this); });
-    if (navigator.share) {
-      document.getElementById('share-native').addEventListener('click', function () {
-        var data = { title: T('ui.title', null, '月球漫步：传奇的抉择'), text: summary };
-        if (url) data.url = url;
-        if (navigator.canShare && !navigator.canShare(data)) { /* 仍尝试分享 */ }
-        navigator.share(data).catch(function () {});
-      });
-    }
-  }
-
   // ---------- 传奇海报（Canvas 自动生成，可保存/分享的图片） ----------
   function roundRect(ctx, x, y, w, h, r) {
     if (w < 2 * r) r = w / 2; if (h < 2 * r) r = h / 2;
@@ -791,13 +720,35 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — ' + endYear, W / 2, 102);
 
+    // 矢量徽标（按稀有度着色，跨平台一致，不依赖 emoji 字体 —— 修复 emoji 变体选择符/ZWJ/垂直度量导致的叠层与错位）
+    function starPath(cx, cy, spikes, outerR, innerR) {
+      var rot = -Math.PI / 2, step = Math.PI / spikes;
+      ctx.beginPath();
+      for (var si = 0; si < spikes; si++) {
+        ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR); rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR); rot += step;
+      }
+      ctx.closePath();
+    }
+    var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
+    var _rc = { common: '#9c8a5a', rare: '#caa84a', epic: '#c9b3f0', legendary: '#f3e2b0' }[_rar] || '#caa84a';
     ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
     ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.font = '60px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-    ctx.textBaseline = 'middle';
-    try { ctx.fillText(e.icon, W / 2, 180); } catch (err) {}
-    ctx.textBaseline = 'alphabetic';
+    if (_rar === 'epic' || _rar === 'legendary') {
+      ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2);
+      ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    starPath(W / 2, 178, 5, 40, 17);
+    if (_rar === 'legendary') {
+      var _sg = ctx.createLinearGradient(W / 2 - 40, 178 - 40, W / 2 + 40, 178 + 40);
+      _sg.addColorStop(0, '#fff4cf'); _sg.addColorStop(1, '#caa84a');
+      ctx.fillStyle = _sg;
+    } else {
+      ctx.fillStyle = _rc;
+    }
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1; ctx.stroke();
 
     ctx.fillStyle = '#f3e2b0'; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(eName, W / 2, 286);
@@ -824,7 +775,7 @@ window.MJ = window.MJ || {};
       var numStr = String(dims[i][2]);
       if (dims[i][1] === 'reputation' || dims[i][1] === 'art') {
         var ov = (state.overflow && state.overflow[dims[i][1]]) || 0;
-        if (ov > 0) numStr += ' ⭐+' + ov;
+        if (ov > 0) numStr += ' ★+' + ov;
       }
       ctx.textAlign = 'right';
       ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
@@ -963,7 +914,7 @@ window.MJ = window.MJ || {};
     }, 'image/png');
   }
 
-  // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图/「放大海报」再次打开（放大查看）
+  // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
   function openPosterModal(state, id, archiveIdx) {
     var old = document.getElementById('poster-overlay');
     if (old) old.parentNode.removeChild(old);
@@ -1023,10 +974,7 @@ window.MJ = window.MJ || {};
         '</div>' +
         '<div class="intro-foot">' +
           '<div class="credit">' + T('ui.credit', null, 'Cr3aM 制作 · MJ Forever') + '</div>' +
-          '<div class="toolbar">' +
-            '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
-          '</div>' +
-        '</div>' +
+'</div>' +
       '</div>';
     app.innerHTML = html;
     if (hasSave) $('#btn-continue').addEventListener('click', function () {
@@ -1037,8 +985,6 @@ window.MJ = window.MJ || {};
       MJ.saveSystem.clear();
       MJ.engine.start();
     });
-    var si = $('#btn-share-intro');
-    if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '月球漫步：传奇的抉择'), buildGameShareText()); });
     var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
     var be = $('#btn-egg'); if (be) be.addEventListener('click', eggModal);
@@ -1148,27 +1094,9 @@ window.MJ = window.MJ || {};
       });
     }
     if (MJ.triviaSystem) MJ.triviaSystem.revealAll(state); // §17.11：结局时按人生状态解锁考据趣事
-    var snapGrid = '<div class="snapshot">';
-    var names = MJ.config.attrNames;
-    ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
-      var v = state.attributes[k] || 0;
-      var extra = '';
-      if (k === 'reputation' || k === 'art') {
-        var ov = (state.overflow && state.overflow[k]) || 0;
-        if (ov > 0) extra = ' <span class="od">⭐+' + ov + '</span>';
-      }
-      snapGrid += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + v + '</b>' + extra + '</div>';
-    });
-    snapGrid += '<div class="s">' + T('ui.networth', null, '净资产') + '：<b>' + formatMoney(state.netWorth) + '</b></div>';
-    var dm = MJ.dominantMeta(state.meta);
-    snapGrid += '<div class="s">' + T('ui.metaRoutePrefix', null, '主导路线：') + '<b>' + (dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—') + '</b></div>';
-    snapGrid += '<div class="s">' + T('ui.legendScore', null, '传奇评分') + '：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
-    snapGrid += '</div>';
-    var lifeStat = '<div class="life-stat-line">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
-    var snap = '<div class="stat-card"><div class="stat-card-h">📊 ' + T('ui.runStats', null, '本局战绩') + '</div>' + snapGrid + lifeStat + '</div>';
 
     var html =
-      statusBar(state, { year: 2009 }) +
+      statusBar(state, { year: e.year || 2009 }) +
       '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
         (e.hidden ? '<div class="badge-ultimate">' + T('ui.badgeUltimate', null, '★ 终极隐藏结局') + '</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
@@ -1176,17 +1104,13 @@ window.MJ = window.MJ || {};
         '<p class="tone">' + T('ending.' + id + '.tone', null, e.tone) + '</p>' +
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
-        snap +
         '<div class="poster-section">' +
           '<div class="poster-box" id="poster-box"></div>' +
-          '<div class="poster-actions">' +
-            '<button class="btn ghost" id="btn-copy">' + T('ui.copyText', null, '复制文案') + '</button>' +
-          '</div>' +
-          '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
+'<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
         '</div>' +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button></div>' +
       '</div>' +
-      '<div class="menu-row">' +
+      '<div class="menu-grid">' +
         '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
         '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
         '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
@@ -1203,7 +1127,7 @@ window.MJ = window.MJ || {};
       '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
     app.innerHTML = html;
     MJ.achievementSystem.evaluate(state, { ending: id }).forEach(toastAchievement);
-    if (MJ.eggSystem) MJ.eggSystem.onEnding(state, id);
+    if (MJ.eggSystem && !state._onEndingDone) { state._onEndingDone = true; MJ.eggSystem.onEnding(state, id); }
     $('#btn-restart').addEventListener('click', function () {
       MJ.saveSystem.clear();
       ui.showIntro(false);
@@ -1218,12 +1142,7 @@ window.MJ = window.MJ || {};
       thumb.title = T('ui.zoomHint', null, '点击放大海报');
       thumb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(thumb);
-      var vb = document.createElement('button');
-      vb.className = 'btn ghost small'; vb.textContent = T('ui.zoomPoster', null, '放大海报');
-      vb.addEventListener('click', function () { openPosterModal(state, id); });
-      pbox.appendChild(vb);
     }
-    $('#btn-copy').addEventListener('click', function () { copyText(buildEndingShareText(state, id), this); });
     openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
