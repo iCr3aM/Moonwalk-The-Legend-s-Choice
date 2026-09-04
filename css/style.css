@@ -171,7 +171,7 @@ html, body {
 
 /* ---------- 结局图鉴 ---------- */
 .gallery { padding: 14px 16px; }
-.gallery .g-head { color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; }
+.gallery .g-head, .rel-head, .panel-h { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
 .gallery .g-head .g-prog { color: var(--ink-dim); font-weight: 400; margin-left: 6px; }
 .gallery .g-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .gallery .g-cell {
