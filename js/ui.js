@@ -62,8 +62,15 @@ window.MJ = window.MJ || {};
     var html = '<div class="bars">';
     keys.forEach(function (k) {
       var val = state.attributes[k] || 0;
+      var right = '<b>' + val + '</b>';
+      if (k === 'reputation' || k === 'art') {
+        var ov = (state.overflow && state.overflow[k]) || 0;
+        if (ov > 0) right += ' <span class="od">⭐+' + ov + '</span>';
+      } else if (k === 'wealth') {
+        right += ' <span class="nw">(' + formatMoney(state.netWorth) + ')</span>';
+      }
       html += '<div class="bar">' +
-        '<div class="lab"><span>' + T('attr.' + k, null, names[k]) + '</span><b>' + val + '</b></div>' +
+        '<div class="lab"><span>' + T('attr.' + k, null, names[k]) + '</span>' + right + '</div>' +
         '<div class="track"><div class="fill ' + k + '" style="width:' + val + '%"></div></div>' +
         '</div>';
     });
@@ -542,7 +549,14 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = '#caa84a'; ctx.font = 'italic 19px "PingFang SC",sans-serif';
     ctx.fillText(eTone, W / 2, 320);
 
-    var dims = [[T('attr.health', null, '健康'), a.health], [T('attr.reputation', null, '声誉'), a.reputation], [T('attr.art', null, '艺术'), a.art], [T('attr.wealth', null, '财富'), a.wealth], [T('attr.family', null, '家庭'), a.family], [T('attr.stress', null, '压力'), a.stress]];
+    var dims = [
+      [T('attr.health', null, '健康'), 'health', a.health],
+      [T('attr.reputation', null, '声誉'), 'reputation', a.reputation],
+      [T('attr.art', null, '艺术'), 'art', a.art],
+      [T('attr.wealth', null, '财富'), 'wealth', a.wealth],
+      [T('attr.family', null, '家庭'), 'family', a.family],
+      [T('attr.stress', null, '压力'), 'stress', a.stress]
+    ];
     var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, barX = bx0 + 92, barW = colW - 92 - 16;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0;
@@ -552,8 +566,15 @@ window.MJ = window.MJ || {};
       ctx.fillText(dims[i][0], x, y + 15);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
-      ctx.fillText(String(dims[i][1]), x + 78, y + 15);
-      var v = Math.max(0, Math.min(100, dims[i][1])) / 100;
+      var numStr = String(dims[i][2]);
+      if (dims[i][1] === 'reputation' || dims[i][1] === 'art') {
+        var ov = (state.overflow && state.overflow[dims[i][1]]) || 0;
+        if (ov > 0) numStr += ' ⭐+' + ov;
+      } else if (dims[i][1] === 'wealth') {
+        numStr += ' · ' + formatMoney(state.netWorth);
+      }
+      ctx.fillText(numStr, x + 78, y + 15);
+      var v = Math.max(0, Math.min(100, dims[i][2])) / 100;
       var bgx = barX + col * colW;
       ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
       var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);

@@ -13,6 +13,8 @@ window.MJ = window.MJ || {};
     this.meta = Object.assign({}, cfg.initialMeta);
     this.netWorth = cfg.initialNetWorth; // 万元
     this.debt = false;
+    // 卓越档：声誉/艺术超出 100 的溢出值（独立计数，不污染 0–100 刻度与结局/成就阈值）
+    this.overflow = { reputation: 0, art: 0 };
     // 初始财富属性由净资产推导（与 Economy 联动）
     var _scale0 = (cfg.wealthScale) || 150;
     this.attributes.wealth = Math.max(0, Math.min(100, Math.round(cfg.initialNetWorth / _scale0)));
@@ -35,6 +37,11 @@ window.MJ = window.MJ || {};
       // 但保留可达 85–100 的空间（艺术家巅峰等结局需要 art>=85）。
       if (delta > 0 && nv > 85 && (key === 'reputation' || key === 'art' || key === 'stress')) {
         nv = cur + delta * 0.5;
+      }
+      // 卓越档：声誉/艺术超过 100 的部分计入独立 overflow（0–100 刻度与结局/成就阈值完全不动）
+      if ((key === 'reputation' || key === 'art') && nv > 100) {
+        this.overflow[key] = (this.overflow[key] || 0) + Math.round(nv - 100);
+        nv = 100;
       }
       this.attributes[key] = Math.max(0, Math.min(100, nv));
     } else if (key in this.meta) {
@@ -84,6 +91,7 @@ window.MJ = window.MJ || {};
       era: this.era,
       history: this.history,
       stats: this.stats,
+      overflow: this.overflow,
       currentId: cur
     };
   };
@@ -101,6 +109,7 @@ window.MJ = window.MJ || {};
     this.era = (data.era != null) ? data.era : -1;
     this.history = data.history || [];
     this.stats = data.stats || { variants: 0, keyChoices: 0, events: 0 };
+    this.overflow = data.overflow || { reputation: 0, art: 0 };
   };
 
   MJ.GameState = GameState;
