@@ -9,8 +9,7 @@ window.MJ = window.MJ || {};
   var app;
   var T = function (k, v, fb) { return MJ.t(k, v, fb); };
   var _view = null; // 当前屏幕的重新渲染函数（语言切换时调用）
-  function audioLabel() { return MJ.audio.enabled ? T('ui.audioOn', null, '♪ 环境音：开') : T('ui.audioOff', null, '♪ 环境音：关'); }
-  function switchLang() { MJ.toggleLang(); if (_view) _view(); }
+  function switchLang() { MJ.i18n.toggleLang(); if (_view) _view(); }
 
   function $(sel) { return app.querySelector(sel); }
 
@@ -353,51 +352,6 @@ window.MJ = window.MJ || {};
     return inner;
   }
 
-  // ---------- 环境音（GDD §10：原创/公共领域 BGM，轻量 WebAudio 氛围垫，默认关闭） ----------
-  var audio = (function () {
-    var ctx = null, master = null, nodes = [], on = false;
-    function ensure() {
-      if (ctx) return true;
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) return false;
-      try {
-        ctx = new AC();
-        master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-        return true;
-      } catch (e) { return false; }
-    }
-    function build() {
-      var freqs = [146.83, 220.0, 277.18]; // D3 A3 C#4 柔和大三和弦
-      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 620; lp.connect(master);
-      freqs.forEach(function (f, i) {
-        var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
-        var g = ctx.createGain(); g.gain.value = 0.16 / (i + 1);
-        var lfo = ctx.createOscillator(); lfo.frequency.value = 0.06 + i * 0.03;
-        var lg = ctx.createGain(); lg.gain.value = 2.5; lfo.connect(lg); lg.connect(o.detune); lfo.start();
-        o.connect(g); g.connect(lp); o.start();
-        nodes.push(o, lfo);
-      });
-    }
-    function start() {
-      if (!ensure()) return false;
-      if (ctx.state === 'suspended') ctx.resume();
-      if (!nodes.length) build();
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 1.5);
-      on = true; return true;
-    }
-    function stop() {
-      if (!ctx) return;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
-      on = false;
-    }
-    return {
-      toggle: function () { if (on) { stop(); return false; } return start(); },
-      isOn: function () { return on; }
-    };
-  })();
-  MJ.audio = audio;
 
   // ---------- 社交分享（GDD §17） ----------
   function escapeText(s) {
@@ -732,7 +686,6 @@ window.MJ = window.MJ || {};
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">' + T('ui.newGame', null, '开始新人生') + '</button>' +
         '</div>' +
         '<div class="toolbar">' +
-          '<button class="btn ghost small" id="btn-audio">' + audioLabel() + '</button>' +
           '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
           '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
         '</div>' +
@@ -745,11 +698,6 @@ window.MJ = window.MJ || {};
       if (hasSave && !window.confirm(T('ui.coverConfirm', null, '将覆盖当前存档并开始新人生，确定吗？'))) return;
       MJ.saveSystem.clear();
       MJ.engine.start();
-    });
-    var audioBtn = $('#btn-audio');
-    if (audioBtn) audioBtn.addEventListener('click', function () {
-      MJ.audio.toggle();
-      audioBtn.textContent = audioLabel();
     });
     var si = $('#btn-share-intro');
     if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '迈克尔·杰克逊：人生选择'), buildGameShareText()); });
@@ -870,7 +818,6 @@ window.MJ = window.MJ || {};
           (canShareImg ? '<button class="btn ghost" id="btn-share-img">' + T('ui.shareImg', null, '分享图片') + '</button>' : '') +
         '</div>' +
         '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button>' +
-        '<button class="btn ghost" id="btn-audio-end">' + audioLabel() + '</button>' +
         '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button></div>' +
       '</div>' +
       '<div class="menu-row">' +
@@ -908,11 +855,6 @@ window.MJ = window.MJ || {};
     var sib = $('#btn-share-img');
     if (sib) sib.addEventListener('click', function () { sharePosterImage(state, id); });
     openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
-    var ebAudio = $('#btn-audio-end');
-    if (ebAudio) ebAudio.addEventListener('click', function () {
-      MJ.audio.toggle();
-      ebAudio.textContent = audioLabel();
-    });
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);

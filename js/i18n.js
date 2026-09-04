@@ -36,8 +36,6 @@ window.MJ = window.MJ || {};
         'ui.copyText': 'Copy Text',
         'ui.shareImg': 'Share Image',
         'ui.zoomPoster': 'View Poster',
-        'ui.audioOn': '♪ Ambience: On',
-        'ui.audioOff': '♪ Ambience: Off',
         'ui.shareFriend': 'Share with Friends',
         'ui.howtoLabel': 'How to Play',
         'ui.gallery': 'Ending Gallery',

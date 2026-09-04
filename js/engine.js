@@ -228,7 +228,18 @@ window.MJ = window.MJ || {};
       // 变体事件插入（仅对主线非结局事件）
       if (!ev.variant && ev.kind !== 'ending') {
         var vid = this.pickVariant(ev.year);
-        if (vid) { this._return = id; return this.go(vid); }
+        if (vid) {
+          // 变体显示年份跟随父事件，避免时间线倒挂（GDD §6 时间一致性）
+          var vinst = Object.assign({}, MJ.EVENTS[vid]);
+          vinst.year = (ev.year != null) ? ev.year
+            : (MJ.EVENTS[vid].window ? Math.round((MJ.EVENTS[vid].window[0] + MJ.EVENTS[vid].window[1]) / 2) : null);
+          this.current = vinst;
+          this._return = id;
+          this.state.stats.events = (this.state.stats.events || 0) + 1;
+          MJ.saveSystem.save(this.state);
+          MJ.ui.showEvent(vinst, this.state);
+          return;
+        }
       }
 
       this.current = ev;

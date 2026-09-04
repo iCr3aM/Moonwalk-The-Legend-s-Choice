@@ -25,12 +25,19 @@ MJ.ui = {
   showEraCard: function (chapter, state, onContinue) { onContinue(); } // 过场直接继续，逻辑已落库
 };
 
+var invPairs = [];
 function play(strategy) {
   MJ.engine.start();
-  var guard = 0;
+  var guard = 0, lastYear = -1, lastId = null, invert = 0;
   while (guard++ < 800) {
     if (!_cur) return { ok: false, why: 'no event' };
-    if (_cur.kind === 'ended') return { ok: true, ending: _cur.id };
+    if (_cur.kind === 'ended') return { ok: true, ending: _cur.id, invert: invert };
+    // 时间一致性回归：状态栏/人生轨迹显示年份不应倒挂
+    var y = MJ.eventYear(_cur);
+    if (typeof y === 'number' && y > 0) {
+      if (lastYear >= 0 && y < lastYear) { invert++; if (invPairs.length < 30) invPairs.push(lastId + '(' + lastYear + ')->' + _cur.id + '(' + y + ')'); }
+      lastYear = y; lastId = _cur.id;
+    }
     if (_cur.kind === 'ending') { MJ.engine.finishEnding(); continue; }
     if (_cur.kind === 'auto') { MJ.engine.proceed(); continue; }
     if (_cur.kind === 'choice') {
@@ -220,17 +227,19 @@ function stratPinnacle(ev, opts, state) {
 
 // 1) 随机 400 局
 var endingsSeen = {};
-var errors = 0;
+var errors = 0, inversions = 0;
 for (var i = 0; i < 400; i++) {
   try {
     var r = play(null);
     if (!r.ok) { errors++; console.log('RANDOM FAIL', i, r); break; }
+    inversions += (r.invert || 0);
     endingsSeen[r.ending] = (endingsSeen[r.ending] || 0) + 1;
   } catch (e) {
     errors++; console.log('RANDOM THROW', i, e && e.stack); break;
   }
 }
-console.log('随机 400 局：异常', errors, '；结局分布', JSON.stringify(endingsSeen));
+console.log('随机 400 局：异常', errors, '；时间倒挂', inversions, '；结局分布', JSON.stringify(endingsSeen));
+if (inversions > 0) { console.log('FAIL: 检测到时间倒挂', JSON.stringify(invPairs.slice(0, 30))); process.exit(1); }
 
 // 2) 定向策略抽样（分布参考，非门槛）：观察真实事件链路下各结局的命中情况；
 //    14 结局“可达性”以第 2b 节「结局解析单元覆盖」为权威证明（直接构造状态验规则表）。

@@ -854,9 +854,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，压力+10）'), effects: { art: 12, reputation: 10, stress: 10 }, flags: { anniv2001: true }, next: '6_4' },
-      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3）'), effects: { reputation: 3 }, next: '6_4' },
-      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5）'), effects: { art: 8, family: 5 }, flags: { collab: true }, next: '6_4' }
+      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，压力+10）'), effects: { art: 12, reputation: 10, stress: 10 }, flags: { anniv2001: true }, next: '6_4b' },
+      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3）'), effects: { reputation: 3 }, next: '6_4b' },
+      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5）'), effects: { art: 8, family: 5 }, flags: { collab: true }, next: '6_4b' }
     ]
   };
 
@@ -873,9 +873,9 @@ window.MJ = window.MJ || {};
       return T('event.6_4.ret0.text', null, '你未购置庄园或始终在兄弟保护下，相关刑事指控未曾出现。');
     },
     options: [
-      { label: T('event.6_4.opt0.label', null, 'A：应诉到底'), hint: T('event.6_4.opt0.hint', null, '支付 1000 万辩护，心力耗尽，终获无罪裁定（压力+30）'), effects: { stress: 30 }, moneyEffect: -1000, flags: { secondCharge: true, secondVerdict: 'not_guilty' }, epilogue: T('event.6_4.opt0.epilogue', null, '法庭的灯亮了又灭，你挺直脊背走进去，把命运交给了十二个陌生人。'), next: '6_4b' },
+      { label: T('event.6_4.opt0.label', null, 'A：应诉到底'), hint: T('event.6_4.opt0.hint', null, '支付 1000 万辩护，心力耗尽，终获无罪裁定（压力+30）'), effects: { stress: 30 }, moneyEffect: -1000, flags: { secondCharge: true, secondVerdict: 'not_guilty' }, epilogue: T('event.6_4.opt0.epilogue', null, '法庭的灯亮了又灭，你挺直脊背走进去，把命运交给了十二个陌生人。'), next: '6_4d' },
       { label: T('event.6_4.opt1.label', null, 'B：达成和解'), hint: T('event.6_4.opt1.hint', null, '砸下 2000 万买断纠纷，声名重创（声誉-30）'), effects: { reputation: -30 }, moneyEffect: -2000, flags: { secondCharge: true, secondVerdict: 'settled' }, epilogue: T('event.6_4.opt1.epilogue', null, '支票签下的瞬间，纠纷平息了，可你心里的那块石头，并没真的落地。'), next: '7_1' },
-      { label: T('event.6_4.opt2.label', null, 'C：透明地坚持'), hint: T('event.6_4.opt2.hint', null, '把清白交给时间，压力如山（压力+20）'), effects: { stress: 20 }, flags: { secondCharge: true }, epilogue: T('event.6_4.opt2.epilogue', null, '你选择把一切摊在阳光下，任由时间慢慢给出答案。'), next: '6_4b' }
+      { label: T('event.6_4.opt2.label', null, 'C：透明地坚持'), hint: T('event.6_4.opt2.hint', null, '把清白交给时间，压力如山（压力+20）'), effects: { stress: 20 }, flags: { secondCharge: true }, epilogue: T('event.6_4.opt2.epilogue', null, '你选择把一切摊在阳光下，任由时间慢慢给出答案。'), next: '6_4d' }
     ]
   };
 
@@ -902,9 +902,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_4c.opt0.label', null, 'A：公开致歉'), hint: T('event.6_4c.opt0.hint', null, '主动担责，口碑受挫（声誉-15，压力+10）'), effects: { reputation: -15, stress: 10 }, flags: { babyDangle: true }, next: '6_4d' },
-      { label: T('event.6_4c.opt1.label', null, 'B：保持沉默'), hint: T('event.6_4c.opt1.hint', null, '任流言发酵（声誉-5，压力+5）'), effects: { reputation: -5, stress: 5 }, next: '6_4d' },
-      { label: T('event.6_4c.opt2.label', null, 'C：反诉媒体'), hint: T('event.6_4c.opt2.hint', null, '以攻代守，退意渐生（隐士+1）（声誉-3，压力+5）'), effects: { reputation: -3, stress: 5, recluse: 1 }, next: '6_4d' }
+      { label: T('event.6_4c.opt0.label', null, 'A：公开致歉'), hint: T('event.6_4c.opt0.hint', null, '主动担责，口碑受挫（声誉-15，压力+10）'), effects: { reputation: -15, stress: 10 }, flags: { babyDangle: true }, next: '6_4' },
+      { label: T('event.6_4c.opt1.label', null, 'B：保持沉默'), hint: T('event.6_4c.opt1.hint', null, '任流言发酵（声誉-5，压力+5）'), effects: { reputation: -5, stress: 5 }, next: '6_4' },
+      { label: T('event.6_4c.opt2.label', null, 'C：反诉媒体'), hint: T('event.6_4c.opt2.hint', null, '以攻代守，退意渐生（隐士+1）（声誉-3，压力+5）'), effects: { reputation: -3, stress: 5, recluse: 1 }, next: '6_4' }
     ]
   };
 
