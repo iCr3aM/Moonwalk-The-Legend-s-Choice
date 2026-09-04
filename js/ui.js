@@ -810,7 +810,13 @@ window.MJ = window.MJ || {};
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
-      snap += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + (state.attributes[k] || 0) + '</b></div>';
+      var v = state.attributes[k] || 0;
+      var extra = '';
+      if (k === 'reputation' || k === 'art') {
+        var ov = (state.overflow && state.overflow[k]) || 0;
+        if (ov > 0) extra = ' <span class="od">⭐+' + ov + '</span>';
+      }
+      snap += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + v + '</b>' + extra + '</div>';
     });
     snap += '<div class="s">' + T('ui.networth', null, '净资产') + '：<b>' + formatMoney(state.netWorth) + '</b></div>';
     var dm = MJ.dominantMeta(state.meta);
