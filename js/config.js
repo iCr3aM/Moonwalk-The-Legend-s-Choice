@@ -195,7 +195,7 @@ window.MJ = window.MJ || {};
     { id: 'ACH_ROOKIE', name: '初露锋芒', icon: '🌱', rarity: 'common', desc: '首张个人专辑面世，少年开始有了自己的名字。',
       check: function (s) { return s.flags.soloAlbum1972 === true; } },
     { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', rarity: 'common', desc: '纵使单飞，也始终把兄弟放在心上。',
-      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
+      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 10; } },
     { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', rarity: 'common', desc: '让一代人的青春里，都住着你的旋律。',
       check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } },
     // —— 稀有 rare ——
@@ -297,7 +297,7 @@ window.MJ = window.MJ || {};
     { id: 'ACH_PEACE_3', name: '和平使者', icon: '🕊️', rarity: 'rare', desc: '爱心 ≥3 且 声誉 ≥70。',
       check: function (s) { return (s.meta.phil || 0) >= 3 && (s.attributes.reputation || 0) >= 70; } },
     { id: 'ACH_LONELY_KING', name: '孤独的王', icon: '🥀', rarity: 'rare', desc: '孤独感 ≥50 且 声誉 ≥80。',
-      check: function (s) { return (s.flags.loneliness || 0) >= 50 && (s.attributes.reputation || 0) >= 80; } },
+      check: function (s) { return (s.attributes.loneliness || 0) >= 50 && (s.attributes.reputation || 0) >= 80; } },
     { id: 'ACH_FAMILY_WARM', name: '暖心家长', icon: '🏡', rarity: 'rare', desc: '家庭 ≥80 且 与子女和解。',
       check: function (s) { return (s.attributes.family || 0) >= 80 && (s.flags.blanketBorn || s.flags.surrogacy || s.flags.kidsReconciled); } },
     { id: 'ACH_COMEBACK_2', name: '王者归来', icon: '🔥', rarity: 'epic', desc: '经历健康危机后 艺术 ≥85。',

@@ -491,6 +491,14 @@
 - 实测谱（降序摘录）：SMOOTH 99.7% / PACIFIST 85.9% / FAMILYMAN 72.5% / TOUR 63.3% / PHIL 61.3% / … / 末端 0% 组为跨周目或刻意玩法成就（TRUE_ETERNAL / GRAMMY_SWEEP / ALL_ENDINGS / EGG_HUNTER / CHARITY_CONCERT / LONELY_KING / BROTHERLY）。
 - 状态：【已落地（2026-09-05）】lints 0；`npm test` / `test:full` 全绿；dist 已重建。
 
+### 18.13 成就可达性核查 + 章节密度（2026-09-05）
+- 成就可达性核查（test/check_achievable.cjs + compute_ach_reach.cjs）：发现并修复 2 个**真·不可达成 bug**：
+  - `ACH_BROTHERLY`：原 `relations.brothers >= 20`，但全事件仅 `1_5` 一处改动 brothers（最高 +15）→ 永远不可达。已降阈值至 `>= 10`（选「守在 Jackson 5」即 +15 可达成）。注：`brothers` 关系目前仅 1_5 一处触发，关系系统偏薄，建议在章节拓展时补「与兄长和解/重聚」事件。
+  - `ACH_LONELY_KING`：原 `s.flags.loneliness`，但孤独是**属性**（`s.attributes.loneliness`，同文件 `ACH_LONELY` 即如此）。已改为 `s.attributes.loneliness`，高隐士+低家庭/媒体+高声誉路线可达成。
+- 其余 0% 项均非 bug：`ACH_TRUE_ETERNAL`/`ACH_BIOPIC` 等需特定结局路线（TRUE_ETERNAL 已由 stratPinnacle 验证可达）；`ACH_GRAMMY_SWEEP` 经数学验证（六专辑满精工+高 momentum 下 q 远超 60 阈值）属「刻意全音乐高精工路线可达」；`ACH_ALL_ENDINGS`/`ACH_EGG_HUNTER`/`ACH_SMOOTH` 为跨周目设计。
+- 章节事件密度（test/analyze_chapters.cjs，主线+变体）：Ch0 童年 6+0（1958–1969 整段最薄，且平衡测试曾 WARN 1958–1964 变体荒漠）、Ch1 12+5、Ch2 17+15、Ch3 22+30、Ch4 13+11、Ch5 15+4。**明确短板：Ch0 童年仅 6 主线 0 变体**，建议优先拓展（家庭日常/首次登台/Motown/组合成型等）；Ch5 续写传奇变体偏少（4）亦可补充。
+- 英文翻译：i18n 覆盖校验 FAIL:0（306 字段 0 缺失；EN 428 条 0 空值/0 漏译/0 残留中文；UI 字面量 95 键 EN 全有）。CSS 已为 EN 适配（`.btn`/`option` 缩小字号字距、`word-break:break-word`、`white-space:pre-line`、模态/图鉴/日记容器 `overflow:auto`），长英文换行而非挤压，结构健全。
+
 # 十、美术与听觉（同前：暗金复古、符号化、原创/公共领域 BGM）
 
 ---
