@@ -1,5 +1,5 @@
 // 续章（§17.2）链路门禁：验证 survived2009 续章链路可完整走通并收束于非死亡结局，
-// 且 7 个拓展节点（8_1b/8_2b/8_3b/8_5b/8_4b/8_4c/8_7）均途经；续章专属变体池 V_POST_* 已注册。
+// 且 8 个拓展节点（8_1b/8_2b/8_3b/8_5b/8_4b/8_4c/8_7/8_9）均途经；续章专属变体池 V_POST_* 已注册。
 // 用法：node test/check_epilogue_chain.cjs
 global.window = global;
 var _store = {};
@@ -51,9 +51,9 @@ var r = walk();
 check('续章链路可达结局', r.ok);
 var ALLOWED = ['END_TRUE_ETERNAL', 'END_MOGUL', 'END_PHILANTHROPIST', 'END_RECLUSE', 'END_PERFECT', 'END_TIMELESS_PRESENT'];
 check('续章收束于非死亡结局（§7.2 规则 3b 链）', ALLOWED.indexOf(r.ending) >= 0);
-var need = ['8_1b', '8_2b', '8_3b', '8_5b', '8_4b', '8_4c', '8_7'];
+var need = ['8_1b', '8_2b', '8_3b', '8_5b', '8_4b', '8_4c', '8_7', '8_9'];
 var missing = need.filter(function (id) { return !_visited[id]; });
-check('续章拓展节点全部途经（8_1b/8_2b/8_3b/8_5b/8_4b/8_4c/8_7）', missing.length === 0);
+check('续章拓展节点全部途经（8_1b/8_2b/8_3b/8_5b/8_4b/8_4c/8_7/8_9）', missing.length === 0);
 if (missing.length) console.log('  未途经:', missing.join(','));
 
 // 途径 8_1b/8_4b 写入的 flag 应解锁 §17.2 专属成就

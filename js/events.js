@@ -1131,9 +1131,23 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_5.opt0.label', null, 'A：由侄子 Jaafar Jackson 饰演（贴合真实历史）'), hint: T('event.8_5.opt0.hint', null, '亲人演绎，你亲自授权（声誉+12，艺术+5）'), effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_7' },
-      { label: T('event.8_5.opt1.label', null, 'B：亲自出演银幕上的自己（架空续章）'), hint: T('event.8_5.opt1.hint', null, '传奇由传奇自己演绎（声誉+18，艺术+10，压力+5）'), effects: { reputation: 18, art: 10, stress: 5 }, flags: { biopicMJStar: true }, next: '8_7' },
-      { label: T('event.8_5.opt2.label', null, 'C：低调回避，把故事交给后人'), hint: T('event.8_5.opt2.hint', null, '留白也是一种回答（声誉+3）'), effects: { reputation: 3 }, next: '8_7' }
+      { label: T('event.8_5.opt0.label', null, 'A：由侄子 Jaafar Jackson 饰演（贴合真实历史）'), hint: T('event.8_5.opt0.hint', null, '亲人演绎，你亲自授权（声誉+12，艺术+5）'), effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_9' },
+      { label: T('event.8_5.opt1.label', null, 'B：亲自出演银幕上的自己（架空续章）'), hint: T('event.8_5.opt1.hint', null, '传奇由传奇自己演绎（声誉+18，艺术+10，压力+5）'), effects: { reputation: 18, art: 10, stress: 5 }, flags: { biopicMJStar: true }, next: '8_9' },
+      { label: T('event.8_5.opt2.label', null, 'C：低调回避，把故事交给后人'), hint: T('event.8_5.opt2.hint', null, '留白也是一种回答（声誉+3）'), effects: { reputation: 3 }, next: '8_9' }
+    ]
+  };
+  E['8_9'] = {
+    id: '8_9', year: 2026, title: T('event.8_9.title', null, '迟来的诉状'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_9.text', null, '自 1980 年代起便与你亲近的一户人家，被外界称作你的“第二家庭”。多年里，这家人中的成员一直公开为你辩护。然而 2025–2026 年，其中四名已成年的成员突然提起诉讼，指称早年的相处中存在不当。遗产管理委员会否认指控，其律师对外称这场诉讼是“desperate money grab”（绝望的敛财）。据公开报道，双方曾在 2020 年达成一笔保密和解（外界估算约 1600 万美元），2025 年最后一笔款项支付后，谈判破裂、对簿公堂。（另据公开记录，遗产方曾就“以不公开换取金钱”的要约，对这户人家中的另一名成员提起 2.13 亿美元敲诈诉讼并赢得裁决——不过那是另一桩独立的案子。）如何面对，又一次交到你手上。'), s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.8_9.branch0.text', null, '你早已学会把喧嚣关在门外，可这一回，门外的声音不肯散去。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_9.opt0.label', null, 'A：依法应诉 / 推进仲裁'), hint: T('event.8_9.opt0.hint', null, '交由律师与仲裁，劳心伤财（压力+15，财富-15，媒体+10）'), effects: { stress: 15, wealth: -15, media: 10, reputation: -3 }, flags: { cascioSuit: 'litigate' }, epilogue: T('event.8_9.opt0.epilogue', null, '你把这场风波交给了法庭与仲裁——真相，留给程序去厘清。'), next: '8_7' },
+      { label: T('event.8_9.opt1.label', null, 'B：公开历史材料自证'), hint: T('event.8_9.opt1.hint', null, '整理并公开历年证词与调查记录，让公众自行判断（声誉+8，压力+10，媒体+8）'), effects: { reputation: 8, stress: 10, media: 8 }, flags: { cascioSuit: 'rebut' }, epilogue: T('event.8_9.opt1.epilogue', null, '你把历年证词与调查记录摊在阳光下，是非，交给时间。'), next: '8_7' },
+      { label: T('event.8_9.opt2.label', null, 'C：庭外和解息事'), hint: T('event.8_9.opt2.hint', null, '以金钱换平静，舆论余波难平（财富-30，声誉-10）'), effects: { wealth: -30, reputation: -10 }, flags: { cascioSuit: 'settle' }, epilogue: T('event.8_9.opt2.epilogue', null, '你用一笔钱换回了平静，但舆论的余波，仍在暗处涌动。'), next: '8_7' },
+      { label: T('event.8_9.opt3.label', null, 'D：反诉 / 追究要挟'), hint: T('event.8_9.opt3.hint', null, '就“以不公开换取金钱”的要约启动反制法律程序（声誉+5，压力+12，财富-10）'), effects: { reputation: 5, stress: 12, wealth: -10 }, flags: { cascioSuit: 'counter' }, epilogue: T('event.8_9.opt3.epilogue', null, '你就“以不公开换金钱”的要约反戈一击——这局，你没站着挨打。'), next: '8_7' }
     ]
   };
   E['8_6'] = {
@@ -1193,9 +1207,9 @@ window.MJ = window.MJ || {};
     ]
   };
   E['8_5b'] = {
-    id: '8_5b', year: 2019, title: T('event.8_5b.title', null, '舆论风波'), kind: 'choice', key: true,
+    id: '8_5b', year: 2019, title: T('event.8_5b.title', null, '《逃离梦幻岛》风波'), kind: 'choice', key: true,
     text: function (s) {
-      return narr(T('event.8_5b.text', null, '一部回溯你人生的纪录片引发新一轮公共讨论，镜头之外，议论像潮水一样涨落。如何回应，又一次交到你手上。'), s, [
+      return narr(T('event.8_5b.text', null, '一部回溯你人生的纪录片《逃离梦幻岛》（Leaving Neverland）上映，把多年前的旧指控再次推上公共讨论的中心。镜头之外，议论像潮水一样涨落。如何回应，又一次交到你手上。'), s, [
         { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.8_5b.branch0.text', null, '你早已习惯退到镜头之外，这回的喧哗，更像隔着玻璃的雨。') }
       ]);
     },

@@ -40,7 +40,7 @@
 - **优化与性能**：移动端、性能、可访问性、轻量数据可视化、社交增强。【§17.10】
 - **趣事与轶事系统**：Trivia Codex / `V_TIDBIT` flavor / hypothetical vignettes。【§17.11】
 - **更多成就候选**：§17.12 候选表（UI 队列方案已落地，新成就待扩）。【§17.12】
-- **续章·2019+ 舆论与法律延续**：本回合新增设计草案（待落地，须遵循 §15.1）。【§17.15】
+- **续章·2019+ 舆论与法律延续**：§17.15 已落地（8_5b 点名《逃离梦幻岛》+ 新增 8_9 Cascio 2025–2026 诉讼，接入 续章 8_5→8_9→8_7，EN 全量）。【§17.15】
 - **无限期延迟**：M10 多周目传承 / M11 成就叙事化 / M12 关键抉择回放 / g6 UI 可视化增强（2026-09-04 用户决定）。
 
 ---
@@ -791,11 +791,11 @@ MJ.planner.resolveGrammy = function (state, key) {
 > 实施建议：先做 `planner.resolveGrammy` + engine `onEnter` 钩子 + Thriller 全链路（3_1 企划→3_3 揭晓）打通验证，再复制到其余五 era；权重用 §8 数值预算校准，使"全满贯"为小概率高光而非必然。
 > 【已落地 g6】Thriller 验证链路 + 其余五 era（OTW/Bad/Dangerous/HIStory/Invincible）全已实现：`2_3/4_2/5_1/6_1` 改企划 choice、`5_2` 由 auto 改 choice、`6_3b` 选项补 `cp_*`；巡演 `4_2a/5_2/6_1e/3_2b` 补 `cp_stagecraft`；揭晓 `2_6/3_3/4_2a_g/5_2g/6_1e_g/6_3b_g` 均挂 `onEnter`；新增成就 `ACH_GRAMMY_SWEEP`(六 era 均≥1) / `ACH_GRAMMY_LEGEND`(累计≥18 或单张≥6)。验证：node --check 全过；定向测试全满贯企划→六 era 均 7–8 座、累计 46、两成就可达；零企划→0 座；smoke 400 局 0 异常/0 时间倒挂；en_smoke 200 局 0 残留；find_missing_en 0；repro 单文件 zh+en 14/18 结局。
 
-### 17.15 续章 · 2019+ 舆论与法律延续（设计草案 · 待落地 · 须遵循 §15.1）
+### 17.15 续章 · 2019+ 舆论与法律延续（已落地 · 须遵循 §15.1）
 > **背景（可考证的公开事实，仅作设计锚点，非游戏内定论）**：
 > - 2019 年纪录片《Leaving Neverland》（HBO / Channel 4，导演 Dan Reed）上映，引发广泛公共讨论；片中讲述者为 Wade Robson 与 James Safechuck（二人早年与 MJ 相识）。
-> - 2025–2026 年，Cascio 家族成员（用户所述为「兄妹 / 四名兄弟姐妹」）对 MJ 遗产委员会提起新诉讼；遗产委员会律师以公开声明反驳，称其为「desperate money grab / shakedown attempt」，并称曾遭「以不公开换取金钱」的要挟，案件进入仲裁程序。
-> - ⚠️ **用户简报中部分细节（如「2020 年约 1600 万美元和解」「2.13 亿美元敲诈」「被诱导成『士兵』」等）未能在公开资料中核实**，本草案以「争议性主张」处理，不径直写入为既成事实；如需落地，应先以权威信源核实具体数额与时间线。
+> - 2025–2026 年，Cascio 家族四名成年成员（Edward/Eddie、Dominic、Aldo Cascio 与妹妹 Marie-Nicole Porte）对 MJ 遗产委员会/相关公司提起新诉讼；遗产委员会律师 Marty Singer 以公开声明反驳，称其为「desperate money grab / shakedown attempt」，并称曾遭「以不公开换取金钱」的要挟，案件进入仲裁程序。（**经核实**：此四人均为早年与 MJ 亲近的「第二家庭」成员，且此前数十年曾公开为 MJ 辩护。）
+> - **数额/时间线核实结论（2026-09-04 落地前核验）**：①「2020 年约 1600 万美元保密和解」属实（公开报道约 1650 万美元，约合每人 300 万）；②「2025 年付款后谈判破裂→诉讼」属实（遗产方 2025 年支付最后一笔约 250 万美元尾款后和解到期、对簿公堂）；③「2.13 亿美元敲诈」指向**另一独立案**——遗产方 2025 年对家族中另一成员 **Frank Cascio** 提起 2.13 亿美元敲诈诉讼并胜诉，与四名兄弟姐妹的诉讼是两件事，游戏内已分项陈述；④「被诱导成『士兵』为其辩护」对应原告方自身主张（称曾被「洗脑」为 MJ 辩护），属其单方陈述，游戏内仅以「争议性主张」呈现，不下定论。
 
 > **设计约束（§15.1 中性化规范，硬性）**：
 > 1. 仅以中性、程序化术语陈述可考证事实节点（纪录片上映 / 公共讨论 / 民事指控 / 诉讼 / 仲裁 / 庭外和解），**不描写任何行为细节**；
@@ -806,11 +806,11 @@ MJ.planner.resolveGrammy = function (state, key) {
 #### 17.15.1 候选事件（续章，window 2019–2026）
 | 候选 ID | 年 | 标题 | 史实锚点 | 玩法 / 维度 |
 | --- | --- | --- | --- | --- |
-| 8_8 | 2019 | 纪录片的回响 | 《Leaving Neverland》上映引发公共讨论 | 争议轴延续：沉默 / 声明 / 转做慈善 三选，影响 `media`/`loneliness`/`reputation` |
-| 8_9 | 2025–2026 | 新的诉讼 | Cascio 家族成员提起新诉讼；遗产委员会公开反驳 | 法律线延续：应诉 / 和解 / 公开自证 三选，影响 `wealth`/`media`/`reputation`/`stress` |
+| 8_5b（已充实） | 2019 | 《逃离梦幻岛》风波 | 原「舆论风波」点名《Leaving Neverland》，作为 2019 内容锚点（沿用既有三选：沉默 / 声明 / 慈善） | 影响 `media`/`loneliness`/`reputation` |
+| 8_9 | 2025–2026 | 迟来的诉状 | Cascio 四名成年成员提起新诉讼；遗产委员会公开反驳（含 2020 和解与 2025 尾款后破裂；另述 Frank Cascio 2.13 亿敲诈案为独立事件） | 法律线延续：应诉 / 公开自证 / 和解 / 反诉 四选，影响 `wealth`/`media`/`reputation`/`stress` |
 
-- **接入点**：`8_5b`（舆论风波）→ `8_8` → `8_9` → `8_4`（或并入既有 8_4–8_6 收束）；与 `survived2009` 路由、`END_TIMELESS_PRESENT` 收束完全兼容。
-- **新增 flag（建议）**：`ln2019`（纪录片已上映）、`ln2019Resp`（A 沉默 / B 声明 / C 慈善）、`cascioSuit`（A 应诉 / B 和解 / C 自证），仅记录玩家在虚构平行历史中的取舍，供收束文案引用。
+- **接入点（已落地）**：续章链 `8_5`（传记电影《Michael》）→ `8_9` → `8_7`（留给后人的话）；`8_5b` 已充实为《逃离梦幻岛》风波，并入既有 `8_5b` 不再单列 `8_8`。`8_9` 接在 `8_5` 与 `8_7` 之间，续章链 `8_5>8_9>8_7` 已验证可达（en_smoke 步数 15 途经 8_9，门禁 `check_epilogue_chain` 已将其纳入必经节点）。
+- **新增 flag（已落地）**：`cascioSuit`（`litigate` 应诉 / `rebut` 公开自证 / `settle` 和解 / `counter` 反诉），记录玩家在虚构平行历史中的取舍；各选项含 `epilogue` 尾声文案，仅描述玩家路径后果，不评价真实人物。
 
 #### 17.15.2 选项拓展（玩家多路径回应 · 「让 MJ 方有力回击」的机制化表达）
 > 说明：用户要求「不能让卡西欧好过」。在 §15.1 框架内，本作以**赋予玩家充分、有力的回应选项**来实现这一诉求——即 MJ/遗产方在虚构续章线中拥有沉默、声明、慈善公益、依法应诉、公开历史材料等多元反制手段，而非由游戏对真实在世个人下定性结论。以下为选项 sketch：
@@ -832,13 +832,14 @@ MJ.planner.resolveGrammy = function (state, key) {
 - **不得**指名未成年当事人；相关方以程序化称谓指代。
 - 收束文案（`END_TIMELESS_PRESENT` 分支）只描述「玩家路径导致的声誉/媒体后果」，不评价真实人物。
 
-#### 17.15.4 验收与落地清单（待实现时）
-- 在 `events.js` 追加 `8_8`/`8_9`（沿用 `T()` + EN 键，回退链兼容；i18n 同步译 EN，确保英文模式 0 残留）。
-- 接入 `survived2009` 续章 `next` 链（与 `8_5b` 相邻）。
-- 回归：`en_smoke` 校验新事件 EN 无中文残留；`check_variant_windows`/`check_dup_events` 不受影响（非变体、无 `grammy_*` 写入）；续章链路 20 局随机走查均到达结局。
-- 合规自查：新文案过 §15.1 红线扫描（无未成年指名、无行为细节、无诽谤定性）。
+#### 17.15.4 验收与落地清单（已落地 g7）
+- ✅ 在 `events.js` 追加 `8_9`（沿用 `T()` + EN 键，回退链兼容；`i18n_events_en.js` 补全全部 EN 文案，英文模式 0 残留）。
+- ✅ `8_5` 三选项 `next` 由 `8_7` 改为 `8_9`，`8_9` 四选项 `next` 指向 `8_7`，接入 `survived2009` 续章链（与 `8_5b`《逃离梦幻岛》风波相邻，chronology 置于 2026 传记电影之后）。
+- ✅ `8_5b` 标题/正文点名《Leaving Neverland》，落实 2019 纪录片内容（原 8_8 草案并入，不再单列）。
+- ✅ 门禁：`en_smoke` 校验 8_9 EN 0 残留；`check_dup_events`/`check_variant_windows` 不受影响（非变体、无 `grammy_*`）；`check_epilogue_chain` 已将 `8_9` 纳入续章必经节点；`find_missing_en` = 0；`npm test` 全绿。
+- ✅ 合规自查：新文案过 §15.1 红线（无未成年指名、无行为细节、无诽谤定性；遗产方「desperate money grab」仅作被引述公开声明；2.13 亿敲诈案明确为 Frank Cascio 独立事件）。
 
-> **状态：★规划 · 待落地**。本回合仅写入 GDD 设计草案，未改动 `events.js` / `config.js` 代码。落地前须先核实用户简报中的具体数额与时间线，并严格遵守上述合规红线。
+> **状态：✅ 已落地（g7）**。代码改动 `events.js` / `i18n_events_en.js` / `test/check_epilogue_chain.cjs`，未动 `config.js` 结局逻辑。
 
 ---
 
@@ -857,7 +858,7 @@ MJ.planner.resolveGrammy = function (state, key) {
 | 合计 | 约 100+ |
 
 ## 附录 B：核心标志与元路线计数
-**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, biopicMJStar, survived2009。
+**标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, biopicMJStar, survived2009, cascioSuit。
 **元路线计数（非负整数）**：phil / mogul / recluse / artPath（隐藏，结局判定读取最高者）。
 
 ## 附录 C：结局情感矩阵
@@ -868,4 +869,4 @@ MJ.planner.resolveGrammy = function (state, key) {
 
 ---
 
-*文档结束 — v1.1（续章 2010–2026 + 18 结局 + §17.3/§17.7/§17.8 拓展已落地；本回合新增「〇、实现状态总览」已实现/待办分离，并新增 §17.15 续章·2019+ 舆论与法律延续设计草案·待落地·须遵循 §15.1；§17 多数扩展已落地，并新增 §17.4–§17.10 扩展路线图；其中 §17.8 A/B/C 与 §17.9 已于 2026-09-04 落地，§17.7 已于 2026-09-04 落地，§17.15 为规划草案，其余 §17.4–§17.6、§17.10 仍为规划项）*
+*文档结束 — v1.2（续章 2010–2026 + 18 结局 + §17.3/§17.7/§17.8 拓展已落地；「〇、实现状态总览」已实现/待办分离；§17.15 续章·2019+ 舆论与法律延续已落地：8_5b 点名《逃离梦幻岛》+ 新增 8_9 Cascio 2025–2026 诉讼，接入 续章 8_5→8_9→8_7，EN 全量，遵循 §15.1；§17 多数扩展已落地，并新增 §17.4–§17.10 扩展路线图；其中 §17.8 A/B/C 与 §17.9 已于 2026-09-04 落地，§17.7 已于 2026-09-04 落地，其余 §17.4–§17.6、§17.10 仍为规划项）*
