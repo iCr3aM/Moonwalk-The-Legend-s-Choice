@@ -180,6 +180,7 @@ html, body {
 .gallery .g-icon { font-size: 22px; line-height: 1.1; }
 .gallery .g-name { font-size: 11px; color: var(--ink); margin-top: 4px; }
 .gallery .g-cell.off .g-name { color: var(--ink-dim); }
+.gallery .g-desc { font-size: 11px; line-height: 1.5; color: var(--ink-dim); margin-top: 5px; text-align: left; max-height: 5.5em; overflow: auto; }
 
 /* ---------- 成就系统 ---------- */
 .ach-panel { padding: 14px 16px; }

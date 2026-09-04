@@ -400,10 +400,10 @@ window.MJ = window.MJ || {};
       '<div class="g-grid">';
     Object.keys(defs).forEach(function (k) {
       var e = defs[k], on = MJ.quoteSystem.isFound(k);
-      html += '<div class="g-cell ' + (on ? 'on' : '') + '">' +
-        '<div class="g-ic">' + e.icon + '</div>' +
-        '<div class="g-nm">' + escapeHtml(e.name) + '</div>' +
-        '<div class="g-ds">' + escapeHtml(on ? e.text : T('ui.locked', null, '？？？')) + '</div></div>';
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
+        '<div class="g-icon">' + (on ? e.icon : '🗣️') + '</div>' +
+        '<div class="g-name">' + escapeHtml(on ? e.name : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-desc">' + escapeHtml(on ? e.text : T('ui.locked', null, '？？？')) + '</div></div>';
     });
     html += '</div></div>';
     return html;
