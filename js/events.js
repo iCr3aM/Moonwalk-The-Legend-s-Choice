@@ -53,7 +53,68 @@ window.MJ = window.MJ || {};
   E.start = {
     id: 'start', year: 1958, title: T('event.start.title', null, '诞生'), kind: 'auto',
     text: function () { return T('event.start.ret0.text', null, '1958 年 8 月 29 日，印第安纳州盖瑞市。炼钢厂的红光彻夜不熄，七口之家的屋檐下，啼哭声划破工业城的喧嚣。\n没人知道，这个在廉价摇篮里挥舞小手的孩子，日后会让全世界的节拍为之停顿。'); },
-    effects: { family: 5 }, next: '1_0'
+    effects: { family: 5 }, next: '0_0'
+  };
+
+  // —— Ch0 童年补完（g?）：钢铁城的家 / 第一次独唱 / 阿波罗剧院之夜 / Motown 引荐 ——
+  E['0_0'] = {
+    id: '0_0', year: 1961, title: T('event.0_0.title', null, '钢铁城的家'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_0.text', null, '盖瑞市杰克逊街的一栋小屋里，挤着九个孩子。父亲乔在炼钢厂上夜班，母亲凯瑟琳是虔诚的耶和华见证人，常在家中弹风琴、唱福音。稍长的兄长们——杰基、蒂托、杰梅因——偷偷在车库里拨弄吉他，最小的你总扒着门缝偷看。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.0_0.branch0.text', null, '家的温暖像炉火，把童年的寒意挡在门外。') },
+        { cond: function (s) { return (s.attributes.stress || 0) >= 30; }, text: T('event.0_0.branch1.text', null, '钢厂的红光与父亲的沉默，偶尔让你在夜里惊醒。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_0.opt0.label', null, 'A：跟着哥哥们偷学吉他'), hint: T('event.0_0.opt0.hint', null, '手足在和弦里越靠越近（艺术+3，家庭+5，手足+8）'), effects: { art: 3, family: 5, rel: { brothers: 8 } }, next: '0_1' },
+      { label: T('event.0_0.opt1.label', null, 'B：躲进母亲的祷告里'), hint: T('event.0_0.opt1.hint', null, '在信仰里寻得安稳（家庭+8，压力-3）'), effects: { family: 8, stress: -3 }, next: '0_1' },
+      { label: T('event.0_0.opt2.label', null, 'C：嫌炼钢厂的轰鸣太吵'), hint: T('event.0_0.opt2.hint', null, '童年的喧嚣让人烦躁（家庭-3，压力+3，艺术-2）'), effects: { family: -3, stress: 3, art: -2 }, next: '0_1' }
+    ]
+  };
+
+  E['0_1'] = {
+    id: '0_1', year: 1963, title: T('event.0_1.title', null, '第一次独唱'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_1.text', null, '学校的才艺晚会上，你被推上舞台，唱起《Climb Ev\'ry Mountain》。五岁嗓音里的空灵，让台下瞬间安静。幕布旁，哥哥们拼命鼓掌。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 30; }, text: T('event.0_1.branch0.text', null, '你听见了自己声音里与众不同的东西，那是一种确认。') },
+        { cond: function (s) { return (s.attributes.stress || 0) >= 30; }, text: T('event.0_1.branch1.text', null, '聚光灯太亮，你几乎想转身逃下台。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_1.opt0.label', null, 'A：把掌声分一半给哥哥们'), hint: T('event.0_1.opt0.hint', null, '手足为你骄傲，羁绊更深（声誉+3，家庭+3，手足+7）'), effects: { reputation: 3, family: 3, rel: { brothers: 7 } }, next: '1_0' },
+      { label: T('event.0_1.opt1.label', null, 'B：沉醉于自己的天籁'), hint: T('event.0_1.opt1.hint', null, '天赋第一次被自己听见（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, next: '1_0' },
+      { label: T('event.0_1.opt2.label', null, 'C：怯场，差点唱不下去'), hint: T('event.0_1.opt2.hint', null, '紧张留下的阴影（压力+5，艺术+2）'), effects: { stress: 5, art: 2 }, next: '1_0' }
+    ]
+  };
+
+  E['0_2'] = {
+    id: '0_2', year: 1967, title: T('event.0_2.title', null, '阿波罗剧院之夜'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_2.text', null, '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，Jackson 5 拿下了冠军。这是写在黑人音乐史里的那一夜——你们从盖瑞的小舞台，被托举进了纽约的星光。哥哥们把你扛在肩上绕场。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 45; }, text: T('event.0_2.branch0.text', null, '此前的掌声成了底气，这一夜你唱得格外放松。') },
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.0_2.branch1.text', null, '被哥哥们举过头顶时，你觉得自己不是一个人在发光。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_2.opt0.label', null, 'A：把奖杯举过哥哥们的头顶'), hint: T('event.0_2.opt0.hint', null, '荣耀属于这一家人（声誉+8，家庭+3，手足+8）'), effects: { reputation: 8, family: 3, rel: { brothers: 8 } }, next: '1_2' },
+      { label: T('event.0_2.opt1.label', null, 'B：独自享受聚光灯'), hint: T('event.0_2.opt1.hint', null, '少年锋芒初露（声誉+10，艺术+3）'), effects: { reputation: 10, art: 3 }, next: '1_2' },
+      { label: T('event.0_2.opt2.label', null, 'C：谦虚地说“我们只是运气好”'), hint: T('event.0_2.opt2.hint', null, '谦逊换来好感（声誉+3，家庭+3）'), effects: { reputation: 3, family: 3 }, next: '1_2' }
+    ]
+  };
+
+  E['0_3'] = {
+    id: '0_3', year: 1968, title: T('event.0_3.title', null, 'Motown 的引荐'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_3.text', null, 'Steeltown 之后，命运递来下一张船票：有人把 Jackson 5 引荐给了 Motown。传说是格拉迪斯·奈特，也有人说是波比·泰勒在俱乐部发现了你们。试唱前夜，哥哥们在后台紧紧围住你。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 45; }, text: T('event.0_3.branch0.text', null, '你已能听见自己声音里的不同，那份底气让试唱不再可怕。') },
+        { cond: function (s) { return (s.attributes.stress || 0) >= 35; }, text: T('event.0_3.branch1.text', null, '被 Motown 这样的巨头审视，心跳快得发慌。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_3.opt0.label', null, 'A：与兄长们紧握着手上台'), hint: T('event.0_3.opt0.hint', null, '同心则无惧（声誉+8，艺术+3，手足+6）'), effects: { reputation: 8, art: 3, rel: { brothers: 6 } }, next: '1_2b' },
+      { label: T('event.0_3.opt1.label', null, 'B：把这次试唱当作历练'), hint: T('event.0_3.opt1.hint', null, '平常心对待（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, next: '1_2b' },
+      { label: T('event.0_3.opt2.label', null, 'C：担心被 Motown 拒之门外'), hint: T('event.0_3.opt2.hint', null, '未战先怯（压力+5）'), effects: { stress: 5 }, next: '1_2b' }
+    ]
   };
 
   E['1_0'] = {
@@ -80,9 +141,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.1_1.opt0.label', null, 'A：在鞭策中拼命练习'), hint: T('event.1_1.opt0.hint', null, '技艺突飞猛进，却割裂了父子温情，紧绷感与日俱增（艺术+15，家庭-10，压力+15）'), effects: { art: 15, family: -10, stress: 15 }, next: '1_2' },
-      { label: T('event.1_1.opt1.label', null, 'B：找到自己的节奏'), hint: T('event.1_1.opt1.hint', null, '稳步成长，家与心都还安稳（艺术+5，家庭+5，压力+5）'), effects: { art: 5, family: 5, stress: 5 }, next: '1_2' },
-      { label: T('event.1_1.opt2.label', null, 'C：推开那扇琴房门'), hint: T('event.1_1.opt2.hint', null, '反抗换来了片刻轻松，也换来冷战（家庭-5，压力-10）'), effects: { family: -5, stress: -10 }, next: '1_2' }
+      { label: T('event.1_1.opt0.label', null, 'A：在鞭策中拼命练习'), hint: T('event.1_1.opt0.hint', null, '技艺突飞猛进，却割裂了父子温情，紧绷感与日俱增（艺术+15，家庭-10，压力+15）'), effects: { art: 15, family: -10, stress: 15 }, next: '0_2' },
+      { label: T('event.1_1.opt1.label', null, 'B：找到自己的节奏'), hint: T('event.1_1.opt1.hint', null, '稳步成长，家与心都还安稳（艺术+5，家庭+5，压力+5）'), effects: { art: 5, family: 5, stress: 5 }, next: '0_2' },
+      { label: T('event.1_1.opt2.label', null, 'C：推开那扇琴房门'), hint: T('event.1_1.opt2.hint', null, '反抗换来了片刻轻松，也换来冷战（家庭-5，压力-10）'), effects: { family: -5, stress: -10 }, next: '0_2' }
     ]
   };
 
@@ -95,8 +156,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.1_2.opt0.label', null, 'A：抓住这张船票'), hint: T('event.1_2.opt0.hint', null, '曝光与口碑齐升，聚光灯更烫了（艺术+10，声誉+10，压力+10）'), effects: { art: 10, reputation: 10, stress: 10 }, next: '1_2b' },
-      { label: T('event.1_2.opt1.label', null, 'B：再观望一阵'), hint: T('event.1_2.opt1.hint', null, '稳守本心，亲情是避风港（艺术+5，家庭+5）'), effects: { art: 5, family: 5 }, next: '1_2b' }
+      { label: T('event.1_2.opt0.label', null, 'A：抓住这张船票'), hint: T('event.1_2.opt0.hint', null, '曝光与口碑齐升，聚光灯更烫了（艺术+10，声誉+10，压力+10）'), effects: { art: 10, reputation: 10, stress: 10 }, next: '0_3' },
+      { label: T('event.1_2.opt1.label', null, 'B：再观望一阵'), hint: T('event.1_2.opt1.hint', null, '稳守本心，亲情是避风港（艺术+5，家庭+5）'), effects: { art: 5, family: 5 }, next: '0_3' }
     ]
   };
 
@@ -884,9 +945,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_3a.opt0.label', null, 'A：投身公益义演'), hint: T('event.6_3a.opt0.hint', null, '用歌声疗愈国殇，爱心+1（声誉+12，慈善+1，压力+5）'), effects: { reputation: 12, phil: 1, stress: 5 }, next: '6_3b' },
-      { label: T('event.6_3a.opt1.label', null, 'B：低调完成周年庆典'), hint: T('event.6_3a.opt1.hint', null, '专注音乐本身（声誉+6，艺术+5）'), effects: { reputation: 6, art: 5 }, next: '6_3b' },
-      { label: T('event.6_3a.opt2.label', null, 'C：借势推《Number Ones》'), hint: T('event.6_3a.opt2.hint', null, '经典汇编再掀热度（声誉+8，财富+10）'), effects: { reputation: 8, wealth: 10 }, next: '6_3b' }
+      { label: T('event.6_3a.opt0.label', null, 'A：投身公益义演'), hint: T('event.6_3a.opt0.hint', null, '用歌声疗愈国殇，爱心+1（声誉+12，慈善+1，压力+5）'), effects: { reputation: 12, phil: 1, stress: 5 }, next: '6_3a_r' },
+      { label: T('event.6_3a.opt1.label', null, 'B：低调完成周年庆典'), hint: T('event.6_3a.opt1.hint', null, '专注音乐本身（声誉+6，艺术+5）'), effects: { reputation: 6, art: 5 }, next: '6_3a_r' },
+      { label: T('event.6_3a.opt2.label', null, 'C：借势推《Number Ones》'), hint: T('event.6_3a.opt2.hint', null, '经典汇编再掀热度（声誉+8，财富+10）'), effects: { reputation: 8, wealth: 10 }, next: '6_3a_r' }
+    ]
+  };
+  // —— 与兄长和解：2001 三十周年庆典，麦迪逊广场花园兄弟同台（史实）——
+  E['6_3a_r'] = {
+    id: '6_3a_r', year: 2001, title: T('event.6_3a_r.title', null, '三十周年，兄弟同台'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.6_3a_r.text', null, '出道三十周年的庆典放在纽约麦迪逊广场花园。那一夜，杰基、蒂托、杰梅因、马龙、兰迪和你重新站上同一块舞台，唱起久违的合声。单飞后的疏离、版税与经纪的龃龉、父亲长长的影子，都在一首歌里暂时退场。'), s, [
+        { cond: function (s) { return (s.relations && s.relations.brothers || 0) >= 15; }, text: T('event.6_3a_r.branch0.text', null, '这些年攒下的手足情，在这一刻全回来了。') },
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.6_3a_r.branch1.text', null, '你望着他们，忽然很想回到盖瑞那栋小屋。') }
+      ]);
+    },
+    options: [
+      { label: T('event.6_3a_r.opt0.label', null, 'A：与兄长们紧紧相拥，把恩怨留在台下'), hint: T('event.6_3a_r.opt0.hint', null, '和解的暖意漫过半生隔阂（家庭+6，声誉+3，手足+12）'), effects: { family: 6, reputation: 3, rel: { brothers: 12 } }, flags: { brothersReunited: true }, epilogue: T('event.6_3a_r.opt0.epilogue', null, '麦克风交叠的瞬间，你听见了童年那支不完整的合声，终于补全。'), next: '6_3b' },
+      { label: T('event.6_3a_r.opt1.label', null, 'B：同唱一曲，却各怀心事'), hint: T('event.6_3a_r.opt1.hint', null, '体面同台，心事未消（家庭+2，艺术+3，手足+4）'), effects: { family: 2, art: 3, rel: { brothers: 4 } }, next: '6_3b' },
+      { label: T('event.6_3a_r.opt2.label', null, 'C：独揽聚光灯，solo 段落光芒独占'), hint: T('event.6_3a_r.opt2.hint', null, '舞台只属于你一人（艺术+5，声誉+5，手足-5）'), effects: { art: 5, reputation: 5, rel: { brothers: -5 } }, next: '6_3b' }
     ]
   };
   E['6_3b'] = {

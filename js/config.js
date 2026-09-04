@@ -195,7 +195,7 @@ window.MJ = window.MJ || {};
     { id: 'ACH_ROOKIE', name: '初露锋芒', icon: '🌱', rarity: 'common', desc: '首张个人专辑面世，少年开始有了自己的名字。',
       check: function (s) { return s.flags.soloAlbum1972 === true; } },
     { id: 'ACH_BROTHERLY', name: '兄弟同心', icon: '👬', rarity: 'common', desc: '纵使单飞，也始终把兄弟放在心上。',
-      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 10; } },
+      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 20; } },
     { id: 'ACH_IDOL', name: '万众倾心', icon: '🌟', rarity: 'common', desc: '让一代人的青春里，都住着你的旋律。',
       check: function (s) { return (s.relations && s.relations.fans || 0) >= 30; } },
     // —— 稀有 rare ——

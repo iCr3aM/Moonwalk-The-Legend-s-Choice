@@ -493,11 +493,12 @@
 
 ### 18.13 成就可达性核查 + 章节密度（2026-09-05）
 - 成就可达性核查（test/check_achievable.cjs + compute_ach_reach.cjs）：发现并修复 2 个**真·不可达成 bug**：
-  - `ACH_BROTHERLY`：原 `relations.brothers >= 20`，但全事件仅 `1_5` 一处改动 brothers（最高 +15）→ 永远不可达。已降阈值至 `>= 10`（选「守在 Jackson 5」即 +15 可达成）。注：`brothers` 关系目前仅 1_5 一处触发，关系系统偏薄，建议在章节拓展时补「与兄长和解/重聚」事件。
+  - `ACH_BROTHERLY`：原 `relations.brothers >= 20` 不可达（全事件仅 `1_5` 一处），先降阈值至 `>= 10`；随后补「Ch0 童年四事件（0_0 钢铁城的家 / 0_1 第一次独唱 / 0_2 阿波罗剧院之夜 / 0_3 Motown 引荐）」+「6_3a_r 三十周年兄弟同台（2001 麦迪逊广场花园史实）」，将阈值定为 `>= 20`——需真正经营手足情方可达成（手足路线实测 brothers=56 触发；自私路线 brothers=-20 不触发）。`brothers` 关系现由 Ch0 四事件 + 1_5 + 6_3a_r 多处驱动。
   - `ACH_LONELY_KING`：原 `s.flags.loneliness`，但孤独是**属性**（`s.attributes.loneliness`，同文件 `ACH_LONELY` 即如此）。已改为 `s.attributes.loneliness`，高隐士+低家庭/媒体+高声誉路线可达成。
 - 其余 0% 项均非 bug：`ACH_TRUE_ETERNAL`/`ACH_BIOPIC` 等需特定结局路线（TRUE_ETERNAL 已由 stratPinnacle 验证可达）；`ACH_GRAMMY_SWEEP` 经数学验证（六专辑满精工+高 momentum 下 q 远超 60 阈值）属「刻意全音乐高精工路线可达」；`ACH_ALL_ENDINGS`/`ACH_EGG_HUNTER`/`ACH_SMOOTH` 为跨周目设计。
-- 章节事件密度（test/analyze_chapters.cjs，主线+变体）：Ch0 童年 6+0（1958–1969 整段最薄，且平衡测试曾 WARN 1958–1964 变体荒漠）、Ch1 12+5、Ch2 17+15、Ch3 22+30、Ch4 13+11、Ch5 15+4。**明确短板：Ch0 童年仅 6 主线 0 变体**，建议优先拓展（家庭日常/首次登台/Motown/组合成型等）；Ch5 续写传奇变体偏少（4）亦可补充。
+- 章节事件密度（test/analyze_chapters.cjs，主线+变体）：Ch0 童年原 6+0（1958–1969 整段最薄）；**已于本次补齐 4 个主线童年事件（0_0/0_1/0_2/0_3，年份 1961/1963/1967/1968，填补 1958–1964 空白并补足 Apollo 夺冠、Motown 引荐等史实）**，现 Ch0 主线 10。Ch1 12+5、Ch2 17+15、Ch3 22+30、Ch4 13+11、Ch5 15+4 未动。Ch5 续写传奇变体偏少（4）仍可补充。
 - 英文翻译：i18n 覆盖校验 FAIL:0（306 字段 0 缺失；EN 428 条 0 空值/0 漏译/0 残留中文；UI 字面量 95 键 EN 全有）。CSS 已为 EN 适配（`.btn`/`option` 缩小字号字距、`word-break:break-word`、`white-space:pre-line`、模态/图鉴/日记容器 `overflow:auto`），长英文换行而非挤压，结构健全。
+- **事件编写约定（易踩坑，2026-09-05 实测）**：关系好感 `rel` 必须**嵌套在 `effects` 内部**（`effects: { ..., rel: { brothers: 8 } }`）。引擎 `choose` 只调用 `applyEffects(opt.effects)`（engine.js 356 行），而 `applyEffects` 仅识别 `eff.rel` 分支（43–47 行 `state.changeRel`）。若把 `rel` 写成选项级同级键（`effects:{...}, rel:{...}`），`rel` 将被**静默忽略、永不生效**（本次新增事件即踩此坑，已修正）。新增/修改事件写 `rel` 时务必内嵌于 `effects`。
 
 # 十、美术与听觉（同前：暗金复古、符号化、原创/公共领域 BGM）
 
