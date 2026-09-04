@@ -3,7 +3,7 @@
 //   56 成就（ach.<id>.name/desc）
 //   8 彩蛋（egg.<id>.name/desc）
 //   24 趣事（trivia.<id>.name/desc）
-//   12 语录（quote.<id>.text；name 未本地化，仅校验 text）
+//   （语录图鉴已移除，故不再校验 quote.*）
 // 做法：置 lang='en'，对每个 (id, field) 调 MJ.t(key, null, SENTINEL)，
 //   缺失（回退到 SENTINEL）或仍为中文（zh 回退）→ 判 FAIL。
 // 用法：node test/check_i18n_coverage.cjs  （建议接入 npm test）
@@ -22,7 +22,6 @@ groups.push({ tag: '变体', ids: Object.keys(MJ.EVENTS).filter(function (k) { v
 groups.push({ tag: '成就', ids: (MJ.config.achievements || []).map(function (a) { return a.id; }), fields: ['name', 'desc'], ns: function (id) { return 'ach.' + id; } });
 groups.push({ tag: '彩蛋', ids: Object.keys(MJ.eggSystem ? MJ.eggSystem.defs : {}), fields: ['name', 'desc'], ns: function (id) { return 'egg.' + id; } });
 groups.push({ tag: '趣事', ids: Object.keys(MJ.triviaSystem ? MJ.triviaSystem.defs : {}), fields: ['name', 'desc'], ns: function (id) { return 'trivia.' + id; } });
-groups.push({ tag: '语录', ids: Object.keys(MJ.quoteSystem ? MJ.quoteSystem.defs : {}), fields: ['text'], ns: function (id) { return 'quote.' + id; } });
 
 var fail = 0, total = 0;
 groups.forEach(function (g) {

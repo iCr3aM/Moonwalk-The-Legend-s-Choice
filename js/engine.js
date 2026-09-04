@@ -318,7 +318,7 @@ window.MJ = window.MJ || {};
         MJ.eggSystem.checkFlags(this.state);
       }
       if (MJ.triviaSystem) MJ.triviaSystem.checkFlags(this.state); // §17.11 趣事：扫描 tidbit_* 标志解锁图鉴
-      if (MJ.quoteSystem) MJ.quoteSystem.checkFlags(this.state); // §17.6 语录：扫描 quote_* 标志解锁图鉴
+
 
       this.pendingEpilogue = consequenceLine(opt, this.state);
 
@@ -603,61 +603,5 @@ window.MJ = window.MJ || {};
     return { s: 'explorer', zh: '随性探索', en: 'Free Explorer' };
   };
 
-  // §17.6 MJ 语录 / 歌词 系统（粉丝向、中性、零数值影响；与趣事/彩蛋同构）
-  // 语录/歌词均为 MJ 本人公开词句，本就为英文，故中英文模式同显原文（最贴合原味）。
-  MJ.quoteSystem = {
-    key: 'quotes',
-    storageKey: 'mj_lifechoices_quotes_v1',
-    defs: {
-      QUOTE_MIRROR: { icon: '🪞', name: 'Man in the Mirror', text: '“If you want to make the world a better place, take a look at yourself and then make a change.”', cond: function () { return true; } },
-      QUOTE_HEAL: { icon: '🕊️', name: 'Heal the World', text: '“Heal the world, make it a better place for you and for me and the entire human race.”', cond: function (s) { return (s.meta.phil || 0) >= 1; } },
-      QUOTE_BILLIE: { icon: '🌟', name: 'Billie Jean', text: '“Billie Jean is not my lover; she’s just a girl who claims that I am the one.”', cond: function (s) { return (s.attributes.art || 0) >= 60; } },
-      QUOTE_BEATIT: { icon: '🥊', name: 'Beat It', text: '“Just beat it, beat it! No one wants to be defeated.”', cond: function (s) { return (s.attributes.art || 0) >= 50; } },
-      QUOTE_THRILLER: { icon: '🌙', name: 'Thriller', text: '“It’s close to midnight and something evil’s lurking in the dark.”', cond: function (s) { return (s.attributes.art || 0) >= 50; } },
-      QUOTE_SMOOTH: { icon: '🎩', name: 'Smooth Criminal', text: '“Annie, are you OK? Are you OK, Annie?”', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
-      QUOTE_MASTERS: { icon: '🎓', name: 'On Craft', text: '“The greatest education in the world is watching the masters at work.”', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
-      QUOTE_CHILD: { icon: '🧒', name: 'On the Child Within', text: '“The child in me is the best part of me.”', cond: function (s) { return (s.meta.recluse || 0) >= 1; } },
-      QUOTE_PERFECT: { icon: '🎯', name: 'On Perfection', text: '“I’m a perfectionist — it’s part of who I am.”', cond: function (s) { return (s.attributes.stress || 0) >= 50; } },
-      QUOTE_MOTHER: { icon: '💗', name: 'On Love', text: '“I learned about love from my mother.”', cond: function (s) { return (s.attributes.family || 0) >= 60; } },
-      QUOTE_VOICE: { icon: '🎤', name: 'On Music', text: '“Music has been my outlet, my voice to the world.”', cond: function (s) { return (s.attributes.art || 0) >= 40; } },
-      QUOTE_LEGACY: { icon: '👑', name: 'On Legacy', text: '“I don’t care about the money — I care about the music.”', cond: function (s) { return (s.meta.mogul || 0) >= 1; } }
-    },
-    _load: function () { try { return JSON.parse(localStorage.getItem(this.storageKey)) || {}; } catch (e) { return {}; } },
-    _save: function (o) { try { localStorage.setItem(this.storageKey, JSON.stringify(o)); } catch (e) {} },
-    total: function () { return Object.keys(this.defs).length; },
-    isFound: function (id) { return !!this._load()[id]; },
-    count: function () { return Object.keys(this._load()).length; },
-    foundList: function () { var d = this._load(), out = []; for (var k in d) if (d[k] && this.defs[k]) out.push(this.defs[k]); return out; },
-    unlock: function (id, silent) {
-      if (!this.defs[id] || this._load()[id]) return;
-      var o = this._load(); o[id] = true; this._save(o);
-      if (!silent && MJ.ui && MJ.ui.toastQuote) MJ.ui.toastQuote(this.defs[id]);
-    },
-    // 游玩中由事件写入 quote_* 标志即时解锁
-    checkFlags: function (flags) {
-      var self = this; flags = flags || {};
-      Object.keys(flags).forEach(function (k) {
-        if (k.indexOf('quote_') === 0) { var id = 'QUOTE_' + k.slice(6).toUpperCase(); self.unlock(id, false); }
-      });
-    },
-    // 结局时按 cond 静默补齐图鉴（不刷屏）
-    revealAll: function (state) {
-      var self = this, s = state;
-      Object.keys(this.defs).forEach(function (k) {
-        try { if (self.defs[k].cond && self.defs[k].cond(s)) self.unlock(k, true); } catch (e) {}
-      });
-    },
-    // 结局页注入：按结局基调挑一句语录/歌词（返回 def key）
-    endingQuote: function (endingId, state) {
-      var map = {
-        END_PLAIN: 'QUOTE_MOTHER', END_FAMILY: 'QUOTE_MOTHER',
-        END_PHILANTHROPIST: 'QUOTE_HEAL', END_STATESMAN: 'QUOTE_HEAL', END_MENTOR: 'QUOTE_HEAL',
-        END_RECLUSE: 'QUOTE_CHILD', END_RECLUSE_SERENE: 'QUOTE_CHILD',
-        END_MOGUL: 'QUOTE_LEGACY', END_INNOVATOR: 'QUOTE_LEGACY',
-        END_TRAGIC: 'QUOTE_PERFECT', END_CONTROVERSIAL: 'QUOTE_PERFECT', END_FINANCIAL: 'QUOTE_PERFECT', END_SURVIVE_DEBT: 'QUOTE_PERFECT',
-        END_ART_PEAK: 'QUOTE_VOICE', END_ETERNAL: 'QUOTE_VOICE', END_TRUE_ETERNAL: 'QUOTE_VOICE', END_TIMELESS_PRESENT: 'QUOTE_VOICE', END_PERFORM: 'QUOTE_VOICE'
-      };
-      return map[endingId] || 'QUOTE_MIRROR';
-    }
-  };
+
 })();

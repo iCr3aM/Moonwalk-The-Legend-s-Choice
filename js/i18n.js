@@ -371,20 +371,6 @@ window.MJ = window.MJ || {};
         'subdim.vision': 'Vision', 'subdim.innovation': 'Innovation', 'subdim.craft': 'Craft', 'subdim.collab': 'Collaboration', 'subdim.stagecraft': 'Stagecraft',
         'style.innovator': 'Trailblazing Innovator', 'style.craftsman': 'Steady Craftsman', 'style.mogul': 'Sharp Mogul', 'style.phil': 'Gentle Philanthropist', 'style.recluse': 'Reclusive Thinker', 'style.explorer': 'Free Explorer',
 
-        // ---------- §17.6 MJ 语录 / 歌词 图鉴（EN，原文为英文） ----------
-        'ui.quoteCodex': 'Quote Codex', 'ui.quoteToast': 'Quote Unlocked · ', 'ui.quoteTag': '(Quote)',
-        'quote.QUOTE_MIRROR.text': '“If you want to make the world a better place, take a look at yourself and then make a change.”',
-        'quote.QUOTE_HEAL.text': '“Heal the world, make it a better place for you and for me and the entire human race.”',
-        'quote.QUOTE_BILLIE.text': '“Billie Jean is not my lover; she’s just a girl who claims that I am the one.”',
-        'quote.QUOTE_BEATIT.text': '“Just beat it, beat it! No one wants to be defeated.”',
-        'quote.QUOTE_THRILLER.text': '“It’s close to midnight and something evil’s lurking in the dark.”',
-        'quote.QUOTE_SMOOTH.text': '“Annie, are you OK? Are you OK, Annie?”',
-        'quote.QUOTE_MASTERS.text': '“The greatest education in the world is watching the masters at work.”',
-        'quote.QUOTE_CHILD.text': '“The child in me is the best part of me.”',
-        'quote.QUOTE_PERFECT.text': '“I’m a perfectionist — it’s part of who I am.”',
-        'quote.QUOTE_MOTHER.text': '“I learned about love from my mother.”',
-        'quote.QUOTE_VOICE.text': '“Music has been my outlet, my voice to the world.”',
-        'quote.QUOTE_LEGACY.text': '“I don’t care about the money — I care about the music.”',
 
         // ---------- §17.12 更多成就（EN） ----------
         'ach.ACH_DANCE_GOD.name': 'King of Dance', 'ach.ACH_DANCE_GOD.desc': 'Trigger ≥3 moonwalk/perfect-performance choices in one run.',
