@@ -385,6 +385,7 @@ html, body {
 /* ---------- M1 关系/羁绊面板 ---------- */
 .rel-panel { margin-top: 10px; }
 .rel-head { font-size: 12px; color: var(--gold); letter-spacing: 1px; }
+.panel-h { font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
 .rel-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
 .rel-cell {
   display: flex; align-items: center; gap: 6px;
@@ -395,6 +396,7 @@ html, body {
 .rel-cell.cold { border-color: var(--danger); color: var(--danger); }
 .rel-ico { font-size: 14px; }
 .rel-val { font-weight: 700; }
+.rel-name { color: var(--ink); flex: 1; }
 
 /* ---------- M3 章节过场（时代卡片） ---------- */
 .era-card { padding: 30px 26px; text-align: center; }
