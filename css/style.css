@@ -548,3 +548,21 @@ html, body {
 .g-rarity { font-size: 10px; margin-top: 3px; color: var(--ink-dim); letter-spacing: 1px; }
 .gallery .g-cell.locked-hidden { border-style: dashed; }
 .modal .gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }
+
+/* 图鉴减列：语录/彩蛋/趣事文案较长，桌面 2 列、移动端 1 列，并放长描述 */
+.modal .gallery.quote-gallery .g-grid,
+.modal .gallery.egg-gallery .g-grid,
+.modal .gallery.trivia-gallery .g-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.modal .gallery.quote-gallery .g-cell { padding: 12px; }
+.modal .gallery.quote-gallery .g-desc,
+.modal .gallery.egg-gallery .g-desc,
+.modal .gallery.trivia-gallery .g-desc { max-height: 9em; }
+@media (max-width: 640px) {
+  .modal .gallery.quote-gallery .g-grid,
+  .modal .gallery.egg-gallery .g-grid,
+  .modal .gallery.trivia-gallery .g-grid { grid-template-columns: 1fr; }
+}
+
+/* 结局页回顾面板分组：桌面 2 列、移动端 1 列，减少竖向堆叠杂乱 */
+.review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+@media (max-width: 640px) { .review-grid { grid-template-columns: 1fr; } }

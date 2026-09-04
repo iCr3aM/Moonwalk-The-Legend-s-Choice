@@ -304,7 +304,7 @@ window.MJ = window.MJ || {};
   function eggHtml() {
     var defs = (MJ.eggSystem ? MJ.eggSystem.defs : {});
     var list = (MJ.eggSystem ? MJ.eggSystem.foundList() : []);
-    var html = '<div class="panel gallery">' +
+    var html = '<div class="panel gallery egg-gallery">' +
       '<div class="g-head">' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="g-prog">' + (MJ.eggSystem ? MJ.eggSystem.count() : 0) + ' / ' + (MJ.eggSystem ? MJ.eggSystem.total() : 0) + '</span></div>' +
       '<div class="g-grid">';
     Object.keys(defs).forEach(function (k) {
@@ -341,7 +341,7 @@ window.MJ = window.MJ || {};
   function triviaHtml() {
     var defs = (MJ.triviaSystem ? MJ.triviaSystem.defs : {});
     var list = (MJ.triviaSystem ? MJ.triviaSystem.foundList() : []);
-    var html = '<div class="panel gallery">' +
+    var html = '<div class="panel gallery trivia-gallery">' +
       '<div class="g-head">' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="g-prog">' + (MJ.triviaSystem ? MJ.triviaSystem.count() : 0) + ' / ' + (MJ.triviaSystem ? MJ.triviaSystem.total() : 0) + '</span></div>' +
       '<div class="g-grid">';
     Object.keys(defs).forEach(function (k) {
@@ -395,7 +395,7 @@ window.MJ = window.MJ || {};
   }
   function quoteHtml() {
     var defs = (MJ.quoteSystem ? MJ.quoteSystem.defs : {});
-    var html = '<div class="panel gallery">' +
+    var html = '<div class="panel gallery quote-gallery">' +
       '<div class="g-head">' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="g-prog">' + (MJ.quoteSystem ? MJ.quoteSystem.count() : 0) + ' / ' + (MJ.quoteSystem ? MJ.quoteSystem.total() : 0) + '</span></div>' +
       '<div class="g-grid">';
     Object.keys(defs).forEach(function (k) {
@@ -804,6 +804,8 @@ window.MJ = window.MJ || {};
     ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 70);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
     ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 44);
+    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif';
+    ctx.fillText('Cr3aM 制作 · MJ Forever', W / 2, H - 20);
 
     return cv;
   }
@@ -1047,12 +1049,14 @@ window.MJ = window.MJ || {};
         '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
         '<button class="btn block" id="btn-quote-end">🗣️ ' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="m-cnt">' + quoteCount() + '</span></button>' +
       '</div>' +
+      '<div class="review-grid">' +
       subDimPanel(state) +
       keyReviewPanel(state) +
       diaryPanel(state) +
       vignettePanel(state) +
       echoesPanel(state) +
       historyPanel(state) +
+      '</div>' +
       '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
     app.innerHTML = html;
     MJ.achievementSystem.evaluate(state, { ending: id }).forEach(toastAchievement);
