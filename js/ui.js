@@ -7,6 +7,10 @@ window.MJ = window.MJ || {};
 
   var ui = {};
   var app;
+  var T = function (k, v, fb) { return MJ.t(k, v, fb); };
+  var _view = null; // 当前屏幕的重新渲染函数（语言切换时调用）
+  function audioLabel() { return MJ.audio.enabled ? T('ui.audioOn', null, '♪ 环境音：开') : T('ui.audioOff', null, '♪ 环境音：关'); }
+  function switchLang() { MJ.toggleLang(); if (_view) _view(); }
 
   function $(sel) { return app.querySelector(sel); }
 
@@ -44,6 +48,11 @@ window.MJ = window.MJ || {};
   function formatMoney(v) {
     var sign = v < 0 ? '-' : '';
     var a = Math.abs(v);
+    if (MJ.i18n.lang === 'en') {
+      // 净资产单位=万；1 万 = 0.01M（1 亿 = 100M）
+      var m = a / 100;
+      return sign + '$' + (m >= 100 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+    }
     if (a >= 10000) return sign + (a / 10000).toFixed(2) + ' 亿';
     return sign + a + ' 万';
   }
@@ -55,7 +64,7 @@ window.MJ = window.MJ || {};
     keys.forEach(function (k) {
       var val = state.attributes[k] || 0;
       html += '<div class="bar">' +
-        '<div class="lab"><span>' + names[k] + '</span><b>' + val + '</b></div>' +
+        '<div class="lab"><span>' + T('attr.' + k, null, names[k]) + '</span><b>' + val + '</b></div>' +
         '<div class="track"><div class="fill ' + k + '" style="width:' + val + '%"></div></div>' +
         '</div>';
     });
@@ -71,7 +80,7 @@ window.MJ = window.MJ || {};
     order.forEach(function (k) {
       var n = state.meta[k] || 0;
       var cls = (k === dom && n > 0) ? 'tag active' : 'tag';
-      html += '<span class="' + cls + '">' + defs[k].icon + ' ' + defs[k].name + ' ×' + n + '</span>';
+      html += '<span class="' + cls + '">' + defs[k].icon + ' ' + T('meta.' + k, null, defs[k].name) + ' ×' + n + '</span>';
     });
     html += '</div>';
     return html;
@@ -92,10 +101,10 @@ window.MJ = window.MJ || {};
   function historyPanel(state) {
     var h = chronoSteps(state.history || []);
     var inner = '<details class="panel history">' +
-      '<summary>人生轨迹 <span class="cnt">(' + h.length + ')</span></summary>' +
+      '<summary>' + T('ui.historyTitle', null, '人生轨迹') + ' <span class="cnt">(' + h.length + ')</span></summary>' +
       '<div class="timeline">';
     if (h.length === 0) {
-      inner += '<div class="empty">尚未做出选择，传奇正在书写…</div>';
+      inner += '<div class="empty">' + T('ui.historyEmpty', null, '尚未做出选择，传奇正在书写…') + '</div>';
     } else {
       h.forEach(function (e) {
         inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
@@ -112,10 +121,10 @@ window.MJ = window.MJ || {};
     var h = state.history || [];
     var keys = h.filter(function (e) { return e.key; });
     var inner = '<details class="panel history kreview" open>' +
-      '<summary>关键抉择回顾 <span class="cnt">(' + keys.length + ')</span></summary>' +
+      '<summary>' + T('ui.keyReviewTitle', null, '关键抉择回顾') + ' <span class="cnt">(' + keys.length + ')</span></summary>' +
       '<div class="timeline">';
     if (keys.length === 0) {
-      inner += '<div class="empty">这一程没有惊心动魄的岔路，平凡本身也是一种答案。</div>';
+      inner += '<div class="empty">' + T('ui.keyReviewEmpty', null, '这一程没有惊心动魄的岔路，平凡本身也是一种答案。') + '</div>';
     } else {
       chronoSteps(keys).forEach(function (e) {
         inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
@@ -133,8 +142,9 @@ window.MJ = window.MJ || {};
     var yearTxt = ev ? MJ.eventYear(ev) : '';
     return '<div class="panel status">' +
       '<div class="status-top">' +
-        '<span class="title">迈克尔·杰克逊：人生选择</span>' +
-        '<span><span class="year">' + yearTxt + '</span> &nbsp; <span class="' + debtCls + '">净资产 ' + formatMoney(net) + '</span></span>' +
+        '<span class="title">' + T('ui.title', null, '迈克尔·杰克逊：人生选择') + '</span>' +
+        '<span><span class="year">' + yearTxt + '</span> &nbsp; <span class="' + debtCls + '">' + T('ui.networth', null, '净资产') + ' ' + formatMoney(net) + '</span></span>' +
+        '<button class="btn ghost small lang-btn" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
       '</div>' +
       attrBars(state) +
       softBars(state) +
@@ -160,14 +170,14 @@ window.MJ = window.MJ || {};
     var total = keys.length;
     var got = keys.filter(function (k) { return g[k]; }).length;
     var html = '<div class="panel gallery">' +
-      '<div class="g-head">结局图鉴 <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
+      '<div class="g-head">' + T('ui.gallery', null, '结局图鉴') + ' <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
       '<div class="g-grid">';
     keys.forEach(function (k) {
       var e = defs[k];
       var on = !!g[k];
-      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" title="' + (on ? e.name : '未解锁') + '">' +
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
-        '<div class="g-name">' + (on ? e.name : '？？？') + '</div>' +
+        '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         '<div class="g-rarity">' + rarityLabel(e.rarity) + '</div>' +
       '</div>';
     });
@@ -184,13 +194,13 @@ window.MJ = window.MJ || {};
     var got = list.filter(function (a) { return a.unlocked; }).length;
     var total = list.length;
     var html = '<div class="panel ach-panel">' +
-      '<div class="g-head">成就 <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
+      '<div class="g-head">' + T('ui.achievements', null, '成就') + ' <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
       '<div class="ach-grid">';
     list.forEach(function (a) {
       var on = a.unlocked;
-      html += '<div class="ach-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(a.name + '：' + a.desc) : '未解锁') + '">' +
+      html += '<div class="ach-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(T('ach.' + a.id + '.name', null, a.name) + '：' + T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="ach-icon">' + (on ? a.icon : '🔒') + '</div>' +
-        '<div class="ach-name">' + (on ? a.name : '？？？') + '</div>' +
+        '<div class="ach-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         '<div class="ach-rarity">' + rarityLabel(a.rarity) + '</div>' +
       '</div>';
     });
@@ -200,7 +210,8 @@ window.MJ = window.MJ || {};
 
   // ---------- 图鉴 / 成就 弹窗（主菜单各收为一个按钮；含多次确认重置） ----------
   function rarityLabel(r) {
-    return ({ common: '普通', rare: '稀有', epic: '史诗', legendary: '传奇' })[r] || '普通';
+    var zh = ({ common: '普通', rare: '稀有', epic: '史诗', legendary: '传奇' })[r] || '普通';
+    return T('rarity.' + r, null, zh);
   }
   function closeOverlay(id) { var o = document.getElementById(id); if (o) o.parentNode.removeChild(o); }
   function galleryCount() {
@@ -220,7 +231,7 @@ window.MJ = window.MJ || {};
     btn.addEventListener('click', function () {
       if (!armed) {
         armed = true;
-        btn.textContent = '再次点击确认（不可逆）';
+        btn.textContent = T('ui.confirmReset', null, '再次点击确认（不可逆）');
         btn.classList.add('danger');
         timer = setTimeout(function () { armed = false; btn.textContent = btn._orig; btn.classList.remove('danger'); }, 3000);
         return;
@@ -236,9 +247,9 @@ window.MJ = window.MJ || {};
     overlay.id = 'gallery-overlay';
     overlay.className = 'overlay modal-overlay';
     overlay.innerHTML = '<div class="modal">' +
-      '<div class="modal-head"><span>📖 结局图鉴</span><span class="spacer"></span>' +
-      '<button class="btn ghost small" id="gallery-reset">重置图鉴</button>' +
-      '<button class="btn ghost small" id="gallery-close">关闭 ✕</button></div>' +
+      '<div class="modal-head"><span>📖 ' + T('ui.gallery', null, '结局图鉴') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="gallery-reset">' + T('ui.resetGallery', null, '重置图鉴') + '</button>' +
+      '<button class="btn ghost small" id="gallery-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"></div></div>';
     overlay.querySelector('.modal-body').innerHTML = galleryHtml();
     document.body.appendChild(overlay);
@@ -254,9 +265,9 @@ window.MJ = window.MJ || {};
     overlay.id = 'ach-overlay';
     overlay.className = 'overlay modal-overlay';
     overlay.innerHTML = '<div class="modal">' +
-      '<div class="modal-head"><span>🏆 成就</span><span class="spacer"></span>' +
-      '<button class="btn ghost small" id="ach-reset">重置成就</button>' +
-      '<button class="btn ghost small" id="ach-close">关闭 ✕</button></div>' +
+      '<div class="modal-head"><span>🏆 ' + T('ui.achievements', null, '成就') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="ach-reset">' + T('ui.resetAch', null, '重置成就') + '</button>' +
+      '<button class="btn ghost small" id="ach-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"></div></div>';
     overlay.querySelector('.modal-body').innerHTML = achievementsPanel();
     document.body.appendChild(overlay);
@@ -272,8 +283,8 @@ window.MJ = window.MJ || {};
     var t = document.createElement('div');
     t.className = 'ach-toast';
     t.innerHTML = '<div class="at-icon">' + a.icon + '</div>' +
-      '<div class="at-body"><div class="at-title">成就解锁 · ' + escapeHtml(a.name) + '</div>' +
-      '<div class="at-desc">' + escapeHtml(a.desc) + '</div></div>';
+      '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) + '</div>' +
+      '<div class="at-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div></div>';
     document.body.appendChild(t);
     setTimeout(function () { t.classList.add('show'); }, 20);
     setTimeout(function () {
@@ -286,7 +297,7 @@ window.MJ = window.MJ || {};
   function metaTendency(state) {
     var dom = MJ.dominantMeta(state.meta);
     if (!dom) return '';
-    return '<div class="tend">正在走向：<b>' + MJ.config.metaDefs[dom].name + '</b> 之路</div>';
+    return '<div class="tend">' + T('ui.tendPrefix', null, '正在走向：') + '<b>' + T('meta.' + dom, null, MJ.config.metaDefs[dom].name) + '</b>' + T('ui.tendSuffix', null, ' 之路') + '</div>';
   }
 
   // M5/M6 体验轴次条：媒体关系 / 孤独（与核心六维分离展示）
@@ -295,7 +306,7 @@ window.MJ = window.MJ || {};
     var html = '<div class="bars soft">';
     keys.forEach(function (k) {
       var val = state.attributes[k] || 0;
-      html += '<div class="bar"><div class="lab"><span>' + MJ.config.attrNames[k] + '</span><b>' + val + '</b></div>' +
+      html += '<div class="bar"><div class="lab"><span>' + T('attr.' + k, null, MJ.config.attrNames[k]) + '</span><b>' + val + '</b></div>' +
         '<div class="track"><div class="fill ' + k + '" style="width:' + val + '%"></div></div></div>';
     });
     html += '</div>';
@@ -306,13 +317,14 @@ window.MJ = window.MJ || {};
   function relationsPanel(state) {
     var defs = MJ.config.relationsDefs || [];
     var rel = state.relations || {};
-    var html = '<div class="rel-panel"><div class="rel-head">羁绊</div><div class="rel-grid">';
+    var html = '<div class="rel-panel"><div class="rel-head">' + T('ui.relHead', null, '羁绊') + '</div><div class="rel-grid">';
     defs.forEach(function (d) {
       var v = rel[d.key] || 0;
       var cls = v >= 20 ? 'warm' : (v <= -10 ? 'cold' : 'neutral');
       var sign = v > 0 ? '+' : '';
-      html += '<div class="rel-cell ' + cls + '" title="' + escapeHtml(d.name) + '：' + (v > 0 ? '亲近' : v < 0 ? '疏远' : '平淡') + '（' + sign + v + '）">' +
-        '<span class="rel-ico">' + d.icon + '</span><span class="rel-name">' + escapeHtml(d.name) + '</span>' +
+      var relWord = v > 0 ? T('ui.relWarm', null, '亲近') : (v < 0 ? T('ui.relCold', null, '疏远') : T('ui.relNeutral', null, '平淡'));
+      html += '<div class="rel-cell ' + cls + '" title="' + escapeHtml(T('rel.' + d.key, null, d.name)) + '：' + relWord + '（' + sign + v + '）">' +
+        '<span class="rel-ico">' + d.icon + '</span><span class="rel-name">' + escapeHtml(T('rel.' + d.key, null, d.name)) + '</span>' +
         '<span class="rel-val">' + sign + v + '</span></div>';
     });
     html += '</div></div>';
@@ -322,8 +334,8 @@ window.MJ = window.MJ || {};
   // M2 人生手记汇总（结局页）
   function diaryPanel(state) {
     var d = state.diary || [];
-    var inner = '<details class="panel history diary" open><summary>人生手记 <span class="cnt">(' + d.length + ')</span></summary><div class="diary-list">';
-    if (!d.length) inner += '<div class="empty">这一程尚未留下手记。</div>';
+    var inner = '<details class="panel history diary" open><summary>' + T('ui.diaryTitle', null, '人生手记') + ' <span class="cnt">(' + d.length + ')</span></summary><div class="diary-list">';
+    if (!d.length) inner += '<div class="empty">' + T('ui.diaryEmpty', null, '这一程尚未留下手记。') + '</div>';
     else d.forEach(function (e) {
       inner += '<div class="diary-item"><b>' + escapeHtml(e.title) + '</b><p>' + escapeHtml(e.text) + '</p></div>';
     });
@@ -334,8 +346,8 @@ window.MJ = window.MJ || {};
   // M4 命运回响汇总（结局页）
   function echoesPanel(state) {
     var d = state.echoes || [];
-    var inner = '<details class="panel history echoes"><summary>命运回响 <span class="cnt">(' + d.length + ')</span></summary><div class="echo-list">';
-    if (!d.length) inner += '<div class="empty">每一个选择都安分地落在了它该在的地方。</div>';
+    var inner = '<details class="panel history echoes"><summary>' + T('ui.echoTitle', null, '命运回响') + ' <span class="cnt">(' + d.length + ')</span></summary><div class="echo-list">';
+    if (!d.length) inner += '<div class="empty">' + T('ui.echoEmpty', null, '每一个选择都安分地落在了它该在的地方。') + '</div>';
     else d.forEach(function (t) { inner += '<div class="echo-item">' + escapeHtml(t) + '</div>'; });
     inner += '</div></details>';
     return inner;
@@ -395,32 +407,36 @@ window.MJ = window.MJ || {};
     var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟' };
     var a = state.attributes;
     var dm = MJ.dominantMeta(state.meta);
-    var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
     var legend = MJ.legendScore(state);
-    var all = MJ.achievementSystem.all();
     var thisRun = (MJ.config.achievements || []).filter(function (ac) {
       try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
     });
     var st = state.stats || { variants: 0, keyChoices: 0 };
+    var endName = T('ending.' + endingId + '.name', null, e.name);
+    var endTone = T('ending.' + endingId + '.tone', null, e.tone);
     return [
-      '我在《迈克尔·杰克逊：人生选择》中，走完了属于自己的传奇一生：',
+      T('share.ending.lead', null, '我在《迈克尔·杰克逊：人生选择》中，走完了属于自己的传奇一生：'),
       '',
-      e.icon + ' ' + e.name + '（' + e.tone + '）',
-      '健康 ' + a.health + ' · 声誉 ' + a.reputation + ' · 艺术 ' + a.art + ' · 财富 ' + a.wealth + ' · 家庭 ' + a.family + ' · 压力 ' + a.stress,
-      '主导路线：' + metaName + '　传奇评分 ' + legend.score + '（评级 ' + legend.grade + '）',
-      '触发变体 ' + st.variants + ' 次　关键抉择 ' + st.keyChoices + ' 个',
-      '本局点亮 ' + thisRun.length + ' 枚成就',
+      e.icon + ' ' + endName + '（' + endTone + '）',
+      T('share.ending.dimLine', { health: a.health, reputation: a.reputation, art: a.art, wealth: a.wealth, family: a.family, stress: a.stress },
+        '健康 {health} · 声誉 {reputation} · 艺术 {art} · 财富 {wealth} · 家庭 {family} · 压力 {stress}'),
+      T('share.ending.routeLine', { path: metaName, score: legend.score, grade: legend.grade },
+        '主导路线：{path}　传奇评分 {score}（评级 {grade}）'),
+      T('share.ending.variantLine', { v: st.variants, k: st.keyChoices },
+        '触发变体 {v} 次　关键抉择 {k} 个'),
+      T('share.ending.achLine', { n: thisRun.length }, '本局点亮 {n} 枚成就'),
       '',
-      '每个人都是自己人生的词曲作者——来写下你的版本。'
+      T('share.ending.tail', null, '每个人都是自己人生的词曲作者——来写下你的版本。')
     ].join('\n');
   }
   function buildGameShareText() {
     return [
-      '《迈克尔·杰克逊：人生选择》——一款文字人生模拟游戏。',
-      '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，',
-      '导向 14 种截然不同的人生结局。你，会走出怎样的传奇？',
+      T('share.game.1', null, '“迈克尔·杰克逊：人生选择”——一款文字人生模拟游戏。'),
+      T('share.game.2', null, '从盖瑞的摇篮到全世界的舞台，在每一个真实的历史岔路口做选择，'),
+      T('share.game.3', null, '导向 14 种截然不同的人生结局。你，会走出怎样的传奇？'),
       '',
-      '（纯网页，双击即玩；含 30 余项变体事件、30 项成就、关键抉择回顾。）'
+      T('share.game.4', null, '（纯网页，双击即玩；含 30 余项变体事件、30 项成就、关键抉择回顾。）')
     ].join('\n');
   }
   function flashBtn(btn, txt) { if (!btn) return; var o = btn.textContent; btn.textContent = txt; setTimeout(function () { btn.textContent = o; }, 1500); }
@@ -435,8 +451,8 @@ window.MJ = window.MJ || {};
     } catch (e) { fail(); }
   }
   function copyText(text, btn) {
-    function ok() { flashBtn(btn, '已复制 ✓'); }
-    function fail() { flashBtn(btn, '请手动复制'); }
+    function ok() { flashBtn(btn, T('ui.copied', null, '已复制 ✓')); }
+    function fail() { flashBtn(btn, T('ui.copyManual', null, '请手动复制')); }
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(ok, function () { legacyCopy(text, ok, fail); });
@@ -457,15 +473,15 @@ window.MJ = window.MJ || {};
       '<div class="sc-head">' + escapeHtml(title) + '</div>' +
       '<textarea class="sc-text" id="share-text" readonly>' + escapeText(summary) + '</textarea>' +
       '<div class="sc-actions">' +
-        '<button class="btn" id="share-copy">复制文案</button>' +
-        (navigator.share ? '<button class="btn primary" id="share-native">系统分享…</button>' : '') +
-        '<button class="btn ghost" id="share-close">关闭</button>' +
+        '<button class="btn" id="share-copy">' + T('ui.shareCopy', null, '复制文案') + '</button>' +
+        (navigator.share ? '<button class="btn primary" id="share-native">' + T('ui.shareNative', null, '系统分享…') + '</button>' : '') +
+        '<button class="btn ghost" id="share-close">' + T('ui.close', null, '关闭') + '</button>' +
       '</div>' +
       '<div class="sc-links">' +
         (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://service.weibo.com/share/share.php?title=' + encoded + '">微博</a>' : '') +
         (url ? '<a class="sc-link" target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?text=' + encoded + '">X / Twitter</a>' : '') +
       '</div>' +
-      '<div class="sc-tip">复制文案或点「系统分享」后，可粘贴到任意社交平台' + (url ? '；也可直接分享本页链接。' : '（本地文件无链接，可手动分享游戏地址）。') + '</div>' +
+      '<div class="sc-tip">' + (url ? T('ui.shareTipUrl', null, '复制文案或点「系统分享」后，可粘贴到任意社交平台；也可直接分享本页链接。') : T('ui.shareTipFile', null, '复制文案或点「系统分享」后，可粘贴到任意社交平台（本地文件无链接，可手动分享游戏地址）。')) + '</div>' +
       '</div>';
     overlay.innerHTML = html;
     document.body.appendChild(overlay);
@@ -474,7 +490,7 @@ window.MJ = window.MJ || {};
     document.getElementById('share-copy').addEventListener('click', function () { copyText(full, this); });
     if (navigator.share) {
       document.getElementById('share-native').addEventListener('click', function () {
-        var data = { title: '迈克尔·杰克逊：人生选择', text: summary };
+        var data = { title: T('ui.title', null, '迈克尔·杰克逊：人生选择'), text: summary };
         if (url) data.url = url;
         if (navigator.canShare && !navigator.canShare(data)) { /* 仍尝试分享 */ }
         navigator.share(data).catch(function () {});
@@ -522,9 +538,13 @@ window.MJ = window.MJ || {};
   }
   function createPoster(state, endingId) {
     var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟', summary: '', monologue: '' };
+    var eName = T('ending.' + endingId + '.name', null, e.name);
+    var eTone = T('ending.' + endingId + '.tone', null, e.tone);
+    var eSum = T('ending.' + endingId + '.summary', null, e.summary);
+    var eMon = T('ending.' + endingId + '.monologue', null, e.monologue);
     var a = state.attributes;
     var dm = MJ.dominantMeta(state.meta);
-    var metaName = dm ? MJ.config.metaDefs[dm].name : '—';
+    var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
     var legend = MJ.legendScore(state);
     var endYear = (state.stats && state.stats.endYear) || 2009;
     // 本局达成成就：按最终状态判定条件，而非累计解锁（不展示历史已解锁总数）
@@ -551,7 +571,7 @@ window.MJ = window.MJ || {};
 
     ctx.textAlign = 'center';
     ctx.fillStyle = '#d4af37'; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText('MICHAEL JACKSON · 人 生 选 择', W / 2, 78);
+    ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — ' + endYear, W / 2, 102);
 
@@ -564,11 +584,11 @@ window.MJ = window.MJ || {};
     ctx.textBaseline = 'alphabetic';
 
     ctx.fillStyle = '#f3e2b0'; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(e.name, W / 2, 286);
+    ctx.fillText(eName, W / 2, 286);
     ctx.fillStyle = '#caa84a'; ctx.font = 'italic 19px "PingFang SC",sans-serif';
-    ctx.fillText(e.tone, W / 2, 320);
+    ctx.fillText(eTone, W / 2, 320);
 
-    var dims = [['健康', a.health], ['声誉', a.reputation], ['艺术', a.art], ['财富', a.wealth], ['家庭', a.family], ['压力', a.stress]];
+    var dims = [[T('attr.health', null, '健康'), a.health], [T('attr.reputation', null, '声誉'), a.reputation], [T('attr.art', null, '艺术'), a.art], [T('attr.wealth', null, '财富'), a.wealth], [T('attr.family', null, '家庭'), a.family], [T('attr.stress', null, '压力'), a.stress]];
     var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, barX = bx0 + 92, barW = colW - 92 - 16;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0;
@@ -590,17 +610,17 @@ window.MJ = window.MJ || {};
     var y = top + 3 * rowH + 14;
     ctx.textAlign = 'center';
     ctx.fillStyle = '#f3e2b0'; ctx.font = '600 18px "PingFang SC",sans-serif';
-    ctx.fillText('主导路线：' + metaName, W / 2, y);
+    ctx.fillText(T('ui.metaRoutePrefix', null, '主导路线：') + metaName, W / 2, y);
     ctx.fillStyle = '#caa84a'; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText('传奇 ' + legend.score + '（' + legend.grade + '）', W / 2, y + 26);
+    ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
 
     y += 54;
     ctx.fillStyle = '#d4af37'; ctx.font = '600 16px "PingFang SC",sans-serif';
-    ctx.fillText('净资产　' + formatMoney(state.netWorth), W / 2, y);
+    ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth), W / 2, y);
 
     y += 40;
     ctx.fillStyle = '#f3e2b0'; ctx.font = '600 16px "PingFang SC",sans-serif';
-    ctx.fillText('本局点亮 ' + thisRun.length + ' 枚成就', W / 2, y);
+    ctx.fillText(T('ui.posterAch', { n: thisRun.length }, '本局点亮 {n} 枚成就'), W / 2, y);
     y += 16;
     var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
     ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
@@ -614,27 +634,27 @@ window.MJ = window.MJ || {};
       y += (((thisRun.length / perRow) | 0) + (thisRun.length % perRow ? 1 : 0)) * 42 + 18;
     } else {
       ctx.fillStyle = '#8a7a4a'; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
-      ctx.fillText('— 本局暂未点亮成就 —', W / 2, y + 18); y += 40;
+      ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40;
     }
     ctx.textBaseline = 'alphabetic';
 
     y += 24;
     ctx.textAlign = 'left';
     ctx.fillStyle = '#d4af37'; ctx.font = '600 17px "PingFang SC",sans-serif';
-    ctx.fillText('结局 · 你的传奇', 60, y);
+    ctx.fillText(T('ui.posterEndingLabel', null, '结局 · 你的传奇'), 60, y);
     y += 14;
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
     y += 24;
     ctx.fillStyle = '#e8d6a6'; ctx.font = '16px "PingFang SC",sans-serif';
-    var narr = (e.summary ? e.summary + '\n' : '') + (e.monologue || '');
+    var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
     y = wrapParagraph(ctx, narr, 60, y, W - 120, 28);
 
     ctx.textAlign = 'center';
     ctx.fillStyle = '#d4af37'; ctx.font = 'italic 17px "PingFang SC",sans-serif';
-    ctx.fillText('每个人都是自己人生的词曲作者。', W / 2, H - 70);
+    ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 70);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText('MJ · 人生选择', W / 2, H - 44);
+    ctx.fillText(T('ui.posterSigned', null, 'MJ · 人生选择'), W / 2, H - 44);
 
     return cv;
   }
@@ -656,7 +676,7 @@ window.MJ = window.MJ || {};
       if (!blob) return;
       var file = new File([blob], 'MJ人生传奇_' + endingId + '.png', { type: 'image/png' });
       if (navigator.canShare({ files: [file] })) {
-        navigator.share({ files: [file], title: '迈克尔·杰克逊：人生选择', text: buildEndingShareText(state, endingId) }).catch(function () {});
+        navigator.share({ files: [file], title: T('ui.title', null, '迈克尔·杰克逊：人生选择'), text: buildEndingShareText(state, endingId) }).catch(function () {});
       }
     }, 'image/png');
   }
@@ -674,11 +694,11 @@ window.MJ = window.MJ || {};
     overlay.className = 'overlay poster-modal';
     overlay.innerHTML = '<div class="poster-frame">' +
       '<div class="poster-tools">' +
-        '<span class="pf-title">' + escapeHtml(e.name) + ' · 传奇海报</span>' +
+        '<span class="pf-title">' + escapeHtml(T('ending.' + id + '.name', null, e.name)) + ' · ' + T('ui.posterOfTag', null, '传奇海报') + '</span>' +
         '<span class="pf-spacer"></span>' +
-        '<button class="btn primary" id="pm-save">保存图片</button>' +
-        (canShareImg ? '<button class="btn ghost" id="pm-share">分享图片</button>' : '') +
-        '<button class="btn ghost" id="pm-close">关闭 ✕</button>' +
+        '<button class="btn primary" id="pm-save">' + T('ui.savePoster', null, '保存图片') + '</button>' +
+        (canShareImg ? '<button class="btn ghost" id="pm-share">' + T('ui.shareImg', null, '分享图片') + '</button>' : '') +
+        '<button class="btn ghost" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
       '</div>' +
       '<div class="poster-canvas-wrap"></div>' +
     '</div>';
@@ -698,22 +718,23 @@ window.MJ = window.MJ || {};
   ui.showIntro = function (hasSave) {
     var html =
       '<div class="panel intro">' +
-        '<h1>迈克尔·杰克逊：人生选择</h1>' +
+        '<h1>' + T('ui.title', null, '迈克尔·杰克逊：人生选择') + '</h1>' +
         '<p class="sub">Michael Jackson: Life Choices</p>' +
         '<div class="how">' +
-          '<p><b>玩法</b>：你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 14 种不同的人生结局。</p>' +
+          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 14 种不同的人生结局。') + '</p>' +
         '</div>' +
         '<div class="menu-row">' +
-          '<button class="btn block" id="btn-gallery">📖 结局图鉴 <span class="m-cnt">' + galleryCount() + '</span></button>' +
-          '<button class="btn block" id="btn-ach">🏆 成就 <span class="m-cnt">' + achCount() + '</span></button>' +
+          '<button class="btn block" id="btn-gallery">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
+          '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
         '</div>' +
         '<div class="btn-row">' +
-          (hasSave ? '<button class="btn primary" id="btn-continue">继续游戏</button>' : '') +
-          '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">开始新人生</button>' +
+          (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
+          '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">' + T('ui.newGame', null, '开始新人生') + '</button>' +
         '</div>' +
         '<div class="toolbar">' +
-          '<button class="btn ghost small" id="btn-audio">♪ 环境音：关</button>' +
-          '<button class="btn ghost small" id="btn-share-intro">分享给朋友</button>' +
+          '<button class="btn ghost small" id="btn-audio">' + audioLabel() + '</button>' +
+          '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
+          '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
         '</div>' +
       '</div>';
     app.innerHTML = html;
@@ -721,26 +742,28 @@ window.MJ = window.MJ || {};
       MJ.engine.resume(MJ.saveSystem.load());
     });
     $('#btn-new').addEventListener('click', function () {
-      if (hasSave && !window.confirm('将覆盖当前存档并开始新人生，确定吗？')) return;
+      if (hasSave && !window.confirm(T('ui.coverConfirm', null, '将覆盖当前存档并开始新人生，确定吗？'))) return;
       MJ.saveSystem.clear();
       MJ.engine.start();
     });
     var audioBtn = $('#btn-audio');
     if (audioBtn) audioBtn.addEventListener('click', function () {
-      var on = MJ.audio.toggle();
-      audioBtn.textContent = on ? '♪ 环境音：开' : '♪ 环境音：关';
+      MJ.audio.toggle();
+      audioBtn.textContent = audioLabel();
     });
     var si = $('#btn-share-intro');
-    if (si) si.addEventListener('click', function () { openShare('分享《迈克尔·杰克逊：人生选择》', buildGameShareText()); });
+    if (si) si.addEventListener('click', function () { openShare(T('ui.title', null, '迈克尔·杰克逊：人生选择'), buildGameShareText()); });
     var bg = $('#btn-gallery'); if (bg) bg.addEventListener('click', galleryModal);
     var ba = $('#btn-ach'); if (ba) ba.addEventListener('click', achievementsModal);
+    var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
+    _view = function () { ui.showIntro(hasSave); };
   };
 
   ui.showEvent = function (ev, state) {
     var text = (typeof ev.text === 'function') ? ev.text(state) : ev.text;
     var epilogueHtml = '';
     if (MJ.engine.pendingEpilogue) {
-      epilogueHtml = '<div class="epilogue"><span class="e-tag">抉择的回响</span>' + escapeHtml(MJ.engine.pendingEpilogue) + '</div>';
+      epilogueHtml = '<div class="epilogue"><span class="e-tag">' + T('ui.epilogueTag', null, '抉择的回响') + '</span>' + escapeHtml(MJ.engine.pendingEpilogue) + '</div>';
       MJ.engine.pendingEpilogue = null;
     }
     var body =
@@ -750,9 +773,9 @@ window.MJ = window.MJ || {};
         '<div class="body">' + escapeHtml(text) + '</div>';
 
     if (ev.kind === 'auto') {
-      body += '<div class="continue-row"><button class="btn primary" id="btn-next">继续</button></div>';
+      body += '<div class="continue-row"><button class="btn primary" id="btn-next">' + T('ui.next', null, '继续') + '</button></div>';
     } else if (ev.kind === 'ending') {
-      body += '<div class="continue-row"><button class="btn primary" id="btn-end">尘埃落定</button></div>';
+      body += '<div class="continue-row"><button class="btn primary" id="btn-end">' + T('ui.end', null, '尘埃落定') + '</button></div>';
     } else {
       var opts = MJ.engine.optionsOf(ev);
       body += '<div class="options">';
@@ -783,6 +806,8 @@ window.MJ = window.MJ || {};
     }
     bindEventKeys(ev);
     MJ.achievementSystem.evaluate(state, {}).forEach(toastAchievement);
+    var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
+    _view = function () { ui.showEvent(ev, state); };
     window.scrollTo(0, 0);
   };
 
@@ -792,17 +817,19 @@ window.MJ = window.MJ || {};
     var echo = (state.echoes && state.echoes.length) ? state.echoes[state.echoes.length - 1] : '';
     var html = statusBar(state, { year: chapter.start }) +
       '<div class="panel era-card">' +
-        '<div class="era-ch">' + escapeHtml(chapter.title) + '</div>' +
-        '<div class="era-sub">' + escapeHtml(chapter.sub) + '</div>' +
-        (diary ? '<div class="era-block"><span class="e-tag">手记</span>' + escapeHtml(diary) + '</div>' : '') +
-        (echo ? '<div class="era-block"><span class="e-tag">命运回响</span>' + escapeHtml(echo) + '</div>' : '') +
-        (chapter.flavor ? '<div class="era-flavor">' + escapeHtml(chapter.flavor) + '</div>' : '') +
-        '<div class="continue-row"><button class="btn primary" id="btn-era">进入本章</button></div>' +
+        '<div class="era-ch">' + T('chapter.' + chapter.id + '.title', null, chapter.title) + '</div>' +
+        '<div class="era-sub">' + T('chapter.' + chapter.id + '.sub', null, chapter.sub) + '</div>' +
+        (diary ? '<div class="era-block"><span class="e-tag">' + T('ui.diaryTag', null, '手记') + '</span>' + escapeHtml(diary) + '</div>' : '') +
+        (echo ? '<div class="era-block"><span class="e-tag">' + T('ui.echoTag', null, '命运回响') + '</span>' + escapeHtml(echo) + '</div>' : '') +
+        (chapter.flavor ? '<div class="era-flavor">' + T('chapter.' + chapter.id + '.flavor', null, chapter.flavor) + '</div>' : '') +
+        '<div class="continue-row"><button class="btn primary" id="btn-era">' + T('ui.eraEnter', null, '进入本章') + '</button></div>' +
       '</div>' + historyPanel(state);
     app.innerHTML = html;
     try { app.setAttribute('data-chapter', chapter.id); } catch (e) {}
     var btn = document.getElementById('btn-era');
     if (btn) btn.addEventListener('click', function () { onContinue(); });
+    var lb = $('#btn-lang'); if (lb) lb.addEventListener('click', switchLang);
+    _view = function () { ui.showEraCard(chapter, state, onContinue); };
     window.scrollTo(0, 0);
   };
 
@@ -812,13 +839,13 @@ window.MJ = window.MJ || {};
     var snap = '<div class="snapshot">';
     var names = MJ.config.attrNames;
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
-      snap += '<div class="s">' + names[k] + '：<b>' + (state.attributes[k] || 0) + '</b></div>';
+      snap += '<div class="s">' + T('attr.' + k, null, names[k]) + '：<b>' + (state.attributes[k] || 0) + '</b></div>';
     });
-    snap += '<div class="s">净资产：<b>' + formatMoney(state.netWorth) + '</b></div>';
+    snap += '<div class="s">' + T('ui.networth', null, '净资产') + '：<b>' + formatMoney(state.netWorth) + '</b></div>';
     var dm = MJ.dominantMeta(state.meta);
-    snap += '<div class="s">主导路线：<b>' + (dm ? MJ.config.metaDefs[dm].name : '—') + '</b></div>';
-    snap += '<div class="s">传奇评分：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
-    snap += '<div class="life-stat">本局触发变体 <b>' + (state.stats ? state.stats.variants : 0) + '</b> 次 · 关键抉择 <b>' + (state.stats ? state.stats.keyChoices : 0) + '</b> 个</div>';
+    snap += '<div class="s">' + T('ui.metaRoutePrefix', null, '主导路线：') + '<b>' + (dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—') + '</b></div>';
+    snap += '<div class="s">' + T('ui.legendScore', null, '传奇评分') + '：<b>' + legend.score + '（' + legend.grade + '）</b></div>';
+    snap += '<div class="life-stat">' + T('ui.lifeStat', { v: (state.stats ? state.stats.variants : 0), k: (state.stats ? state.stats.keyChoices : 0) }, '本局触发变体 {v} 次 · 关键抉择 {k} 个') + '</div>';
     snap += '</div>';
 
     var canShareImg = false;
@@ -827,31 +854,32 @@ window.MJ = window.MJ || {};
     var html =
       statusBar(state, { year: 2009 }) +
       '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
-        (e.hidden ? '<div class="badge-ultimate">★ 终极隐藏结局</div>' : '') +
+        (e.hidden ? '<div class="badge-ultimate">' + T('ui.badgeUltimate', null, '★ 终极隐藏结局') + '</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
-        '<h2>' + e.name + '</h2>' +
-        '<p class="tone">' + e.tone + '</p>' +
-        '<div class="desc">' + escapeHtml(e.summary) + '</div>' +
-        (e.monologue ? '<div class="mono">' + escapeHtml(e.monologue) + '</div>' : '') +
+        '<h2>' + T('ending.' + id + '.name', null, e.name) + '</h2>' +
+        '<p class="tone">' + T('ending.' + id + '.tone', null, e.tone) + '</p>' +
+        '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
+        (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
         snap +
         '<div class="poster-box" id="poster-box"></div>' +
         '<div class="poster-actions">' +
-          '<button class="btn primary" id="btn-save-poster">保存图片海报</button>' +
-          '<button class="btn ghost" id="btn-copy">复制文案</button>' +
-          (canShareImg ? '<button class="btn ghost" id="btn-share-img">分享图片</button>' : '') +
+          '<button class="btn primary" id="btn-save-poster">' + T('ui.savePoster', null, '保存图片海报') + '</button>' +
+          '<button class="btn ghost" id="btn-copy">' + T('ui.copyText', null, '复制文案') + '</button>' +
+          (canShareImg ? '<button class="btn ghost" id="btn-share-img">' + T('ui.shareImg', null, '分享图片') + '</button>' : '') +
         '</div>' +
-        '<div class="btn-row"><button class="btn primary" id="btn-restart">重新开始</button>' +
-        '<button class="btn ghost" id="btn-audio-end">♪ 环境音：关</button></div>' +
+        '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button>' +
+        '<button class="btn ghost" id="btn-audio-end">' + audioLabel() + '</button>' +
+        '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button></div>' +
       '</div>' +
       '<div class="menu-row">' +
-        '<button class="btn block" id="btn-gallery-end">📖 结局图鉴 <span class="m-cnt">' + galleryCount() + '</span></button>' +
-        '<button class="btn block" id="btn-ach-end">🏆 成就 <span class="m-cnt">' + achCount() + '</span></button>' +
+        '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
+        '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
       '</div>' +
       keyReviewPanel(state) +
       diaryPanel(state) +
       echoesPanel(state) +
       historyPanel(state) +
-      '<div class="foot">你的每一个选择，写就了独一无二的传奇。</div>';
+      '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
     app.innerHTML = html;
     MJ.achievementSystem.evaluate(state, { ending: id }).forEach(toastAchievement);
     $('#btn-restart').addEventListener('click', function () {
@@ -863,13 +891,13 @@ window.MJ = window.MJ || {};
     if (pbox) {
       var thumb = document.createElement('img');
       thumb.src = posterCanvas.toDataURL('image/png');
-      thumb.alt = '传奇海报';
+      thumb.alt = T('ui.posterOfTag', null, '传奇海报');
       thumb.className = 'poster-thumb';
-      thumb.title = '点击放大海报';
+      thumb.title = T('ui.zoomHint', null, '点击放大海报');
       thumb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(thumb);
       var vb = document.createElement('button');
-      vb.className = 'btn ghost small'; vb.textContent = '放大海报';
+      vb.className = 'btn ghost small'; vb.textContent = T('ui.zoomPoster', null, '放大海报');
       vb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(vb);
     }
@@ -880,11 +908,13 @@ window.MJ = window.MJ || {};
     openPosterModal(state, id); // 结局默认弹出海报，可关闭后点击缩略图放大
     var ebAudio = $('#btn-audio-end');
     if (ebAudio) ebAudio.addEventListener('click', function () {
-      var on = MJ.audio.toggle();
-      ebAudio.textContent = on ? '♪ 环境音：开' : '♪ 环境音：关';
+      MJ.audio.toggle();
+      ebAudio.textContent = audioLabel();
     });
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
+    var lbe = $('#btn-lang'); if (lbe) lbe.addEventListener('click', switchLang);
+    _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }
     });
