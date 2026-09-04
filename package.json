@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "node build_singlefile.cjs",
     "preview": "vite preview",
-    "test": "node test/check_dup_events.cjs && node test/check_variant_windows.cjs && node test/check_dream_achievements.cjs && node test/check_residue_en.cjs && node test/check_dream_e2e.cjs && node test/check_epilogue_chain.cjs && node test/check_endings_new.cjs && node test/check_bio_thin.cjs && node test/en_smoke.cjs && node test/check_ui_classes.cjs && node test/check_i18n_coverage.cjs && node test/check_balance_reach.cjs",
+    "test": "node test/check_dup_events.cjs && node test/check_variant_windows.cjs && node test/check_dream_achievements.cjs && node test/check_residue_en.cjs && node test/check_dream_e2e.cjs && node test/check_epilogue_chain.cjs && node test/check_endings_new.cjs && node test/check_bio_thin.cjs && node test/en_smoke.cjs && node test/check_ui_classes.cjs && node test/check_i18n_coverage.cjs && node test/check_balance_reach.cjs && node test/check_responsive.cjs",
     "test:full": "node test/smoke.cjs && npm test"
   },
   "devDependencies": {
