@@ -200,7 +200,7 @@ window.MJ = window.MJ || {};
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="g-rarity">' + rarityLabel(e.rarity) + '</div>' +
+        '<div class="g-rarity">' + (on ? rarityLabel(e.rarity) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
     html += '</div></div>';
@@ -403,7 +403,10 @@ window.MJ = window.MJ || {};
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
         '<div class="g-icon">' + (on ? e.icon : '🗣️') + '</div>' +
         '<div class="g-name">' + escapeHtml(on ? e.name : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="g-desc">' + escapeHtml(on ? e.text : T('ui.locked', null, '？？？')) + '</div></div>';
+        (on
+          ? '<div class="g-desc">' + escapeHtml(e.text) + '</div>'
+          : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
+        '</div>';
     });
     html += '</div></div>';
     return html;
@@ -869,10 +872,6 @@ window.MJ = window.MJ || {};
         '<div class="how">' +
           '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 14 种不同的人生结局。') + '</p>' +
         '</div>' +
-        '<div class="toolbar">' +
-          '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
-          '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
-        '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">' + T('ui.newGame', null, '开始新人生') + '</button>' +
@@ -883,6 +882,13 @@ window.MJ = window.MJ || {};
           '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
           '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
           '<button class="btn block" id="btn-quote">🗣️ ' + T('ui.quoteCodex', null, '语录图鉴') + ' <span class="m-cnt">' + quoteCount() + '</span></button>' +
+        '</div>' +
+        '<div class="intro-foot">' +
+          '<div class="credit">Cr3aM 制作 · MJ Forever</div>' +
+          '<div class="toolbar">' +
+            '<button class="btn ghost small" id="btn-lang">' + (MJ.i18n.lang === 'zh' ? '🌐 中文' : '🌐 EN') + '</button>' +
+            '<button class="btn ghost small" id="btn-share-intro">' + T('ui.shareFriend', null, '分享给朋友') + '</button>' +
+          '</div>' +
         '</div>' +
       '</div>';
     app.innerHTML = html;
