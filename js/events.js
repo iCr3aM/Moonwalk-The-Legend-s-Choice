@@ -306,19 +306,23 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 创作企划器：3_1 改为「企划」choice，选项写 cp_* 画像（不同维度=不同 flag，天然叠加）——
   E['3_1'] = {
-    id: '3_1', year: 1982, title: T('event.3_1.title', null, '《Thriller》'), kind: 'auto',
+    id: '3_1', year: 1982, title: T('event.3_1.title', null, '《Thriller》'), kind: 'choice',
     text: function (s) {
       if (s.flags.isSolo) {
-        return narr(T('event.3_1.text', null, '《Thriller》发行。它后来会成为史上最畅销的专辑，而此刻，你还不知道自己正把流行音乐的天花板推高了一寸。'), s, [
+        return narr(T('event.3_1.text', null, '《Thriller》的企划案摊在桌上。你要如何定义这张将定义时代的专辑？'), s, [
           { cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: T('event.3_1.branch0.text', null, '你隐约感到，这张专辑会把自己钉进历史的某一页。') },
           { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.3_1.branch1.text', null, '商人的直觉在耳边低语：这张唱片，不只是艺术，更是资产。') }
         ]);
       }
       return T('event.3_1.ret0.text', null, '你在团体中参与了这张里程碑专辑的创作，历史的页码里，有你写下的一行。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; },
-    next: '3_1b'
+    options: [
+      { label: T('event.3_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.3_1.opt0.hint', null, '艺术与野心拉满，预算承压（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '3_1b' },
+      { label: T('event.3_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.3_1.opt1.hint', null, '制作精良、人脉加成，野心稍收（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '3_1b' },
+      { label: T('event.3_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.3_1.opt2.hint', null, '创新拉满、制作克制，赌一把（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '3_1b' }
+    ]
   };
 
   E['3_1b'] = {
@@ -366,6 +370,7 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // —— §17.14 巡演自定义：Victory 巡演选项写入 cp_stagecraft（舞台呈现），联动 3_3 格莱美结算 ——
   E['3_2b'] = {
     id: '3_2b', year: 1984, title: T('event.3_2b.title', null, 'Victory 巡演'), kind: 'choice',
     text: function (s) {
@@ -375,23 +380,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.3_2b.opt0.label', null, 'A：全心投入家族巡演'), hint: T('event.3_2b.opt0.hint', null, '亲情与票房双丰收（家庭+15，财富+15，压力+10）'), effects: { family: 15, wealth: 15, stress: 10 }, next: '3_3' },
-      { label: T('event.3_2b.opt1.label', null, 'B：敷衍走完流程'), hint: T('event.3_2b.opt1.hint', null, '例行公事（家庭+5，财富+5）'), effects: { family: 5, wealth: 5 }, next: '3_3' },
-      { label: T('event.3_2b.opt2.label', null, 'C：借台推个人光芒'), hint: T('event.3_2b.opt2.hint', null, '锋芒外露，兄弟微凉（艺术+10，声誉+5，家庭-5）'), effects: { art: 10, reputation: 5, family: -5 }, next: '3_3' }
+      { label: T('event.3_2b.opt0.label', null, 'A：全心投入家族巡演'), hint: T('event.3_2b.opt0.hint', null, '亲情与票房双丰收（家庭+15，财富+15，压力+10）'), effects: { family: 15, wealth: 15, stress: 10 }, flags: { cp_stagecraft: 80 }, next: '3_3' },
+      { label: T('event.3_2b.opt1.label', null, 'B：敷衍走完流程'), hint: T('event.3_2b.opt1.hint', null, '例行公事（家庭+5，财富+5）'), effects: { family: 5, wealth: 5 }, flags: { cp_stagecraft: 45 }, next: '3_3' },
+      { label: T('event.3_2b.opt2.label', null, 'C：借台推个人光芒'), hint: T('event.3_2b.opt2.hint', null, '锋芒外露，兄弟微凉（艺术+10，声誉+5，家庭-5）'), effects: { art: 10, reputation: 5, family: -5 }, flags: { cp_stagecraft: 70 }, next: '3_3' }
     ]
   };
 
+  // —— §17.14 格莱美揭晓：onEnter 在展示前结算（见 planner.resolveGrammy），text 按座数分档叙事 ——
   E['3_3'] = {
-    id: '3_3', year: 1984, title: T('event.3_3.title', null, '格莱美八项'), kind: 'auto',
+    id: '3_3', year: 1984, title: T('event.3_3.title', null, '格莱美之夜'), kind: 'auto',
+    onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'thriller'); },
     text: function (s) {
-      if (s.flags.isSolo) {
-        return narr(T('event.3_3.text', null, '凭《Thriller》一夜独揽八座格莱美，史无前例的加冕。领奖台的光，几乎要把人灼伤。'), s, [
-          { cond: function (s) { return (s.attributes.reputation || 0) >= 90; }, text: T('event.3_3.branch0.text', null, '加冕的瞬间你却有点恍惚——巅峰的风，比想象中更冷。') }
-        ]);
-      }
-      return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
+      var w = s.flags.grammy_thriller || 0;
+      if (w >= 6) return T('event.3_3.sweep.text', null, '凭《Thriller》一夜独揽 ' + w + ' 座格莱美，史无前例的加冕。领奖台的光，几乎要把人灼伤。');
+      if (w >= 3) return T('event.3_3.multi.text', null, '《Thriller》为你赢得 ' + w + ' 座格莱美，乐坛的座次就此改写。');
+      if (w >= 1) return T('event.3_3.minor.text', null, '格莱美之夜，你捧回 ' + w + ' 座奖杯——不算横扫，却已登堂入室。');
+      return T('event.3_3.none.text', null, '提名名单上有你的名字，但最终铩羽而归。闪光灯外的那一瞬，你听见了沉默。');
     },
-    effects: function (s) { return s.flags.isSolo ? { art: 20, reputation: 20 } : { art: 8, reputation: 8 }; },
     next: '3_4'
   };
 

@@ -16,6 +16,7 @@ require('../js/config.js');
 require('../js/state.js');
 require('../js/engine.js');
 require('../js/events.js');
+require('../js/planner.js');
 
 // 桩 UI：无需 DOM
 var _cur = null;

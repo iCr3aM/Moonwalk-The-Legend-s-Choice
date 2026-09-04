@@ -13,6 +13,7 @@ require('../js/i18n.js');
 require('../js/i18n_events_en.js');
 require('../js/engine.js');
 require('../js/events.js');
+require('../js/planner.js');
 
 var MJ = global.MJ;
 MJ.i18n.setLang('en');

@@ -43,7 +43,7 @@ sandbox.localStorage = { getItem: (k) => (k in ls ? ls[k] : null), setItem: (k, 
 sandbox.document = { getElementById: (id) => (id === 'app' ? appEl : makeEl()), createElement: (t) => makeEl(t), querySelector: () => makeEl(), querySelectorAll: () => [], addEventListener() {}, body: makeEl() };
 vm.createContext(sandbox);
 
-const files = ['js/config.js', 'js/i18n.js', 'js/i18n_events_en.js', 'js/events.js', 'js/state.js', 'js/engine.js', 'js/ui.js'];
+const files = ['js/config.js', 'js/i18n.js', 'js/i18n_events_en.js', 'js/events.js', 'js/planner.js', 'js/state.js', 'js/engine.js', 'js/ui.js'];
 let combined = '';
 files.forEach((f) => { combined += '\n/* ===== ' + f + ' ===== */\n' + fs.readFileSync(path.join(root, f), 'utf8') + '\n'; });
 

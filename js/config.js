@@ -32,7 +32,7 @@ window.MJ = window.MJ || {};
   C.initialFlags = {};
 
   // 元路线隐藏计数（非负整数）
-  C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0 };
+  C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0, grammyWins: 0 };
 
   // 稀有度排序（图鉴/成就按 普通→传奇 自上而下排列）
   C.rarityRank = { common: 0, rare: 1, epic: 2, legendary: 3 };

@@ -242,11 +242,13 @@ window.MJ = window.MJ || {};
         if (vid) {
           // 变体显示年份跟随父事件，避免时间线倒挂（GDD §6 时间一致性）
           var vinst = Object.assign({}, MJ.EVENTS[vid]);
+          if (ev.onEnter) vinst.onEnter = ev.onEnter; // 携带主事件结算钩子（GDD §17.14：如格莱美揭晓前动态解析）
           vinst.year = (ev.year != null) ? ev.year
             : (MJ.EVENTS[vid].window ? Math.round((MJ.EVENTS[vid].window[0] + MJ.EVENTS[vid].window[1]) / 2) : null);
           this.current = vinst;
           this._return = id;
           this.state.stats.events = (this.state.stats.events || 0) + 1;
+          if (vinst.onEnter) vinst.onEnter(this.state); // 变体分支同样在进入即结算
           MJ.saveSystem.save(this.state);
           MJ.ui.showEvent(vinst, this.state);
           return;
@@ -254,6 +256,7 @@ window.MJ = window.MJ || {};
       }
 
       this.current = ev;
+      if (ev.onEnter) ev.onEnter(this.state); // GDD §17.14：进入事件即结算（如格莱美揭晓前动态解析）
       this.state.stats.events = (this.state.stats.events || 0) + 1; // 途经人生节点计数
       MJ.saveSystem.save(this.state); // 进入新事件即存档（含 currentId），刷新可续玩
 

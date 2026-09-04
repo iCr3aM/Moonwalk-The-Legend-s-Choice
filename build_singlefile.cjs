@@ -13,6 +13,7 @@ const jsFiles = [
   'js/i18n.js',
   'js/i18n_events_en.js',
   'js/events.js',
+  'js/planner.js',
   'js/state.js',
   'js/engine.js',
   'js/ui.js',
