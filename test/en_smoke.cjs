@@ -97,4 +97,61 @@ for (var k = 0; k < 30; k++) {
   }
 }
 console.log('EN 选项抽样：样本', sampled, '；含中文残留', zhHit);
+
+// 确定性遍历续章链路（禁用变体，避免重定向）：校验 next 全可达、无运行时错误
+var _origPick = MJ.engine.pickVariant;
+MJ.engine.pickVariant = function () { return null; };
+MJ.engine.start();
+MJ.engine.state.flags.survived2009 = true;
+MJ.engine.go('8_0');
+var chainErr = 0, steps = 0, seen = {};
+while (steps++ < 120) {
+  var cur = MJ.engine.current;
+  if (!cur) { chainErr++; break; }
+  if (cur.kind === 'ending') break;
+  if (cur.kind === 'auto') { MJ.engine.proceed(); continue; }
+  if (cur.kind === 'choice') { seen[cur.id] = (seen[cur.id] || 0) + 1; MJ.engine.choose(0); continue; }
+  break;
+}
+MJ.engine.pickVariant = _origPick;
+console.log('EN 续章链路遍历：步数', steps, '；错误', chainErr, '；途经', Object.keys(seen).join('>'));
+
+// 确定性校验 2_6 / 4_4 接入主线（禁用变体，solo 路径）
+MJ.engine.pickVariant = function () { return null; };
+MJ.engine.start();
+MJ.engine.state.flags.isSolo = true;
+MJ.engine.go('2_4');
+var g2 = 0, seen2 = {};
+while (g2++ < 60) {
+  var c2 = MJ.engine.current;
+  if (!c2) { chainErr++; break; }
+  if (c2.id === '3_1') { seen2['3_1'] = 1; break; }
+  if (c2.kind === 'auto') { MJ.engine.proceed(); continue; }
+  if (c2.kind === 'choice') { seen2[c2.id] = (seen2[c2.id] || 0) + 1; MJ.engine.choose(0); continue; }
+  break;
+}
+MJ.engine.pickVariant = _origPick;
+console.log('EN 第二章 solo 链路(2_4→3_1) 途经', Object.keys(seen2).join('>'), '；是否经过 2_5/2_6:', !!(seen2['2_5'] && seen2['2_6']));
+
+// 新事件（g4/g5）确定性覆盖：强制校验每个新事件/变体在 EN 下无中文残留
+var newIds = ['8_1b', '8_2b', '8_3b', '8_5b', '8_4b', '8_4c', '8_7', '2_6', '4_4', 'V_POST_TRIBUTE', 'V_POST_HOLO', 'V_POST_FAMILY'];
+var cov = 0, covHit = 0;
+function zhOf(x) { if (x == null) return false; if (typeof x === 'function') x = x(); return typeof x === 'string' && /[一-鿿]/.test(x); }
+newIds.forEach(function (id) {
+  var ev = MJ.EVENTS[id];
+  if (!ev) { console.log('缺失事件', id); covHit++; return; }
+  var loc = MJ.localizeEvent(ev, new MJ.GameState());
+  [loc.title, loc.text].forEach(function (t) { if (zhOf(t)) { covHit++; console.log('EN 残留(默认) ' + id + ':', t); } });
+  (loc.options || []).forEach(function (o) {
+    if (zhOf(o.label)) { covHit++; console.log('EN 残留 ' + id + ' label:', o.label); }
+    if (zhOf(o.hint)) { covHit++; console.log('EN 残留 ' + id + ' hint:', o.hint); }
+  });
+  cov++;
+});
+['artPath', 'phil', 'mogul', 'recluse', ''].forEach(function (m) {
+  var st = new MJ.GameState(); if (m) st.meta[m] = 1;
+  var loc = MJ.localizeEvent(MJ.EVENTS['8_7'], st);
+  if (zhOf(loc.text)) { covHit++; console.log('EN 残留 8_7(' + m + '):', loc.text); }
+});
+console.log('EN 新事件覆盖：事件', cov, '；中文残留', covHit);
 console.log('EN 测试结束。');

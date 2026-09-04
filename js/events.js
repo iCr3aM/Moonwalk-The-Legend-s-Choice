@@ -270,9 +270,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.2_4.opt0.label', null, 'A：深度绑定 Epic'), hint: T('event.2_4.opt0.hint', null, '话语权与收益齐涨（声誉+10，财富+15）'), effects: { reputation: 10, wealth: 15, rel: { quincy: 12 } }, flags: { epicDeep: true }, next: '3_1' },
-      { label: T('event.2_4.opt1.label', null, 'B：保持安全距离'), hint: T('event.2_4.opt1.hint', null, '留白给生活，压力随之退潮（家庭+5，压力-10）'), effects: { family: 5, stress: -10 }, flags: { epicDeep: false }, next: '3_1' },
-      { label: T('event.2_4.opt2.label', null, 'C：自创厂牌单干'), hint: T('event.2_4.opt2.hint', null, '野心勃勃，却也烧钱劳神（艺术+10，财富-10，压力+5）'), effects: { art: 10, wealth: -10, stress: 5 }, next: '3_1' }
+      { label: T('event.2_4.opt0.label', null, 'A：深度绑定 Epic'), hint: T('event.2_4.opt0.hint', null, '话语权与收益齐涨（声誉+10，财富+15）'), effects: { reputation: 10, wealth: 15, rel: { quincy: 12 } }, flags: { epicDeep: true }, next: '2_5' },
+      { label: T('event.2_4.opt1.label', null, 'B：保持安全距离'), hint: T('event.2_4.opt1.hint', null, '留白给生活，压力随之退潮（家庭+5，压力-10）'), effects: { family: 5, stress: -10 }, flags: { epicDeep: false }, next: '2_5' },
+      { label: T('event.2_4.opt2.label', null, 'C：自创厂牌单干'), hint: T('event.2_4.opt2.hint', null, '野心勃勃，却也烧钱劳神（艺术+10，财富-10，压力+5）'), effects: { art: 10, wealth: -10, stress: 5 }, next: '2_5' }
     ]
   };
 
@@ -285,9 +285,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.2_5.opt0.label', null, 'A：炫一场技巧独唱'), hint: T('event.2_5.opt0.hint', null, '技惊四座，紧绷感同在（艺术+10，声誉+5，压力+5）'), effects: { art: 10, reputation: 5, stress: 5 }, next: '3_1' },
-      { label: T('event.2_5.opt1.label', null, 'B：稳妥完成演出'), hint: T('event.2_5.opt1.hint', null, '得体收官（声誉+5）'), effects: { reputation: 5 }, next: '3_1' },
-      { label: T('event.2_5.opt2.label', null, 'C：婉拒独唱安排'), hint: T('event.2_5.opt2.hint', null, '低调退后半步（声誉-3，家庭+3）'), effects: { reputation: -3, family: 3 }, next: '3_1' }
+      { label: T('event.2_5.opt0.label', null, 'A：炫一场技巧独唱'), hint: T('event.2_5.opt0.hint', null, '技惊四座，紧绷感同在（艺术+10，声誉+5，压力+5）'), effects: { art: 10, reputation: 5, stress: 5 }, next: '2_6' },
+      { label: T('event.2_5.opt1.label', null, 'B：稳妥完成演出'), hint: T('event.2_5.opt1.hint', null, '得体收官（声誉+5）'), effects: { reputation: 5 }, next: '2_6' },
+      { label: T('event.2_5.opt2.label', null, 'C：婉拒独唱安排'), hint: T('event.2_5.opt2.hint', null, '低调退后半步（声誉-3，家庭+3）'), effects: { reputation: -3, family: 3 }, next: '2_6' }
+    ]
+  };
+
+  // ---------- 主线偏薄章节拓展（g5：GDD §17.3） ----------
+  E['2_6'] = {
+    id: '2_6', year: 1981, title: T('event.2_6.title', null, '格莱美加冕之夜'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.2_6.text', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。台下的昆西笑着鼓掌——这段黄金搭档，开始被世人记住。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.2_6.branch0.text', null, '你握着奖杯，忽然明白，舞台之外还有人懂你的野心。') }
+      ]);
+    },
+    options: [
+      { label: T('event.2_6.opt0.label', null, 'A：与昆西举杯共庆'), hint: T('event.2_6.opt0.hint', null, '情谊与声名同酿（艺术+10，声誉+5，昆西好感+10）'), effects: { art: 10, reputation: 5, rel: { quincy: 10 } }, next: '3_1' },
+      { label: T('event.2_6.opt1.label', null, 'B：把奖杯献给家人'), hint: T('event.2_6.opt1.hint', null, '荣耀归家（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '3_1' },
+      { label: T('event.2_6.opt2.label', null, 'C：趁热规划下一张专辑'), hint: T('event.2_6.opt2.hint', null, '趁热打铁（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '3_1' }
     ]
   };
 
@@ -510,6 +525,20 @@ window.MJ = window.MJ || {};
       ]);
     },
     effects: { reputation: 10, wealth: 5 }, next: '5_1'
+  };
+
+  E['4_4'] = {
+    id: '4_4', year: 1989, title: T('event.4_4.title', null, '后《Bad》时代'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.4_4.text', null, '《Bad》的余温还在，世界已经把你看作流行乐的代名词。站在 1989 的十字路口，你要想想，接下来的名字该写向哪里。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.4_4.branch0.text', null, '商人的直觉告诉你，名气之外还有更大的版图可画。') }
+      ]);
+    },
+    options: [
+      { label: T('event.4_4.opt0.label', null, 'A：乘势扩展商业版图'), hint: T('event.4_4.opt0.hint', null, '把名气换成版图（财富+15，声誉+5，商业巨擘+1）'), effects: { wealth: 15, reputation: 5, mogul: 1 }, next: '5_1' },
+      { label: T('event.4_4.opt1.label', null, 'B：沉淀回归家庭'), hint: T('event.4_4.opt1.hint', null, '名利之外有归处（家庭+10，压力-5）'), effects: { family: 10, stress: -5 }, next: '5_1' },
+      { label: T('event.4_4.opt2.label', null, 'C：筹备更先锋的作品'), hint: T('event.4_4.opt2.hint', null, '向未知突围（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '5_1' }
+    ]
   };
 
   E['5_1'] = {
@@ -1007,9 +1036,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_1.opt0.label', null, 'A：采纳“数字单曲 + 汇编专辑”'), hint: T('event.8_1.opt0.hint', null, '先锋之举，声誉与艺术双升（艺术+12，声誉+10）'), effects: { art: 12, reputation: 10 }, flags: { digitalSingles: true }, next: '8_2' },
-      { label: T('event.8_1.opt1.label', null, 'B：坚持传统专辑模式'), hint: T('event.8_1.opt1.hint', null, '稳妥但守成（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, next: '8_2' },
-      { label: T('event.8_1.opt2.label', null, 'C：两者兼顾'), hint: T('event.8_1.opt2.hint', null, '折中路线（艺术+8，声誉+6，财富+5）'), effects: { art: 8, reputation: 6, wealth: 5 }, flags: { digitalSingles: true }, next: '8_2' }
+      { label: T('event.8_1.opt0.label', null, 'A：采纳“数字单曲 + 汇编专辑”'), hint: T('event.8_1.opt0.hint', null, '先锋之举，声誉与艺术双升（艺术+12，声誉+10）'), effects: { art: 12, reputation: 10 }, flags: { digitalSingles: true }, next: '8_1b' },
+      { label: T('event.8_1.opt1.label', null, 'B：坚持传统专辑模式'), hint: T('event.8_1.opt1.hint', null, '稳妥但守成（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, next: '8_1b' },
+      { label: T('event.8_1.opt2.label', null, 'C：两者兼顾'), hint: T('event.8_1.opt2.hint', null, '折中路线（艺术+8，声誉+6，财富+5）'), effects: { art: 8, reputation: 6, wealth: 5 }, flags: { digitalSingles: true }, next: '8_1b' }
     ]
   };
   E['8_2'] = {
@@ -1020,9 +1049,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_2.opt0.label', null, 'A：精挑细选重磅发行'), hint: T('event.8_2.opt0.hint', null, '口碑爆棚（艺术+12，声誉+12）'), effects: { art: 12, reputation: 12 }, next: '8_3' },
-      { label: T('event.8_2.opt1.label', null, 'B：原样打包图省事'), hint: T('event.8_2.opt1.hint', null, '量足但平庸（艺术+4，声誉+4）'), effects: { art: 4, reputation: 4 }, next: '8_3' },
-      { label: T('event.8_2.opt2.label', null, 'C：加入未公开遗珠'), hint: T('event.8_2.opt2.hint', null, '惊喜彩蛋（艺术+8，声誉+8，财富+5）'), effects: { art: 8, reputation: 8, wealth: 5 }, next: '8_3' }
+      { label: T('event.8_2.opt0.label', null, 'A：精挑细选重磅发行'), hint: T('event.8_2.opt0.hint', null, '口碑爆棚（艺术+12，声誉+12）'), effects: { art: 12, reputation: 12 }, next: '8_2b' },
+      { label: T('event.8_2.opt1.label', null, 'B：原样打包图省事'), hint: T('event.8_2.opt1.hint', null, '量足但平庸（艺术+4，声誉+4）'), effects: { art: 4, reputation: 4 }, next: '8_2b' },
+      { label: T('event.8_2.opt2.label', null, 'C：加入未公开遗珠'), hint: T('event.8_2.opt2.hint', null, '惊喜彩蛋（艺术+8，声誉+8，财富+5）'), effects: { art: 8, reputation: 8, wealth: 5 }, next: '8_2b' }
     ]
   };
   E['8_3'] = {
@@ -1033,8 +1062,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，身家暴涨（净资产 +7.5 亿）'), effects: { wealth: 50 }, moneyEffect: 75000, flags: { sonySold: true }, next: '8_4' },
-      { label: T('event.8_3.opt1.label', null, 'B：保留部分权益'), hint: T('event.8_3.opt1.hint', null, '留得青山（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3 }, next: '8_4' }
+      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，身家暴涨（净资产 +7.5 亿）'), effects: { wealth: 50 }, moneyEffect: 75000, flags: { sonySold: true }, next: '8_3b' },
+      { label: T('event.8_3.opt1.label', null, 'B：保留部分权益'), hint: T('event.8_3.opt1.hint', null, '留得青山（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3 }, next: '8_3b' }
     ]
   };
   E['8_4'] = {
@@ -1045,9 +1074,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_4.opt0.label', null, 'A：扩建公益基金会'), hint: T('event.8_4.opt0.hint', null, '善名远播，爱心+1（声誉+10，家庭+3，慈善+1）'), effects: { reputation: 10, family: 3, phil: 1 }, next: '8_5' },
-      { label: T('event.8_4.opt1.label', null, 'B：守护家族与版权'), hint: T('event.8_4.opt1.hint', null, '稳妥传承（家庭+10，财富+10）'), effects: { family: 10, wealth: 10 }, next: '8_5' },
-      { label: T('event.8_4.opt2.label', null, 'C：半退半隐享清闲'), hint: T('event.8_4.opt2.hint', null, '把日子还给自己（压力-10，隐士+1）'), effects: { stress: -10, recluse: 1 }, next: '8_5' }
+      { label: T('event.8_4.opt0.label', null, 'A：扩建公益基金会'), hint: T('event.8_4.opt0.hint', null, '善名远播，爱心+1（声誉+10，家庭+3，慈善+1）'), effects: { reputation: 10, family: 3, phil: 1 }, next: '8_4b' },
+      { label: T('event.8_4.opt1.label', null, 'B：守护家族与版权'), hint: T('event.8_4.opt1.hint', null, '稳妥传承（家庭+10，财富+10）'), effects: { family: 10, wealth: 10 }, next: '8_4b' },
+      { label: T('event.8_4.opt2.label', null, 'C：半退半隐享清闲'), hint: T('event.8_4.opt2.hint', null, '把日子还给自己（压力-10，隐士+1）'), effects: { stress: -10, recluse: 1 }, next: '8_4b' }
     ]
   };
   E['8_5'] = {
@@ -1058,9 +1087,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_5.opt0.label', null, 'A：由侄子 Jaafar Jackson 饰演（贴合真实历史）'), hint: T('event.8_5.opt0.hint', null, '亲人演绎，你亲自授权（声誉+12，艺术+5）'), effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_6' },
-      { label: T('event.8_5.opt1.label', null, 'B：亲自出演银幕上的自己（架空续章）'), hint: T('event.8_5.opt1.hint', null, '传奇由传奇自己演绎（声誉+18，艺术+10，压力+5）'), effects: { reputation: 18, art: 10, stress: 5 }, flags: { biopicMJStar: true }, next: '8_6' },
-      { label: T('event.8_5.opt2.label', null, 'C：低调回避，把故事交给后人'), hint: T('event.8_5.opt2.hint', null, '留白也是一种回答（声誉+3）'), effects: { reputation: 3 }, next: '8_6' }
+      { label: T('event.8_5.opt0.label', null, 'A：由侄子 Jaafar Jackson 饰演（贴合真实历史）'), hint: T('event.8_5.opt0.hint', null, '亲人演绎，你亲自授权（声誉+12，艺术+5）'), effects: { reputation: 12, art: 5 }, flags: { biopic2026: true }, next: '8_7' },
+      { label: T('event.8_5.opt1.label', null, 'B：亲自出演银幕上的自己（架空续章）'), hint: T('event.8_5.opt1.hint', null, '传奇由传奇自己演绎（声誉+18，艺术+10，压力+5）'), effects: { reputation: 18, art: 10, stress: 5 }, flags: { biopicMJStar: true }, next: '8_7' },
+      { label: T('event.8_5.opt2.label', null, 'C：低调回避，把故事交给后人'), hint: T('event.8_5.opt2.hint', null, '留白也是一种回答（声誉+3）'), effects: { reputation: 3 }, next: '8_7' }
     ]
   };
   E['8_6'] = {
@@ -1077,6 +1106,99 @@ window.MJ = window.MJ || {};
       return base;
     },
     next: null
+  };
+
+  // ---------- 续章拓展节点（g4：GDD §17.2 假设 2009 未离世） ----------
+  E['8_1b'] = {
+    id: '8_1b', year: 2014, title: T('event.8_1b.title', null, '全息归来'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_1b.text', null, '2014 年的 Billboard 颁奖礼，一束光里站起“你”——以全息影像重返舞台，与台下的真实观众隔空合唱。科技让传奇在离世之外，另有一种复活。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.8_1b.branch0.text', null, '当熟悉的舞步由光影重现，你忽然分不清台上是幻影，还是那个从未离开的自己。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_1b.opt0.label', null, 'A：拥抱这场科技奇观'), hint: T('event.8_1b.opt0.hint', null, '艺术与科技惊艳世人（艺术+10，声誉+8，artPath+1）'), effects: { art: 10, reputation: 8, artPath: 1 }, next: '8_2' },
+      { label: T('event.8_1b.opt1.label', null, 'B：低调收录为纪念'), hint: T('event.8_1b.opt1.hint', null, '把这一刻留给怀念的人（声誉+5，家庭+3）'), effects: { reputation: 5, family: 3 }, next: '8_2' },
+      { label: T('event.8_1b.opt2.label', null, 'C：婉拒全息噱头'), hint: T('event.8_1b.opt2.hint', null, '守住本真的边界（艺术+5，隐士+1）'), effects: { art: 5, recluse: 1 }, next: '8_2' }
+    ]
+  };
+  E['8_2b'] = {
+    id: '8_2b', year: 2014, title: T('event.8_2b.title', null, '遗作《Xscape》'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_2b.text', null, '继你亲订的汇编之后，又一批早年未公开的小样被整理成《Xscape》问世。它们不是你亲手排定，却也成了与世人最后的对话。'), s, [
+        { cond: function (s) { return s.flags.digitalSingles === true; }, text: T('event.8_2b.branch0.text', null, '你曾规划“单曲汇成专辑”，而这张遗珠，倒像命运替你补上的尾声。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_2b.opt0.label', null, 'A：亲自参与编曲打磨'), hint: T('event.8_2b.opt0.hint', null, '亲手打磨最后的礼物（艺术+10，声誉+8）'), effects: { art: 10, reputation: 8 }, flags: { xscapeCurated: true }, next: '8_3' },
+      { label: T('event.8_2b.opt1.label', null, 'B：交予团队打理'), hint: T('event.8_2b.opt1.hint', null, '省心却也稳妥（声誉+5，财富+5）'), effects: { reputation: 5, wealth: 5 }, next: '8_3' },
+      { label: T('event.8_2b.opt2.label', null, 'C：封存不予发行'), hint: T('event.8_2b.opt2.hint', null, '把私密留给自己（隐士+1，家庭+3）'), effects: { recluse: 1, family: 3 }, next: '8_3' }
+    ]
+  };
+  E['8_3b'] = {
+    id: '8_3b', year: 2017, title: T('event.8_3b.title', null, '遗产税争议'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_3b.text', null, '遗产管理委员会与税务机关就资产估值对簿公堂，诉讼从 2013 年一路拉到 2017 年。账面上的数字，成了另一场没有观众的拉锯。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.8_3b.branch0.text', null, '你早把版图织得够大，这回合的估值博弈，不过是商海的余波。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_3b.opt0.label', null, 'A：委托专业团队抗辩'), hint: T('event.8_3b.opt0.hint', null, '花钱买专业，口碑微稳（财富-10，声誉+3）'), effects: { wealth: -10, reputation: 3 }, next: '8_5b' },
+      { label: T('event.8_3b.opt1.label', null, 'B：公开财务透明化'), hint: T('event.8_3b.opt1.hint', null, '以透明换信任（声誉+5，媒体+6）'), effects: { reputation: 5, media: 6 }, next: '8_5b' },
+      { label: T('event.8_3b.opt2.label', null, 'C：庭外和解息事'), hint: T('event.8_3b.opt2.hint', null, '破财消灾，心力交瘁（财富-15，压力+5）'), effects: { wealth: -15, stress: 5 }, next: '8_5b' }
+    ]
+  };
+  E['8_5b'] = {
+    id: '8_5b', year: 2019, title: T('event.8_5b.title', null, '舆论风波'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_5b.text', null, '一部回溯你人生的纪录片引发新一轮公共讨论，镜头之外，议论像潮水一样涨落。如何回应，又一次交到你手上。'), s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.8_5b.branch0.text', null, '你早已习惯退到镜头之外，这回的喧哗，更像隔着玻璃的雨。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_5b.opt0.label', null, 'A：保持沉默'), hint: T('event.8_5b.opt0.hint', null, '把回应咽回心里（隐士+1，孤独+3）'), effects: { recluse: 1, loneliness: 3 }, next: '8_4' },
+      { label: T('event.8_5b.opt1.label', null, 'B：发表公开声明'), hint: T('event.8_5b.opt1.hint', null, '以正视听，徒增疲惫（声誉+3，压力+5，媒体+5）'), effects: { reputation: 3, stress: 5, media: 5 }, next: '8_4' },
+      { label: T('event.8_5b.opt2.label', null, 'C：用慈善行动回应'), hint: T('event.8_5b.opt2.hint', null, '让善意替你说话（慈善+1，声誉+5，家庭+3）'), effects: { phil: 1, reputation: 5, family: 3 }, next: '8_4' }
+    ]
+  };
+  E['8_4b'] = {
+    id: '8_4b', year: 2022, title: T('event.8_4b.title', null, '《MJ the Musical》'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_4b.text', null, '百老汇的聚光灯下，一部以你为名号的音乐剧拉开帷幕。舞台上的“你”替你谢幕，而台下的掌声，仍为你而响。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.8_4b.branch0.text', null, '你看着台上那个演绎自己的人，忽然觉得传奇也可以被重新讲述。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_4b.opt0.label', null, 'A：亲临首演站台'), hint: T('event.8_4b.opt0.hint', null, '为传奇添一笔温度（声誉+10，艺术+5）'), effects: { reputation: 10, art: 5 }, next: '8_4c' },
+      { label: T('event.8_4b.opt1.label', null, 'B：低调遥致祝贺'), hint: T('event.8_4b.opt1.hint', null, '退后半步，留白给舞台（声誉+5，隐士+1）'), effects: { reputation: 5, recluse: 1 }, next: '8_4c' },
+      { label: T('event.8_4b.opt2.label', null, 'C：投资并深度参与'), hint: T('event.8_4b.opt2.hint', null, '商与艺兼得（财富-5，艺术+8，商业巨擘+1）'), effects: { wealth: -5, art: 8, mogul: 1 }, flags: { mjMusical: true }, next: '8_4c' }
+    ]
+  };
+  E['8_4c'] = {
+    id: '8_4c', year: 2023, title: T('event.8_4c.title', null, '《Thriller 40》周年'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_4c.text', null, '《Thriller》迎来四十岁生日，一场横跨两年的纪念企划把老歌重新推上榜单。一代人的青春，被同一段节拍唤醒。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.8_4c.branch0.text', null, '你想起录制它时那群并肩的人，怀旧里多了一层暖意。') }
+      ]);
+    },
+    options: [
+      { label: T('event.8_4c.opt0.label', null, 'A：办盛大纪念演出'), hint: T('event.8_4c.opt0.hint', null, '与一代人共舞（声誉+10，艺术+5）'), effects: { reputation: 10, art: 5 }, next: '8_5' },
+      { label: T('event.8_4c.opt1.label', null, 'B：出珍藏版合辑'), hint: T('event.8_4c.opt1.hint', null, '情怀变现（声誉+6，财富+5）'), effects: { reputation: 6, wealth: 5 }, next: '8_5' },
+      { label: T('event.8_4c.opt2.label', null, 'C：与家人共度纪念'), hint: T('event.8_4c.opt2.hint', null, '把这一刻留给至亲（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '8_5' }
+    ]
+  };
+  E['8_7'] = {
+    id: '8_7', year: 2026, title: T('event.8_7.title', null, '留给后人的话'), kind: 'auto',
+    text: function (s) {
+      return narr(T('event.8_7.text', null, '走到这一程，你停下手，想给后来者留几句话。'), s, [
+        { cond: function (s) { return MJ.dominantMeta(s.meta) === 'artPath'; }, text: T('event.8_7.branch0.text', null, '\n“别怕把整颗心交给一支舞、一首歌——那才是你真正活过的证据。”') },
+        { cond: function (s) { return MJ.dominantMeta(s.meta) === 'phil'; }, text: T('event.8_7.branch1.text', null, '\n“若你手中有一点光，就分给暗处的人，这比任何奖杯都长久。”') },
+        { cond: function (s) { return MJ.dominantMeta(s.meta) === 'mogul'; }, text: T('event.8_7.branch2.text', null, '\n“把热爱变成能握在手中的版图，也是一种写传奇的方式。”') },
+        { cond: function (s) { return MJ.dominantMeta(s.meta) === 'recluse'; }, text: T('event.8_7.branch3.text', null, '\n“偶尔躲起来，听见自己的心跳，也挺好。”') },
+        { cond: function (s) { return MJ.dominantMeta(s.meta) !== 'artPath' && MJ.dominantMeta(s.meta) !== 'phil' && MJ.dominantMeta(s.meta) !== 'mogul' && MJ.dominantMeta(s.meta) !== 'recluse'; }, text: T('event.8_7.branch4.text', null, '\n“无论走到哪，记得为何而唱。”') }
+      ]);
+    },
+    next: '8_6'
   };
 
   E['7_3'] = {
@@ -1579,6 +1701,49 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_FLASHBACK.opt0.label', null, 'A：把思念写进歌里'), hint: T('event.V_FLASHBACK.opt0.hint', null, '温柔沉淀（艺术+5，孤独-8）'), effects: { art: 5, loneliness: -8 }, next: '__RETURN__' },
       { label: T('event.V_FLASHBACK.opt1.label', null, 'B：独自消化'), hint: T('event.V_FLASHBACK.opt1.hint', null, '内敛，却更孤（孤独+5，压力+3）'), effects: { loneliness: 5, stress: 3 }, next: '__RETURN__' }
+    ]
+  };
+
+  // ---------- 续章专属变体池（g4：GDD §17.2，窗口 [2010,2026]） ----------
+  E.V_POST_TRIBUTE = {
+    id: 'V_POST_TRIBUTE', variant: true, window: [2010, 2026], weight: 35,
+    title: T('event.V_POST_TRIBUTE.title', null, '年轻一代的翻唱致敬'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_POST_TRIBUTE.text', null, '社交平台上，一群少年翻唱你的歌走红。那些旋律被新一代重新哼起，像一封迟到却温热的手写信。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 75; }, text: T('event.V_POST_TRIBUTE.branch0.text', null, '你看着屏幕里那张年轻的面孔，像看见当年同样渴望被世界听见的自己。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_POST_TRIBUTE.opt0.label', null, 'A：欣然聆听并鼓励'), hint: T('event.V_POST_TRIBUTE.opt0.hint', null, '薪火暖意（艺术+5，家庭+3）'), effects: { art: 5, family: 3 }, next: '__RETURN__' },
+      { label: T('event.V_POST_TRIBUTE.opt1.label', null, 'B：低调致谢'), hint: T('event.V_POST_TRIBUTE.opt1.hint', null, '把舞台留给后来人（声誉+3）'), effects: { reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_POST_HOLO = {
+    id: 'V_POST_HOLO', variant: true, window: [2014, 2026], weight: 30,
+    cond: function (s) { return (s.attributes.art || 0) >= 80; },
+    title: T('event.V_POST_HOLO.title', null, 'AI 与全息巡演之争'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_POST_HOLO.text', null, '技术公司提议用 AI 与全息影像办一场“永不落幕”的巡演。关于“真实的你”该由谁定义的争论，再次被点燃。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_POST_HOLO.branch0.text', null, '你早已把名字变成一门生意，这回的争议，倒像给版图添了注脚。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_POST_HOLO.opt0.label', null, 'A：拥抱新技术授权'), hint: T('event.V_POST_HOLO.opt0.hint', null, '先驱姿态（艺术+5，声誉+5，媒体+4）'), effects: { art: 5, reputation: 5, media: 4 }, next: '__RETURN__' },
+      { label: T('event.V_POST_HOLO.opt1.label', null, 'B：审慎保留态度'), hint: T('event.V_POST_HOLO.opt1.hint', null, '守住边界（声誉+3，隐士+1）'), effects: { reputation: 3, recluse: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_POST_FAMILY = {
+    id: 'V_POST_FAMILY', variant: true, window: [2013, 2026], weight: 25,
+    cond: function (s) { return s.flags.sonySold === true || (s.meta.mogul || 0) >= 1; },
+    title: T('event.V_POST_FAMILY.title', null, '家族内部的版权分歧'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_POST_FAMILY.text', null, '围绕遗产与版权的处置，家族内部出现了不同的声音。血缘与利益，再一次需要你从中调停。'), s, [
+        { cond: function (s) { return s.flags.sonySold === true; }, text: T('event.V_POST_FAMILY.branch0.text', null, '索尼收购后，权益的盘子更大，家人的盘算也更多。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_POST_FAMILY.opt0.label', null, 'A：以情分化解分歧'), hint: T('event.V_POST_FAMILY.opt0.hint', null, '亲情为先（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3 }, next: '__RETURN__' },
+      { label: T('event.V_POST_FAMILY.opt1.label', null, 'B：交由专业团队处理'), hint: T('event.V_POST_FAMILY.opt1.hint', null, '专业但疏远（财富-5，压力+5）'), effects: { wealth: -5, stress: 5 }, next: '__RETURN__' }
     ]
   };
 

@@ -473,9 +473,9 @@
 - 接入后与现有 `survived2009` 路由、元路线、结局判定完全兼容（仅延长链路、增加分支）。
 
 ### 17.3 主线相对偏薄的章节（次要拓展位）
-> 主线七章整体饱和（总节点 ~92+），但两章密度偏低，可作次级拓展：
-- **第二章 · 单飞与 Off The Wall（1978–1981，仅 2_1–2_5）**：可补 Off The Wall 专辑（1979，首支 solo 冠军）、首座 solo 格莱美、与 Diana Ross / Quincy Jones 合作深化（呼应 M1 关系系统）。
-- **第四章 · Bad 与梦幻庄园（1986–1990，仅 4_0–4_3）**：可补 Bad 世界巡演（1987–88）、1984 格莱美、We Are The World 后的公益声望（1985 落在第三章边界，可作桥接节点）。
+> 主线七章整体饱和（总节点 ~100+），但两章密度偏低，可作次级拓展：
+- **第二章 · 单飞与 Off The Wall（1978–1981）**：【已落地 g5】新增 `2_6` 格莱美加冕之夜（1981，深化与昆西·琼斯的黄金搭档，呼应 M1 关系系统 `rel.quincy`），并修复原 `2_5` 格莱美表演为死节点（solo 路径现可经 `2_4→2_5→2_6→3_1` 贯通）。其余候选（Diana Ross 合作深化）留待后续。
+- **第四章 · Bad 与梦幻庄园（1986–1990）**：【已落地 g5】新增 `4_4` 后《Bad》时代（1989，商业版图 / 回归家庭 / 先锋作品三选），填补 `4_3→5_1` 间空白。其余候选（1984 格莱美、We Are The World 公益声望可作第三章边界桥接）保持开放。
 
 ---
 
@@ -486,12 +486,12 @@
 ## 附录 A：节点统计（v0.5）
 | 类型 | 数量 |
 | --- | --- |
-| 选择事件 | 约 40（含续章 6 个选择） |
-| 自动事件 | 约 14 |
+| 选择事件 | 约 48（含续章 12 个选择） |
+| 自动事件 | 约 15（含续章 `8_7`） |
 | 条件事件 | 约 18 |
-| 变体事件 | 34（已扩，含隐藏/条件） |
+| 变体事件 | 37（含续章 `V_POST_*` 3 个） |
 | 结局/判定 | 15（14 结局 + 判定） |
-| 合计 | 约 92+ |
+| 合计 | 约 100+ |
 
 ## 附录 B：核心标志与元路线计数
 **标志**：isSolo, soloAlbum1972, epicDeep, isPepsiBurned, painkillerDependent, weAreTheWorld, atvBought, captainEO, neverlandType, healWorld, marriedLisa, marriedDebbie, sonyMerge, invincibleStarted, bloodDance, scream, earthSong, ghosts, charity99, anniv2001, blanketBorn, babyDangle, bashirDoc, settlement1993, secondCharge, secondVerdict, debtCrisis, thisItHeld, thisItScale, digitalSingles, sonySold, biopic2026, biopicMJStar, survived2009。
