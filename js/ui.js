@@ -878,6 +878,18 @@ window.MJ = window.MJ || {};
   }
 
 
+  // 画布转 <img> src：优先 Blob URL（iOS Safari 长按「保存图片」对 data: URI 不弹菜单，Blob URL 可正常保存）
+  function setPosterSrc(imgEl, cv) {
+    if (cv.toBlob) {
+      cv.toBlob(function (blob) {
+        if (!blob) { imgEl.src = cv.toDataURL('image/png'); return; }
+        imgEl.src = URL.createObjectURL(blob);
+      }, 'image/png');
+    } else {
+      imgEl.src = cv.toDataURL('image/png');
+    }
+  }
+
   // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
   function openPosterModal(state, id, archiveIdx, prebuilt) {
     var old = document.getElementById('poster-overlay');
@@ -899,13 +911,13 @@ window.MJ = window.MJ || {};
         '</div>' +
       '</div>' +
     '</div>';
-    // 移动端长按「保存图片」原生菜单只对 <img> 生效，<canvas> 无效；故将画布转为 <img> 再插入
+    // 移动端长按「保存图片」原生菜单只对 <img> 生效；且 iOS Safari 对 data: URI 不弹保存项，故用 Blob URL
     var _posterImg = document.createElement('img');
-    _posterImg.src = cv.toDataURL('image/png');
     _posterImg.alt = T('ui.posterOfTag', null, '传奇海报');
     _posterImg.className = 'poster-img';
     _posterImg.title = T('ui.zoomHint', null, '点击放大海报');
     overlay.querySelector('.poster-canvas-wrap').appendChild(_posterImg);
+    setPosterSrc(_posterImg, cv);
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
@@ -921,7 +933,11 @@ window.MJ = window.MJ || {};
   }
   function closePosterModal() {
     var o = document.getElementById('poster-overlay');
-    if (o) o.parentNode.removeChild(o);
+    if (o) {
+      var _im = o.querySelector('.poster-canvas-wrap img');
+      if (_im && _im.src && _im.src.indexOf('blob:') === 0) { try { URL.revokeObjectURL(_im.src); } catch (e) {} }
+      o.parentNode.removeChild(o);
+    }
   }
 
   ui.showIntro = function (hasSave) {
@@ -1110,7 +1126,7 @@ window.MJ = window.MJ || {};
     var pbox = document.getElementById('poster-box');
     if (pbox) {
       var thumb = document.createElement('img');
-      thumb.src = posterCanvas.toDataURL('image/png');
+      setPosterSrc(thumb, posterCanvas);
       thumb.alt = T('ui.posterOfTag', null, '传奇海报');
       thumb.className = 'poster-thumb';
       thumb.title = T('ui.zoomHint', null, '点击放大海报');
