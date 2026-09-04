@@ -1275,6 +1275,7 @@ window.MJ.i18n.dict.eventEn = {
   "event.V_EGG_DISCO.branch0.text": "The impulse to move with it, deep in your body, was more honest than you'd thought.",
   "event.V_EGG_WATW.text": "In the studio, you pressed a special chord into the chorus of 'We Are The World' — a touch whose warmth only you could hear.",
   "event.V_EGG_WATW.branch0.text": "You remembered why you wrote this song: music was never meant to have borders.",
+  "event.V_EGG_WATW.opt0.epilogue": "Years later, some still swear they heard in that chorus a tenderness nowhere else — your secret signal to the world.",
   "event.V_BIO_WIZ.text": "A fairy-tale musical film put you to work side by side with Quincy Jones. Off-camera, he was quietly sizing up the child who shone too quietly to be ordinary.",
   "event.V_BIO_WIZ.branch0.text": "You had a vague feeling this meeting would rewrite everything after.",
   "event.V_BIO_MOTOWN25.text": "On the eve of the tribute show, you decided to slip an unseen glide into the medley. Backstage, someone laughed that you'd gone mad.",

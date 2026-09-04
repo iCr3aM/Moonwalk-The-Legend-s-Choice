@@ -296,8 +296,8 @@ window.MJ = window.MJ || {};
       for (var i = 0; i < list.length; i++) { if (list[i].id === k) { on = true; break; } }
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
         '<div class="g-icon">' + (on ? e.icon : '🥚') + '</div>' +
-        '<div class="g-name">' + (on ? escapeHtml(e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="g-rarity">' + (on ? escapeHtml(e.desc) : T('ui.locked', null, '未解锁')) + '</div>' +
+        '<div class="g-name">' + (on ? escapeHtml(T('egg.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-rarity">' + (on ? escapeHtml(T('egg.' + k + '.desc', null, e.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
     html += '</div></div>';

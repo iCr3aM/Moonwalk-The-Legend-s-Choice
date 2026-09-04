@@ -448,7 +448,7 @@ window.MJ = window.MJ || {};
       var d = this._load();
       if (d.found[id]) return false;
       d.found[id] = true; this._save(d);
-      if (MJ.ui && MJ.ui.toastEgg) MJ.ui.toastEgg({ icon: def.icon, name: def.name, desc: def.desc });
+      if (MJ.ui && MJ.ui.toastEgg) MJ.ui.toastEgg({ icon: def.icon, name: T('egg.' + id + '.name', null, def.name), desc: T('egg.' + id + '.desc', null, def.desc) });
       return true;
     },
     // 扫描 state.flags 中 egg_* 前缀 → 解锁对应彩蛋（变体事件选项写入 egg_xxx 时触发）

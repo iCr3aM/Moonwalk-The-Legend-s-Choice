@@ -273,6 +273,38 @@ window.MJ = window.MJ || {};
         'ach.ACH_BEYOND.name': 'Presence Beyond Time',
         'ach.ACH_BEYOND.desc': 'You did not stop in 2009 — life has a sequel.',
 
+        // ---------- §17.13 / §17.14 新增成就（格莱美涌现 + 未竟梦想） ----------
+        'ach.ACH_GRAMMY_SWEEP.name': 'Grammy Sweep',
+        'ach.ACH_GRAMMY_SWEEP.desc': 'From Off The Wall to Invincible, you wrote your own name on every trophy.',
+        'ach.ACH_GRAMMY_LEGEND.name': 'Grammy Legend',
+        'ach.ACH_GRAMMY_LEGEND.desc': 'A marvel in Grammy history: you lived yourself into the record.',
+        'ach.ACH_DREAMER.name': 'Dreamweaver',
+        'ach.ACH_DREAMER.desc': 'For that boy, you lit, one by one, every item left unticked on the list.',
+        'ach.ACH_PETERPAN.name': 'The Peter Pan Pact',
+        'ach.ACH_PETERPAN.desc': 'You bought the rights, pleaded for the role, and kept the boy who would not grow up on screen.',
+        'ach.ACH_GREATWALL.name': 'The Great Wall Concert',
+        'ach.ACH_GREATWALL.desc': 'In your imagination, you staged the concert atop the Great Wall.',
+        'ach.ACH_THISISIT.name': 'The Unfinished Show',
+        'ach.ACH_THISISIT.desc': "In London's O2, 2009, you finally took the stage for the opening night of those fifty shows.",
+
+        // ---------- 彩蛋（GDD §17.9） ----------
+        'egg.EGG_MOONWALK.name': 'Origin of the Moonwalk',
+        'egg.EGG_MOONWALK.desc': 'Again and again you tip toe to the floor and glide backward — so the myth began on the concrete of a Gary alley.',
+        'egg.EGG_LYRIC.name': 'Backwards Lyrics',
+        'egg.EGG_LYRIC.desc': '"Annie, are you OK?" You laugh and sing the lyrics backwards; time flows back a second.',
+        'egg.EGG_TRIBUTE.name': 'A Dream Duet',
+        'egg.EGG_TRIBUTE.desc': 'Under the spotlight, you harmonize across time with Elvis and the Beatles — every legend was meant to share one stage.',
+        'egg.EGG_WATW.name': 'The Same Song',
+        'egg.EGG_WATW.desc': "You press that special chord, giving 'We Are The World' a layer of tenderness only you could hear.",
+        'egg.EGG_MOTOWN.name': 'Old Friends Reunited',
+        'egg.EGG_MOTOWN.desc': 'The old Motown crew gathered once more; youth flickered back to life for a moment in the harmony.',
+        'egg.EGG_DISCO.name': 'Disco Tribute',
+        'egg.EGG_DISCO.desc': 'You shrug a shoulder to the neon, bowing solemnly to the disco era of those who came before.',
+        'egg.EGG_DEV.name': "Developer's Note",
+        'egg.EGG_DEV.desc': '"Thank you for living this life again and again into so many different shapes."',
+        'egg.EGG_FOURTH.name': 'The Fourth Wall',
+        'egg.EGG_FOURTH.desc': '"To everyone rewriting the legend — the child in the mirror has been applauding for you all along."',
+
         // ---------- 分享文案 ----------
         'share.game.1': '“Michael Jackson: Life Choices” — a text-based life simulation game.',
         'share.game.2': 'From the crib in Gary to the world’s stages, make choices at every real historical crossroad,',
