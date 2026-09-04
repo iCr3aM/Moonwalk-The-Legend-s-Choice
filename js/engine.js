@@ -57,21 +57,21 @@ window.MJ = window.MJ || {};
     var eff = opt.effects || {};
     if (typeof eff === 'function') eff = eff(state);
     var map = {
-      health: function (d) { return d > 0 ? '身子骨稳了一分' : '元气又损了一截'; },
-      reputation: function (d) { return d > 0 ? '声名更响亮了些' : '口碑悄悄蒙尘'; },
-      wealth: function (d) { return d > 0 ? '进项让荷包鼓了些' : '开销又添了一笔'; },
-      family: function (d) { return d > 0 ? '家的温度回升了些' : '亲情又凉了一截'; },
-      art: function (d) { return d > 0 ? '技艺更精进了些' : '灵感稍稍游离'; },
-      stress: function (d) { return d > 0 ? '紧绷感又爬上肩头' : '呼吸松快了些'; }
+      health: function (d) { return d > 0 ? T('consequence.health.pos', null, '身子骨稳了一分') : T('consequence.health.neg', null, '元气又损了一截'); },
+      reputation: function (d) { return d > 0 ? T('consequence.reputation.pos', null, '声名更响亮了些') : T('consequence.reputation.neg', null, '口碑悄悄蒙尘'); },
+      wealth: function (d) { return d > 0 ? T('consequence.wealth.pos', null, '进项让荷包鼓了些') : T('consequence.wealth.neg', null, '开销又添了一笔'); },
+      family: function (d) { return d > 0 ? T('consequence.family.pos', null, '家的温度回升了些') : T('consequence.family.neg', null, '亲情又凉了一截'); },
+      art: function (d) { return d > 0 ? T('consequence.art.pos', null, '技艺更精进了些') : T('consequence.art.neg', null, '灵感稍稍游离'); },
+      stress: function (d) { return d > 0 ? T('consequence.stress.pos', null, '紧绷感又爬上肩头') : T('consequence.stress.neg', null, '呼吸松快了些'); }
     };
     var parts = [];
     ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
       var d = eff[k];
       if (typeof d === 'number' && Math.abs(d) >= 8 && map[k]) parts.push(map[k](d));
     });
-    if (opt.moneyEffect) parts.push(opt.moneyEffect < 0 ? '账上又见一处窟窿' : '账上添了一笔进项');
+    if (opt.moneyEffect) parts.push(opt.moneyEffect < 0 ? T('consequence.money.neg', null, '账上又见一处窟窿') : T('consequence.money.pos', null, '账上添了一笔进项'));
     if (!parts.length) return null;
-    return '尘埃落定——' + parts.join('，') + '。';
+    return T('consequence.prefix', null, '尘埃落定——') + parts.join('，') + T('consequence.suffix', null, '。');
   }
 
   // ---------- 结局解析（GDD 7.2 优先级规则表） ----------
@@ -264,6 +264,7 @@ window.MJ = window.MJ || {};
     },
 
     optionsOf: function (ev) {
+      if (MJ.localizeEvent) return MJ.localizeEvent(ev, this.state).options;
       return typeof ev.options === 'function' ? ev.options(this.state) : ev.options;
     },
 
@@ -273,7 +274,7 @@ window.MJ = window.MJ || {};
       var opt = opts[optIndex];
       if (!opt) return;
 
-      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: opt.label, key: !!ev.key });
+      this.state.pushHistory({ year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: opt.label, key: !!ev.key });
       if (ev.key) this.state.stats.keyChoices++;
       applyEffects(opt.effects, this.state);
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
@@ -290,7 +291,7 @@ window.MJ = window.MJ || {};
       var ev = this.current;
       applyEffects(ev.effects, this.state);
       if (ev.flags) for (var k in ev.flags) this.state.setFlag(k, ev.flags[k]);
-      this.state.pushHistory({ year: MJ.eventYear(ev), title: ev.title, choice: '（经历）', key: !!ev.key });
+      this.state.pushHistory({ year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: T('engine.experienced', null, '（经历）'), key: !!ev.key });
       MJ.ruleEngine.afterEvent(this.state);
       MJ.saveSystem.save(this.state);
       this.advance(ev.next);
@@ -322,6 +323,7 @@ window.MJ = window.MJ || {};
   };
 
   MJ.engine = engine;
+  var T = function (k, v, fb) { return (MJ.t ? MJ.t(k, v, fb) : (fb != null ? fb : k)); };
 
   // ---------- 存档系统（localStorage） ----------
   MJ.saveSystem = {

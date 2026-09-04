@@ -760,7 +760,10 @@ window.MJ = window.MJ || {};
   };
 
   ui.showEvent = function (ev, state) {
-    var text = (typeof ev.text === 'function') ? ev.text(state) : ev.text;
+    var loc = (MJ.localizeEvent ? MJ.localizeEvent(ev, state) : null);
+    var title = loc ? loc.title : ev.title;
+    var text = loc ? loc.text : ((typeof ev.text === 'function') ? ev.text(state) : ev.text);
+    var opts = loc ? loc.options : MJ.engine.optionsOf(ev);
     var epilogueHtml = '';
     if (MJ.engine.pendingEpilogue) {
       epilogueHtml = '<div class="epilogue"><span class="e-tag">' + T('ui.epilogueTag', null, '抉择的回响') + '</span>' + escapeHtml(MJ.engine.pendingEpilogue) + '</div>';
@@ -769,7 +772,7 @@ window.MJ = window.MJ || {};
     var body =
       '<div class="panel event">' + epilogueHtml +
         '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年</div>' +
-        '<h2>' + ev.title + '</h2>' +
+        '<h2>' + escapeHtml(title) + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';
 
     if (ev.kind === 'auto') {
@@ -777,7 +780,6 @@ window.MJ = window.MJ || {};
     } else if (ev.kind === 'ending') {
       body += '<div class="continue-row"><button class="btn primary" id="btn-end">' + T('ui.end', null, '尘埃落定') + '</button></div>';
     } else {
-      var opts = MJ.engine.optionsOf(ev);
       body += '<div class="options">';
       opts.forEach(function (o, i) {
         body += '<button class="option" data-idx="' + i + '">' +

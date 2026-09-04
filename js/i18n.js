@@ -92,6 +92,25 @@ window.MJ = window.MJ || {};
         'ui.echoTag': 'Echo',
         'ui.zoomHint': 'Click to enlarge poster',
 
+        // ---------- 引擎合成文案（后果回响） ----------
+        'engine.experienced': 'Experienced',
+        'consequence.health.pos': 'your body steadied a little',
+        'consequence.health.neg': 'your vitality took another blow',
+        'consequence.reputation.pos': 'your name rang a little louder',
+        'consequence.reputation.neg': 'your reputation dimmed quietly',
+        'consequence.wealth.pos': 'the coffers swelled a bit',
+        'consequence.wealth.neg': 'another expense was logged',
+        'consequence.family.pos': 'the warmth of home returned',
+        'consequence.family.neg': 'family ties cooled another notch',
+        'consequence.art.pos': 'your craft refined further',
+        'consequence.art.neg': 'inspiration drifted slightly',
+        'consequence.stress.pos': 'tension crept back to your shoulders',
+        'consequence.stress.neg': 'you breathed a little easier',
+        'consequence.money.neg': 'another hole opened in the accounts',
+        'consequence.money.pos': 'a fresh sum entered the books',
+        'consequence.prefix': 'The dust settles — ',
+        'consequence.suffix': '.',
+
         // ---------- 属性 / 元路线 / 关系 / 稀有度 ----------
         'attr.health': 'Health',
         'attr.reputation': 'Reputation',
@@ -292,12 +311,14 @@ window.MJ = window.MJ || {};
 
   MJ.i18n = i18n;
 
-  // 统一入口：当前语种 → zh → fallback → key
+  // 统一入口：当前语种 → zh → eventEn(事件英文，外部加载) → fallback → key
   MJ.t = function (key, vars, fallback) {
     var d = i18n.dict[i18n.lang] || {};
     if (d[key] != null) return subst(d[key], vars);
     var zh = i18n.dict.zh || {};
     if (zh[key] != null) return subst(zh[key], vars);
+    var ev = i18n.dict.eventEn;
+    if (ev && ev[key] != null) return subst(ev[key], vars);
     if (fallback != null) return subst(fallback, vars);
     return key;
   };
