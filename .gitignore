@@ -3,3 +3,10 @@ _smoke.js
 commit_msg.txt
 node_modules/
 dist/
+
+# 开发/调试脚手架（不提交）
+check_keys.cjs
+debug_events.cjs
+event_keys.txt
+js/events.wrapped.js
+wrap_events.cjs
