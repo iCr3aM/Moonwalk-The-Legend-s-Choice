@@ -1789,5 +1789,98 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ----- 生平补全事件（GDD §17.8 A：忠于 MJ 真实年表，窗口化变体自然插入主线） -----
+  E.V_BIO_WIZ = {
+    id: 'V_BIO_WIZ', variant: true, window: [1977, 1979], weight: 45,
+    title: T('event.V_BIO_WIZ.title', null, '《新绿野仙踪》'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_WIZ.text', null, '一部童话音乐电影，让你与昆西·琼斯并肩工作。镜头外的他，正悄悄打量这个安静到发光的孩子。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: T('event.V_BIO_WIZ.branch0.text', null, '你隐约觉得，这次相遇会改写之后的一切。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_WIZ.opt0.label', null, 'A：全力打磨角色'), hint: T('event.V_BIO_WIZ.opt0.hint', null, '把舞台交给电影（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_WIZ.opt1.label', null, 'B：当作过渡，静待机会'), hint: T('event.V_BIO_WIZ.opt1.hint', null, '稳步积累（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_MOTOWN25 = {
+    id: 'V_BIO_MOTOWN25', variant: true, window: [1983, 1983], weight: 50,
+    title: T('event.V_BIO_MOTOWN25.title', null, 'Motown 25 后台'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_MOTOWN25.text', null, '纪念演出前夜，你决定在串烧里加一段谁也没见过的滑行。后台有人笑你疯了。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 60; }, text: T('event.V_BIO_MOTOWN25.branch0.text', null, '你知道，明晚那一步，会成为一个时代的注脚。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_MOTOWN25.opt0.label', null, 'A：坚持那段滑行'), hint: T('event.V_BIO_MOTOWN25.opt0.hint', null, '定义瞬间的勇气（艺术+7，声誉+5）'), effects: { art: 7, reputation: 5 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_MOTOWN25.opt1.label', null, 'B：保守演出'), hint: T('event.V_BIO_MOTOWN25.opt1.hint', null, '稳稳收场（声誉+3）'), effects: { reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_GRAMMY84 = {
+    id: 'V_BIO_GRAMMY84', variant: true, window: [1984, 1984], weight: 45,
+    title: T('event.V_BIO_GRAMMY84.title', null, '格莱美之夜'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_GRAMMY84.text', null, '《Thriller》在这一夜横扫奖项。聚光灯太亮，你却想起小时候在盖瑞，连一盏像样的台灯都没有。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) <= 60; }, text: T('event.V_BIO_GRAMMY84.branch0.text', null, '荣耀越大，失眠越久。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_GRAMMY84.opt0.label', null, 'A：享受巅峰'), hint: T('event.V_BIO_GRAMMY84.opt0.hint', null, '把这一夜记进骨头里（声誉+7，艺术+4）'), effects: { reputation: 7, art: 4 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_GRAMMY84.opt1.label', null, 'B：低调致谢'), hint: T('event.V_BIO_GRAMMY84.opt1.hint', null, '把奖杯留给团队（声誉+4，家庭+3）'), effects: { reputation: 4, family: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_BADTOUR = {
+    id: 'V_BIO_BADTOUR', variant: true, window: [1988, 1988], weight: 45,
+    title: T('event.V_BIO_BADTOUR.title', null, '《Bad》世界巡演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_BADTOUR.text', null, '单飞后的首次全球远征。每一座城市的灯牌都写着一个名字，你第一次感到，孤独也可以被万人共享。'), s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 50; }, text: T('event.V_BIO_BADTOUR.branch0.text', null, '连轴转的日程，让镜中的人越来越陌生。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_BADTOUR.opt0.label', null, 'A：加场，把声音送到更远'), hint: T('event.V_BIO_BADTOUR.opt0.hint', null, '商业与影响力的双增（财富+30，声誉+5，压力+8）'), effects: { wealth: 30, reputation: 5, stress: 8 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_BADTOUR.opt1.label', null, 'B：留白，给身体喘息'), hint: T('event.V_BIO_BADTOUR.opt1.hint', null, '健康优先（健康+5，财富+15）'), effects: { health: 5, wealth: 15 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_HISTORYTOUR = {
+    id: 'V_BIO_HISTORYTOUR', variant: true, window: [1996, 1997], weight: 45,
+    title: T('event.V_BIO_HISTORYTOUR.title', null, 'HIStory 世界巡演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_HISTORYTOUR.text', null, '当时 solo 艺人规模最大的巡演。巨型雕像被立在世界各地的广场，你站在自己脚下，第一次觉得自己像一座符号。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_BIO_HISTORYTOUR.branch0.text', null, '符号越大，真实的你越难被看见。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_HISTORYTOUR.opt0.label', null, 'A：把巡演做成史诗'), hint: T('event.V_BIO_HISTORYTOUR.opt0.hint', null, '传奇再升级（声誉+6，财富+35，压力+8）'), effects: { reputation: 6, wealth: 35, stress: 8 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_HISTORYTOUR.opt1.label', null, 'B：在喧嚣里留一处安静'), hint: T('event.V_BIO_HISTORYTOUR.opt1.hint', null, '守住内心（家庭+4，健康+3）'), effects: { family: 4, health: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_911 = {
+    id: 'V_BIO_911', variant: true, window: [2001, 2001], weight: 55,
+    title: T('event.V_BIO_911.title', null, '废墟旁的歌声'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_911.text', null, '那一年秋天，城市还冒着烟。你站在临时搭起的台子上，想把一点温度递给惊慌的人。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.V_BIO_911.branch0.text', null, '你比谁都清楚，音乐是能在废墟上长出东西的。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_911.opt0.label', null, 'A：为陌生人唱一首'), hint: T('event.V_BIO_911.opt0.hint', null, '把善意唱出去（慈善+2，声誉+6，家庭+3）'), effects: { phil: 2, reputation: 6, family: 3 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_911.opt1.label', null, 'B：默默捐款，不露面'), hint: T('event.V_BIO_911.opt1.hint', null, '安静行善（慈善+1，财富-10）'), effects: { phil: 1, wealth: -10 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BIO_FREDDIE = {
+    id: 'V_BIO_FREDDIE', variant: true, window: [1995, 1995], weight: 40,
+    title: T('event.V_BIO_FREDDIE.title', null, '未完成的合唱'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BIO_FREDDIE.text', null, '一段与已故挚友留下的合唱素材，被重新发现。你对着空荡的录音棚，把那句和声补完。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 65; }, text: T('event.V_BIO_FREDDIE.branch0.text', null, '有些声音，跨越了时间还在等你。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BIO_FREDDIE.opt0.label', null, 'A：以致敬之名发布'), hint: T('event.V_BIO_FREDDIE.opt0.hint', null, '让思念有了出口（艺术+5，声誉+5，慈善+1）'), effects: { art: 5, reputation: 5, phil: 1 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_FREDDIE.opt1.label', null, 'B：收进抽屉留作纪念'), hint: T('event.V_BIO_FREDDIE.opt1.hint', null, '把私心留给自己（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+
   MJ.EVENTS = E;
 })();
