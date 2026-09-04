@@ -865,28 +865,52 @@ window.MJ = window.MJ || {};
 
     return cv;
   }
+  // 保存图片：优先 toBlob + 锚点下载（可被系统“分享/存储”捕获）；失败回退 data: URI；再失败静默放弃
   function downloadPoster(cv, base) {
     var name = base + '.png';
-    function go(blob) {
-      var url = URL.createObjectURL(blob);
+    function _anchor(url) {
       var a = document.createElement('a'); a.href = url; a.download = name;
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
     }
-    if (cv.toBlob) cv.toBlob(go, 'image/png');
-    else { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
+    function _fallback() {
+      try { _anchor(cv.toDataURL('image/png')); } catch (e) {}
+    }
+    if (cv.toBlob) {
+      try {
+        cv.toBlob(function (blob) {
+          if (!blob) { _fallback(); return; }
+          try { var u = URL.createObjectURL(blob); _anchor(u); setTimeout(function () { URL.revokeObjectURL(u); }, 1500); }
+          catch (e) { _fallback(); }
+        }, 'image/png');
+        return;
+      } catch (e) {}
+    }
+    _fallback();
   }
 
 
-  // 画布转 <img> src：优先 Blob URL（iOS Safari 长按「保存图片」对 data: URI 不弹菜单，Blob URL 可正常保存）
+  // 画布转 <img> src：兼容性优先。同步 toDataURL 在 Android/桌面必成功出图；
+  // 再尝试 Blob URL 以兼容 iOS Safari 长按保存（data: URI 在 iOS 不弹菜单）。
+  // 任何一步失败（toBlob 抛错 / 回调不来 / blob 为空 / blob 加载失败）都回退到 data: URI，确保图片一定显示。
   function setPosterSrc(imgEl, cv) {
+    var _settled = false, _triedData = false;
+    function _setData() {
+      if (_settled || _triedData) return;
+      _triedData = true;
+      try { imgEl.src = cv.toDataURL('image/png'); _settled = true; } catch (e) {}
+    }
+    function _setBlob(blob) {
+      if (_settled) return;
+      if (!blob) { _setData(); return; }
+      try { imgEl.src = URL.createObjectURL(blob); _settled = true; } catch (e) { _setData(); }
+    }
+    imgEl.onerror = function () { if (!_settled) _setData(); };
     if (cv.toBlob) {
-      cv.toBlob(function (blob) {
-        if (!blob) { imgEl.src = cv.toDataURL('image/png'); return; }
-        imgEl.src = URL.createObjectURL(blob);
-      }, 'image/png');
+      try { cv.toBlob(_setBlob, 'image/png'); }
+      catch (e) { _setData(); }
+      setTimeout(function () { if (!_settled) _setData(); }, 600);
     } else {
-      imgEl.src = cv.toDataURL('image/png');
+      _setData();
     }
   }
 
