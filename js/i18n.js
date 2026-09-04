@@ -96,6 +96,7 @@ window.MJ = window.MJ || {};
         'ui.echoTag': 'Echo',
         'ui.zoomHint': 'Click to enlarge poster',
         'ui.posterSaveHint': 'Tip: long-press the poster image to save it to your device',
+        'ui.posterSave': 'Save Image',
 
         // ---------- 引擎合成文案（后果回响） ----------
         'engine.experienced': 'Experienced',

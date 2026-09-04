@@ -894,14 +894,23 @@ window.MJ = window.MJ || {};
         '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
         '<div class="poster-foot-actions' + (hasDelete ? ' has-delete' : '') + '">' +
           (hasDelete ? '<button class="btn ghost danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
+          '<button class="btn primary" id="pm-save">' + T('ui.posterSave', null, '保存图片') + '</button>' +
           '<button class="btn primary" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
         '</div>' +
       '</div>' +
     '</div>';
-    overlay.querySelector('.poster-canvas-wrap').appendChild(cv);
+    // 移动端长按「保存图片」原生菜单只对 <img> 生效，<canvas> 无效；故将画布转为 <img> 再插入
+    var _posterImg = document.createElement('img');
+    _posterImg.src = cv.toDataURL('image/png');
+    _posterImg.alt = T('ui.posterOfTag', null, '传奇海报');
+    _posterImg.className = 'poster-img';
+    _posterImg.title = T('ui.zoomHint', null, '点击放大海报');
+    overlay.querySelector('.poster-canvas-wrap').appendChild(_posterImg);
     document.body.appendChild(overlay);
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
+    var _saveBtn = document.getElementById('pm-save');
+    if (_saveBtn) _saveBtn.addEventListener('click', function () { downloadPoster(cv, 'MJ-' + id); });
     if (hasDelete) {
       // 二次确认（再次点击确认 + 3 秒超时复位），删除后回到档案库列表
       wireReset('pm-delete', function () {
