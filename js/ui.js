@@ -873,14 +873,11 @@ window.MJ = window.MJ || {};
   }
   function downloadPoster(cv, base) {
     var name = base + '.png';
-    function go(blob) {
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a'); a.href = url; a.download = name;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
-    }
-    if (cv.toBlob) cv.toBlob(go, 'image/png');
-    else { var a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = name; a.click(); }
+    // 同步 data: URI 锚点下载，跨平台（含 Android WebView）可靠；
+    // 避免 toBlob 在部分设备回调不来 / 抛错导致下载无反应（旧安卓裂图同类问题）
+    var a = document.createElement('a');
+    a.href = cv.toDataURL('image/png'); a.download = name;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
 
 

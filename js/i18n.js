@@ -433,8 +433,7 @@ window.MJ = window.MJ || {};
         'ach.ACH_SPEEDRUN.name': 'Speedrun Life', 'ach.ACH_SPEEDRUN.desc': 'Reach any ending via a minimal path.',
         'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute all run.',
 
-        // ---------- §18 事件叙事（EN） ----------
-        'engine.experienced': 'Lived through',
+
 
 
 
