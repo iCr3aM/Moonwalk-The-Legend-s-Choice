@@ -836,10 +836,16 @@ window.MJ = window.MJ || {};
       var _picks = [_keys[0]]; if (_keys.length > 1) _picks.push(_keys[_keys.length - 1]);
       for (var _ki = 0; _ki < _picks.length; _ki++) {
         var _kk = _picks[_ki];
+        var _kt = _kk.title || '';
+        var _kc = _kk.choice || '';
+        if (_kk.id) {
+          _kt = T('event.' + _kk.id + '.title', null, _kt);
+          if (_kk.opt != null && _kk.opt >= 0) _kc = T('event.' + _kk.id + '.opt' + _kk.opt + '.label', null, _kc);
+        }
         ctx.fillStyle = '#f3e2b0'; ctx.font = '600 13px "PingFang SC",sans-serif';
-        ctx.fillText((_kk.year || '') + ' · ' + (_kk.title || ''), 60, y); y += 19;
+        ctx.fillText((_kk.year || '') + ' · ' + _kt, 60, y); y += 19;
         ctx.fillStyle = '#caa84a'; ctx.font = '13px "PingFang SC",sans-serif';
-        ctx.fillText('↳ ' + (_kk.choice || ''), 74, y); y += 23;
+        ctx.fillText('↳ ' + _kc, 74, y); y += 23;
       }
     }
 
