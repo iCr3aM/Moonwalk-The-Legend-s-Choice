@@ -1061,6 +1061,7 @@ window.MJ.i18n.dict.eventEn = {
   "event.V_LEG_THISISIT.opt0.epilogue": "The lights of the fifty shows lit up one by one; you stood at center, like high-fiving the you of then across time.",
   "event.V_LEG_THISISIT.opt1.label": "B: Scale down, protect your health",
   "event.V_LEG_THISISIT.opt1.hint": "Save your strength for tomorrow (Art +5, Wealth +8, Health +3)",
+  "event.V_LEG_THISISIT.opt1.epilogue": "You kept the leftover strength for tomorrow, and gently laid that fifty-night dream back by the pillow.",
   "event.V_LEG_BIOPIMG.title": "The Self on Screen",
   "event.V_LEG_BIOPIMG.text": "Musicals and biographical films bearing your name were staged one after another. The lens would retrace your life, and this time you had a say in who tells the story.",
   "event.V_LEG_BIOPIMG.branch0.text": "You were both the one told of and the one telling.",
