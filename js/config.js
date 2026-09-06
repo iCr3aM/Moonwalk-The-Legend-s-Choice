@@ -321,7 +321,29 @@ window.MJ = window.MJ || {};
     { id: 'ACH_MOTOWN', name: '摩城之门', icon: '💫', rarity: 'rare', desc: '从 Steeltown 到 Motown，你推开了一扇通往世界的大门。',
       check: function (s) { return s.flags.motownAudition === true; } },
     { id: 'ACH_REUNITE', name: '破镜重圆', icon: '🪞', rarity: 'rare', desc: '三十周年舞台，你与兄长们把半生的隔阂留在了台下——不完整的合声，终于补全。',
-      check: function (s) { return s.flags.brothersReunited === true; } }
+      check: function (s) { return s.flags.brothersReunited === true; } },
+
+    // —— Phase 2 内容扩充 ——
+    { id: 'ACH_TOY_DRUM', name: '第一面鼓', icon: '🥁', rarity: 'common', desc: '盖瑞巷口那只旧玩具鼓，是你与世界合奏的第一件乐器。',
+      check: function (s) { return s.flags.toyDrum === true; } },
+    { id: 'ACH_FIRST_LIGHT', name: '初绽光芒', icon: '✨', rarity: 'rare', desc: '当艺术与声名同时抵达某个高度，你成了别人眼里的"那个迈克尔"。',
+      check: function (s) { return (s.attributes.art || 0) >= 70 && (s.attributes.reputation || 0) >= 60; } },
+    { id: 'ACH_PEACE_AMBASSADOR', name: '和平大使', icon: '🕊️', rarity: 'epic', desc: '你远赴远方，为一群孩子把歌声变成和平的请柬。',
+      check: function (s) { return s.flags.peaceConcert === true || ((s.meta.phil || 0) >= 3 && (s.attributes.reputation || 0) >= 65); } },
+    { id: 'ACH_ELDEST_BOND', name: '长兄之绊', icon: '👬', rarity: 'rare', desc: '纵有分歧，你与兄长们的羁绊始终厚过任何流言。',
+      check: function (s) { return (s.relations && s.relations.brothers || 0) >= 25; } },
+    { id: 'ACH_RECLUSE_PEACE', name: '静好隐士', icon: '🌿', rarity: 'rare', desc: '你退向静默，却未被孤独吞没——安静里自有安宁。',
+      check: function (s) { return (s.meta.recluse || 0) >= 2 && (s.attributes.loneliness || 0) < 40; } },
+    { id: 'ACH_STAGE_LEGEND', name: '舞台传说', icon: '🎇', rarity: 'legendary', desc: '烧伤之后仍戒药登台——你把疼痛跳成了传奇。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ART_PEAK'; } },
+    { id: 'ACH_COMEBACK_KING', name: '王者再临', icon: '🔥', rarity: 'epic', desc: '经历健康危机后，你以更高的艺术完成逆袭。',
+      check: function (s) { return s.flags.comebackSeen === true && (s.attributes.art || 0) >= 80; } },
+    { id: 'ACH_DIGITAL_ERA', name: '数字先锋', icon: '📡', rarity: 'rare', desc: '你先于时代，把单曲汇成了唱片。',
+      check: function (s) { return s.flags.digitalSingles === true; } },
+    { id: 'ACH_LEGACY_2026', name: '2026 的回响', icon: '🎬', rarity: 'rare', desc: '传记电影里，你的传奇换了一种方式继续被讲述。',
+      check: function (s) { return s.flags.biopic2026 === true || s.flags.biopicMJStar === true; } },
+    { id: 'ACH_WHOLE_LIFE', name: '圆满人生', icon: '🍀', rarity: 'epic', desc: '声名、健康与从容在你身上同时落地——这一生，不亏欠自己。',
+      check: function (s) { return (s.attributes.health || 0) >= 70 && (s.attributes.reputation || 0) >= 70 && (s.attributes.stress || 0) <= 40; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

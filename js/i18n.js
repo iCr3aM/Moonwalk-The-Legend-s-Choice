@@ -434,6 +434,18 @@ window.MJ = window.MJ || {};
         'ach.ACH_SPEEDRUN.name': 'Speedrun Life', 'ach.ACH_SPEEDRUN.desc': 'Reach any ending via a minimal path.',
         'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute for the entire run.',
 
+        // —— Phase 2 内容扩充 ——
+        'ach.ACH_TOY_DRUM.name': 'The First Drum', 'ach.ACH_TOY_DRUM.desc': 'The old toy drum on Gary’s corner was your first instrument in duet with the world.',
+        'ach.ACH_FIRST_LIGHT.name': 'First Glow', 'ach.ACH_FIRST_LIGHT.desc': 'When art and fame reached a certain height together, you became "that Michael" in others’ eyes.',
+        'ach.ACH_PEACE_AMBASSADOR.name': 'Ambassador of Peace', 'ach.ACH_PEACE_AMBASSADOR.desc': 'You traveled far to turn a song into an invitation to peace for a group of children.',
+        'ach.ACH_ELDEST_BOND.name': 'Bond of Eldest Brothers', 'ach.ACH_ELDEST_BOND.desc': 'Despite disagreements, your bond with your brothers stayed thicker than any rumor.',
+        'ach.ACH_RECLUSE_PEACE.name': 'Peaceful Recluse', 'ach.ACH_RECLUSE_PEACE.desc': 'You withdrew into silence yet were not swallowed by loneliness — quiet held its own calm.',
+        'ach.ACH_STAGE_LEGEND.name': 'Stage Legend', 'ach.ACH_STAGE_LEGEND.desc': 'After the burn, you still performed clean — you danced the pain into legend.',
+        'ach.ACH_COMEBACK_KING.name': 'The King Returns', 'ach.ACH_COMEBACK_KING.desc': 'After a health crisis, you completed the comeback with even higher artistry.',
+        'ach.ACH_DIGITAL_ERA.name': 'Digital Pioneer', 'ach.ACH_DIGITAL_ERA.desc': 'Ahead of your time, you gathered singles into an album.',
+        'ach.ACH_LEGACY_2026.name': 'Echoes of 2026', 'ach.ACH_LEGACY_2026.desc': 'In the biopic, your legend found a new way to keep being told.',
+        'ach.ACH_WHOLE_LIFE.name': 'A Life Well Lived', 'ach.ACH_WHOLE_LIFE.desc': 'Fame, health and ease landed together — this life owed nothing to itself.',
+
 
 
 
