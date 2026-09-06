@@ -1884,6 +1884,60 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ---------- Phase 2 内容扩充：薄弱章节变体（Ch0 童年 + Ch1 单飞期） ----------
+  E.V_TOY_DRUM = {
+    id: 'V_TOY_DRUM', variant: true, window: [1958, 1968], weight: 28,
+    title: T('event.V_TOY_DRUM.title', null, '巷口的玩具鼓'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TOY_DRUM.text', null, '父亲从钢厂带回一只旧玩具鼓。你把它架在膝头，对着镜子敲出不成调的节拍——那是你第一支“乐队”。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 30; }, text: T('event.V_TOY_DRUM.branch0.text', null, '节奏感像种子，在廉价鼓面上发了芽。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_TOY_DRUM.opt0.label', null, 'A：敲给邻居孩子们听'), hint: T('event.V_TOY_DRUM.opt0.hint', null, '童年的掌声最纯粹（艺术+4，家庭+3）'), effects: { art: 4, family: 3 }, flags: { toydrum: true, garyRoots: true }, next: '__RETURN__' },
+      { label: T('event.V_TOY_DRUM.opt1.label', null, 'B：自己偷偷练'), hint: T('event.V_TOY_DRUM.opt1.hint', null, '把热情藏起来（艺术+2，压力+2）'), effects: { art: 2, stress: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_SISTER_LATOYA = {
+    id: 'V_SISTER_LATOYA', variant: true, window: [1962, 1969], weight: 22,
+    title: T('event.V_SISTER_LATOYA.title', null, '与妹妹拉托亚的二重唱'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_SISTER_LATOYA.text', null, '妹妹拉托亚总爱跟着你的哼唱和声。某个午后，你们把《Rockin’ Robin》唱成了只属于兄妹的版本。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.V_SISTER_LATOYA.branch0.text', null, '唱到副歌，你们不约而同地笑了——那是只属于家人的默契。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，手足+5）'), effects: { family: 5, rel: { brothers: 5 } }, flags: { sisterDuet: true }, next: '__RETURN__' },
+      { label: T('event.V_SISTER_LATOYA.opt1.label', null, 'B：笑闹着糊弄过去'), hint: T('event.V_SISTER_LATOYA.opt1.hint', null, '轻松但潦草（家庭+2）'), effects: { family: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TV_SPECIAL = {
+    id: 'V_TV_SPECIAL', variant: true, window: [1971, 1979], weight: 25,
+    title: T('event.V_TV_SPECIAL.title', null, '电视特辑邀约'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TV_SPECIAL.text', null, '一档全国直播的电视特辑向你发出邀约，镜头意味着曝光，也意味着被审视。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 60; }, text: T('event.V_TV_SPECIAL.branch0.text', null, '聚光灯下，你听见童年那支玩具鼓的节拍，隔着岁月仍清亮。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_TV_SPECIAL.opt0.label', null, 'A：倾力准备现场'), hint: T('event.V_TV_SPECIAL.opt0.hint', null, '舞台淬炼（艺术+6，声誉+6）'), effects: { art: 6, reputation: 6 }, next: '__RETURN__' },
+      { label: T('event.V_TV_SPECIAL.opt1.label', null, 'B：婉拒保清净'), hint: T('event.V_TV_SPECIAL.opt1.hint', null, '守住私密（压力-3）'), effects: { stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BROTHERS_FEUD = {
+    id: 'V_BROTHERS_FEUD', variant: true, window: [1973, 1979], weight: 22,
+    title: T('event.V_BROTHERS_FEUD.title', null, '兄弟间的分歧'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BROTHERS_FEUD.text', null, '单飞后，兄长们对你的某些决定颇有微词，餐桌上的空气偶尔发紧。'), s, [
+        { cond: function (s) { return (s.relations && s.relations.brothers || 0) >= 10; }, text: T('event.V_BROTHERS_FEUD.branch0.text', null, '你想起童年合声里那只最稳的和弦，原是他们给的。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BROTHERS_FEUD.opt0.label', null, 'A：主动化解隔阂'), hint: T('event.V_BROTHERS_FEUD.opt0.hint', null, '兄弟情回暖（手足+6，家庭+3）'), effects: { family: 3, rel: { brothers: 6 } }, next: '__RETURN__' },
+      { label: T('event.V_BROTHERS_FEUD.opt1.label', null, 'B：各执己见'), hint: T('event.V_BROTHERS_FEUD.opt1.hint', null, '裂痕加深（手足-8，家庭-5）'), effects: { family: -5, rel: { brothers: -8 } }, next: '__RETURN__' }
+    ]
+  };
+
   // ---------- 续章专属变体池（g4：GDD §17.2，窗口 [2010,2026]） ----------
   E.V_POST_TRIBUTE = {
     id: 'V_POST_TRIBUTE', variant: true, window: [2010, 2026], weight: 35,
