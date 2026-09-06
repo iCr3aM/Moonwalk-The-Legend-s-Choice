@@ -333,7 +333,7 @@ window.MJ = window.MJ || {};
     { id: 'ACH_FIRST_LIGHT', name: '初绽光芒', icon: '✨', rarity: 'rare', desc: '当艺术与声名同时抵达某个高度，你成了别人眼里的"那个迈克尔"。',
       check: function (s) { return (s.attributes.art || 0) >= 70 && (s.attributes.reputation || 0) >= 60; } },
     { id: 'ACH_PEACE_AMBASSADOR', name: '和平大使', icon: '🕊️', rarity: 'epic', desc: '你远赴远方，为一群孩子把歌声变成和平的请柬。',
-      check: function (s) { return s.flags.peaceConcert === true || ((s.meta.phil || 0) >= 3 && (s.attributes.reputation || 0) >= 65); } },
+      check: function (s) { return (s.meta.phil || 0) >= 3 && (s.attributes.reputation || 0) >= 65; } },
     { id: 'ACH_ELDEST_BOND', name: '长兄之绊', icon: '👬', rarity: 'rare', desc: '纵有分歧，你与兄长们的羁绊始终厚过任何流言。',
       check: function (s) { return (s.relations && s.relations.brothers || 0) >= 25; } },
     { id: 'ACH_RECLUSE_PEACE', name: '静好隐士', icon: '🌿', rarity: 'rare', desc: '你退向静默，却未被孤独吞没——安静里自有安宁。',
