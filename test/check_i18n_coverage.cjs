@@ -39,6 +39,24 @@ groups.forEach(function (g) {
   console.log('  ' + g.tag + '：' + g.ids.length + ' 条 id x ' + g.fields.length + ' 字段');
 });
 
+// ---------- 第五阶段：稀有度档位 EN 守卫 ----------
+// 收集 config 中实际出现的全部稀有度档位（成就 + 结局），断言 rarity.<r> 在 EN 下有非空、含字母、非中文词条，
+// 防止新增档位时遗漏翻译（如 ACH_BROTHERLY 曾用 uncommon 但无 EN 词条，导致图鉴显示中文「普通」）。
+var rarities = {};
+(MJ.config.achievements || []).forEach(function (a) { if (a.rarity) rarities[a.rarity] = true; });
+Object.keys(MJ.config.endingRarity || {}).forEach(function (k) { rarities[MJ.config.endingRarity[k]] = true; });
+var rarityFail = 0;
+MJ.i18n.setLang('en');
+Object.keys(rarities).forEach(function (r) {
+  var key = 'rarity.' + r;
+  var v = MJ.t(key, null, SENTINEL);
+  if (v === SENTINEL || !/[A-Za-z]/.test(v) || zh(v)) {
+    rarityFail++;
+    console.log('FAIL 稀有度 EN 缺失/非英文: ' + key + ' -> ' + v);
+  }
+});
+console.log('稀有度档位守卫：' + Object.keys(rarities).length + ' 档；缺失/非英文 ' + rarityFail);
+
 console.log('\ni18n 覆盖校验（变体/成就/彩蛋/趣事）：字段总数 ' + total + '；缺失/残留 ' + fail);
 
 // ---------- 第二阶段：字典内全部 EN 词条质量校验 ----------
@@ -82,6 +100,6 @@ Object.keys(foundKeys).forEach(function (key) {
 });
 console.log('UI字面量键扫描：' + Object.keys(foundKeys).length + ' 个键；EN缺失 ' + uiScanFail + '；EN含中文 ' + uiScanCjk);
 
-var allFail = fail + emptyFail + sameFail + uiScanFail + uiScanCjk;
+var allFail = fail + emptyFail + sameFail + uiScanFail + uiScanCjk + rarityFail;
 console.log('\n=== 合计 FAIL: ' + allFail + ' ===');
 process.exit(allFail ? 1 : 0);

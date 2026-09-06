@@ -35,7 +35,7 @@ window.MJ = window.MJ || {};
   C.initialMeta = { phil: 0, mogul: 0, recluse: 0, artPath: 0, grammyWins: 0, collab: 0 };
 
   // 稀有度排序（图鉴/成就按 普通→传奇 自上而下排列）
-  C.rarityRank = { common: 0, rare: 1, epic: 2, legendary: 3 };
+  C.rarityRank = { common: 0, uncommon: 1, rare: 2, epic: 3, legendary: 4 };
   // 成就「实际可达性」：均匀随机 5000 局实测的 check 命中率（1.0=每局必得）。
   // 用于成就图鉴按真实可达性排序（而非手写稀有度档位）。重算：node test/compute_ach_reach.cjs 5000
   C.achievementReach = {
@@ -350,40 +350,40 @@ window.MJ = window.MJ || {};
   // M2 内心独白 / 手记模板：按章节 + 元路线/flag 生成第一人称独白（取首个命中 cond，无 cond 为兜底）
   C.diaryTemplates = {
     0: [
-      { cond: function (s) { return (s.attributes.art || 0) >= 50; }, text: '哥哥说我天生属于舞台。我偷偷把洗发水瓶当麦克风，对着镜子练了整晚的舞步。' },
-      { text: '盖瑞的夜晚总带着炼钢厂的铁锈味。我常在床上数着哥哥们的呼吸，想：外面的世界，会不会也有人为我的歌声停下脚步？' }
+      { key: 'diary.0.0', cond: function (s) { return (s.attributes.art || 0) >= 50; }, text: '哥哥说我天生属于舞台。我偷偷把洗发水瓶当麦克风，对着镜子练了整晚的舞步。' },
+      { key: 'diary.0.1', text: '盖瑞的夜晚总带着炼钢厂的铁锈味。我常在床上数着哥哥们的呼吸，想：外面的世界，会不会也有人为我的歌声停下脚步？' }
     ],
     1: [
-      { cond: function (s) { return s.flags.isSolo === true; }, text: '离开兄弟的那天，我既兴奋又空。方向盘握在自己手里，可庆功宴上少了几张熟悉的脸。' },
-      { cond: function (s) { return s.flags.isSolo === false; }, text: '我选择留在兄弟身边。有人笑我错失了独舞的聚光灯，可血缘的合唱，是谁也偷不走的。' },
-      { text: '二十岁像一张没写完的乐谱。我急于证明自己不只是"那个小男孩"。' }
+      { key: 'diary.1.0', cond: function (s) { return s.flags.isSolo === true; }, text: '离开兄弟的那天，我既兴奋又空。方向盘握在自己手里，可庆功宴上少了几张熟悉的脸。' },
+      { key: 'diary.1.1', cond: function (s) { return s.flags.isSolo === false; }, text: '我选择留在兄弟身边。有人笑我错失了独舞的聚光灯，可血缘的合唱，是谁也偷不走的。' },
+      { key: 'diary.1.2', text: '二十岁像一张没写完的乐谱。我急于证明自己不只是"那个小男孩"。' }
     ],
     2: [
-      { cond: function (s) { return (s.attributes.art || 0) >= 75; }, text: '当《Thriller》的黑胶转起来，我听见全世界屏住了呼吸。这一刻，我确信音乐能打败孤独。' },
-      { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '名声像涨潮，我忙着不被冲走。偶尔想起盖瑞，才想起自己为什么开始唱。' },
-      { text: '镁光灯很暖，也很烫。我在世界之巅学着想：接下来，要留下什么？' }
+      { key: 'diary.2.0', cond: function (s) { return (s.attributes.art || 0) >= 75; }, text: '当《Thriller》的黑胶转起来，我听见全世界屏住了呼吸。这一刻，我确信音乐能打败孤独。' },
+      { key: 'diary.2.1', cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '名声像涨潮，我忙着不被冲走。偶尔想起盖瑞，才想起自己为什么开始唱。' },
+      { key: 'diary.2.2', text: '镁光灯很暖，也很烫。我在世界之巅学着想：接下来，要留下什么？' }
     ],
     3: [
-      { cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: '我建起乐园、办起基金会，只想把光分一点给够不着灯的孩子。' },
-      { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '我一点点退向高墙里。外界的议论越响，我越想安静。' },
-      { text: '掌声和流言同时涌来。我在法庭与舞台之间，学着不让任何人替我写结局。' }
+      { key: 'diary.3.0', cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: '我建起乐园、办起基金会，只想把光分一点给够不着灯的孩子。' },
+      { key: 'diary.3.1', cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '我一点点退向高墙里。外界的议论越响，我越想安静。' },
+      { key: 'diary.3.2', text: '掌声和流言同时涌来。我在法庭与舞台之间，学着不让任何人替我写结局。' }
     ],
     4: [
-      { cond: function (s) { return s.debt === true; }, text: '账单像雪片。我告诉自己：活下来，有时比完美落幕更需要勇气。' },
-      { cond: function (s) { return (s.attributes.health || 0) >= 60 && (s.attributes.reputation || 0) >= 60; }, text: '镜前的舞步慢了，可那双手套还在闪光。这一程，我不亏欠舞台。' },
-      { text: '2009 年的夏天，很多事要落幕了。我合上谱子，听见最初的那个盖瑞孩子在鼓掌。' }
+      { key: 'diary.4.0', cond: function (s) { return s.debt === true; }, text: '账单像雪片。我告诉自己：活下来，有时比完美落幕更需要勇气。' },
+      { key: 'diary.4.1', cond: function (s) { return (s.attributes.health || 0) >= 60 && (s.attributes.reputation || 0) >= 60; }, text: '镜前的舞步慢了，可那双手套还在闪光。这一程，我不亏欠舞台。' },
+      { key: 'diary.4.2', text: '2009 年的夏天，很多事要落幕了。我合上谱子，听见最初的那个盖瑞孩子在鼓掌。' }
     ]
   };
 
   // M4 命运回响 / 因果回调模板：按 flag 生成跨章因果回响（引擎收集所有命中项，去重）
   C.echoTemplates = [
-    { cond: function (s) { return s.flags.isSolo === true; }, text: '命运回响：当年迈出单飞那一步，让你与兄弟渐行渐远，却也握住了自己的方向盘。' },
-    { cond: function (s) { return s.flags.isPepsiBurned === true; }, text: '命运回响：84 年百事舞台的那场火，至今仍在肩头留着隐约的疤。' },
-    { cond: function (s) { return s.flags.painkillerDependent === true; }, text: '命运回响：从那场烧伤的镇痛起，药物悄悄成了你离不开的拐杖。' },
-    { cond: function (s) { return s.flags.marriedLisa === true || s.flags.marriedDebbie === true; }, text: '命运回响：你曾向镜头前的人交付过真心，婚姻的余温是暖，也是软肋。' },
-    { cond: function (s) { return s.flags.blanketBorn === true || s.flags.surrogacy === true; }, text: '命运回响：孩子降生的啼哭，是这喧嚣人间里你最想守护的安静。' },
-    { cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: '命运回响：早年种下的善，如今长成了 Heal the World 的森林。' },
-    { cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
+    { key: 'echo.0', cond: function (s) { return s.flags.isSolo === true; }, text: '命运回响：当年迈出单飞那一步，让你与兄弟渐行渐远，却也握住了自己的方向盘。' },
+    { key: 'echo.1', cond: function (s) { return s.flags.isPepsiBurned === true; }, text: '命运回响：84 年百事舞台的那场火，至今仍在肩头留着隐约的疤。' },
+    { key: 'echo.2', cond: function (s) { return s.flags.painkillerDependent === true; }, text: '命运回响：从那场烧伤的镇痛起，药物悄悄成了你离不开的拐杖。' },
+    { key: 'echo.3', cond: function (s) { return s.flags.marriedLisa === true || s.flags.marriedDebbie === true; }, text: '命运回响：你曾向镜头前的人交付过真心，婚姻的余温是暖，也是软肋。' },
+    { key: 'echo.4', cond: function (s) { return s.flags.blanketBorn === true || s.flags.surrogacy === true; }, text: '命运回响：孩子降生的啼哭，是这喧嚣人间里你最想守护的安静。' },
+    { key: 'echo.5', cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: '命运回响：早年种下的善，如今长成了 Heal the World 的森林。' },
+    { key: 'echo.6', cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
   ];
 
   // M2 扩展：假如…（想象）微片段模板（GDD §17.11），按主导元路线程序化生成，全部标注"想象"

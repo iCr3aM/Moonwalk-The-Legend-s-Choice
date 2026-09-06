@@ -137,13 +137,14 @@ window.MJ = window.MJ || {};
         'rel.kids': 'Children',
         'rel.fans': 'Fans',
         'rarity.common': 'Common',
+        'rarity.uncommon': 'Uncommon',
         'rarity.rare': 'Rare',
         'rarity.epic': 'Epic',
         'rarity.legendary': 'Legendary',
 
         // ---------- 章节（时代卡片） ----------
         'chapter.0.title': 'Chapter I · The Cradle of Gary',
-        'chapter.0.sub': '1958 – 1969　A Child’s Voice in the Steel Town',
+        'chapter.0.sub': '1958 – 1969　A Child’s Voice in Steeltown',
         'chapter.0.flavor': 'In the red glow of the steel mills, seven siblings squeezed into a narrow home. The beat began at the edge of a humble crib.',
         'chapter.1.title': 'Chapter II · Solo & Crossroads',
         'chapter.1.sub': '1970 – 1981　From the Group to Solo',
@@ -342,7 +343,7 @@ window.MJ = window.MJ || {};
         'ach.ACH_GRAMMY_SWEEP.name': 'Grammy Sweep',
         'ach.ACH_GRAMMY_SWEEP.desc': 'From Off The Wall to Invincible, you wrote your own name on every trophy.',
         'ach.ACH_GRAMMY_LEGEND.name': 'Grammy Legend',
-        'ach.ACH_GRAMMY_LEGEND.desc': 'A marvel in Grammy history: you lived yourself into the record.',
+        'ach.ACH_GRAMMY_LEGEND.desc': 'A marvel in Grammy history: you wrote yourself into the record.',
         'ach.ACH_DREAMER.name': 'Dreamweaver',
         'ach.ACH_DREAMER.desc': 'For that boy, you lit, one by one, every item left unticked on the list.',
         'ach.ACH_PETERPAN.name': 'The Peter Pan Pact',
@@ -354,7 +355,7 @@ window.MJ = window.MJ || {};
 
         // ---------- 彩蛋（GDD §17.9） ----------
         'egg.EGG_MOONWALK.name': 'Origin of the Moonwalk',
-        'egg.EGG_MOONWALK.desc': 'Again and again you tip toe to the floor and glide backward — so the myth began on the concrete of a Gary alley.',
+        'egg.EGG_MOONWALK.desc': 'Again and again you tiptoe to the floor and glide backward — so the myth began on the concrete of a Gary alley.',
         'egg.EGG_LYRIC.name': 'Backwards Lyrics',
         'egg.EGG_LYRIC.desc': '"Annie, are you OK?" You laugh and sing the lyrics backwards; time flows back a second.',
         'egg.EGG_TRIBUTE.name': 'A Dream Duet',
@@ -392,7 +393,7 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_BLANKET.name': 'Swinging with Blanket', 'trivia.TRIVIA_BLANKET.desc': 'You cradled your youngest, swaying him in your arms, calling it “the steadiest swing in the world.”',
         'trivia.TRIVIA_THISISIT.name': 'Polishing This Is It', 'trivia.TRIVIA_THISISIT.desc': 'Every step of the fifty shows you timed frame by frame with the choreographer, even as your body flashed red.',
         'trivia.TRIVIA_GRAMMY.name': 'The Trophy Goes to the Band', 'trivia.TRIVIA_GRAMMY.desc': 'Under the bright stage lights you handed the trophy first to the quiet musicians behind you.',
-        'trivia.TRIVIA_WATW.name': 'All-Night Vocals for “We Are The World”', 'trivia.TRIVIA_WATW.desc': 'The night the studio brimmed with stars, you were last to leave, checking every harmony fit seamless.',
+        'trivia.TRIVIA_WATW.name': 'All-Night Vocals for “We Are The World”', 'trivia.TRIVIA_WATW.desc': 'The night the studio brimmed with stars, you were last to leave, checking every harmony fit seamlessly.',
         'trivia.TRIVIA_PEACE.name': 'Lifting a Child in a War Zone', 'trivia.TRIVIA_PEACE.desc': 'Off-camera you knelt to lift a local child — a photo never used for publicity.',
         'trivia.TRIVIA_STUDIO_LATE.name': 'Late-Night Soup for the Band', 'trivia.TRIVIA_STUDIO_LATE.desc': 'You remembered whose stomach was delicate and sent hot soup at midnight: “mind the voice.”',
         'trivia.TRIVIA_DISCO.name': 'A Bow to the Disco Era', 'trivia.TRIVIA_DISCO.desc': 'You shrugged a shoulder to the neon and bowed, solemnly, to the disco pioneers before you.',
@@ -427,11 +428,11 @@ window.MJ = window.MJ || {};
         'ach.ACH_LONELY_KING.name': 'Lonely King', 'ach.ACH_LONELY_KING.desc': 'Loneliness ≥50 and Reputation ≥80.',
         'ach.ACH_FAMILY_WARM.name': 'Warm Parent', 'ach.ACH_FAMILY_WARM.desc': 'Family ≥80 and reconciled with your children.',
         'ach.ACH_COMEBACK_2.name': 'The Comeback', 'ach.ACH_COMEBACK_2.desc': 'Art ≥85 after a health crisis.',
-        'ach.ACH_EGG_HUNTER.name': 'Egg Hunter', 'ach.ACH_EGG_HUNTER.desc': 'Unlock ≥8 easter eggs.',
+        'ach.ACH_EGG_HUNTER.name': 'Egg Hunter', 'ach.ACH_EGG_HUNTER.desc': 'Unlock ≥8 Easter eggs.',
         'ach.ACH_VARIANT_20.name': 'Variant Collector', 'ach.ACH_VARIANT_20.desc': 'Trigger ≥20 variant events in one run.',
         'ach.ACH_ALL_ENDINGS.name': 'All of Life', 'ach.ACH_ALL_ENDINGS.desc': 'Unlock all 18 endings.',
         'ach.ACH_SPEEDRUN.name': 'Speedrun Life', 'ach.ACH_SPEEDRUN.desc': 'Reach any ending via a minimal path.',
-        'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute all run.',
+        'ach.ACH_PACIFIST.name': 'Clean Record', 'ach.ACH_PACIFIST.desc': 'Never entangled in any legal dispute for the entire run.',
 
 
 
@@ -487,6 +488,10 @@ window.MJ = window.MJ || {};
   // 关键：eventEn 仅含英文事件正文；中文模式下必须优先使用代码内的中文字面量回退，
   // 否则会因命中 eventEn 而把剧情/选项错误地显示成英文。
   MJ.t = function (key, vars, fallback) {
+    // 记录事件键的中文字面量（永远是 T 的第三个参数），供旧存档中文串→事件 id 反查（海报兼容层）
+    if (typeof key === 'string' && key.indexOf('event.') === 0 && fallback != null) {
+      (MJ._zhLit || (MJ._zhLit = {}))[key] = fallback;
+    }
     var lang = i18n.lang;
     var d = i18n.dict[lang] || {};
     if (d[key] != null) return subst(d[key], vars);
@@ -498,10 +503,8 @@ window.MJ = window.MJ || {};
       return key;
     }
 
-    // 中文（及任何非英文语种）：中文串以代码内字面量为回退，不取 eventEn 的英文
+    // 中文（及任何非英文语种）：中文串以代码内字面量为回退，绝不取 eventEn 的英文
     if (fallback != null) return subst(fallback, vars);
-    var ev2 = i18n.dict.eventEn;
-    if (ev2 && ev2[key] != null) return subst(ev2[key], vars);
     return key;
   };
 

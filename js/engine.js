@@ -122,7 +122,7 @@ window.MJ = window.MJ || {};
     var tpls = (MJ.config.diaryTemplates || {})[chapterId];
     if (!tpls) return '';
     for (var i = 0; i < tpls.length; i++) {
-      try { if (!tpls[i].cond || tpls[i].cond(state)) return tpls[i].text; } catch (e) {}
+      try { if (!tpls[i].cond || tpls[i].cond(state)) return { key: tpls[i].key, text: tpls[i].text }; } catch (e) {}
     }
     return '';
   };
@@ -132,7 +132,7 @@ window.MJ = window.MJ || {};
     var tpls = MJ.config.echoTemplates || [];
     var out = [];
     for (var i = 0; i < tpls.length; i++) {
-      try { if (tpls[i].cond(state)) out.push(tpls[i].text); } catch (e) {}
+      try { if (tpls[i].cond(state)) out.push({ key: tpls[i].key, text: tpls[i].text }); } catch (e) {}
     }
     return out;
   };
@@ -333,11 +333,12 @@ window.MJ = window.MJ || {};
       var s = this.state;
       var frag = MJ.buildDiary(chapterId, s);
       if (frag) {
-        s.diary.push({ chapter: chapterId, title: (MJ.config.chapters[chapterId] || {}).title || '', text: frag });
+        s.diary.push({ chapter: chapterId, title: (MJ.config.chapters[chapterId] || {}).title || '', key: frag.key, text: frag.text });
         if (s.diary.length > 6) s.diary.shift();
       }
       MJ.buildEchoes(s).forEach(function (t) {
-        if (s.echoes.indexOf(t) < 0) s.echoes.push(t);
+        var dup = s.echoes.some(function (x) { return (typeof x === 'string' ? x : x.key) === t.key; });
+        if (!dup) s.echoes.push(t);
       });
     },
 
