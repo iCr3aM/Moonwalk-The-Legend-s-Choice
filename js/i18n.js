@@ -375,6 +375,18 @@ window.MJ = window.MJ || {};
         'egg.EGG_APOLLO.name': 'Apollo Night',
         'egg.EGG_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, you and your brothers lifted the champion trophy.',
 
+        // —— Phase 2 内容扩充 ——
+        'egg.EGG_TOYDRUM.name': 'The First Toy Drum',
+        'egg.EGG_TOYDRUM.desc': 'The old toy drum on Gary’s corner was your first instrument in duet with the world.',
+        'egg.EGG_SISTERDUET.name': 'Harmony with Sister',
+        'egg.EGG_SISTERDUET.desc': 'One afternoon, you and La Toya turned "Rockin’ Robin" into a version that belonged only to the siblings.',
+        'egg.EGG_CHARITYYOUTH.name': 'Children’s Hospital Show',
+        'egg.EGG_CHARITYYOUTH.desc': 'You slipped into the ward and sang a lullaby for the child in the bed.',
+        'egg.EGG_FANLETTERKID.name': 'A Letter from a Child',
+        'egg.EGG_FANLETTERKID.desc': 'A scrawled letter said: your song kept them from fearing the dark.',
+        'egg.EGG_FINALREHEARSAL.name': 'The Last Rehearsal Light',
+        'egg.EGG_FINALREHEARSAL.desc': 'In the 2009 summer rehearsal hall, you were especially particular about where every light should fall.',
+
         // ---------- 趣事与轶事（GDD §17.11：Trivia & Anecdotes） ----------
         'ui.triviaCodex': 'Trivia Codex',
         'ui.triviaToast': 'Trivia Discovered · ',

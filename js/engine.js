@@ -513,7 +513,14 @@ window.MJ = window.MJ || {};
       EGG_DEV:      { icon: '🛠️', name: '开发者留言', desc: '“谢谢你，把这一段人生，一遍遍活成了不同的样子。”' },
       EGG_FOURTH:   { icon: '🪞', name: '第四面墙', desc: '“致每一位重写传奇的你——镜子里的那个孩子，一直在为你鼓掌。”' },
       EGG_GARY:     { icon: '🏠', name: '盖瑞的孩子', desc: '盖瑞市杰克逊街的那栋小屋，九个孩子的笑声里，藏着一个巨星的起点。' },
-      EGG_APOLLO:   { icon: '🏅', name: '阿波罗之夜', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，你与兄弟们捧起了冠军奖杯。' }
+      EGG_APOLLO:   { icon: '🏅', name: '阿波罗之夜', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，你与兄弟们捧起了冠军奖杯。' },
+
+      // —— Phase 2 内容扩充 ——
+      EGG_TOYDRUM:        { icon: '🥁', name: '第一面玩具鼓', desc: '盖瑞巷口那只旧玩具鼓，是你与世界合奏的第一件乐器。' },
+      EGG_SISTERDUET:     { icon: '👯', name: '与妹妹的和声', desc: '某个午后，你和拉托亚把《Rockin’ Robin》唱成了只属于兄妹的版本。' },
+      EGG_CHARITYYOUTH:   { icon: '🏥', name: '儿童医院义演', desc: '你悄悄走进病房，为病床上的孩子唱起摇篮曲。' },
+      EGG_FANLETTERKID:   { icon: '✉️', name: '孩子的来信', desc: '一封歪歪扭扭的来信说：你的歌让他不再怕黑。' },
+      EGG_FINALREHEARSAL: { icon: '💡', name: '最后一束彩排光', desc: '2009 年夏天的排练厅，你对每束光的位置都格外较真。' }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }

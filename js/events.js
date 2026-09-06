@@ -1443,7 +1443,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_CHARITY.opt0.label', null, 'A：倾尽全力筹办'), hint: T('event.V_CHARITY.opt0.hint', null, '善名广传，爱心+1（声誉+12，家庭+5，压力+8，慈善+1）'), effects: { reputation: 12, family: 5, stress: 8, phil: 1 }, next: '__RETURN__' },
+      { label: T('event.V_CHARITY.opt0.label', null, 'A：倾尽全力筹办'), hint: T('event.V_CHARITY.opt0.hint', null, '善名广传，爱心+1（声誉+12，家庭+5，压力+8，慈善+1）'), effects: { reputation: 12, family: 5, stress: 8, phil: 1 }, flags: { egg_charityyouth: true }, next: '__RETURN__' },
       { label: T('event.V_CHARITY.opt1.label', null, 'B：仅名义站台'), hint: T('event.V_CHARITY.opt1.hint', null, '举手之劳（声誉+5）'), effects: { reputation: 5 }, next: '__RETURN__' }
     ]
   };
@@ -1511,7 +1511,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_FANMAIL.opt0.label', null, 'A：亲笔回信鼓励'), hint: T('event.V_FANMAIL.opt0.hint', null, '善意回馈，暖意融融（家庭+3，声誉+3）'), effects: { family: 3, reputation: 3 }, next: '__RETURN__' },
+      { label: T('event.V_FANMAIL.opt0.label', null, 'A：亲笔回信鼓励'), hint: T('event.V_FANMAIL.opt0.hint', null, '善意回馈，暖意融融（家庭+3，声誉+3）'), effects: { family: 3, reputation: 3 }, flags: { egg_fanletterkid: true }, next: '__RETURN__' },
       { label: T('event.V_FANMAIL.opt1.label', null, 'B：交由团队处理'), hint: T('event.V_FANMAIL.opt1.hint', null, '体面但疏离（声誉+1）'), effects: { reputation: 1 }, next: '__RETURN__' }
     ]
   };
@@ -2335,7 +2335,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_THISISIT_DONE.opt0.label', null, 'A：圆满完成驻演'), hint: T('event.V_THISISIT_DONE.opt0.hint', null, '把未竟之演唱完（声誉+12，艺术+10）'), effects: { reputation: 12, art: 10 }, flags: { dream_thisisit: true }, next: '__RETURN__' },
+      { label: T('event.V_THISISIT_DONE.opt0.label', null, 'A：圆满完成驻演'), hint: T('event.V_THISISIT_DONE.opt0.hint', null, '把未竟之演唱完（声誉+12，艺术+10）'), effects: { reputation: 12, art: 10 }, flags: { dream_thisisit: true, egg_finalrehearsal: true }, next: '__RETURN__' },
       { label: T('event.V_THISISIT_DONE.opt1.label', null, 'B：留作心底的遗憾'), hint: T('event.V_THISISIT_DONE.opt1.hint', null, '让想象停在最美处（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
     ]
   };
