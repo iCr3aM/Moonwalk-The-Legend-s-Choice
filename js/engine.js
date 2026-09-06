@@ -190,18 +190,21 @@ window.MJ = window.MJ || {};
       return 'END_FINANCIAL';
     }
     // 以下仅 !burned & !debt：成功型 / 普通型结局（按"更具体者优先"排序）
-    if (dom === 'recluse' && a.health >= 50 && (a.loneliness || 0) < 50) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7）
+    if (dom === 'recluse' && a.health >= 50 && (a.loneliness || 0) < 55) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7，放宽孤独阈值 <55）
     if (dom === 'recluse' && a.health >= 35) return 'END_RECLUSE';        // 4
     // 13 声誉承压（M5 媒体轴联动）：有丑闻标志且声誉/媒体仍偏低 → 丑闻定义legacy；
     //    前置到「成功型结局」之前，否则会被 MOGUL/PHIL/PERFECT 等抢走而永远不可达。
     if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
     if (m.mogul >= 2 && dom === 'mogul' && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5 商业须为主导路线，避免吞掉普通好结局池
     if ((a.art || 0) >= 70 && (m.mogul || 0) >= 1 && f.cp_innovation >= 80) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
+    // 8 完美传奇（干净人生，§17.7 可达性）：未走主导特殊路线、无提携/加冕标志、身心健康且声誉达标 → 优先收束，
+    //    避免被 TRAGIC 默认吞掉；用 dom/collab/加冕标志排他，不抢 MOGUL/PHIL/MENTOR/ETERNAL/INNOVATOR。
+    if (dom !== 'mogul' && dom !== 'phil' && dom !== 'recluse' && (m.collab || 0) < 1 && !(f.thriller25 || f.anniv2001) && a.health >= 32 && (a.reputation || 0) >= 42) return 'END_PERFECT';
     if ((m.phil || 0) >= 2 && dom === 'phil' && !debt && (a.reputation || 0) >= 58 && (a.family || 0) >= 45) return 'END_STATESMAN'; // 6b 文化大使（§17.7，须慈善主导且在 PHIL 前）
     if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST';   // 6 须慈善主导
-    if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 50) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可）
-    if (a.art >= 66 && a.reputation >= 56 && a.health >= 46 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
-    if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（需声誉达标，否则归争议缠身）
+    if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 44) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可，放宽艺术阈值 ≥44）
+    if (a.art >= 60 && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志（放宽艺术 ≥60 / 健康 ≥42）
+    if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（兜底，需声誉达标）
     return 'END_TRAGIC';                                     // 14 默认
   };
 

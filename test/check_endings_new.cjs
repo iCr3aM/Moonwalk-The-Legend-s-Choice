@@ -20,7 +20,7 @@ function mkEnding(over) {
 var ucases = [
   ['END_PLAIN', { entryId: 'END_PLAIN' }],
   ['END_FAMILY', { flags: { isSolo: false } }],
-  ['END_RECLUSE', { attr: { health: 60, family: 30, loneliness: 50 }, meta: { recluse: 3 } }],
+  ['END_RECLUSE', { attr: { health: 60, family: 30, loneliness: 60 }, meta: { recluse: 3 } }],
   ['END_MOGUL', { attr: { family: 50, media: 60, health: 60, wealth: 70, art: 60 }, meta: { mogul: 2 }, debt: false }],
   ['END_PHILANTHROPIST', { attr: { family: 40, wealth: 30, health: 60 }, meta: { phil: 3 }, debt: false }],
   ['END_ETERNAL', { flags: { thriller25: true }, attr: { art: 80, reputation: 70, health: 60, family: 50, media: 60 } }],

@@ -1450,7 +1450,7 @@ window.MJ = window.MJ || {};
 
   // ----- 新增变体题材库（③ 扩充） -----
   E.V_PRESS = {
-    id: 'V_PRESS', variant: true, window: [1988, 2005], weight: 35,
+    id: 'V_PRESS', variant: true, window: [1989, 1994], weight: 26,
     title: T('event.V_PRESS.title', null, '深度专访邀约'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_PRESS.text', null, '一档极具分量的访谈节目递来邀约，主持人想聊聊“真实的你”。镜头之后，是又一场关于坦诚的赌注。'), s, [
@@ -1463,7 +1463,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BACKSTAGE = {
-    id: 'V_BACKSTAGE', variant: true, window: [1982, 2005], weight: 30,
+    id: 'V_BACKSTAGE', variant: true, window: [1982, 1994], weight: 22,
     title: T('event.V_BACKSTAGE.title', null, '巡演后台崩溃'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BACKSTAGE.text', null, '一场巡演的间隙，你在空荡的后台摘下耳返，忽然不想再面对下一座城市的万人欢呼。'), s, [
@@ -1476,7 +1476,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_FAMILY = {
-    id: 'V_FAMILY', variant: true, window: [1985, 2005], weight: 30,
+    id: 'V_FAMILY', variant: true, window: [1985, 2005], weight: 20,
     cond: function (s) { return !!s.flags.marriedDebbie || !!s.flags.marriedLisa || !!s.flags.blanketBorn; },
     title: T('event.V_FAMILY.title', null, '家庭温馨时刻'), kind: 'choice',
     text: function (s) {
@@ -1490,7 +1490,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BLOCK = {
-    id: 'V_BLOCK', variant: true, window: [1982, 2005], weight: 30,
+    id: 'V_BLOCK', variant: true, window: [1982, 1994], weight: 22,
     title: T('event.V_BLOCK.title', null, '创作瓶颈'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BLOCK.text', null, '录音室里，你对着一段怎么也写不顺的副歌发呆。灵感的井，似乎一夜之间干涸了。'), s, [
@@ -1503,7 +1503,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_FANMAIL = {
-    id: 'V_FANMAIL', variant: true, window: [1983, 2005], weight: 35,
+    id: 'V_FANMAIL', variant: true, window: [1983, 1994], weight: 26,
     title: T('event.V_FANMAIL.title', null, '一封粉丝来信'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_FANMAIL.text', null, '助理抱来一摞信件，其中一封来自重病中的孩子，说你的歌是她黑夜里的光。'), s, [
@@ -1529,7 +1529,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_DEAL = {
-    id: 'V_DEAL', variant: true, window: [1985, 2005], weight: 30,
+    id: 'V_DEAL', variant: true, window: [1987, 1994], weight: 20,
     cond: function (s) { return s.flags.isSolo === true; },
     title: T('event.V_DEAL.title', null, '商业谈判桌'), kind: 'choice',
     text: function (s) {
@@ -1582,6 +1582,32 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_CHILDHOOD.opt0.label', null, 'A：咬牙加练'), hint: T('event.V_CHILDHOOD.opt0.hint', null, '技艺精进，身心俱疲（艺术+8，压力+5）'), effects: { art: 8, stress: 5 }, epilogue: T('event.V_CHILDHOOD.opt0.epilogue', null, '你把童年摁进了节拍里，镜中的舞步越来越稳，眼底的疲惫也越来越深。'), next: '__RETURN__' },
       { label: T('event.V_CHILDHOOD.opt1.label', null, 'B：偷得浮生'), hint: T('event.V_CHILDHOOD.opt1.hint', null, '短暂喘息（压力-5，家庭+3）'), effects: { stress: -5, family: 3 }, epilogue: T('event.V_CHILDHOOD.opt1.epilogue', null, '你溜去巷口看了一回弹珠，那点偷来的快乐，比任何掌声都真实。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_CHILDHOOD_GARY = {
+    id: 'V_CHILDHOOD_GARY', variant: true, window: [1958, 1965], weight: 30,
+    title: T('event.V_CHILDHOOD_GARY.title', null, '盖瑞的炉火'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CHILDHOOD_GARY.text', null, '盖瑞的炼钢厂彻夜通红，父亲下班时满身煤灰，却总在你睡前哼起一段旋律。你在铁锈味的风里，第一次觉得"家"是有声音的。'), s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 35; }, text: T('event.V_CHILDHOOD_GARY.branch0.text', null, '机器的轰鸣让你睡不着，你把脸埋进枕头，假装听不见远处的汽笛。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CHILDHOOD_GARY.opt0.label', null, 'A：依偎在父亲膝头听歌'), hint: T('event.V_CHILDHOOD_GARY.opt0.hint', null, '暖意盈怀（家庭+6，压力-3）'), effects: { family: 6, stress: -3 }, epilogue: T('event.V_CHILDHOOD_GARY.opt0.epilogue', null, '你枕着父亲走调的哼唱入睡，那是最早的、不必完美的安眠曲。'), next: '__RETURN__' },
+      { label: T('event.V_CHILDHOOD_GARY.opt1.label', null, 'B：躲进后院数星星'), hint: T('event.V_CHILDHOOD_GARY.opt1.hint', null, '片刻自由（艺术+4，压力-2）'), effects: { art: 4, stress: -2 }, epilogue: T('event.V_CHILDHOOD_GARY.opt1.epilogue', null, '你在后院的草垛上数星星，把银河当成了还没写出的乐谱。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_CHILDHOOD_RADIO = {
+    id: 'V_CHILDHOOD_RADIO', variant: true, window: [1958, 1966], weight: 25,
+    title: T('event.V_CHILDHOOD_RADIO.title', null, '第一次听电台'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CHILDHOOD_RADIO.text', null, '邻居家窗里飘出灵歌的旋律，你趴在篱笆上听了整整一个下午。原来除了工厂的轰鸣，世界还藏着这样的声音。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 25; }, text: T('event.V_CHILDHOOD_RADIO.branch0.text', null, '你的脚尖不自觉地跟着节拍点了起来，比任何功课都诚实。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CHILDHOOD_RADIO.opt0.label', null, 'A：偷偷学唱那支歌'), hint: T('event.V_CHILDHOOD_RADIO.opt0.hint', null, '种下旋律（艺术+6）'), effects: { art: 6 }, epilogue: T('event.V_CHILDHOOD_RADIO.opt0.epilogue', null, '你把这支歌偷偷练熟了，没人知道，一个未来的歌者正在篱笆外发芽。'), next: '__RETURN__' },
+      { label: T('event.V_CHILDHOOD_RADIO.opt1.label', null, 'B：把零钱攒给唱片'), hint: T('event.V_CHILDHOOD_RADIO.opt1.hint', null, '珍视热爱（家庭-2，艺术+4）'), effects: { family: -2, art: 4 }, epilogue: T('event.V_CHILDHOOD_RADIO.opt1.epilogue', null, '你攒下几枚闪亮的硬币，换来的不只是唱片，还有心跳一样的节奏。'), next: '__RETURN__' }
     ]
   };
   E.V_DISCO = {
@@ -1679,7 +1705,7 @@ window.MJ = window.MJ || {};
 
   // ----- 补充变体：让四条元路线都有变体代表（artPath 此前缺位） -----
   E.V_SONGWRITE = {
-    id: 'V_SONGWRITE', variant: true, window: [1983, 2005], weight: 30,
+    id: 'V_SONGWRITE', variant: true, window: [1983, 1994], weight: 22,
     title: T('event.V_SONGWRITE.title', null, '深夜创作'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_SONGWRITE.text', null, '又一宿未眠，你在钢琴前反复推敲一段旋律。天快亮时，那个让你心跳的动机终于浮现。'), s, [
@@ -1692,7 +1718,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BUSINESS_EMPIRE = {
-    id: 'V_BUSINESS_EMPIRE', variant: true, window: [1985, 2005], weight: 30,
+    id: 'V_BUSINESS_EMPIRE', variant: true, window: [1986, 1994], weight: 20,
     cond: function (s) { return s.flags.isSolo === true; },
     title: T('event.V_BUSINESS_EMPIRE.title', null, '版图扩张'), kind: 'choice',
     text: function (s) {
@@ -1765,7 +1791,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_MOONWALK_TRIBUTE = {
-    id: 'V_MOONWALK_TRIBUTE', variant: true, window: [1984, 2009], weight: 25,
+    id: 'V_MOONWALK_TRIBUTE', variant: true, window: [1984, 1994], weight: 18,
     cond: function (s) { return (s.attributes.art || 0) >= 80; },
     title: T('event.V_MOONWALK_TRIBUTE.title', null, '传奇舞步的回响'), kind: 'choice',
     text: function (s) {
@@ -1827,7 +1853,7 @@ window.MJ = window.MJ || {};
 
   // ----- 体验深化 M6：童年闪回（孤独轴驱动，高孤独时触发） -----
   E.V_FLASHBACK = {
-    id: 'V_FLASHBACK', variant: true, window: [1985, 2008], weight: 40,
+    id: 'V_FLASHBACK', variant: true, window: [1987, 1994], weight: 28,
     cond: function (s) { return (s.attributes.loneliness || 0) >= 35; },
     title: T('event.V_FLASHBACK.title', null, '盖瑞的回声'), kind: 'choice',
     text: function (s) {
@@ -2195,7 +2221,7 @@ window.MJ = window.MJ || {};
 
   // ---------- §17.13.3 未竟梦想变体（皆标注"想象"，遵循 §15.1 中性化；落地 ACH_DREAMER/PETERPAN/GREATWALL/THISISIT） ----------
   E.V_PETERPAN = {
-    id: 'V_PETERPAN', variant: true, window: [1987, 2005], weight: 35,
+    id: 'V_PETERPAN', variant: true, window: [1988, 1994], weight: 26,
     title: T('event.V_PETERPAN.title', null, '（想象）彼得潘之约'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_PETERPAN.text', null, '你买下了《彼得潘》的版权，也曾含泪恳求能亲自饰演那个不愿长大的男孩。Neverland 的名字，正由此而来。'), s, [
@@ -2234,7 +2260,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_CHILDHOSP = {
-    id: 'V_CHILDHOSP', variant: true, window: [1987, 2005], weight: 35,
+    id: 'V_CHILDHOSP', variant: true, window: [1988, 1994], weight: 26,
     title: T('event.V_CHILDHOSP.title', null, '（想象）Neverland 儿童医院'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILDHOSP.text', null, '你设想在 Neverland 里建一座儿童医院，让生病的孩子也能在童话里奔跑。'), s, [
