@@ -1196,7 +1196,18 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.8_4.opt0.label', null, 'A：扩建公益基金会'), hint: T('event.8_4.opt0.hint', null, '善名远播，爱心+1（声誉+10，家庭+3，慈善+1）'), effects: { reputation: 10, family: 3, phil: 1 }, next: '8_4b' },
       { label: T('event.8_4.opt1.label', null, 'B：守护家族与版权'), hint: T('event.8_4.opt1.hint', null, '稳妥传承（家庭+10，财富+10）'), effects: { family: 10, wealth: 10 }, next: '8_4b' },
-      { label: T('event.8_4.opt2.label', null, 'C：半退半隐享清闲'), hint: T('event.8_4.opt2.hint', null, '把日子还给自己（压力-10，隐士+1）'), effects: { stress: -10, recluse: 1 }, next: '8_4b' }
+      { label: T('event.8_4.opt2.label', null, 'C：半退半隐享清闲'), hint: T('event.8_4.opt2.hint', null, '把日子还给自己（压力-10，隐士+1）'), effects: { stress: -10, recluse: 1 }, next: '8_4b' },
+      { label: T('event.8_4.opt3.label', null, 'D：留一段私人影像'), hint: T('event.8_4.opt3.hint', null, '把想说的话存进时光（艺术+2，家庭+2）'), effects: { art: 2, family: 2 }, next: '8_8' }
+    ]
+  };
+  E['8_8'] = {
+    id: '8_8', year: 2020, title: T('event.8_8.title', null, '私人影像：未说出口的话'), kind: 'choice', key: true,
+    text: function (s) {
+      return narr(T('event.8_8.text', null, '你对着镜头，想录一段只给未来看的话。可真到开口时，说的却尽是些鸡毛蒜皮——你忽然发现，最想留下的，从来不是丰功伟绩。'), s, []);
+    },
+    options: [
+      { label: T('event.8_8.opt0.label', null, 'A：把影像留给家人'), hint: T('event.8_8.opt0.hint', null, '只给最亲的人看（家庭+3）'), effects: { family: 3 }, next: '8_4b' },
+      { label: T('event.8_8.opt1.label', null, 'B：封存进时光胶囊'), hint: T('event.8_8.opt1.hint', null, '让它自己说话（艺术+2，隐士+1）'), effects: { art: 2, recluse: 1 }, next: '8_4b' }
     ]
   };
   E['8_5'] = {
