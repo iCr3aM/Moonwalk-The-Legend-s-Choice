@@ -553,6 +553,10 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
   overflow-wrap: anywhere;
 }
+/* 结局图鉴：稀有度行预留假设线标签高度，确保有/无标签卡片等高 */
+.modal .gallery.ending-gallery .g-rarity { min-height: 28px; }
+/* 成就图鉴：off 卡片不显示描述，避免双"未解锁" */
+.modal .gallery.ach-gallery .g-cell.off .g-desc { display: none; }
 /* 成就图鉴：描述区弹性填充 + 最小高度占位，确保已解锁/未解锁卡片等高 */
 .modal .gallery.ach-gallery .g-desc {
   flex: 1 1 auto;
@@ -580,13 +584,17 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .modal .gallery.egg-gallery .g-grid,
 .modal .gallery.trivia-gallery .g-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .modal .gallery.quote-gallery .g-cell { padding: 12px; }
-/* 彩蛋/趣事：描述区弹性填充 + 最小高度占位，确保已解锁（长描述）与未解锁（短文本）卡片等高 */
-.modal .gallery.egg-gallery .g-cell,
-.modal .gallery.trivia-gallery .g-cell { align-items: stretch; text-align: left; }
+/* 彩蛋/趣事：已解锁卡片描述区弹性填充 + 最小高度占位；未解锁卡片内容居中 */
+.modal .gallery.egg-gallery .g-cell.on,
+.modal .gallery.trivia-gallery .g-cell.on { align-items: stretch; text-align: left; }
+.modal .gallery.egg-gallery .g-cell.off,
+.modal .gallery.trivia-gallery .g-cell.off { align-items: center; text-align: center; }
 .modal .gallery.egg-gallery .g-icon,
-.modal .gallery.trivia-gallery .g-icon { align-self: center; }
+.modal .gallery.trivia-gallery .g-icon { flex-shrink: 0; }
 .modal .gallery.egg-gallery .g-name,
 .modal .gallery.trivia-gallery .g-name { text-align: center; }
+.modal .gallery.egg-gallery .g-cell.off .g-desc,
+.modal .gallery.trivia-gallery .g-cell.off .g-desc { display: none; }
 .modal .gallery.quote-gallery .g-desc,
 .modal .gallery.egg-gallery .g-desc,
 .modal .gallery.trivia-gallery .g-desc {

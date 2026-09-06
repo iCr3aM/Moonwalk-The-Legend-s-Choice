@@ -284,7 +284,7 @@ window.MJ = window.MJ || {};
         '<div class="g-icon">' + (on ? a.icon : '🏆') + '</div>' +
         '<div class="g-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         (on ? '<div class="g-rarity">' + rarityLabel(a.rarity) + '</div>' : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
-        '<div class="g-desc">' + (on ? escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
+        (on ? '<div class="g-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div>' : '') +
       '</div>';
     });
     html += '</div></div>';
@@ -931,12 +931,9 @@ window.MJ = window.MJ || {};
     ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
 
     y += 54;
-    ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth), W / 2, y);
-    // —— 格莱美总座数模块 ——
-    y += 28;
-    ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText('🏆 ' + T('ui.posterGrammy', { n: _gw }, '格莱美 {n} 座'), W / 2, y);
+    /* 净资产 + 格莱美合并为一行，节省纵向空间 */
+    ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth) + '　　🏆 ' + T('ui.posterGrammy', { n: _gw }, '格莱美 {n} 座'), W / 2, y);
 
     y += 40;
     ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
@@ -1045,9 +1042,9 @@ window.MJ = window.MJ || {};
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
     y += 24;
-    ctx.fillStyle = G.cream; ctx.font = '16px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
     var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
-    y = wrapParagraph(ctx, narr, 60, y, W - 120, 28, H - 130);
+    y = wrapParagraph(ctx, narr, 60, y, W - 120, 26, H - 150);
 
     ctx.textAlign = 'center';
     // 名言（随机 + 去重上一条，居中多行；相对最后内容定位，避免被成就挤压覆盖）
@@ -1071,7 +1068,7 @@ window.MJ = window.MJ || {};
     // 方案 B：字号 15px、行距 22，支持至多 2 行（2 行时版权≈1238，仍在边框 1256 内）
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qLines = wrapCenter(ctx, _posterQuote, W - 120);
-    var taglineY = Math.max(H - 120, y + 30);
+    var taglineY = Math.max(H - 130, y + 42);
     for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 22);
     var _sigY = taglineY + _qLines.length * 22 + 14;
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
