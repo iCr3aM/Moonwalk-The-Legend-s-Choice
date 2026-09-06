@@ -34,12 +34,12 @@
 - **Six attributes + dual-track Economy**: Health / Reputation / Wealth / Family / Art / Stress (all 0–100); large sums go through `netWorth` / `debt` (in 10k units), fixing the early "wealth clamped to 0" unreachable-ending bug.
 - **18 endings**: including 1 hidden ultimate (True Eternal) and 1 sequel ending, resolved by a priority rule table plus meta-route tie-breaking.
 - **Four hidden meta-routes**: Artist / Philanthropist / Mogul / Recluse, accumulated from choices with a live "you are on the path to X" hint.
-- **Variant event system ("what-if" system)**: 75 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
-- **60 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
+- **Variant event system ("what-if" system)**: 79 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
+- **70 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
 - **Bilingual (Simplified Chinese / English)**: one-click language switch, fully localized event text.
 - **Sequel "what if MJ didn't pass" (2010–2026)**: This Is It residency, digital singles plan, Sony's 2016 acquisition of half of Sony/ATV, the 2026 biopic *Michael*, and other historical anchors.
 - **Legendary poster**: the ending screen auto-generates a saveable (long-press) Canvas poster (six stats, dominant route, node / variant / choice stats, achievement progress).
-- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (10).
+- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (15).
 - **Auto-continue**: `localStorage` auto-save (including current node id); refresh to resume.
 - **Neutral, procedural narration**: sensitive legal events use factual phrasing—no presumption of guilt/innocence, no naming of minors.
 - **Responsive dark-gold retro UI**: CSS Grid four-zone layout, two columns on mobile and three on desktop.
