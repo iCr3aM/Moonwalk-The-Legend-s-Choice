@@ -347,7 +347,31 @@ window.MJ = window.MJ || {};
     { id: 'ACH_LEGACY_2026', name: '2026 的回响', icon: '🎬', rarity: 'rare', desc: '传记电影里，你的传奇换了一种方式继续被讲述。',
       check: function (s) { return s.flags.biopic2026 === true || s.flags.biopicMJStar === true; } },
     { id: 'ACH_WHOLE_LIFE', name: '圆满人生', icon: '🍀', rarity: 'epic', desc: '声名、健康与从容在你身上同时落地——这一生，不亏欠自己。',
-      check: function (s) { return (s.attributes.health || 0) >= 70 && (s.attributes.reputation || 0) >= 70 && (s.attributes.stress || 0) <= 40; } }
+      check: function (s) { return (s.attributes.health || 0) >= 70 && (s.attributes.reputation || 0) >= 70 && (s.attributes.stress || 0) <= 40; } },
+
+    // —— Phase B 补全：影视 / 宠物 / 奖项 / 巡演 / 公益 成就（§17.15 中性） ——
+    { id: 'ACH_CAPTAINEO', name: '《外星人》主演', icon: '🎥', rarity: 'rare', desc: '你主演的 3D 短片《Captain EO》成为迪士尼的常驻传奇。',
+      check: function (s) { return s.flags.captainEO === true; } },
+    { id: 'ACH_MOONWALKER', name: '《月球漫步者》', icon: '🎞️', rarity: 'rare', desc: '1988 年跨界电影，你把音乐游戏还给了孩子。',
+      check: function (s) { return s.flags.moonwalker === true; } },
+    { id: 'ACH_GHOSTS', name: '《Ghosts》构想者', icon: '👻', rarity: 'rare', desc: '你构想并主演的长片，让怪诞有了体温。',
+      check: function (s) { return s.flags.ghosts === true; } },
+    { id: 'ACH_BUBBLES', name: '黑猩猩之友', icon: '🐵', rarity: 'uncommon', desc: '你与 Bubbles 的相伴，成了时代的一帧童真。',
+      check: function (s) { return s.flags.bubbles === true; } },
+    { id: 'ACH_HALFTIME', name: '中场之王', icon: '🏈', rarity: 'rare', desc: '1993 年超级碗，你用表演定义了世代记忆。',
+      check: function (s) { return s.flags.superBowl === true; } },
+    { id: 'ACH_VMA', name: '录像带先锋', icon: '📼', rarity: 'rare', desc: 'MTV 将首届视频先锋奖授予你，重塑了 MV 艺术。',
+      check: function (s) { return s.flags.vma === true; } },
+    { id: 'ACH_DIAMOND', name: '钻石销量', icon: '💎', rarity: 'epic', desc: '全球唱片销量逾亿，你领受了钻石大奖。',
+      check: function (s) { return s.flags.diamond === true; } },
+    { id: 'ACH_GRAMMYLEGEND', name: '格莱美传奇', icon: '🏆', rarity: 'epic', desc: '你成为少数获“格莱美传奇奖”的音乐人，由妹妹珍妮亲手颁授。',
+      check: function (s) { return s.flags.grammyLegend === true; } },
+    { id: 'ACH_NEVERLAND', name: '梦幻庄园', icon: '🎠', rarity: 'rare', desc: '那座庄园里有动物园、摩天轮与无数孩子的笑声。',
+      check: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
+    { id: 'ACH_PHIL_LEGEND', name: '慈善传奇', icon: '🌍', rarity: 'legendary', desc: '你以一代歌者的能量，把善意送往世界各地。',
+      check: function (s) { return (s.meta.phil || 0) >= 4; } },
+    { id: 'ACH_WORLD_TOUR', name: '世界巡演', icon: '🌐', rarity: 'rare', desc: '你踏上史上最大规模的 solo 艺人巡演，广场上立起你的巨像。',
+      check: function (s) { return s.flags.worldTour === true; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------

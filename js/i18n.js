@@ -387,6 +387,13 @@ window.MJ = window.MJ || {};
         'egg.EGG_FINALREHEARSAL.name': 'The Last Rehearsal Light',
         'egg.EGG_FINALREHEARSAL.desc': 'In the 2009 summer rehearsal hall, you were especially particular about where every light should fall.',
 
+        // ---------- Phase B 补全：影视 / 宠物 / 奖项 / 巡演 彩蛋（§17.15 中性） ----------
+        'egg.EGG_CAPTAINEO.name': 'Captain EO', 'egg.EGG_CAPTAINEO.desc': 'The 3D short you starred in (1985) landed at Disney and turned a space-faring songster into an amusement-park legend.',
+        'egg.EGG_MOONWALKER.name': 'Moonwalker', 'egg.EGG_MOONWALKER.desc': 'The 1988 anthology film wove music, animation and live action into a carnival made for children.',
+        'egg.EGG_GHOSTS.name': 'Ghosts', 'egg.EGG_GHOSTS.desc': 'The featurette you conceived and starred in brought the misunderstood strange to the screen.',
+        'egg.EGG_BUBBLES.name': 'Chimpanzee Companion', 'egg.EGG_BUBBLES.desc': 'The chimpanzee Bubbles you kept became one of the era’s most photographed symbols of childhood.',
+        'egg.EGG_HALFTIME.name': 'King of the Halftime', 'egg.EGG_HALFTIME.desc': 'Your 1993 Super Bowl halftime defined a generation’s memory of the spectacle.',
+
         // ---------- 趣事与轶事（GDD §17.11：Trivia & Anecdotes） ----------
         'ui.triviaCodex': 'Trivia Codex',
         'ui.triviaToast': 'Trivia Discovered · ',
@@ -402,7 +409,7 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_ONOMATOPOEIA.name': 'Scatting the Arrangement', 'trivia.TRIVIA_ONOMATOPOEIA.desc': 'When words failed a chord, you “bum-bum-da”ed it to the band — and somehow they understood.',
         'trivia.TRIVIA_FANMAIL.name': 'Handwriting Fan Letters', 'trivia.TRIVIA_FANMAIL.desc': 'Amid mountains of mail you answered a few by hand, always signing “Love, Michael.”',
         'trivia.TRIVIA_COMIC.name': 'Comics & Sci-Fi', 'trivia.TRIVIA_COMIC.desc': 'Beyond the fame game you hoarded comics and old sci-fi films — a joy only a child understands.',
-        'trivia.TRIVIA_BLANKET.name': 'Swinging with Blanket', 'trivia.TRIVIA_BLANKET.desc': 'You cradled your youngest, swaying him in your arms, calling it “the steadiest swing in the world.”',
+        'trivia.TRIVIA_BLANKET.name': 'Swinging with your youngest', 'trivia.TRIVIA_BLANKET.desc': 'You cradled your youngest, swaying him in your arms, calling it “the steadiest swing in the world.”',
         'trivia.TRIVIA_THISISIT.name': 'Polishing This Is It', 'trivia.TRIVIA_THISISIT.desc': 'Every step of the fifty shows you timed frame by frame with the choreographer, even as your body flashed red.',
         'trivia.TRIVIA_GRAMMY.name': 'The Trophy Goes to the Band', 'trivia.TRIVIA_GRAMMY.desc': 'Under the bright stage lights you handed the trophy first to the quiet musicians behind you.',
         'trivia.TRIVIA_WATW.name': 'All-Night Vocals for “We Are The World”', 'trivia.TRIVIA_WATW.desc': 'The night the studio brimmed with stars, you were last to leave, checking every harmony fit seamlessly.',
@@ -469,6 +476,19 @@ window.MJ = window.MJ || {};
         'ach.ACH_DIGITAL_ERA.name': 'Digital Pioneer', 'ach.ACH_DIGITAL_ERA.desc': 'Ahead of your time, you gathered singles into an album.',
         'ach.ACH_LEGACY_2026.name': 'Echoes of 2026', 'ach.ACH_LEGACY_2026.desc': 'In the biopic, your legend found a new way to keep being told.',
         'ach.ACH_WHOLE_LIFE.name': 'A Life Well Lived', 'ach.ACH_WHOLE_LIFE.desc': 'Fame, health and ease landed together — this life owed nothing to itself.',
+
+        // —— Phase B 补全：影视 / 宠物 / 奖项 / 巡演 / 公益 成就（§17.15 中性） ——
+        'ach.ACH_CAPTAINEO.name': 'Captain EO Star', 'ach.ACH_CAPTAINEO.desc': 'The 3D short you starred in became a standing legend at Disney.',
+        'ach.ACH_MOONWALKER.name': 'Moonwalker', 'ach.ACH_MOONWALKER.desc': 'The 1988 anthology film gave the music game back to children.',
+        'ach.ACH_GHOSTS.name': 'Architect of Ghosts', 'ach.ACH_GHOSTS.desc': 'You conceived and starred in a featurette that gave the strange a pulse.',
+        'ach.ACH_BUBBLES.name': 'Friend of Bubbles', 'ach.ACH_BUBBLES.desc': 'Your time with Bubbles became a frame of childhood for the era.',
+        'ach.ACH_HALFTIME.name': 'King of the Halftime', 'ach.ACH_HALFTIME.desc': 'At the 1993 Super Bowl you defined a generation’s memory of the spectacle.',
+        'ach.ACH_VMA.name': 'Video Vanguard', 'ach.ACH_VMA.desc': 'MTV gave you the first Video Vanguard Award, reshaping the music video as art.',
+        'ach.ACH_DIAMOND.name': 'Diamond Sales', 'ach.ACH_DIAMOND.desc': 'With record sales past a hundred million, you received the Diamond Award.',
+        'ach.ACH_GRAMMYLEGEND.name': 'Grammy Legend', 'ach.ACH_GRAMMYLEGEND.desc': 'You became one of the few Grammy Legend Award recipients, honored by your sister Janet.',
+        'ach.ACH_NEVERLAND.name': 'Neverland', 'ach.ACH_NEVERLAND.desc': 'The estate held a zoo, a Ferris wheel and the laughter of countless children.',
+        'ach.ACH_PHIL_LEGEND.name': 'Philanthropy Legend', 'ach.ACH_PHIL_LEGEND.desc': 'With a generation’s voice, you sent kindness to every corner of the world.',
+        'ach.ACH_WORLD_TOUR.name': 'World Tour', 'ach.ACH_WORLD_TOUR.desc': 'You embarked on the largest solo-artist tour of its time, giant statues raised in your likeness.',
 
 
 

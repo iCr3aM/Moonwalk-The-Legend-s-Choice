@@ -60,7 +60,7 @@ window.MJ = window.MJ || {};
   E['0_0'] = {
     id: '0_0', year: 1961, title: T('event.0_0.title', null, '钢铁城的家'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.0_0.text', null, '盖瑞市杰克逊街的一栋小屋里，挤着九个孩子。父亲乔在炼钢厂上夜班，母亲凯瑟琳是虔诚的耶和华见证人，常在家中弹风琴、唱福音。稍长的兄长们——杰基、蒂托、杰梅因——偷偷在车库里拨弄吉他，最小的你总扒着门缝偷看。'), s, [
+      return narr(T('event.0_0.text', null, '盖瑞市杰克逊街的一栋小屋里，挤着九个孩子。父亲乔在炼钢厂上夜班，母亲凯瑟琳是虔诚的耶和华见证人，常在家中弹风琴、唱福音。稍长的兄长们——杰基、蒂托、杰梅因——偷偷在车库里拨弄吉他，年幼的你总扒着门缝偷看。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.0_0.branch0.text', null, '家的温暖像炉火，把童年的寒意挡在门外。') },
         { cond: function (s) { return (s.attributes.stress || 0) >= 30; }, text: T('event.0_0.branch1.text', null, '钢厂的红光与父亲的沉默，偶尔让你在夜里惊醒。') }
       ]);
@@ -547,7 +547,7 @@ window.MJ = window.MJ || {};
   };
 
   E['4_1'] = {
-    id: '4_1', year: 1987, title: T('event.4_1.title', null, '梦幻庄园'), kind: 'choice', key: true,
+    id: '4_1', year: 1988, title: T('event.4_1.title', null, '梦幻庄园'), kind: 'choice', key: true,
     text: function (s) {
       return narr(T('event.4_1.text', null, '你在加州买下一座庄园，取名“Neverland”——一个属于童真、旋转木马与欢笑的乌托邦。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.4_1.branch0.text', null, '你想象着孩子们的笑声填满庄园，那画面比任何舞台都动人。') },
@@ -899,7 +899,7 @@ window.MJ = window.MJ || {};
     id: '6_2d', year: 1997, title: T('event.6_2d.title', null, '《Ghosts》短片'), kind: 'choice',
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '6_2e',
     text: function (s) {
-      return narr(T('event.6_2d.text', null, '你亲自执导长篇短片《Ghosts》，把心里那些不被理解的怪诞，一股脑搬上银幕。'), s, [
+      return narr(T('event.6_2d.text', null, '你构想并主演长篇短片《Ghosts》，把心里那些不被理解的怪诞，借银幕呈现。'), s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: T('event.6_2d.branch0.text', null, '大银幕成了你最私密的日记本，怪诞之下全是真心。') },
         { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.6_2d.branch1.text', null, '你越来越多躲进自己的世界，短片里的角色倒比你本人更敢说话。') }
       ]);
@@ -986,7 +986,7 @@ window.MJ = window.MJ || {};
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {
         var extra = s.flags.settlement1993 ? T('event.6_4.extra.text', null, ' 由于 1993 年已达成庭外和解，这次指控受到更多公众关注。') : '';
-        var t = T('event.6_4.text', null, '2002 年，你再次面临刑事指控。庄园的围墙之外，媒体的探照灯昼夜不息。') + extra;
+        var t = T('event.6_4.text', null, '2003 年，你再次面临刑事指控。庄园的围墙之外，媒体的探照灯昼夜不息。') + extra;
         if ((s.attributes.reputation || 0) <= 50) t += T('event.6_4.branch0.text', null, '\n名声早已千疮百孔，这一击你不知还能不能接住。');
         return t + T('event.6_4.ask.text', null, '\n这一次，你站在了更汹涌的漩涡中央。');
       }
@@ -994,15 +994,15 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: T('event.6_4.opt0.label', null, 'A：应诉到底'), hint: T('event.6_4.opt0.hint', null, '支付 1000 万辩护，心力耗尽，终获无罪裁定（压力+30）'), effects: { stress: 30 }, moneyEffect: -1000, flags: { secondCharge: true, secondVerdict: 'not_guilty' }, epilogue: T('event.6_4.opt0.epilogue', null, '法庭的灯亮了又灭，你挺直脊背走进去，把命运交给了十二个陌生人。'), next: '6_4d' },
-      { label: T('event.6_4.opt1.label', null, 'B：达成和解'), hint: T('event.6_4.opt1.hint', null, '砸下 2000 万买断纠纷，声名重创（声誉-30）'), effects: { reputation: -30 }, moneyEffect: -2000, flags: { secondCharge: true, secondVerdict: 'settled' }, epilogue: T('event.6_4.opt1.epilogue', null, '支票签下的瞬间，纠纷平息了，可你心里的那块石头，并没真的落地。'), next: '7_1' },
+      { label: T('event.6_4.opt1.label', null, 'B：架空线——以和解换平静（非史实）'), hint: T('event.6_4.opt1.hint', null, '砸下 2000 万买断纠纷，声名重创（声誉-30）'), effects: { reputation: -30 }, moneyEffect: -2000, flags: { secondCharge: true, secondVerdict: 'settled' }, epilogue: T('event.6_4.opt1.epilogue', null, '支票签下的瞬间，纠纷平息了，可你心里的那块石头，并没真的落地。'), next: '7_1' },
       { label: T('event.6_4.opt2.label', null, 'C：透明地坚持'), hint: T('event.6_4.opt2.hint', null, '把清白交给时间，压力如山（压力+20）'), effects: { stress: 20 }, flags: { secondCharge: true }, epilogue: T('event.6_4.opt2.epilogue', null, '你选择把一切摊在阳光下，任由时间慢慢给出答案。'), next: '6_4d' }
     ]
   };
 
   E['6_4b'] = {
-    id: '6_4b', year: 2002, title: T('event.6_4b.title', null, 'Blanket 出生'), kind: 'choice',
+    id: '6_4b', year: 2002, title: T('event.6_4b.title', null, '幼子出生'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.6_4b.text', null, '你的第三个孩子 Blanket 降生，襁褓里的呼吸，是这喧嚣人间里最安静的奇迹。'), s, [
+      return narr(T('event.6_4b.text', null, '你的第三个孩子降生，襁褓里的呼吸，是这喧嚣人间里最安静的奇迹。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.6_4b.branch0.text', null, '你把孩子抱在怀里，忽然觉得所有喧嚣都值得。') },
         { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.6_4b.branch1.text', null, '你下意识把他藏得更紧，不想让镜头分走半点天真。') }
       ]);
@@ -1669,7 +1669,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_BUBBLES.opt0.label', null, 'A：童心未泯'), hint: T('event.V_BUBBLES.opt0.hint', null, '暖意融融（家庭+5）'), effects: { family: 5 }, epilogue: T('event.V_BUBBLES.opt0.epilogue', null, '你在草地上和它滚作一团，那一刻，你只是个爱玩的大孩子。'), next: '__RETURN__' },
+      { label: T('event.V_BUBBLES.opt0.label', null, 'A：童心未泯'), hint: T('event.V_BUBBLES.opt0.hint', null, '暖意融融（家庭+5）'), effects: { family: 5 }, flags: { bubbles: true }, epilogue: T('event.V_BUBBLES.opt0.epilogue', null, '你在草地上和它滚作一团，那一刻，你只是个爱玩的大孩子。'), next: '__RETURN__' },
       { label: T('event.V_BUBBLES.opt1.label', null, 'B：担心舆论'), hint: T('event.V_BUBBLES.opt1.hint', null, '束手束脚（声誉-3，压力+3）'), effects: { reputation: -3, stress: 3 }, epilogue: T('event.V_BUBBLES.opt1.epilogue', null, '你怕镜头把这当成又一个怪谈，只好把那份快乐悄悄收了起来。'), next: '__RETURN__' }
     ]
   };
@@ -1911,9 +1911,9 @@ window.MJ = window.MJ || {};
   };
   E.V_SISTER_LATOYA = {
     id: 'V_SISTER_LATOYA', variant: true, window: [1962, 1969], weight: 22,
-    title: T('event.V_SISTER_LATOYA.title', null, '与妹妹拉托亚的二重唱'), kind: 'choice',
+    title: T('event.V_SISTER_LATOYA.title', null, '与姐姐拉托亚的二重唱'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.V_SISTER_LATOYA.text', null, '妹妹拉托亚总爱跟着你的哼唱和声。某个午后，你们把《Rockin’ Robin》唱成了只属于兄妹的版本。'), s, [
+      return narr(T('event.V_SISTER_LATOYA.text', null, '姐姐拉托亚总爱跟着你的哼唱和声。某个午后，你们把《Rockin’ Robin》唱成了只属于兄妹的版本。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.V_SISTER_LATOYA.branch0.text', null, '唱到副歌，你们不约而同地笑了——那是只属于家人的默契。') }
       ]);
     },
@@ -2238,7 +2238,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_BIO_HISTORYTOUR.opt0.label', null, 'A：把巡演做成史诗'), hint: T('event.V_BIO_HISTORYTOUR.opt0.hint', null, '传奇再升级（声誉+6，财富+35，压力+8）'), effects: { reputation: 6, wealth: 35, stress: 8 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_HISTORYTOUR.opt0.label', null, 'A：把巡演做成史诗'), hint: T('event.V_BIO_HISTORYTOUR.opt0.hint', null, '传奇再升级（声誉+6，财富+35，压力+8）'), effects: { reputation: 6, wealth: 35, stress: 8 }, flags: { worldTour: true }, next: '__RETURN__' },
       { label: T('event.V_BIO_HISTORYTOUR.opt1.label', null, 'B：在喧嚣里留一处安静'), hint: T('event.V_BIO_HISTORYTOUR.opt1.hint', null, '守住内心（家庭+4，健康+3）'), effects: { family: 4, health: 3 }, next: '__RETURN__' }
     ]
   };
@@ -2279,7 +2279,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_BIO_SBOWL.opt0.label', null, 'A：把表演推向极致'), hint: T('event.V_BIO_SBOWL.opt0.hint', null, '定义一代人的记忆（声誉+8，艺术+5）'), effects: { reputation: 8, art: 5 }, next: '__RETURN__' },
+      { label: T('event.V_BIO_SBOWL.opt0.label', null, 'A：把表演推向极致'), hint: T('event.V_BIO_SBOWL.opt0.hint', null, '定义一代人的记忆（声誉+8，艺术+5）'), effects: { reputation: 8, art: 5 }, flags: { superBowl: true }, next: '__RETURN__' },
       { label: T('event.V_BIO_SBOWL.opt1.label', null, 'B：克制留白，把舞台交给乐队'), hint: T('event.V_BIO_SBOWL.opt1.hint', null, '成全他人，也成全自己（声誉+5，提携+1）'), effects: { reputation: 5, collab: 1 }, next: '__RETURN__' }
     ]
   };
@@ -2528,6 +2528,218 @@ window.MJ = window.MJ || {};
       { label: T('event.V_REL_KIDS.opt0.label', null, 'A：放下工作陪他们'), hint: T('event.V_REL_KIDS.opt0.hint', null, '亲子时光（子女 +25，家庭 +5）'), effects: { family: 5, rel: { kids: 25 } }, flags: { kidsReconciled: true }, next: '__RETURN__' },
       { label: T('event.V_REL_KIDS.opt1.label', null, 'B：公开维护孩子'), hint: T('event.V_REL_KIDS.opt1.hint', null, '挡在镜头前（子女 +15，声誉 +5，压力 +3）'), effects: { reputation: 5, stress: 3, rel: { kids: 15 } }, flags: { kidsReconciled: true }, next: '__RETURN__' },
       { label: T('event.V_REL_KIDS.opt2.label', null, 'C：放手让他们独立'), hint: T('event.V_REL_KIDS.opt2.hint', null, '让他们自己飞（子女 +10，隐士 +1）'), effects: { recluse: 1, rel: { kids: 10 } }, next: '__RETURN__' }
+    ]
+  };
+
+  // ---------- Phase B 补全：早期生涯 / 奖项 / 子女（忠实生平，§17.15 中性） ----------
+  E.V_ALBUM_DEBUT = {
+    id: 'V_ALBUM_DEBUT', variant: true, window: [1972, 1973], weight: 30,
+    title: T('event.V_ALBUM_DEBUT.title', null, '初啼：个人专辑'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ALBUM_DEBUT.text', null, '离开杰克逊五人组的聚光灯，你交出首张个人专辑《Got to Be There》，又很快带来《Ben》——那首写给小老鼠的歌，竟让人听见了大人也有的孤单。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 65; }, text: T('event.V_ALBUM_DEBUT.branch0.text', null, '你还小，却已经懂得用声音接住别人的心事。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ALBUM_DEBUT.opt0.label', null, 'A：把情歌唱得更真'), hint: T('event.V_ALBUM_DEBUT.opt0.hint', null, '以声动人（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, epilogue: T('event.V_ALBUM_DEBUT.opt0.epilogue', null, '你对着耳机一遍遍打磨尾音，直到那句孤单被唱成了温柔。'), next: '__RETURN__' },
+      { label: T('event.V_ALBUM_DEBUT.opt1.label', null, 'B：先沉淀再出发'), hint: T('event.V_ALBUM_DEBUT.opt1.hint', null, '厚积薄发（艺术+3）'), effects: { art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ALBUM_FM = {
+    id: 'V_ALBUM_FM', variant: true, window: [1975, 1976], weight: 25,
+    title: T('event.V_ALBUM_FM.title', null, '少年心事：《Forever, Michael》'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ALBUM_FM.text', null, '十五岁的声音开始变厚。《Forever, Michael》里，你试着把成长的迷惘写进旋律。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_ALBUM_FM.branch0.text', null, '家里的风琴声，是你最早的和声课。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ALBUM_FM.opt0.label', null, 'A：以此叩问内心'), hint: T('event.V_ALBUM_FM.opt0.hint', null, '向内生长（艺术+5，家庭+2）'), effects: { art: 5, family: 2 }, epilogue: T('event.V_ALBUM_FM.opt0.epilogue', null, '你用指尖顺着旋律的弧度描摹，像在给才刚起步的路画地图。'), next: '__RETURN__' },
+      { label: T('event.V_ALBUM_FM.opt1.label', null, 'B：交给市场检验'), hint: T('event.V_ALBUM_FM.opt1.hint', null, '直面评价（声誉+3，压力+2）'), effects: { reputation: 3, stress: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_J5_TOUR = {
+    id: 'V_J5_TOUR', variant: true, window: [1973, 1979], weight: 22,
+    title: T('event.V_J5_TOUR.title', null, '与兄长同台巡演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_J5_TOUR.text', null, '作为杰克逊五人组的一员，你跟着兄长们在世界各地的体育馆奔跑。台下万人的合唱，是童年最响亮的回音。'), s, [
+        { cond: function (s) { return (s.relations.brothers || 0) >= 40; }, text: T('event.V_J5_TOUR.branch0.text', null, '兄弟并肩的舞台，比任何奖杯都踏实。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_J5_TOUR.opt0.label', null, 'A：享受集体的热浪'), hint: T('event.V_J5_TOUR.opt0.hint', null, '手足更亲（手足+6，家庭+3）'), effects: { rel: { brothers: 6 }, family: 3 }, epilogue: T('event.V_J5_TOUR.opt0.epilogue', null, '灯光下你们勾肩合唱，那一刻全世界都只是自家的乐队。'), next: '__RETURN__' },
+      { label: T('event.V_J5_TOUR.opt1.label', null, 'B：暗中较劲更卖力'), hint: T('event.V_J5_TOUR.opt1.hint', null, '兄弟竞合（艺术+4，压力+2）'), effects: { art: 4, stress: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_J5_EPIC = {
+    id: 'V_J5_EPIC', variant: true, window: [1975, 1976], weight: 24,
+    title: T('event.V_J5_EPIC.title', null, '易主与更名'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_J5_EPIC.text', null, '1975 年，组合离开摩城（Motown），转投 Epic 唱片，并更名“The Jacksons”。杰梅因留在原公司，由弟弟兰迪（Randy）补入阵容。一个新的起点，在争议中拉开。'), s, [
+        { cond: function (s) { return (s.attributes.recluse || 0) >= 1; }, text: T('event.V_J5_EPIC.branch0.text', null, '名字换了，血缘没换；你更明白什么才真正属于自己。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_J5_EPIC.opt0.label', null, 'A：拥抱新阵型'), hint: T('event.V_J5_EPIC.opt0.hint', null, '顺势新生（声誉+4，手足+4）'), effects: { reputation: 4, rel: { brothers: 4 } }, epilogue: T('event.V_J5_EPIC.opt0.epilogue', null, '排练时你与兰迪握了握手——和声自会找到新的形状。'), next: '__RETURN__' },
+      { label: T('event.V_J5_EPIC.opt1.label', null, 'B：惦记旧情谊'), hint: T('event.V_J5_EPIC.opt1.hint', null, '念旧亦重（家庭+3，压力+2）'), effects: { family: 3, stress: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_AWARD_LEGEND = {
+    id: 'V_AWARD_LEGEND', variant: true, window: [1993, 1993], weight: 35,
+    title: T('event.V_AWARD_LEGEND.title', null, '格莱美传奇奖'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_AWARD_LEGEND.text', null, '1993 年，你成为获得“格莱美传奇奖”（Grammy Legend Award）的少数音乐人之一。妹妹珍妮（Janet）走上台，把这座荣誉交到你手中。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_AWARD_LEGEND.branch0.text', null, '掌声里，是你用几十年写下的旋律在替你说话。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_AWARD_LEGEND.opt0.label', null, 'A：谦逊致谢'), hint: T('event.V_AWARD_LEGEND.opt0.hint', null, '沉淀荣光（声誉+6，艺术+3）'), effects: { reputation: 6, art: 3 }, flags: { grammyLegend: true }, epilogue: T('event.V_AWARD_LEGEND.opt0.epilogue', null, '你接过奖杯只深深鞠了一躬——音乐从来都是真正的发言者。'), next: '__RETURN__' },
+      { label: T('event.V_AWARD_LEGEND.opt1.label', null, 'B：与珍妮同享时刻'), hint: T('event.V_AWARD_LEGEND.opt1.hint', null, '手足温情（家庭+4，手足+4）'), effects: { family: 4, rel: { brothers: 4 } }, next: '__RETURN__' }
+    ]
+  };
+  E.V_VMA = {
+    id: 'V_VMA', variant: true, window: [1988, 1988], weight: 35,
+    title: T('event.V_VMA.title', null, '录像带先锋奖'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_VMA.text', null, '1988 年，MTV 将首届“视频先锋奖”（Video Vanguard Award，后称迈克尔·杰克逊音乐录影带先锋奖）授予你，表彰你重新定义了音乐录影带这一艺术形式。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_VMA.branch0.text', null, '你早相信，画面和旋律本就该一起呼吸。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_VMA.opt0.label', null, 'A：把视觉推向极致'), hint: T('event.V_VMA.opt0.hint', null, '视觉革命（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, flags: { vma: true }, epilogue: T('event.V_VMA.opt0.epilogue', null, '你看着屏幕亮起，知道这一帧已和歌一样有了生命。'), next: '__RETURN__' },
+      { label: T('event.V_VMA.opt1.label', null, 'B：把舞台交给后辈'), hint: T('event.V_VMA.opt1.hint', null, '提携新声（声誉+3，提携+1）'), effects: { reputation: 3, collab: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_WMA_DIAMOND = {
+    id: 'V_WMA_DIAMOND', variant: true, window: [2005, 2006], weight: 35,
+    title: T('event.V_WMA_DIAMOND.title', null, '钻石大奖'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_WMA_DIAMOND.text', null, '世界音乐奖上，你被授予“钻石大奖”（Diamond Award），以表彰全球唱片销量逾亿的成就。那也是你生前最后一次公开登台献唱。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: T('event.V_WMA_DIAMOND.branch0.text', null, '数字背后，是一代代听众把心事交给了你的歌。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_WMA_DIAMOND.opt0.label', null, 'A：以歌声致谢世界'), hint: T('event.V_WMA_DIAMOND.opt0.hint', null, '谢幕亦是开场（声誉+6，慈善+2）'), effects: { reputation: 6, phil: 2 }, flags: { diamond: true }, epilogue: T('event.V_WMA_DIAMOND.opt0.epilogue', null, '你再次走向话筒，那道越过国界的声音，温柔地合上了圆。'), next: '__RETURN__' },
+      { label: T('event.V_WMA_DIAMOND.opt1.label', null, 'B：低调领受'), hint: T('event.V_WMA_DIAMOND.opt1.hint', null, '安静收下（声誉+3，压力-2）'), effects: { reputation: 3, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BUBBLES_STORY = {
+    id: 'V_BUBBLES_STORY', variant: true, window: [1988, 1993], weight: 18,
+    title: T('event.V_BUBBLES_STORY.title', null, '黑猩猩与童年符号'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BUBBLES_STORY.text', null, '你豢养的黑猩猩“Bubbles”成了时代的文化注脚：它被拍到与你同桌进餐、戴墨镜乘坐轿车。后来它迁居动物园与保护区，在镜头之外慢慢老去。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_BUBBLES_STORY.branch0.text', null, '你想起自己也曾是别人眼里“不该被围观的小孩”。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BUBBLES_STORY.opt0.label', null, 'A：珍视这份纯粹'), hint: T('event.V_BUBBLES_STORY.opt0.hint', null, '童心未泯（家庭+4）'), effects: { family: 4 }, epilogue: T('event.V_BUBBLES_STORY.opt0.epilogue', null, '你对着旧影像笑了——餐桌旁那个小家伙，说到底只是个朋友。'), next: '__RETURN__' },
+      { label: T('event.V_BUBBLES_STORY.opt1.label', null, 'B：把它交还自然'), hint: T('event.V_BUBBLES_STORY.opt1.hint', null, '放手成全（家庭+2，压力-2）'), effects: { family: 2, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_CHILD_PRINCE = {
+    id: 'V_CHILD_PRINCE', variant: true, window: [1997, 1997], weight: 30,
+    title: T('event.V_CHILD_PRINCE.title', null, '长子降生'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CHILD_PRINCE.text', null, '你的第一个孩子降生了。新生命带来的安静，是这喧嚣人间里你最想守护的奇迹。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_CHILD_PRINCE.branch0.text', null, '你暗下决心，要把自己没得到的童年，温柔地还给他。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CHILD_PRINCE.opt0.label', null, 'A：全心陪伴成长'), hint: T('event.V_CHILD_PRINCE.opt0.hint', null, '父爱沉淀（家庭+12，压力+3）'), effects: { family: 12, stress: 3, rel: { kids: 14 } }, flags: { princeBorn: true }, epilogue: T('event.V_CHILD_PRINCE.opt0.epilogue', null, '你把他轻轻搂紧，暗自发誓聚光灯永不会碰到该由你守护的东西。'), next: '__RETURN__' },
+      { label: T('event.V_CHILD_PRINCE.opt1.label', null, 'B：暂缓公众曝光'), hint: T('event.V_CHILD_PRINCE.opt1.hint', null, '守护私密（家庭+5）'), effects: { family: 5, rel: { kids: 6 } }, flags: { princeBorn: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_CHILD_PARIS = {
+    id: 'V_CHILD_PARIS', variant: true, window: [1997, 1999], weight: 30,
+    title: T('event.V_CHILD_PARIS.title', null, '女儿降生'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CHILD_PARIS.text', null, '你的女儿降生了。襁褓里的呼吸，让这喧嚣的人间忽然有了柔软的落点。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_CHILD_PARIS.branch0.text', null, '你学着把锋芒收起，只愿做她身后那道安静的影。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CHILD_PARIS.opt0.label', null, 'A：倾注所有温柔'), hint: T('event.V_CHILD_PARIS.opt0.hint', null, '父爱深沉（家庭+12，压力+3）'), effects: { family: 12, stress: 3, rel: { kids: 14 } }, flags: { parisBorn: true }, epilogue: T('event.V_CHILD_PARIS.opt0.epilogue', null, '你看着她熟睡，任世界的喧哗退去；再没别的东西值得这样奋力守护。'), next: '__RETURN__' },
+      { label: T('event.V_CHILD_PARIS.opt1.label', null, 'B：低调守护'), hint: T('event.V_CHILD_PARIS.opt1.hint', null, '把私密留给自己（家庭+5）'), effects: { family: 5, rel: { kids: 6 } }, flags: { parisBorn: true }, next: '__RETURN__' }
+    ]
+  };
+
+  // ---------- Phase B 补全：轻量中立留白（Victory 善款 / One Night Only / MJ&Friends / Apollo / 遗作 / Encino） ----------
+  E.V_VICTORY_CHARITY = {
+    id: 'V_VICTORY_CHARITY', variant: true, window: [1984, 1984], weight: 30,
+    title: T('event.V_VICTORY_CHARITY.title', null, '胜利巡演的善款'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_VICTORY_CHARITY.text', null, '1984 年的 Victory 巡演不仅是票房奇迹——你坚持把巡演收益的一部分捐给儿童慈善，让喧嚣的舞台也长出温柔。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: T('event.V_VICTORY_CHARITY.branch0.text', null, '你从小就知道，掌声之外还有更该被听见的声音。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_VICTORY_CHARITY.opt0.label', null, 'A：把善款落到实处'), hint: T('event.V_VICTORY_CHARITY.opt0.hint', null, '慈善+3，声誉+2'), effects: { phil: 3, reputation: 2 }, epilogue: T('event.V_VICTORY_CHARITY.opt0.epilogue', null, '你签下那张支票时想着孩子们，台下的欢呼仿佛也暖了几分。'), next: '__RETURN__' },
+      { label: T('event.V_VICTORY_CHARITY.opt1.label', null, 'B：先壮大事业'), hint: T('event.V_VICTORY_CHARITY.opt1.hint', null, '财富+5'), effects: { wealth: 5 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ONENIGHT = {
+    id: 'V_ONENIGHT', variant: true, window: [1995, 1995], weight: 30,
+    title: T('event.V_ONENIGHT.title', null, '一夜-only 的约定'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ONENIGHT.text', null, '1995 年，你筹划了一场仅此一夜的电视演唱会（One Night Only），把经典与新歌浓缩进几小时的光里。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 65; }, text: T('event.V_ONENIGHT.branch0.text', null, '你总觉得，一场好的演出应当像一封写给听众的信。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ONENIGHT.opt0.label', null, 'A：把经典唱到极致'), hint: T('event.V_ONENIGHT.opt0.hint', null, '艺术+5，声誉+3'), effects: { art: 5, reputation: 3 }, epilogue: T('event.V_ONENIGHT.opt0.epilogue', null, '你把最后一个长音托住，仿佛它是全世界唯一要紧的音。'), next: '__RETURN__' },
+      { label: T('event.V_ONENIGHT.opt1.label', null, 'B：留出呼吸感'), hint: T('event.V_ONENIGHT.opt1.hint', null, '健康+3，压力-2'), effects: { health: 3, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_MJFRIENDS = {
+    id: 'V_MJFRIENDS', variant: true, window: [1997, 1999], weight: 30,
+    title: T('event.V_MJFRIENDS.title', null, '与世界同台'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_MJFRIENDS.text', null, '1999 年的 MJ & Friends 慈善演唱会，你与一代巨星同台，把掌声变成送往各地的善意。'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: T('event.V_MJFRIENDS.branch0.text', null, '你相信音乐是最诚实的外交。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_MJFRIENDS.opt0.label', null, 'A：以歌搭桥'), hint: T('event.V_MJFRIENDS.opt0.hint', null, '慈善+4，声誉+3'), effects: { phil: 4, reputation: 3 }, epilogue: T('event.V_MJFRIENDS.opt0.epilogue', null, '与他人并肩时，你觉得音乐才真正算得上外交。'), next: '__RETURN__' },
+      { label: T('event.V_MJFRIENDS.opt1.label', null, 'B：低调行善'), hint: T('event.V_MJFRIENDS.opt1.hint', null, '慈善+2，压力-2'), effects: { phil: 2, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_APOLLO_LAST = {
+    id: 'V_APOLLO_LAST', variant: true, window: [2002, 2002], weight: 30,
+    title: T('event.V_APOLLO_LAST.title', null, '重返阿波罗'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_APOLLO_LAST.text', null, '2002 年，你重返哈莱姆的阿波罗剧院登台——那是你与兄弟们年少夺冠的地方，也是生前最后几次公开演唱之一。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_APOLLO_LAST.branch0.text', null, '旧地重游，你忽然听懂了当年那个孩子的野心。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_APOLLO_LAST.opt0.label', null, 'A：把回忆唱给故地'), hint: T('event.V_APOLLO_LAST.opt0.hint', null, '家庭+4，艺术+3'), effects: { family: 4, art: 3 }, epilogue: T('event.V_APOLLO_LAST.opt0.epilogue', null, '在那束熟悉的聚光灯下，岁月折回了盖瑞巷口。'), next: '__RETURN__' },
+      { label: T('event.V_APOLLO_LAST.opt1.label', null, 'B：安静致意'), hint: T('event.V_APOLLO_LAST.opt1.hint', null, '家庭+2，压力-2'), effects: { family: 2, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_MICHAEL2010 = {
+    id: 'V_MICHAEL2010', variant: true, window: [2010, 2010], weight: 30,
+    title: T('event.V_MICHAEL2010.title', null, '身后的专辑'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_MICHAEL2010.text', null, '2010 年，你离世后的首张遗作专辑《Michael》面世，未竟的旋律由后来者替你续完。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 65; }, text: T('event.V_MICHAEL2010.branch0.text', null, '你一直相信，一首歌会比歌者活得更久。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_MICHAEL2010.opt0.label', null, 'A：让旋律继续流传'), hint: T('event.V_MICHAEL2010.opt0.hint', null, '艺术+4，声誉+3'), effects: { art: 4, reputation: 3 }, epilogue: T('event.V_MICHAEL2010.opt0.epilogue', null, '你总说歌比人长寿，此刻它真的替你活了下去。'), next: '__RETURN__' },
+      { label: T('event.V_MICHAEL2010.opt1.label', null, 'B：留给世人评说'), hint: T('event.V_MICHAEL2010.opt1.hint', null, '声誉+2，压力-2'), effects: { reputation: 2, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ENCINO = {
+    id: 'V_ENCINO', variant: true, window: [1971, 1987], weight: 22,
+    title: T('event.V_ENCINO.title', null, '恩西诺的院子'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ENCINO.text', null, '1971 年后，全家迁入加州恩西诺（Encino）的大宅。院子里有你的小动物园与录音棚，童年终于有了属于自己的角落。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 55; }, text: T('event.V_ENCINO.branch0.text', null, '你第一次觉得，家可以不必挤在九个人的笑声里。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ENCINO.opt0.label', null, 'A：把院子变成乐园'), hint: T('event.V_ENCINO.opt0.hint', null, '家庭+5'), effects: { family: 5 }, epilogue: T('event.V_ENCINO.opt0.epilogue', null, '你在草坪上奔跑，这一次，院门把世界的喧嚣挡在了外面。'), next: '__RETURN__' },
+      { label: T('event.V_ENCINO.opt1.label', null, 'B：在录音棚里沉淀'), hint: T('event.V_ENCINO.opt1.hint', null, '艺术+4'), effects: { art: 4 }, next: '__RETURN__' }
     ]
   };
 

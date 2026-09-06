@@ -520,7 +520,12 @@ window.MJ = window.MJ || {};
       EGG_SISTERDUET:     { icon: '👯', name: '与妹妹的和声', desc: '某个午后，你和拉托亚把《Rockin’ Robin》唱成了只属于兄妹的版本。' },
       EGG_CHARITYYOUTH:   { icon: '🏥', name: '儿童医院义演', desc: '你悄悄走进病房，为病床上的孩子唱起摇篮曲。' },
       EGG_FANLETTERKID:   { icon: '✉️', name: '孩子的来信', desc: '一封歪歪扭扭的来信说：你的歌让他不再怕黑。' },
-      EGG_FINALREHEARSAL: { icon: '💡', name: '最后一束彩排光', desc: '2009 年夏天的排练厅，你对每束光的位置都格外较真。' }
+      EGG_FINALREHEARSAL: { icon: '💡', name: '最后一束彩排光', desc: '2009 年夏天的排练厅，你对每束光的位置都格外较真。' },
+      EGG_CAPTAINEO: { icon: '🎥', name: '《外星人》的插曲', desc: '1985 年你主演的 3D 短片《Captain EO》登陆迪士尼，把太空歌姬变成了游乐园的传说。' },
+      EGG_MOONWALKER: { icon: '🎞️', name: '《月球漫步者》', desc: '1988 年的跨界电影，把音乐、动画与真人串成了一场属于孩子的狂欢。' },
+      EGG_GHOSTS: { icon: '👻', name: '《Ghosts》长片', desc: '你构想并主演的长篇短片，把不被理解的怪诞搬上了银幕。' },
+      EGG_BUBBLES: { icon: '🐵', name: '黑猩猩伙伴', desc: '你豢养的黑猩猩 Bubbles，曾是时代镜头里最出圈的童年符号。' },
+      EGG_HALFTIME: { icon: '🏈', name: '中场之王', desc: '1993 年超级碗的中场，你用一场表演定义了不止一代人的记忆。' }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
@@ -556,6 +561,12 @@ window.MJ = window.MJ || {};
       });
       if (state.flags.garyRoots) this.unlock('EGG_GARY');
       if (state.flags.apolloChampion) this.unlock('EGG_APOLLO');
+      // Phase B：孤儿 flag 接入彩蛋（§17.15 中性）
+      if (state.flags.captainEO) this.unlock('EGG_CAPTAINEO');
+      if (state.flags.moonwalker) this.unlock('EGG_MOONWALKER');
+      if (state.flags.ghosts) this.unlock('EGG_GHOSTS');
+      if (state.flags.bubbles) this.unlock('EGG_BUBBLES');
+      if (state.flags.superBowl) this.unlock('EGG_HALFTIME');
       return n;
     },
     // 跨周目累计：3_1b「完美演绎」累计 3 次 → 月球漫步起源
@@ -595,7 +606,7 @@ window.MJ = window.MJ || {};
       TRIVIA_ONOMATOPOEIA:  { icon: '🎶', name: '用拟声词讲编曲', desc: '你说不清和弦时，就“咚呲哒哒”地比划给乐手听，他们竟真听懂了。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
       TRIVIA_FANMAIL:       { icon: '✉️', name: '手写回信给歌迷', desc: '面对成山的来信，你挑出几封亲手回了字句，落款总是“Love, Michael”。', cond: function (s) { return (s.relations.fans || 0) >= 20; } },
       TRIVIA_COMIC:         { icon: '📚', name: '收藏连环画与科幻片', desc: '名利场之外，你囤了一柜子连环画和老科幻片，是只有孩子才懂的快乐。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
-      TRIVIA_BLANKET:       { icon: '🛝', name: '陪 Blanket 玩空中秋千', desc: '你托着小儿子在怀里晃啊晃，说这是“世界上最稳的秋千”。', cond: function (s) { return s.flags.blanketBorn || s.flags.surrogacy; } },
+      TRIVIA_BLANKET:       { icon: '🛝', name: '陪幼子玩空中秋千', desc: '你托着小儿子在怀里晃啊晃，说这是“世界上最稳的秋千”。', cond: function (s) { return s.flags.blanketBorn || s.flags.surrogacy; } },
       TRIVIA_THISISIT:      { icon: '🎬', name: '为《This Is It》逐帧打磨走位', desc: '五十场演唱会的每个走位，你都和编舞师一帧帧对过，哪怕身体已亮起红灯。', cond: function (s) { return s.flags.thisItHeld || s.flags.thisItScale; } },
       TRIVIA_GRAMMY:        { icon: '🏆', name: '把奖杯让给团队', desc: '领奖台上的聚光灯很亮，你却把奖杯先递给了身后沉默的乐手们。', cond: function (s) { return (s.meta.grammyWins || 0) >= 1 || ['otw','thriller','bad','dangerous','history','invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
       TRIVIA_WATW:          { icon: '🕊️', name: '为《We Are The World》熬夜合声', desc: '那一夜录音棚挤满巨星，你最后一个离开，反复确认每一句合声都严丝合缝。', cond: function (s) { return s.flags.weAreTheWorld; } },
