@@ -245,7 +245,7 @@ window.MJ = window.MJ || {};
     });
     var total = keys.length;
     var got = keys.filter(function (k) { return g[k]; }).length;
-    var html = '<div class="panel gallery">' +
+    var html = '<div class="panel gallery ending-gallery">' +
       '<div class="g-head">' + T('ui.gallery', null, '结局图鉴') + ' <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
       '<div class="g-grid">';
     keys.forEach(function (k) {
@@ -275,7 +275,7 @@ window.MJ = window.MJ || {};
     });
     var got = list.filter(function (a) { return a.unlocked; }).length;
     var total = list.length;
-    var html = '<div class="panel gallery">' +
+    var html = '<div class="panel gallery ach-gallery">' +
       '<div class="g-head">' + T('ui.achievements', null, '成就') + ' <span class="g-prog">' + got + ' / ' + total + '</span></div>' +
       '<div class="g-grid">';
     list.forEach(function (a) {

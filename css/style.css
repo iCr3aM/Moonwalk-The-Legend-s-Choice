@@ -544,6 +544,18 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .ed-asum { margin: 0 0 10px; }
 .gallery .g-cell.locked-hidden { border-style: dashed; }
 .modal .gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(82px, 1fr)); }
+/* 结局/成就图鉴：原 82px 多列（桌面约 7 列）导致中英文案挤压；放宽列宽并限行防溢出 */
+.modal .gallery.ending-gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+.modal .gallery.ach-gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.modal .gallery.ending-gallery .g-name,
+.modal .gallery.ach-gallery .g-name {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 640px) {
+  .modal .gallery.ending-gallery .g-grid,
+  .modal .gallery.ach-gallery .g-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* 结局详情弹窗（如何达成） */
 
