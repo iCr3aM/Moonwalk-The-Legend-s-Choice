@@ -751,6 +751,18 @@ window.MJ = window.MJ || {};
   }
 
   function createPoster(state, endingId) {
+    // 统一金色调色板（与 CSS --gold / --gold-bright / --gold-deep 同族，集中管理避免 Canvas 与 DOM 各一套金色）
+    var G = {
+      rgb: '212,175,55',
+      base: '#d4af37',    // = CSS --gold
+      bright: '#f3e2b0',  // 明亮金（Canvas 文字高亮）
+      deep: '#c79a2c',    // = CSS --gold-deep
+      dim: '#b9a06a',
+      dim2: '#8a7a4a',
+      cream: '#e8d6a6',
+      common: '#9c8a5a',
+      legendHi: '#fff4cf'
+    };
     var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟', summary: '', monologue: '' };
     var eName = T('ending.' + endingId + '.name', null, e.name);
     var eTone = T('ending.' + endingId + '.tone', null, e.tone);
@@ -789,7 +801,7 @@ window.MJ = window.MJ || {};
     ctx.strokeRect(34, 34, W - 68, H - 68);
 
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#d4af37'; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — ' + endYear, W / 2, 102);
@@ -805,7 +817,7 @@ window.MJ = window.MJ || {};
       ctx.closePath();
     }
     var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
-    var _rc = { common: '#9c8a5a', rare: '#caa84a', epic: '#c9b3f0', legendary: '#f3e2b0' }[_rar] || '#caa84a';
+    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
     ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2);
     ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
     ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
@@ -816,7 +828,7 @@ window.MJ = window.MJ || {};
     starPath(W / 2, 178, 5, 40, 17);
     if (_rar === 'legendary') {
       var _sg = ctx.createLinearGradient(W / 2 - 40, 178 - 40, W / 2 + 40, 178 + 40);
-      _sg.addColorStop(0, '#fff4cf'); _sg.addColorStop(1, '#caa84a');
+      _sg.addColorStop(0, G.legendHi); _sg.addColorStop(1, G.deep);
       ctx.fillStyle = _sg;
     } else {
       ctx.fillStyle = _rc;
@@ -824,9 +836,9 @@ window.MJ = window.MJ || {};
     ctx.fill();
     ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1; ctx.stroke();
 
-    ctx.fillStyle = '#f3e2b0'; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillStyle = G.bright; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(eName, W / 2, 286);
-    ctx.fillStyle = '#caa84a'; ctx.font = 'italic 19px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.deep; ctx.font = 'italic 19px "PingFang SC",sans-serif';
     ctx.fillText(eTone, W / 2, 320);
 
     var dims = [
@@ -844,7 +856,7 @@ window.MJ = window.MJ || {};
       var x = bx0 + col * colW, y = top + row * rowH;
       var bgx = x + barXoff;
       ctx.textAlign = 'left';
-      ctx.fillStyle = '#b9a06a'; ctx.font = '15px "PingFang SC",sans-serif';
+      ctx.fillStyle = G.dim; ctx.font = '15px "PingFang SC",sans-serif';
       ctx.fillText(dims[i][0], x, y + 15);
       var numStr = String(dims[i][2]);
       if (dims[i][1] === 'reputation' || dims[i][1] === 'art') {
@@ -852,28 +864,28 @@ window.MJ = window.MJ || {};
         if (ov > 0) numStr += ' ★+' + ov;
       }
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#f3e2b0'; ctx.font = '600 15px sans-serif';
+      ctx.fillStyle = G.bright; ctx.font = '600 15px sans-serif';
       ctx.fillText(numStr, x + colW - 10, y + 15);
       var v = Math.max(0, Math.min(100, dims[i][2])) / 100;
       ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
       var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);
-      grad.addColorStop(0, '#caa84a'); grad.addColorStop(1, '#f3e2b0');
+      grad.addColorStop(0, G.deep); grad.addColorStop(1, G.bright);
       ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 9, 4); ctx.fill();
     }
 
     var y = top + 3 * rowH + 14;
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#f3e2b0'; ctx.font = '600 18px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.bright; ctx.font = '600 18px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.metaRoutePrefix', null, '主导路线：') + metaName, W / 2, y);
-    ctx.fillStyle = '#caa84a'; ctx.font = '15px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
 
     y += 54;
-    ctx.fillStyle = '#d4af37'; ctx.font = '600 16px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth), W / 2, y);
 
     y += 40;
-    ctx.fillStyle = '#f3e2b0'; ctx.font = '600 16px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterAch', { n: thisRun.length }, '本局点亮 {n} 枚成就'), W / 2, y);
     y += 16;
     var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
@@ -882,12 +894,12 @@ window.MJ = window.MJ || {};
     if (thisRun.length) {
       for (var k = 0; k < thisRun.length; k++) {
         var c = k % perRow, r = (k / perRow) | 0;
-        ctx.fillStyle = '#f3e2b0';
+        ctx.fillStyle = G.bright;
         try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {}
       }
       y += (((thisRun.length / perRow) | 0) + (thisRun.length % perRow ? 1 : 0)) * 42 + 18;
     } else {
-      ctx.fillStyle = '#8a7a4a'; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = G.dim2; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
       ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40;
     }
     ctx.textBaseline = 'alphabetic';
@@ -895,7 +907,7 @@ window.MJ = window.MJ || {};
     // §18.8 人生关键词标签云：主导元路线 + 属性降序前 2
     y += 16;
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#d4af37'; ctx.font = '600 14px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = '600 14px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterKeywords', null, '人生关键词'), W / 2, y);
     var _tags = [];
     if (dm) _tags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
@@ -912,7 +924,7 @@ window.MJ = window.MJ || {};
       ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 1;
       ctx.fillStyle = 'rgba(212,175,55,0.10)';
       roundRect(ctx, _px, y + 8, _pw, _ph, 14); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = '#f3e2b0';
+      ctx.fillStyle = G.bright;
       ctx.fillText(_tags[_t2], _px + _pw / 2, y + 8 + _ph / 2);
       _x += _pw + _gap;
     }
@@ -922,7 +934,7 @@ window.MJ = window.MJ || {};
     // §18.8 本局最关键 1–2 个抉择回看（取自 state.history 中 key 标记为真的节点）
     y += 6;
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#d4af37'; ctx.font = '600 15px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterKeyChoices', null, '关键抉择'), 60, y);
     y += 12;
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
@@ -930,7 +942,7 @@ window.MJ = window.MJ || {};
     y += 20;
     var _keys = (state.history || []).filter(function (h) { return h && h.key; });
     if (!_keys.length) {
-      ctx.fillStyle = '#8a7a4a'; ctx.font = '13px sans-serif';
+      ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif';
       ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22;
     } else {
       var _picks = [_keys[0]]; if (_keys.length > 1) _picks.push(_keys[_keys.length - 1]);
@@ -959,27 +971,27 @@ window.MJ = window.MJ || {};
           if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = '';
           if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—';
         }
-        ctx.fillStyle = '#f3e2b0'; ctx.font = '600 13px "PingFang SC",sans-serif';
+        ctx.fillStyle = G.bright; ctx.font = '600 13px "PingFang SC",sans-serif';
         ctx.fillText((_kk.year || '') + ' · ' + _kt, 60, y); y += 19;
-        ctx.fillStyle = '#caa84a'; ctx.font = '13px "PingFang SC",sans-serif';
+        ctx.fillStyle = G.deep; ctx.font = '13px "PingFang SC",sans-serif';
         ctx.fillText('↳ ' + _kc, 74, y); y += 23;
       }
     }
 
     y += 24;
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#d4af37'; ctx.font = '600 17px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = '600 17px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterEndingLabel', null, '结局 · 你的传奇'), 60, y);
     y += 14;
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
     y += 24;
-    ctx.fillStyle = '#e8d6a6'; ctx.font = '16px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.cream; ctx.font = '16px "PingFang SC",sans-serif';
     var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
     y = wrapParagraph(ctx, narr, 60, y, W - 120, 28, H - 130);
 
     ctx.textAlign = 'center';
-    ctx.fillStyle = '#d4af37'; ctx.font = 'italic 17px "PingFang SC",sans-serif';
+    ctx.fillStyle = G.base; ctx.font = 'italic 17px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 96);
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
     ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 70);
