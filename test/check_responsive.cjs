@@ -16,13 +16,13 @@ function inMedia(query, re) { return re.test(blocks(css, query)); }
 
 var checks = [
   ['@media (max-width:640px) 存在', inMedia('max-width: 640px', /./)],
-  ['@media (max-width:600px) 存在', inMedia('max-width: 600px', /./)],
+  // 注：原 600px 断点已并入 640px（二者规则完全重复且 640 后定义覆盖 600），故不再单独断言 600px。
   ['prefers-reduced-motion 存在', /prefers-reduced-motion/.test(css)],
   ['640: .btn-row 纵向排列', inMedia('max-width: 640px', /\.btn-row\s*\{[^}]*flex-direction:\s*column/)],
   ['640: .bars 两列', inMedia('max-width: 640px', /\.bars\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['640: 图鉴网格两列', inMedia('max-width: 640px', /(\.menu-grid|\.menu-row)\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['640: .toolbar 可换行', inMedia('max-width: 640px', /\.toolbar\s*\{[^}]*flex-wrap:\s*wrap/)],
-  ['640: .subdim-name 限宽', inMedia('max-width: 640px', /\.subdim-name\s*\{[^}]*width:\s*56px/)],
+  ['640: .subdim-grid 单列', inMedia('max-width: 640px', /\.subdim-grid\s*\{[^}]*grid-template-columns:\s*1fr/)],
   ['模态 max-height + 滚动', /\.modal\s*\{[^}]*max-height[^}]*overflow:\s*auto/.test(css)]
 ];
 

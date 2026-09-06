@@ -41,7 +41,7 @@ window.MJ = window.MJ || {};
     }).join('');
     overlay.innerHTML = '<div class="modal lang-modal-card">' +
       '<div class="modal-head"><span>🌐 ' + T('ui.langBtn', null, '语言') + '</span><span class="spacer"></span>' +
-      '<button type="button" class="btn ghost small" id="lang-close">✕</button></div>' +
+      '<button type="button" class="btn ghost small" id="lang-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body"><div class="lang-grid">' + cards + '</div></div></div>';
     overlay.querySelectorAll('.lang-opt').forEach(function (b) {
       b.addEventListener('click', function () { chooseLang(b.getAttribute('data-lang')); });
@@ -376,7 +376,7 @@ window.MJ = window.MJ || {};
         ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>'
         : '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>';
     }
-    overlay.innerHTML = '<div class="modal ending-detail">' +
+    overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>' + headTxt + '</span><span class="spacer"></span>' +
       '<button class="btn ghost small" id="ed-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
       '<div class="modal-body">' + bodyHtml + '</div></div>';
@@ -1025,7 +1025,7 @@ window.MJ = window.MJ || {};
       '<div class="poster-foot">' +
         '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
         '<div class="poster-foot-actions' + (hasDelete ? ' has-delete' : '') + '">' +
-          (hasDelete ? '<button class="btn ghost danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
+          (hasDelete ? '<button class="btn danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
           '<button class="btn primary" id="pm-save">' + T('ui.posterSave', null, '保存图片') + '</button>' +
           '<button class="btn primary" id="pm-close">' + T('ui.close', null, '关闭 ✕') + '</button>' +
         '</div>' +
