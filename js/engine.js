@@ -411,7 +411,8 @@ window.MJ = window.MJ || {};
       if (MJ.eggSystem) {
         if (ev.id === '3_1b' && optIndex === 0) MJ.eggSystem.incMoonwalkPerfect();
         var _mwSet = { '3_1b': 1, '3_2b': 1, '4_2b': 1, '6_1c': 1 };
-        _bumpStreak(this.state, !!(_mwSet[ev.id] && optIndex === 0));
+        // 仅对 4 个月球漫步事件做连击计数；普通事件不重置连击（否则跨章节分散的演出永远凑不齐 4 连）
+        if (_mwSet[ev.id]) _bumpStreak(this.state, optIndex === 0);
         MJ.eggSystem.checkFlags(this.state);
       }
       if (MJ.triviaSystem) MJ.triviaSystem.checkFlags(this.state); // §17.11 趣事：扫描 tidbit_* 标志解锁图鉴
