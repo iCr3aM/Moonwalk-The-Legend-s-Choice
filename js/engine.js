@@ -615,7 +615,14 @@ window.MJ = window.MJ || {};
       TRIVIA_QUIET_REPLAY:  { icon: '🎞️', name: '独自看演出回放', desc: '人散了，你独自把今晚的演出又看一遍，盯着某个走神的一秒出神。' },
       TRIVIA_GARY:          { icon: '🏠', name: '盖瑞巷口的水泥地', desc: '盖瑞的那条巷子，水泥地是你最初的舞台；你常扒着门缝，看兄长们拨弄吉他。', cond: function (s) { return s.flags.garyRoots === true; } },
       TRIVIA_APOLLO:        { icon: '🏅', name: '阿波罗业余之夜', desc: '哈莱姆的阿波罗剧院，业余之夜的聚光灯下，Jackson 5 拿下了冠军——那是写在黑人音乐史里的那一夜。', cond: function (s) { return s.flags.apolloChampion === true; } },
-      TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 的试唱前夜', desc: '试唱前夜，哥哥们在后台紧紧围住你；第二天，你推开了摩城那扇通往世界的大门。', cond: function (s) { return s.flags.motownAudition === true; } }
+      TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 的试唱前夜', desc: '试唱前夜，哥哥们在后台紧紧围住你；第二天，你推开了摩城那扇通往世界的大门。', cond: function (s) { return s.flags.motownAudition === true; } },
+
+      // —— Phase 2 内容扩充（解锁靠结局 revealAll 按 cond 扫描；不新增变体，严守 4 变体裁定）——
+      TRIVIA_DIALTONE:    { icon: '☎️', name: '拨号音里的节拍', desc: '你对着拨号音“嘟——嘟——”打拍子，电话那头以为是线路故障，你却笑出了声。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 60; } },
+      TRIVIA_GLOVE:       { icon: '🧤', name: '一只手套的魔法', desc: '那只闪着光的单只手套，是你给自己设的暗号：只要戴上它，舞台就只属于你一个人。', cond: function (s) { return (s.attributes.art || 0) >= 70; } },
+      TRIVIA_QUIETSTAGE:  { icon: '🪑', name: '谢幕后的安静', desc: '掌声散尽，你独自坐在空荡的舞台边，听见自己的呼吸——那是最诚实的掌声。', cond: function (s) { return (s.attributes.stress || 0) <= 35; } },
+      TRIVIA_MOTHERSONG:  { icon: '🎵', name: '唱给妈妈听', desc: '有次你随口哼起妈妈最爱的那首老歌，唱到一半，喉咙忽然发紧。', cond: function (s) { return (s.attributes.family || 0) >= 70; } },
+      TRIVIA_HEALPLANET:  { icon: '🌍', name: '把地球缝补起来', desc: '你相信音乐能缝补裂痕：把不同肤色、不同语言的人，缝进同一段旋律里。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 2; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }

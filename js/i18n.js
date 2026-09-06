@@ -424,6 +424,18 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_APOLLO.name': 'Apollo Amateur Night', 'trivia.TRIVIA_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, the Jackson 5 took the crown — a night written into Black music history.',
         'trivia.TRIVIA_MOTOWN.name': 'The Night Before the Motown Audition', 'trivia.TRIVIA_MOTOWN.desc': 'The night before the audition, your brothers huddled tight around you backstage; the next day you pushed open Motown’s door onto the world.',
 
+        // —— Phase 2 内容扩充 ——
+        'trivia.TRIVIA_DIALTONE.name': 'Dial Tone Beat',
+        'trivia.TRIVIA_DIALTONE.desc': 'You kept time to the dial tone’s “beep-beep,” and the caller thought it was a line fault — you just laughed.',
+        'trivia.TRIVIA_GLOVE.name': 'The Magic of One Glove',
+        'trivia.TRIVIA_GLOVE.desc': 'That single shining glove was your private signal: the moment you put it on, the stage belonged to you alone.',
+        'trivia.TRIVIA_QUIETSTAGE.name': 'The Quiet After the Bow',
+        'trivia.TRIVIA_QUIETSTAGE.desc': 'When the applause died, you sat alone at the edge of the empty stage and heard your own breathing — the most honest applause.',
+        'trivia.TRIVIA_MOTHERSONG.name': 'Singing for Mother',
+        'trivia.TRIVIA_MOTHERSONG.desc': 'Once you hummed, offhand, your mother’s favorite old song; halfway through, your throat suddenly tightened.',
+        'trivia.TRIVIA_HEALPLANET.name': 'Sewing the Earth Back Together',
+        'trivia.TRIVIA_HEALPLANET.desc': 'You believed music could mend ruptures: stitching different skin tones and tongues into one melody.',
+
         // ---------- §17.4 决策风格 / 专项子维度（展示层，EN） ----------
         'ui.subDimTitle': 'Specialized Craft',
         'subdim.vision': 'Vision', 'subdim.innovation': 'Innovation', 'subdim.craft': 'Craft', 'subdim.collab': 'Collaboration', 'subdim.stagecraft': 'Stagecraft',
