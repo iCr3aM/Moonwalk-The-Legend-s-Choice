@@ -49,7 +49,7 @@ check('续章专属变体池 V_POST_* 已注册（≥3，窗口[2010,2026]）', 
 
 var r = walk();
 check('续章链路可达结局', r.ok);
-var ALLOWED = ['END_TRUE_ETERNAL', 'END_MOGUL', 'END_PHILANTHROPIST', 'END_RECLUSE', 'END_PERFECT', 'END_TIMELESS_PRESENT'];
+var ALLOWED = ['END_TRUE_ETERNAL', 'END_MOGUL', 'END_PHILANTHROPIST', 'END_RECLUSE', 'END_PERFECT', 'END_TIMELESS_PRESENT', 'END_ALT_SURVIVE_LEGACY'];
 check('续章收束于非死亡结局（§7.2 规则 3b 链）', ALLOWED.indexOf(r.ending) >= 0);
 var need = ['8_1b', '8_2b', '8_3b', '8_5b', '8_4b', '8_4c', '8_7', '8_9'];
 var missing = need.filter(function (id) { return !_visited[id]; });

@@ -255,6 +255,7 @@ window.MJ = window.MJ || {};
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         '<div class="g-rarity">' + (on ? rarityLabel(MJ.config.endingRarity[k]) : T('ui.locked', null, '未解锁')) + '</div>' +
+        (e.assumption ? '<div class="asum-tag">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
       '</div>';
     });
     html += '</div></div>';
@@ -361,6 +362,7 @@ window.MJ = window.MJ || {};
       // 已解锁：名称 / 基调 / 简介 / 如何达成 / 独白 全部展示
       headTxt = e.icon + ' ' + escapeHtml(T('ending.' + key + '.name', null, e.name));
       bodyHtml =
+        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
         (e.tone ? '<div class="ed-tone">' + escapeHtml(T('ending.' + key + '.tone', null, e.tone)) + '</div>' : '') +
         '<div class="ed-summary">' + escapeHtml(T('ending.' + key + '.summary', null, e.summary || '')) + '</div>' +
         (hint ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>' : '') +
@@ -372,9 +374,11 @@ window.MJ = window.MJ || {};
     } else {
       // 未解锁（非隐藏）：只显示「如何达成」，名称/基调/简介/独白均不显示
       headTxt = '❓ ' + T('ui.unknown', null, '？？？');
-      bodyHtml = hint
+      bodyHtml =
+        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
+        (hint
         ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>'
-        : '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>';
+        : '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>');
     }
     overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>' + headTxt + '</span><span class="spacer"></span>' +
@@ -1064,7 +1068,7 @@ window.MJ = window.MJ || {};
         '<h1>' + T('ui.title', null, '月球漫步：传奇的抉择') + '</h1>' +
         (MJ.i18n.lang === 'zh' ? '<p class="sub">Moonwalk: The Legend\'s Choice</p>' : '') +
         '<div class="how">' +
-          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 18 种不同的人生结局。') + '</p>' +
+          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 25 种不同的人生结局。') + '</p>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +
@@ -1100,6 +1104,37 @@ window.MJ = window.MJ || {};
     _view = function () { ui.showIntro(hasSave); };
   };
 
+  // §17.14 格莱美揭晓面板：列出本届具体获奖（参考 docs/mjwiki 各颁奖页），并标注 MJ 真实生涯总数作对照
+  function grammyAwardPanel(state, key) {
+    if (!state || !state.flags) return '';
+    var gw = state.flags['grammy_' + key] || 0;
+    var cats = state.flags['grammyCats_' + key] || [];
+    var tr = (MJ && MJ.t) ? MJ.t : (typeof T !== 'undefined' ? T : function (k, _, fb) { return fb || ''; });
+    var real = (MJ && MJ.GRAMMY_REAL_TOTAL) ? MJ.GRAMMY_REAL_TOTAL : 13;
+    var html = '<div class="grammy-awards">';
+    if (gw > 0 && cats.length) {
+      html += '<div class="ga-head">🏆 ' + tr('ui.grammyAwards', null, '本届格莱美') + ' · ' + gw + ' ' + tr('ui.trophyCount', null, '座') + '</div>';
+      html += '<ul class="ga-list">';
+      for (var i = 0; i < cats.length; i++) {
+        var x = cats[i];
+        html += '<li><b>' + tr('grammy.' + x.c, null, x.zh) + '</b> 《' + x.w + '》</li>';
+      }
+      html += '</ul>';
+    } else {
+      html += '<div class="ga-head ga-none">🏆 ' + tr('ui.grammyAwards', null, '本届格莱美') + ' · ' + tr('ui.grammyNone', null, '一无所获') + '</div>';
+    }
+    html += '<div class="ga-foot">' + tr('ui.grammyRealTotal', null, '现实中的 MJ 生涯共获 ' + real + ' 座格莱美') + '</div>';
+    var total = (state.meta && state.meta.grammyWins) || 0;
+    if (total >= real) {
+      var note = (total === real)
+        ? tr('ui.grammyMatchedReal', null, '🏆 你恰好追平了现实中的 MJ：生涯 ' + real + ' 座格莱美')
+        : tr('ui.grammyBeyondReal', null, '🏆 你已超越现实中的 MJ（生涯 ' + real + ' 座格莱美）');
+      html += '<div class="ga-real-note">' + note + '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   ui.showEvent = function (ev, state) {
     var loc = (MJ.localizeEvent ? MJ.localizeEvent(ev, state) : null);
     var title = loc ? loc.title : ev.title;
@@ -1115,6 +1150,8 @@ window.MJ = window.MJ || {};
         '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年</div>' +
         '<h2>' + escapeHtml(title) + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';
+
+    if (ev.grammyReveal) body += grammyAwardPanel(state, ev.grammyReveal);
 
     if (ev.kind === 'auto') {
       body += '<div class="continue-row"><button class="btn primary" id="btn-next">' + T('ui.next', null, '继续') + '</button></div>';
@@ -1207,6 +1244,7 @@ window.MJ = window.MJ || {};
       statusBar(state, { year: e.year || 2009 }) +
       '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
         (e.hidden ? '<div class="badge-ultimate">' + T('ui.badgeUltimate', null, '★ 终极隐藏结局') + '</div>' : '') +
+        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
         '<h2>' + T('ending.' + id + '.name', null, e.name) + '</h2>' +
         '<p class="tone">' + T('ending.' + id + '.tone', null, e.tone) + '</p>' +

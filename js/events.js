@@ -2584,6 +2584,85 @@ window.MJ = window.MJ || {};
       { label: T('event.V_J5_EPIC.opt1.label', null, 'B：转会 Epic，更名 The Jacksons'), hint: T('event.V_J5_EPIC.opt1.hint', null, '拥抱更大舞台，兰迪补入新阵型（声誉+4，手足+4）'), effects: { reputation: 4, rel: { brothers: 4 }, timeline: { '1975': 'epic' } }, epilogue: T('event.V_J5_EPIC.opt1.epilogue', null, '排练时你与兰迪握了握手——和声自会找到新的形状。'), next: '__RETURN__' }
     ]
   };
+  // ===== 阶段 3：架空历史 BP2–BP7 决策点变体（写入 state.timeline / flag，驱动 END_ALT_*；史实经 docs/mjwiki/ 逐项核实） =====
+  E.V_OFFWALL_QJ = {
+    id: 'V_OFFWALL_QJ', variant: true, window: [1979, 1981], weight: 22,
+    title: T('event.V_OFFWALL_QJ.title', null, '1979：与 Quincy Jones 联手，还是独立制作？'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_OFFWALL_QJ.text', null, '1979 年，《Off the Wall》问世——这是你与制作人昆西·琼斯（Quincy Jones）首度合作的专辑。下一阶段的创作主导权，握在谁手里？是延续这位黄金搭档，还是收回主导权、以独立制作人身份掌舵？'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_OFFWALL_QJ.branch0.text', null, '你听见自己心里那个更倔的编曲念头，蠢蠢欲动。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_OFFWALL_QJ.opt0.label', null, 'A：延续与昆西·琼斯的合作'), hint: T('event.V_OFFWALL_QJ.opt0.hint', null, '稳坐黄金搭档，延续 Thriller/Bad 路线（声誉+4，艺术+3）'), effects: { reputation: 4, art: 3 }, next: '__RETURN__' },
+      { label: T('event.V_OFFWALL_QJ.opt1.label', null, 'B：独立制作，自掌创作'), hint: T('event.V_OFFWALL_QJ.opt1.hint', null, '收回主导权，走出异色商业路线（艺术+5，财富+4）'), effects: { art: 5, wealth: 4, timeline: { '1979': 'solo_prod' } }, next: '__RETURN__' }
+    ]
+  };
+  E.V_PEPSI_ACCIDENT = {
+    id: 'V_PEPSI_ACCIDENT', variant: true, window: [1984, 1985], weight: 20,
+    title: T('event.V_PEPSI_ACCIDENT.title', null, '1984：百事广告片场'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_PEPSI_ACCIDENT.text', null, '1984 年，百事可乐的广告片场，烟火装置在彩排中出了意外。你站在聚光灯与火星之间，本能地护住了自己。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) >= 60; }, text: T('event.V_PEPSI_ACCIDENT.branch0.text', null, '你平时对身体的养护，此刻成了底气。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_PEPSI_ACCIDENT.opt0.label', null, 'A：按计划完成拍摄（意外发生）'), hint: T('event.V_PEPSI_ACCIDENT.opt0.hint', null, '片场意外留下印记，身体受损（健康-10）'), effects: { health: -10 }, next: '__RETURN__' },
+      { label: T('event.V_PEPSI_ACCIDENT.opt1.label', null, 'B：稳妥应对，干净脱身'), hint: T('event.V_PEPSI_ACCIDENT.opt1.hint', null, '事前预案得当，仅虚惊一场、迅速康复（健康+4）'), effects: { health: 4, timeline: { '1984': 'safe' } }, next: '__RETURN__' }
+    ]
+  };
+  E.V_CATALOG_EMPIRE = {
+    id: 'V_CATALOG_EMPIRE', variant: true, window: [1985, 1988], weight: 18,
+    title: T('event.V_CATALOG_EMPIRE.title', null, '1985：版权版图'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_CATALOG_EMPIRE.text', null, '1985 年，你斥资购入 ATV 音乐出版公司——连同披头士等数千首歌曲的版权，成为音乐史上最年轻的版权巨头之一。手握曲库，你开始盘算更大的商业版图。'), s, [
+        { cond: function (s) { return (s.attributes.wealth || 0) >= 55; }, text: T('event.V_CATALOG_EMPIRE.branch0.text', null, '账户里的数字，第一次让你觉得主动权握在自己手里。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_CATALOG_EMPIRE.opt0.label', null, 'A：稳健收藏，做版权收藏家'), hint: T('event.V_CATALOG_EMPIRE.opt0.hint', null, '深耕音乐曲库（财富+8）'), effects: { wealth: 8 }, next: '__RETURN__' },
+      { label: T('event.V_CATALOG_EMPIRE.opt1.label', null, 'B：打造传媒帝国（版权+影视+地产）'), hint: T('event.V_CATALOG_EMPIRE.opt1.hint', null, '把版图扩成传媒帝国（财富+6）'), effects: { wealth: 6, timeline: { 'biz': 'empire' } }, next: '__RETURN__' }
+    ]
+  };
+  E.V_SURVIVE_PATH = {
+    id: 'V_SURVIVE_PATH', variant: true, window: [2010, 2025], weight: 24, cond: function (s) { return s.flags.survived2009 === true; },
+    title: T('event.V_SURVIVE_PATH.title', null, '续章 · 你撑过了 2009'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_SURVIVE_PATH.text', null, '2009 年的那场排练危机，你稳稳接住了。回望伦敦 O2 的舞台，你决定把这段传奇怎么续写下去。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) >= 55; }, text: T('event.V_SURVIVE_PATH.branch0.text', null, '身体比当年更懂得节制，舞台却依旧滚烫。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_SURVIVE_PATH.opt0.label', null, 'A：把舞台与生命都稳稳接住，继续创作'), hint: T('event.V_SURVIVE_PATH.opt0.hint', null, '续写长寿传奇（健康+5）'), effects: { health: 5, timeline: { '2009': 'survive' } }, next: '__RETURN__' },
+      { label: T('event.V_SURVIVE_PATH.opt1.label', null, 'B：退居幕后，安享遗产'), hint: T('event.V_SURVIVE_PATH.opt1.hint', null, '从容收束，把余生留给创作与家人（压力-4）'), effects: { stress: -4 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_PEACE_PATH = {
+    id: 'V_PEACE_PATH', variant: true, window: [1985, 1993], weight: 30,
+    title: T('event.V_PEACE_PATH.title', null, '1985：慈善的岔口'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_PEACE_PATH.text', null, '1985 年，你与莱昂纳尔·里奇写下《We Are The World》，为远方的饥荒筹款；此后公益成了你生命里越来越重的砝码。你开始思考：要把慈善放在怎样的位置？'), s, [
+        { cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: T('event.V_PEACE_PATH.branch0.text', null, '每一次看到受助者的眼睛，你都比上一次更笃定。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_PEACE_PATH.opt0.label', null, 'A：把慈善当作一生的事业重心'), hint: T('event.V_PEACE_PATH.opt0.hint', null, '以公益为人生主轴（慈善+8）'), effects: { phil: 8 }, flags: { altPeace: true }, next: '__RETURN__' },
+      { label: T('event.V_PEACE_PATH.opt1.label', null, 'B：平衡公益与舞台'), hint: T('event.V_PEACE_PATH.opt1.hint', null, '兼顾慈善与事业（慈善+4）'), effects: { phil: 4 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_QUIET_PATH = {
+    id: 'V_QUIET_PATH', variant: true, window: [1988, 1998], weight: 30,
+    title: T('event.V_QUIET_PATH.title', null, '1988：庄园与归处'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_QUIET_PATH.text', null, '1988 年，你为家人置下了一座远离喧嚣的庄园。岁月推移，家庭在你心里的分量越来越重。你开始想象：功成名就之后，是否该主动把生活收拢回家人身边？'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 55; }, text: T('event.V_QUIET_PATH.branch0.text', null, '你发现，最踏实的掌声，原来来自家里那桌晚饭。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_QUIET_PATH.opt0.label', null, 'A：以家庭为锚，主动归隐庄园'), hint: T('event.V_QUIET_PATH.opt0.hint', null, '把人生重心放回家人（家庭+8）'), effects: { family: 8 }, flags: { altQuietRetiree: true }, next: '__RETURN__' },
+      { label: T('event.V_QUIET_PATH.opt1.label', null, 'B：兼顾家庭与公众生活'), hint: T('event.V_QUIET_PATH.opt1.hint', null, '平衡二者（家庭+4）'), effects: { family: 4 }, next: '__RETURN__' }
+    ]
+  };
   E.V_AWARD_LEGEND = {
     id: 'V_AWARD_LEGEND', variant: true, window: [1993, 1993], weight: 35,
     title: T('event.V_AWARD_LEGEND.title', null, '格莱美传奇奖'), kind: 'choice',

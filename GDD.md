@@ -862,9 +862,10 @@
 
 #### 17.14.3 数据 schema（零侵入）
 - 复用 `flags`：`cp_vision, cp_craft, cp_innovation, cp_collab, cp_stagecraft`（数值型 flag，沿用 `setFlag`/`serialize`，无需改 state.js）。
-- `flags.grammy_<album>`：`otw|thriller|bad|dangerous|history|invincible` → 座数（0–8）。
-- `meta.grammyWins`（新增非负计数）：`config.initialMeta` 加 `grammyWins:0`；解析时 `state.meta.grammyWins += wins`。
-- 解析函数位置：新增 `js/planner.js`（或并入 engine.js），`MJ.planner.resolveGrammy`。
+- `flags.grammy_<album>`：`otw|thriller|bad|dangerous|history|invincible` → 座数（0–20，含 what-if 远超史实）。
+- `flags.grammyCats_<album>`：本届具体获奖清单（`[{c:类别键, w:作品, zh:中文名}]`，按声望降序取前 `wins` 项）；供揭晓面板展示（§17.14.10）。
+- `meta.grammyWins`（非负计数）：`config.initialMeta` 加 `grammyWins:0`；解析时 `state.meta.grammyWins += wins`。
+- 解析函数位置：`js/planner.js`，`MJ.planner.resolveGrammy`（含 `getCats`/`getWins` UI 辅助）。
 
 #### 17.14.4 resolveGrammy 公式（可实现，权重可按 §8 数值预算微调）
 ```js
@@ -875,9 +876,15 @@ MJ.planner.resolveGrammy = function (state, key) {
   var q = 0.22*v + 0.18*c + 0.20*i + 0.12*co + 0.18*st + 0.10*momentum; // 0–100
   var bias = { otw:0, thriller:6, bad:3, dangerous:0, history:-4, invincible:-6 }[key] || 0;
   q = Math.max(0, Math.min(100, q + bias));
-  var wins = q>=88 ? 6+Math.round((q-88)/3)
-            : q>=75 ? 3+Math.round((q-75)/6)
-            : q>=60 ? (q>=68?2:1) : 0;
+  // 涌现映射（低分段细化：56≤q<62→1，62≤q<68→2，使中等投入恰好=13）：
+  var eq = q>=88 ? 10+Math.round((q-88)/2)
+          : q>=78 ? 6+Math.round((q-78)/3)
+          : q>=68 ? 3+Math.round((q-68)/5)
+          : q>=62 ? 2 : q>=56 ? 1 : 0;
+  eq = Math.min(16, eq);
+  var FLOOR = { otw:1, thriller:8, bad:0, dangerous:0, history:0, invincible:0 }; // 现实保底
+  var CAP = 20;
+  var wins = Math.min(CAP, (FLOOR[key]||0) + eq); // 永不归零（隐士仅 eq≈0，仍拿保底）
   state.flags['grammy_'+key] = wins;
   state.meta.grammyWins = (state.meta.grammyWins||0) + wins;
   state.changeAttr('reputation', Math.min(20, wins*2));
@@ -892,6 +899,7 @@ MJ.planner.resolveGrammy = function (state, key) {
 - **巡演节点补 `cp_stagecraft`**：4_2a(A 全力→st:85,stress+)/6_1e/5_2/3_2b。
 - **补 4 个格莱美揭晓节点**（`onEnter` 调解析，读取 `flags.grammy_<album>` 叙事）：`4_2a_g`(Bad, 1988, 接 4_2b) / `5_2g`(Dangerous, **year=1992** 以规避时间倒挂，接 5_2b) / `6_1e_g`(HIStory, 1996, 接 6_2) / `6_3b_g`(Invincible, 2002, 接 6_4b)；OTW 复用既有 `2_6`(加 onEnter)、Thriller 复用既有 `3_3`。
 - 揭晓节点 `text` 按 `flags.grammy_<album>` 分档叙事（0=提名未中 / 1–2=小胜 / 3–5=多项 / 6+=大满贯），全部 `T()` 包裹 + EN 键。
+- **具体奖项展示（沉浸增强）**：六个揭晓节点加 `grammyReveal:<album>` 标记；`ui.showEvent` 据此在正文后注入「格莱美揭晓面板」，列出本届具体获奖（类别+作品，来源 §17.14.10 奖项池），并标注"现实中的 MJ 生涯共获 13 座格莱美"作对照；`w=0` 时显示「一无所获」。面板样式 `.grammy-awards`（金色描边），本地化经 `MJ.t('grammy.<类别键>')` 中英双语。
 
 #### 17.14.6 最小代码改动
 | 文件 | 改动 | 风险 |
@@ -903,8 +911,9 @@ MJ.planner.resolveGrammy = function (state, key) {
 | i18n_events_en.js | 新文案 EN 键 | 低 |
 
 #### 17.14.7 成就联动（涌现式）
-- `ACH_GRAMMY_SWEEP`（改写 §17.13.2）：六张专辑 `grammy_*` 均 ≥1 → "从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。"
-- 新增 `ACH_GRAMMY_LEGEND`（epic）：`meta.grammyWins >= 18` 或单张 ≥6 → "格莱美史上的奇观：你把自己活成了纪录本身。"
+- `ACH_GRAMMY_SWEEP`：六张专辑 `grammy_*` 均 ≥1 → "从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。"（实测可达率随调参变化，见 `config.achievementReach`）
+- `ACH_GRAMMY_LEGEND`：`meta.grammyWins >= 18` 或单张 ≥6 → "格莱美史上的奇观：你把自己活成了纪录本身。"（真实游玩上限 48，单测理想化 cp 得 51，故 ≥18 易触发；实测 ~62%）。
+- **玩法光谱（用户拍板）**：① 极致运营→累计 48（真实上限；理想化单测 51，远超史实）；② 中等投入（全 B 企划+全 B 巡演，埋 collab）→ 恰好 13，追平现实 MJ 生涯；③ 普通放任 / 隐士路线→保底 9 座（otw1+thriller8），低于 MJ 真实 13 座；隐士按方案 A 不归零、仅涌现≈0 仍拿保底。三档 9/13/48 均经 `test/_grammy_range.cjs` 与 `test/_grammy_playthrough.cjs` 验证可达。
 - `dream_*` 成就（§17.13.3）保持不变。
 
 #### 17.14.8 可达性 & 合规
@@ -913,9 +922,19 @@ MJ.planner.resolveGrammy = function (state, key) {
 - 回归：smoke.cjs 年份单调断言不受影响（仅新增/改造主线节点，年份保持）；en_smoke 校验新事件 EN；serialise→hydrate 后 `grammyWins`/`grammy_*` 不丢（flags/meta 已序列化）。
 
 #### 17.14.9 验收清单
-- [x] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表（全满贯 7–8、零企划 0）。
-- [x] 400 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,8]、0 异常、0 时间倒挂。
-- [x] 定向：低质企划→HIStory/Invincible 0 座；高质→可全满贯（两成就解锁）。
+- [x] planner.resolveGrammy 单测：给定 cp_* 档位输出座数符合阈值表（理想化全局 cp（全 A 企划+巡演+momentum 满）→ 累计 51；真实游玩上限 48，因 OTW 无舞台呈现/collab 不可同时满；零企划 → 仅保底 9）。
+- [x] `test/_grammy_range.cjs`：① 最优累计 ≥50（理想化全局 cp 实测 51）；② 隐士路线 = 保底 9（方案 A 不归零）；③ 普通放任 =9 < 真实 MJ 13；④ 同专辑二次结算幂等不重复累加；⑤ `grammyCats` 数 == min(wins, 池长) 且按声望降序。
+- [x] 400 局随机冒烟：每 era 揭晓节点均触发、座数 ∈[0,20]、0 异常、0 时间倒挂；`en_smoke` 0 残留。
+- [x] 定向：低质企划→HIStory/Invincible 0 座；高质→可累计冲 50（两成就解锁）。
+
+#### 17.14.10 具体奖项池（沉浸展示，wiki 核实）
+- 每个专辑在 `planner.GRAMMY_POOLS` 中维护一张**按声望降序**的奖项池（类别键 + 作品 + 中文名）；结算时取前 `wins` 项写入 `grammyCats_<album>`，揭晓面板逐项列出。
+- 数据来源 `docs/mjwiki/`（26th/30th Grammy 页、专辑页、Legend Award 页逐项核实）：
+  - **Thriller**：单夜 8 座（年度专辑 / 年度唱片《Beat It》/ 最佳流行男声《Thriller》/ 最佳 R&B 男声《Billie Jean》/ 最佳摇滚男声《Beat It》/ 最佳 R&B 歌曲《Billie Jean》/ 年度制作人 Quincy+MJ / 最佳非古典录音工程）。
+  - **Bad**：最佳非古典录音工程 + 1990 最佳音乐录影带(短篇)《Leave Me Alone》（史实 0 座为 MJ 个人竞争奖，故 `FLOOR.bad=0`）。
+  - **HIStory**：1996 最佳音乐录影带(短篇)《Scream》(with Janet)；`FLOOR.history=0`。
+  - **OTW / Dangerous / Invincible**：史实竞争奖极少（Dangerous 仅 1993 荣誉 Legend Award），`FLOOR` 均 0；奖项池以真实关联提名 + 时代合理类别补足，使 what-if 高产出时具体奖项清单仍可信。
+- 现实锚点：MJ 生涯公认 **13 座**格莱美（含荣誉类，格莱美官网口径），见 `MJ.GRAMMY_REAL_TOTAL`，用于面板"低于现实 MJ"对照。
 
 > **v0.6 命名修订（已实现，提交 c919c6e）**：为消除"格莱美之夜"等 6 处字面值撞名，格莱美揭晓节点统一按专辑命名——《Thriller》/《Bad》/《Dangerous》/《HIStory》/《Invincible》格莱美之夜；`V_BIO_GRAMMY84`→「加冕余温」、`V_BIO_WIZ`→「《新绿野仙踪》幕后」、`V_BIO_BADTOUR`→「《Bad》巡演侧记」、`V_BIO_HISTORYTOUR`→「HIStory 巡演侧记」（英文 i18n 同步）。孤儿节点 `1_7/1_8/4_4` 已接回（`1_6→1_7→1_8→2_1`、`4_3→4_4→5_1`）。变体事件不得写入 `grammy_*` 标志、不得出现 `V_GRAMMY*` id（§17.14 涌现结算专有，防重复计奖，见 `test/check_dup_events.cjs`）。
 - [x] i18n EN 全量（find_missing_en=0）、en_smoke 通过；存档往返后计数不丢（flags/meta 已序列化）。

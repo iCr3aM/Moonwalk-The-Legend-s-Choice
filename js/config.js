@@ -57,7 +57,9 @@ window.MJ = window.MJ || {};
     // —— Phase 2 内容扩充（可达性由 compute_ach_reach N=5000 实测）——
     ACH_TOY_DRUM: 0.2644, ACH_FIRST_LIGHT: 0.7652, ACH_PEACE_AMBASSADOR: 0.5986,
     ACH_ELDEST_BOND: 0.2358, ACH_RECLUSE_PEACE: 0.255, ACH_STAGE_LEGEND: 0.0148,
-    ACH_COMEBACK_KING: 0.0374, ACH_DIGITAL_ERA: 0.138, ACH_LEGACY_2026: 0.1412, ACH_WHOLE_LIFE: 0.116
+    ACH_COMEBACK_KING: 0.0374, ACH_DIGITAL_ERA: 0.138, ACH_LEGACY_2026: 0.1412,     ACH_WHOLE_LIFE: 0.116,
+  ACH_ALT_FORK: 0, ACH_ALT_STAY_MOTOWN: 0, ACH_ALT_NO_QJ: 0, ACH_ALT_HEALED: 0,
+  ACH_ALT_MEDIA_MOGUL: 0, ACH_ALT_PEACE_LAUREATE: 0, ACH_ALT_SURVIVE_LEGACY: 0, ACH_ALT_QUIET_RETIREE: 0
   };
   // 结局稀有度（普通在最上、传奇在最下）。按用户反馈进一步下调：偏向"设计可达性/可达成感"
   // （配合图鉴「如何达成」配方，让玩家觉得稀有结局也能 pursuit），而非纯随机命中率。
@@ -69,7 +71,9 @@ window.MJ = window.MJ || {};
     END_ETERNAL: 'rare', END_SURVIVE_DEBT: 'rare', END_FINANCIAL: 'rare',
     END_PERFECT: 'epic', END_STATESMAN: 'epic', END_ART_PEAK: 'epic',
     END_TRAGIC: 'legendary', END_TRUE_ETERNAL: 'legendary',
-    END_ALT_STAY_MOTOWN: 'rare'
+    END_ALT_STAY_MOTOWN: 'rare',
+    END_ALT_NO_QJ: 'rare', END_ALT_HEALED: 'rare', END_ALT_MEDIA_MOGUL: 'epic',
+    END_ALT_PEACE_LAUREATE: 'epic', END_ALT_SURVIVE_LEGACY: 'legendary', END_ALT_QUIET_RETIREE: 'rare'
   };
 
   // 元路线破平次序：艺术 > 慈善 > 商业 > 隐士（GDD 7.2 注释）
@@ -126,9 +130,45 @@ window.MJ = window.MJ || {};
       monologue: '灼伤、药物，与那场永远停在 2009 年的夏天——你的故事被太多人写过，却少有人真正读懂。\n聚光灯有多亮，身后的影子就有多长。历史会记得你的旋律，也会记得你没能躲过的那些暗箭。'
     },
     END_ALT_STAY_MOTOWN: {
-      name: '厂牌老兵', icon: '🎺', tone: '安稳、温情', year: 2009, summary: '留在 Motown，与兄弟共度一生，艺术中庸却家庭安稳。',
+      name: '厂牌老兵', icon: '🎺', tone: '安稳、温情', year: 2009, assumption: true, summary: '留在 Motown，与兄弟共度一生，艺术中庸却家庭安稳。',
       hint: '在 1975 的岔口选择「留在 Motown」（架空决策 BP1），走一条不走单飞传奇的家族路线。',
       monologue: '没有 Epic 的改名风波，没有 solo 的孤峰，你们始终是「杰克逊五人组」。\n唱片销量或许少了几座山峰，可年夜饭的桌上永远坐着所有人——有些荣耀，本来就该一家人分着领。'
+    },
+    END_ALT_NO_QJ: {
+      name: '独立制作人', icon: '🎚️', tone: '异色、锋芒', year: 2009, assumption: true,
+      summary: '不与 Quincy Jones 合作，独立操盘专辑与乐团，走出一条商业异色的音乐路。',
+      hint: '在 1979 的岔口选择「独立制作」（架空决策 BP2），不依托金牌制作人，自掌创作。',
+      monologue: '没有 Quincy Jones 的金牌招牌，你自己握住了调音台。路走得磕绊，却每一拍都刻着自己的名字。\n销量或许少了几座山峰，但当你在空荡的录音棚里回放成品，那声音里有种谁也夺不走的自由。'
+    },
+    END_ALT_HEALED: {
+      name: '晚年安康', icon: '🌿', tone: '安宁、释然', year: 2009, assumption: true,
+      summary: '1984 百事意外后稳妥康复，远离喧嚣，于静好中安度晚年。',
+      hint: '在 1984 的岔口选择「稳妥康复」（架空决策 BP3，§17.15 仅中性呈现），走安康隐士线。',
+      monologue: '那年的灼伤没有拖垮你。你按时养伤、按时退场，把舞台交给更年轻的人。\n晚年住在有院子的房子里，偶尔听听旧唱片——有些伤口，交给时间，比交给聚光灯愈合得更好。'
+    },
+    END_ALT_MEDIA_MOGUL: {
+      name: '传媒大亨', icon: '📡', tone: '雄厚、冷峻', year: 2009, assumption: true,
+      summary: '购入 Beatles 版权、创立媒体帝国，把音乐版图扩张成传媒王朝。',
+      hint: '在商业版图的岔口选择「创立媒体帝国」（架空决策 BP6），强化商业巨擘为专属线。',
+      monologue: '你不满足于拥有一首歌。ATV、Sony，再到整座媒体帝国——你把旋律变成了频道，把掌声变成了资产。\n世人说你贪婪，你只笑：真正的艺术家，也要懂得如何让作品活过自己。'
+    },
+    END_ALT_PEACE_LAUREATE: {
+      name: '和平桂冠', icon: '🕊️', tone: '光辉、仁爱', year: 2009, assumption: true,
+      summary: '以慈善转身应对风波、累积国际荣誉，登顶慈善家之巅。',
+      hint: '在 1993 / 2003 风波中选择「慈善转身」（架空决策 BP4/BP5），把善意堆到极致并收获国际荣誉。',
+      monologue: '当非议如潮水涌来，你没有迎战，而是把双手伸向了更远处等待被照亮的人。\n国际荣誉的桂冠加冕在你肩头，你却说：真正想救的，从来不是自己的名声。'
+    },
+    END_ALT_SURVIVE_LEGACY: {
+      name: '续章长寿', icon: '🕰️', tone: '传奇、悠远', year: 2025, assumption: true,
+      summary: '2009 之后仍续写传奇，在更长的岁月里活得辉煌而清醒。',
+      hint: '在 2009 之后的岔口选择「存活更久」（架空决策 BP7，扩展续章线），让人生另有续集。',
+      monologue: '2009 年的夏天没有成为终点。你学着把脚步放慢，把舞台让给偶尔的回归，把更多时间留给镜子前的自己。\n多年以后人们才明白：传奇未必死于盛年，有时它只是换了一种活法，继续在场。'
+    },
+    END_ALT_QUIET_RETIREE: {
+      name: '归隐庄园', icon: '🏡', tone: '圆满、恬淡', year: 2009, assumption: true,
+      summary: '家庭稳固、主动退隐庄园，于天伦与静好中圆满收束。',
+      hint: '在家族稳固时选择「主动退隐庄园」（架空决策，家庭向），把余生交给亲情与庭院。',
+      monologue: '功名摆在架子上积了灰，你却一点不后悔。庄园的黄昏里，孩子绕膝，老友偶尔造访。\n你终于懂得：所谓圆满，不过是有人在门口等你回家，而你也真的，想回家了。'
     },
     END_ART_PEAK: {
       name: '艺术巅峰', icon: '🎵', tone: '辉煌、悲壮', year: 2009, summary: '克服依赖，以最高艺术谢幕。',
@@ -316,12 +356,30 @@ window.MJ = window.MJ || {};
       check: function () { try { return MJ.eggSystem && MJ.eggSystem.count && MJ.eggSystem.count() >= 8; } catch (e) { return false; } } },
     { id: 'ACH_VARIANT_20', name: '变体收藏家', icon: '🎲', rarity: 'epic', desc: '单局内触发 ≥20 次变体事件。',
       check: function (s) { return (s.stats.variants || 0) >= 20; } },
-    { id: 'ACH_ALL_ENDINGS', name: '人生百态', icon: '🗺️', rarity: 'legendary', desc: '解锁全部 18 个结局。',
+    { id: 'ACH_ALL_ENDINGS', name: '人生百态', icon: '🗺️', rarity: 'legendary', desc: '解锁全部 25 个结局。',
       check: function () { try { var g = MJ.saveSystem.getGallery ? MJ.saveSystem.getGallery() : {}; return Object.keys(g).length >= Object.keys(MJ.config.endings).length; } catch (e) { return false; } } },
     { id: 'ACH_SPEEDRUN', name: '速通人生', icon: '⚡', rarity: 'rare', desc: '以极简路径（极少节点）抵达任一结局。',
       check: function (s) { return (s.stats.events || 99) <= 24; } },
     { id: 'ACH_PACIFIST', name: '清白之躯', icon: '⚖️', rarity: 'rare', desc: '整局未卷入任何法律争议。',
       check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict && !s.flags.legalTrouble; } },
+
+    // —— §17.x 架空历史（alt 结局）专属成就 ——
+    { id: 'ACH_ALT_FORK', name: '岔路微光', icon: '🌀', rarity: 'uncommon', desc: '在真实历史的岔口，做出了一个改变人生走向的假设抉择。',
+      check: function (s) { var tl = s.timeline || {}; return Object.keys(tl).length > 0; } },
+    { id: 'ACH_ALT_STAY_MOTOWN', name: '厂牌老兵', icon: '🎺', rarity: 'rare', desc: '留在 Motown，与兄弟共度一生。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_STAY_MOTOWN'; } },
+    { id: 'ACH_ALT_NO_QJ', name: '独立制作人', icon: '🎚️', rarity: 'rare', desc: '不与 Quincy Jones 合作，自掌创作。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_NO_QJ'; } },
+    { id: 'ACH_ALT_HEALED', name: '晚年安康', icon: '🌿', rarity: 'rare', desc: '1984 意外后稳妥康复，安度晚年。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_HEALED'; } },
+    { id: 'ACH_ALT_MEDIA_MOGUL', name: '传媒大亨', icon: '📡', rarity: 'epic', desc: '创立媒体帝国，扩张音乐版图。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_MEDIA_MOGUL'; } },
+    { id: 'ACH_ALT_PEACE_LAUREATE', name: '和平桂冠', icon: '🕊️', rarity: 'epic', desc: '以慈善转身登顶慈善家之巅。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_PEACE_LAUREATE'; } },
+    { id: 'ACH_ALT_SURVIVE_LEGACY', name: '续章长寿', icon: '🕰️', rarity: 'legendary', desc: '2009 之后仍续写传奇。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_SURVIVE_LEGACY'; } },
+    { id: 'ACH_ALT_QUIET_RETIREE', name: '归隐庄园', icon: '🏡', rarity: 'rare', desc: '家庭稳固、主动退隐庄园。',
+      check: function (s, ctx) { return ctx && ctx.ending === 'END_ALT_QUIET_RETIREE'; } },
 
     // —— §17.16 童年补完 / 与兄长和解 专属成就（消除内容孤儿）——
     { id: 'ACH_GARY', name: '盖瑞的孩子', icon: '🏠', rarity: 'common', desc: '盖瑞市杰克逊街的小屋，九个孩子的笑声里，藏着一个巨星的起点。',

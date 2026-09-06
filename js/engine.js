@@ -157,6 +157,20 @@ window.MJ = window.MJ || {};
     return { score: score, grade: grade };
   };
 
+  // 架空历史（alt 结局）解析：将 BP 决策写入的 state.timeline 分叉 / flag 映射到对应假设结局。
+  // 仅返回 id 或 null；由 resolveEnding 在「硬约束之后、路线型 canonical 之前」的 ALT BAND 调用。
+  function resolveAltEnding(state) {
+    var tl = state.timeline;
+    if (!tl) return null;
+    if (tl['1975'] === 'motown') return 'END_ALT_STAY_MOTOWN';
+    if (tl['1979'] === 'solo_prod') return 'END_ALT_NO_QJ';
+    if (tl['1984'] === 'safe') return 'END_ALT_HEALED';
+    if (tl['biz'] === 'empire') return 'END_ALT_MEDIA_MOGUL';
+    if (state.flags.altPeace === true) return 'END_ALT_PEACE_LAUREATE';
+    if (state.flags.altQuietRetiree === true) return 'END_ALT_QUIET_RETIREE';
+    return null;
+  }
+
   MJ.resolveEnding = function (state, entryId) {
     var f = state.flags, a = state.attributes, m = state.meta;
     var burned = f.isPepsiBurned === true;
@@ -166,13 +180,13 @@ window.MJ = window.MJ || {};
     var dom = dominantMeta(m);
 
     if (entryId === 'END_PLAIN') return 'END_PLAIN';          // 1. 硬性分支（1_5 留盖瑞早退）
-    if (f.isSolo === false) return 'END_FAMILY';              // 2. 始终未单飞
     // 3. 真·永恒隐藏结局（终极）：不烧伤/不负债 + 艺术&声誉&健康极致 + 慈善&艺术路线极致 + 双加冕标志（多方极致收敛）
     if (!burned && !debt && (a.art || 0) >= 85 && (a.reputation || 0) >= 85 && (a.health || 0) >= 75 && (m.phil || 0) >= 3 && (m.artPath || 0) >= 2 && (f.thriller25 && f.anniv2001)) {
       return 'END_TRUE_ETERNAL';
     }
     // 3b. 续章（假设 2009 未离世）：永不归死亡结局，按人生状态收束（普通/稀有/史诗/传奇皆可抵达）
     if (f.survived2009 === true) {
+      if (state.timeline && state.timeline['2009'] === 'survive') return 'END_ALT_SURVIVE_LEGACY'; // 架空续章长寿（BP7）
       if (debt && !held) return 'END_SURVIVE_DEBT';
       if (debt) return 'END_FINANCIAL';
       if ((a.art || 0) >= 66 && (a.reputation || 0) >= 56 && (a.health || 0) >= 46 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL';
@@ -196,11 +210,16 @@ window.MJ = window.MJ || {};
       return 'END_FINANCIAL';
     }
     // 以下仅 !burned & !debt：成功型 / 普通型结局（按"更具体者优先"排序）
+    // 13 声誉承压（M5 媒体轴联动）：有丑闻标志且声誉/媒体仍偏低 → 丑闻定义legacy；
+    //    前置到「成功型结局」之前（法律类 END_CONTROVERSIAL 仍胜出 alt，符合用户决策"硬约束/法律仍胜出"）。
+    if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
+    // ★ ALT BAND（阶段 2：提升为主支；路线型 canonical 含 END_RECLUSE* 亦被 alt 覆盖，见用户决策"精英优先、路线重皮"）
+    var _alt = resolveAltEnding(state);
+    if (_alt) return _alt;
+    // 路线型 canonical：隐士线（置于 ALT BAND 之后，使分叉者优先拿对应 alt 结局）
     if (dom === 'recluse' && a.health >= 50 && (a.loneliness || 0) < 55) return 'END_RECLUSE_SERENE'; // 4a 平和隐士（§17.7，放宽孤独阈值 <55）
     if (dom === 'recluse' && a.health >= 35) return 'END_RECLUSE';        // 4
-    // 13 声誉承压（M5 媒体轴联动）：有丑闻标志且声誉/媒体仍偏低 → 丑闻定义legacy；
-    //    前置到「成功型结局」之前，否则会被 MOGUL/PHIL/PERFECT 等抢走而永远不可达。
-    if ((a.reputation < 72 && f.settlement1993) || ((a.media || 0) < 40 && (f.settlement1993 || f.secondCharge))) return 'END_CONTROVERSIAL';
+    if (f.isSolo === false) return 'END_FAMILY';              // 始终未单飞（置于 alt 之后：分叉者优先拿对应 alt 结局）
     if (m.mogul >= 2 && dom === 'mogul' && !debt && a.wealth >= 60) return 'END_MOGUL';      // 5 商业须为主导路线，避免吞掉普通好结局池
     if ((a.art || 0) >= 70 && (m.mogul || 0) >= 1 && f.cp_innovation >= 80) return 'END_INNOVATOR'; // 5a 音乐技术先驱（§17.7）
     // 8 完美传奇（干净人生，§17.7 可达性）：未走主导特殊路线、无提携/加冕标志、身心健康且声誉达标 → 优先收束，
@@ -211,8 +230,8 @@ window.MJ = window.MJ || {};
     if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 44) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可，放宽艺术阈值 ≥44）
     if (a.art >= 60 && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志（放宽艺术 ≥60 / 健康 ≥42）
     if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（兜底，需声誉达标）
-    // 架空结局（方案 A，spec §11 阶段 1）：canonical 优先；主线条件不足（将落入默认 END_TRAGIC）且时间线分叉满足时，落入 alt 结局
-    if (state.timeline && state.timeline['1975'] === 'motown') return 'END_ALT_STAY_MOTOWN';
+
+
     return 'END_TRAGIC';                                     // 14 默认
   };
 

@@ -37,7 +37,13 @@ var ucases = [
   ['END_INNOVATOR', { meta: { mogul: 1 }, attr: { art: 85 }, flags: { cp_innovation: 85 } }],
   ['END_MENTOR', { meta: { collab: 2 }, attr: { family: 55, art: 65 } }],
   ['END_STATESMAN', { meta: { phil: 2 }, attr: { reputation: 75, family: 60 } }],
-  ['END_ALT_STAY_MOTOWN', { timeline: { '1975': 'motown' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }]
+  ['END_ALT_STAY_MOTOWN', { timeline: { '1975': 'motown' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_NO_QJ', { timeline: { '1979': 'solo_prod' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_HEALED', { timeline: { '1984': 'safe' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_MEDIA_MOGUL', { timeline: { 'biz': 'empire' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_PEACE_LAUREATE', { flags: { altPeace: true }, meta: { phil: 3 }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_SURVIVE_LEGACY', { flags: { survived2009: true }, timeline: { '2009': 'survive' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  ['END_ALT_QUIET_RETIREE', { flags: { altQuietRetiree: true }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }]
 ];
 
 var pass = 0, fail = 0, bad = [];
@@ -57,7 +63,7 @@ if (ids.length !== 18 + altIds.length) { console.log('FAIL 结局总数应为 18
 ids.forEach(function (id) { if (!MJ.config.endingRarity[id]) { console.log('FAIL 缺 endingRarity: ' + id); fail++; } });
 
 // 新结局 EN 文案
-['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE', 'END_ALT_STAY_MOTOWN'].forEach(function (id) {
+altIds.concat(['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE']).forEach(function (id) {
   ['name', 'tone', 'summary', 'monologue'].forEach(function (f) {
     if (!MJ.i18n.dict.en['ending.' + id + '.' + f]) { console.log('FAIL 缺 EN: ending.' + id + '.' + f); fail++; }
   });
