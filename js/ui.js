@@ -47,7 +47,7 @@ window.MJ = window.MJ || {};
       b.addEventListener('click', function () { chooseLang(b.getAttribute('data-lang')); });
     });
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('lang-modal'); });
-    document.getElementById('lang-close').addEventListener('click', function () { closeOverlay('lang-modal'); });
+    overlay.querySelector('#lang-close').addEventListener('click', function () { closeOverlay('lang-modal'); });
     document.body.appendChild(overlay);
   }
   function chooseLang(lang) {
