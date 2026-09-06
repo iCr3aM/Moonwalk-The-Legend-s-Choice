@@ -756,10 +756,46 @@ window.MJ = window.MJ || {};
 
   // 海报名言库：取自 docs/mjwiki/wiki/Michael Jackson - Wikiquote.html（逐条核对可考）
   var _lastPosterQuote = null;
+  // 海报名言库：名言逐条取自 docs/mjwiki/wiki/Michael Jackson - Wikiquote.html（含出处注释）；
+  // 歌词为歌曲原句（注明出处）。均控制 ≤2 行以适配方案 B 排版。
   var MJ_POSTER_QUOTES = [
-    { zh: '谎言奔跑如冲刺，真相奔跑如马拉松。', en: 'Lies run sprints, but the truth runs marathons.' },
-    { zh: '若你降生时知被爱、离去时亦知被爱，其间一切皆可面对。', en: 'If you enter this world knowing you are loved and you leave this world knowing the same, then everything that happens in between can be dealt with.' },
-    { zh: '“我爱你。”——那是落笔之前，写在词下的结局。', en: 'I love you. That’ll be the ending of this under the words.' }
+    // —— 名言（Wikiquote 逐条核对）——
+    { zh: '谎言奔跑如冲刺，真相奔跑如马拉松。', en: 'Lies run sprints, but the truth runs marathons.' }, // Jet, Nov 2003
+    { zh: '若你降生时知被爱、离去时亦知被爱，其间一切皆可面对。', en: 'If you enter this world knowing you are loved and you leave this world knowing the same, then everything that happens in between can be dealt with.' }, // Dancing the Dream, 1992
+    { zh: '“我爱你。”——那是落笔之前，写在词下的结局。', en: 'I love you. That’ll be the ending of this under the words.' }, // Moonwalker
+    { zh: '纵然世界充满恨，我们仍须敢于希望。', en: 'In a world filled with hate, we must still dare to hope.' }, // funeral invitation, 2009
+    { zh: '我并无偏见，只是时候该有第一位黑人王者了。', en: 'I am not prejudiced, it’s just time for the first Black King now.' }, // handwritten note, 1987
+    { zh: '意识借创造表达自身；我们栖居的世界，是造物者的舞。', en: 'Consciousness expresses itself through creation. This world we live in is the dance of the Creator.' }, // Dangerous inlay “The Dance”, 1991
+    { zh: '我只是乐声流经的管道；荣耀不归我——那是神的工作，祂借我做信使。', en: 'I’m just the source through which music flows. I can’t take credit for it — it’s God’s work, and He’s using me as the messenger.' }, // Ebony/Jet, 1992
+    { zh: '我渐渐明白，父亲哪怕严厉，也藏着一种爱——他逼我，是因为爱我。', en: 'I have begun to see that even my father’s harshness was a kind of love. He pushed me because he loved me.' }, // Oxford “Heal the Kids”, 2001
+    { zh: '别人模仿我，我毫无芥蒂——那是一种赞美。', en: 'I have no problem with them imitating me. It’s a compliment.' }, // TV Guide, 2001
+    { zh: '我知自己属何族。照镜便知——我是黑人。', en: 'I know my race. I just look in the mirror. I know I’m black.' }, // NAA remarks, 2002
+    { zh: '我和任何人一样，会受伤、会流血，也容易羞窘。', en: 'I’m just like anyone. I cut and I bleed. And I embarrass easily.' }, // press statement (BBC), 2003
+    { zh: '我向来想做影响、启迪每一代人的音乐。谁又甘于速朽？', en: 'I always wanted to do music that influences and inspires each generation. Who wants mortality?' }, // Ebony, 2007
+    { zh: '爱，永生不灭。', en: 'Love lives forever.' }, // This Is It, 2009
+    { zh: '一切皆因爱……以爱之名，L.O.V.E.', en: 'It’s all for love… With the love, L.O.V.E.' }, // This Is It, 2009
+    { zh: '我爱这颗星球，爱那些树……改变，始于我们。', en: 'I love the Planet, I love the trees… It starts with us.' }, // This Is It, 2009 (environment)
+    { zh: '我绝不会拒绝给孩子爱。', en: 'I will never deny a child love.' }, // interview, 2003
+    { zh: '未与一人促膝长谈，便不要妄断其人。', en: 'Do not judge a person unless you’ve talked to them one-on-one.' }, // Oprah, 1993
+    { zh: '我曾极度、蚀骨地孤独。', en: 'I used to be very lonely, painfully lonely.' }, // interview, 2003
+    { zh: '我化作歌者与歌……不息起舞，直到唯有舞本身。', en: 'I become the singer and the song… I keep on dancing — until there is only the dance.' }, // Dangerous “The Dance”, 1991
+    { zh: '我从梦中醒来，惊呼“快记下来”……我不过是把天赐之乐带进人间的信使。', en: 'I wake up from dreams and go “Wow, put this down on paper”… I’m just a courier bringing it into the world.' }, // Rolling Stone, 1983
+    { zh: '不如就说我是从火星来的外星人？他们什么都信。', en: 'Why not just tell people I’m an alien from Mars? They’ll believe anything.' }, // re: Bubbles, 1984
+    // —— 歌词（歌曲原句，注明出处）——
+    { zh: '治愈世界，让它成为更美好的地方。', en: 'Heal the world, make it a better place.' }, // 《Heal the World》
+    { zh: '我先从镜中的自己开始改变。', en: 'I’m starting with the man in the mirror.' }, // 《Man in the Mirror》
+    { zh: '我们就是世界，我们就是孩子。', en: 'We are the world, we are the children.' }, // 《We Are The World》
+    { zh: '别停，直到你满足为止。', en: 'Don’t stop ’til you get enough.' }, // 《Don’t Stop ’Til You Get Enough》
+    { zh: '你并不孤单。', en: 'You are not alone.' }, // 《You Are Not Alone》
+    { zh: '无论黑白，都不重要。', en: 'It don’t matter if you’re black or white.' }, // 《Black or White》
+    { zh: '比利·琼不是我的爱人。', en: 'Billie Jean is not my lover.' }, // 《Billie Jean》
+    { zh: '安妮，你还好吗？', en: 'Annie, are you OK?' }, // 《Smooth Criminal》
+    { zh: '他们根本不在乎我们。', en: 'All I wanna say is that they don’t really care about us.' }, // 《They Don’t Care About Us》
+    { zh: '做出改变。', en: 'Make that change.' }, // 《Man in the Mirror》
+    { zh: '你心深处有处地方，我知道那是爱。', en: 'There’s a place in your heart, and I know that it is love.' }, // 《Heal the World》
+    { zh: '若想让世界更好，先审视自己，再做出改变。', en: 'If you wanna make the world a better place, take a look at yourself and then make a change.' }, // 《Man in the Mirror》
+    { zh: '我们就是点亮明日的人，所以开始付出吧。', en: 'We are the ones who make a brighter day, so let’s start giving.' }, // 《We Are The World》
+    { zh: '持守信念。', en: 'Keep the faith.' } // 《Keep the Faith》
   ];
 
   function createPoster(state, endingId) {
@@ -1031,15 +1067,16 @@ window.MJ = window.MJ || {};
     }
     _lastPosterQuote = _qObj;
     var _posterQuote = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
-    ctx.fillStyle = G.base; ctx.font = 'italic 16px "PingFang SC",sans-serif';
+    // 方案 B：字号 15px、行距 22，支持至多 2 行（2 行时版权≈1238，仍在边框 1256 内）
+    ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qLines = wrapCenter(ctx, _posterQuote, W - 120);
-    var taglineY = Math.max(H - 110, y + 30);
-    for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 24);
-    var _sigY = taglineY + _qLines.length * 24 + 16;
+    var taglineY = Math.max(H - 120, y + 30);
+    for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 22);
+    var _sigY = taglineY + _qLines.length * 22 + 14;
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
     ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sigY);
     ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif';
-    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sigY + 22);
+    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sigY + 20);
 
     return cv;
   }
