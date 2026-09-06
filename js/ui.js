@@ -754,6 +754,14 @@ window.MJ = window.MJ || {};
     return rev;
   }
 
+  // 海报名言库：取自 docs/mjwiki/wiki/Michael Jackson - Wikiquote.html（逐条核对可考）
+  var _lastPosterQuote = null;
+  var MJ_POSTER_QUOTES = [
+    { zh: '谎言奔跑如冲刺，真相奔跑如马拉松。', en: 'Lies run sprints, but the truth runs marathons.' },
+    { zh: '若你降生时知被爱、离去时亦知被爱，其间一切皆可面对。', en: 'If you enter this world knowing you are loved and you leave this world knowing the same, then everything that happens in between can be dealt with.' },
+    { zh: '“我爱你。”——那是落笔之前，写在词下的结局。', en: 'I love you. That’ll be the ending of this under the words.' }
+  ];
+
   function createPoster(state, endingId) {
     // 统一金色调色板（与 CSS --gold / --gold-bright / --gold-deep 同族，集中管理避免 Canvas 与 DOM 各一套金色）
     var G = {
@@ -773,6 +781,7 @@ window.MJ = window.MJ || {};
     var eSum = T('ending.' + endingId + '.summary', null, e.summary);
     var eMon = T('ending.' + endingId + '.monologue', null, e.monologue);
     var a = state.attributes;
+    var _gw = (state.meta && state.meta.grammyWins) || 0; // 格莱美总座数（planner 写入）
     var dm = MJ.dominantMeta(state.meta);
     var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
     var legend = MJ.legendScore(state);
@@ -887,6 +896,10 @@ window.MJ = window.MJ || {};
     y += 54;
     ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth), W / 2, y);
+    // —— 格莱美总座数模块 ——
+    y += 28;
+    ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
+    ctx.fillText('🏆 ' + T('ui.posterGrammy', { n: _gw }, '格莱美 {n} 座'), W / 2, y);
 
     y += 40;
     ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
@@ -895,13 +908,18 @@ window.MJ = window.MJ || {};
     var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
     ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
     ctx.textBaseline = 'middle';
+    var _cap = Math.min(thisRun.length, 33); // 封顶 3 行，超出以 ＋N 提示，避免挤压边缘
     if (thisRun.length) {
-      for (var k = 0; k < thisRun.length; k++) {
+      for (var k = 0; k < _cap; k++) {
         var c = k % perRow, r = (k / perRow) | 0;
         ctx.fillStyle = G.bright;
         try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {}
       }
-      y += (((thisRun.length / perRow) | 0) + (thisRun.length % perRow ? 1 : 0)) * 42 + 18;
+      y += (((_cap / perRow) | 0) + (_cap % perRow ? 1 : 0)) * 42 + 18;
+      if (thisRun.length > 33) {
+        ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText(T('ui.posterAchMore', { n: thisRun.length - 33 }, '＋{n} 枚未显示'), W / 2, y); y += 20;
+      }
     } else {
       ctx.fillStyle = G.dim2; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
       ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40;
@@ -995,12 +1013,33 @@ window.MJ = window.MJ || {};
     y = wrapParagraph(ctx, narr, 60, y, W - 120, 28, H - 130);
 
     ctx.textAlign = 'center';
-    ctx.fillStyle = G.base; ctx.font = 'italic 17px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterTagline', null, '每个人都是自己人生的词曲作者。'), W / 2, H - 96);
+    // 名言（随机 + 去重上一条，居中多行；相对最后内容定位，避免被成就挤压覆盖）
+    function wrapCenter(c, text, maxW) {
+      var lines = [], cur = '';
+      for (var i = 0; i < text.length; i++) {
+        var ch = text[i];
+        if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; }
+        else cur += ch;
+      }
+      if (cur) lines.push(cur);
+      return lines;
+    }
+    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
+    if (MJ_POSTER_QUOTES.length > 1) {
+      var _guard = 0;
+      while (_qObj === _lastPosterQuote && _guard++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
+    }
+    _lastPosterQuote = _qObj;
+    var _posterQuote = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
+    ctx.fillStyle = G.base; ctx.font = 'italic 16px "PingFang SC",sans-serif';
+    var _qLines = wrapCenter(ctx, _posterQuote, W - 120);
+    var taglineY = Math.max(H - 110, y + 30);
+    for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 24);
+    var _sigY = taglineY + _qLines.length * 24 + 16;
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, H - 70);
+    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sigY);
     ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif';
-    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, H - 46);
+    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sigY + 22);
 
     return cv;
   }
