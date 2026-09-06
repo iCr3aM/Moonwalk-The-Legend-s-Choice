@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>测试场 · MJ 节点可达性 / UI 显示 / 流程图</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #1a1208; color: #f3e2b0; }
+    #wrap { display: flex; min-height: 100vh; }
+    #controls {
+      width: 380px; flex: 0 0 380px; background: #241a0e; border-right: 1px solid #4a3a1e;
+      padding: 14px; overflow: auto; max-height: 100vh; position: sticky; top: 0;
+    }
+    #controls h3 { margin: 16px 0 6px; font-size: 13px; color: #ffcf6b; border-bottom: 1px solid #4a3a1e; padding-bottom: 4px; }
+    #controls h3:first-child { margin-top: 0; }
+    #controls label { display: block; font-size: 12px; margin: 6px 0 2px; color: #d9c089; }
+    #controls select, #controls textarea, #controls input[type=number], #controls input[type=text] {
+      width: 100%; background: #15100a; color: #f3e2b0; border: 1px solid #4a3a1e;
+      border-radius: 6px; padding: 6px; font-size: 12px; font-family: inherit;
+    }
+    #controls textarea { height: 60px; resize: vertical; font-family: ui-monospace, Menlo, Consolas, monospace; }
+    .btn2 { background: #7a5a23; color: #fff; border: none; border-radius: 6px; padding: 7px 10px; margin: 6px 6px 0 0; cursor: pointer; font-size: 12px; }
+    .btn2:hover { background: #93702c; }
+    .btn2.ghost { background: #3a2c14; }
+    .attr { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 12px; }
+    .attr > span:first-child { width: 34px; color: #d9c089; }
+    .attr input[type=range] { flex: 1; }
+    .attr .val { width: 32px; text-align: right; color: #ffcf6b; }
+    table { border-collapse: collapse; width: 100%; font-size: 11px; margin-top: 6px; }
+    th, td { border: 1px solid #4a3a1e; padding: 3px 5px; text-align: left; }
+    th { background: #33260f; color: #ffcf6b; position: sticky; top: 0; }
+    td.zero { color: #ff7a7a; background: #3a1414; }
+    tr.warn td { color: #ffd27a; }
+    .ok { color: #9be59b; }
+    .warn { color: #ffd27a; }
+    .err { color: #ff7a7a; }
+    #simOut { max-height: 320px; overflow: auto; margin-top: 6px; }
+    #banner { font-size: 12px; color: #ffd27a; min-height: 16px; margin: 4px 0 8px; line-height: 1.4; }
+    .note { font-size: 11px; color: #9a8a5e; line-height: 1.5; }
+    .seg { display: inline-flex; gap: 0; }
+    .seg button { border-radius: 0; margin: 6px 0 0; }
+    .seg button:first-child { border-radius: 6px 0 0 6px; }
+    .seg button:last-child { border-radius: 0 6px 6px 0; margin-left: -1px; }
+
+    /* 主区：标签页 + 预览 + 流程图 */
+    #mainArea { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    #tabs { display: flex; background: #241a0e; border-bottom: 1px solid #4a3a1e; }
+    .tab { background: transparent; color: #d9c089; border: none; padding: 11px 18px; cursor: pointer; font-size: 13px; border-bottom: 2px solid transparent; }
+    .tab.act { color: #ffcf6b; border-bottom-color: #ffcf6b; }
+    #app { flex: 1; overflow: auto; }
+    #flowView { display: flex; flex: 1; min-height: 0; }
+    #flowToolbar { width: 210px; flex: 0 0 210px; background: #241a0e; border-right: 1px solid #4a3a1e; padding: 12px; overflow: auto; }
+    #flowToolbar h4 { margin: 4px 0 6px; font-size: 12px; color: #ffcf6b; }
+    #flowToolbar label { display: block; font-size: 12px; margin: 4px 0; color: #d9c089; }
+    #flowCanvas { flex: 1; overflow: hidden; position: relative; background: #15100a; touch-action: none; user-select: none; }
+    #flowSvg { width: 100%; height: 100%; display: block; cursor: grab; }
+    #flowRoot { will-change: transform; }
+    #flowDetail { width: 320px; flex: 0 0 320px; background: #241a0e; border-left: 1px solid #4a3a1e; padding: 14px; overflow: auto; font-size: 12px; }
+    #flowDetail h2 { font-size: 15px; margin: 0 0 8px; color: #ffcf6b; }
+    #flowDetail h3 { font-size: 12px; margin: 12px 0 4px; color: #ffcf6b; border-bottom: 1px solid #4a3a1e; padding-bottom: 3px; }
+    #flowDetail .kv { font-size: 11px; margin: 3px 0; color: #d9c089; }
+    #flowDetail .muted { color: #9a8a5e; }
+    #flowDetail .opts { margin: 0; padding-left: 18px; }
+    #flowDetail .opts li { margin: 5px 0; line-height: 1.4; }
+    #flowDetail .badge { display:inline-block; padding:1px 6px; border-radius:4px; font-size:10px; }
+    #flowDetail .badge.asm { background:#5a2a3a; color:#ffd2e0; }
+
+    .node rect { fill: #2e2310; stroke: #6b5424; stroke-width: 1.5; }
+    .node.auto rect { fill: #22303a; stroke: #3a5a6a; }
+    .node.ending rect { fill: #3a1f2e; stroke: #6a3a52; }
+    .node.variant rect { fill: #2f2a12; stroke: #8a6a2a; stroke-dasharray: 4 3; }
+    .node text { fill: #f3e2b0; font-size: 11px; pointer-events: none; }
+    .node .nid { fill: #a8915e; font-size: 9px; }
+    .node:hover rect { stroke: #ffcf6b; }
+    .node.dim { opacity: 0.12; }
+    .node.hl rect { stroke: #ffcf6b; stroke-width: 3; }
+    .edge { fill: none; stroke: #5a4a2a; stroke-width: 1.3; pointer-events: none; shape-rendering: optimizeSpeed; vector-effect: non-scaling-stroke; }
+    .edge.inject { stroke: #7a6a3a; stroke-dasharray: 5 4; }
+    .edge.dim { opacity: 0.06; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <div id="controls">
+      <h3>测试场 · 节点可达性 / UI 显示</h3>
+      <div class="note">复用真实游戏模块（js/*），无假数据：状态来自 <code>new MJ.GameState()</code>，UI 来自 <code>MJ.ui.showEvent</code>，可达性审计由真实 <code>MJ.engine</code> 驱动。</div>
+
+      <h3>语言</h3>
+      <div class="seg">
+        <button class="btn2" id="langZh">中文</button>
+        <button class="btn2" id="langEn">English</button>
+      </div>
+
+      <h3>事件选择 / 渲染</h3>
+      <label>选择事件（按类型分组）</label>
+      <select id="evSel"></select>
+      <div class="attr" style="margin-top:6px;">
+        <label style="margin:0;"><input type="checkbox" id="interactiveChk" /> 交互试玩（从此节点用真实引擎推进；否则纯预览、忽略条件、不可点击）</label>
+      </div>
+      <button class="btn2" id="renderBtn">渲染选中事件</button>
+      <div id="banner"></div>
+      <div class="note">当前查看：<span id="curView">—</span></div>
+
+      <h3>状态编辑器（真实 MJ.GameState）</h3>
+      <div class="attr"><span>健康</span><input type="range" id="attr_health" min="0" max="100" value="50"><span class="val" id="val_health">50</span></div>
+      <div class="attr"><span>声誉</span><input type="range" id="attr_reputation" min="0" max="100" value="50"><span class="val" id="val_reputation">50</span></div>
+      <div class="attr"><span>财富</span><input type="range" id="attr_wealth" min="0" max="100" value="50"><span class="val" id="val_wealth">50</span></div>
+      <div class="attr"><span>家庭</span><input type="range" id="attr_family" min="0" max="100" value="50"><span class="val" id="val_family">50</span></div>
+      <div class="attr"><span>艺术</span><input type="range" id="attr_art" min="0" max="100" value="50"><span class="val" id="val_art">50</span></div>
+      <div class="attr"><span>压力</span><input type="range" id="attr_stress" min="0" max="100" value="50"><span class="val" id="val_stress">50</span></div>
+      <label>flags（JSON，如 {"survived2009":true}）</label>
+      <textarea id="flagsTa"></textarea>
+      <label>timeline（JSON，如 {"1975":"motown"}）</label>
+      <textarea id="tlTa"></textarea>
+      <button class="btn2" id="applyBtn">应用状态并重渲染</button>
+      <button class="btn2 ghost" id="resetBtn">重置为新游戏</button>
+
+      <h3>事件目录（静态可达性）</h3>
+      <label>过滤 id（含）</label>
+      <input type="text" id="catFilter" placeholder="如 1_8 / V_ / END_" />
+      <table id="catTable"><thead><tr><th>id</th><th>类型</th><th>年/窗</th><th>变体</th><th>强制</th><th>权重</th><th>条件满足</th><th>next</th></tr></thead><tbody id="catBody"></tbody></table>
+
+      <h3>结局目录</h3>
+      <table><thead><tr><th>id</th><th>类型</th><th>名称</th></tr></thead><tbody id="endBody"></tbody></table>
+
+      <h3>可达性审计（真实引擎模拟）</h3>
+      <label>局数 N（1–20000）</label>
+      <input type="number" id="simN" value="1000" min="1" max="20000" />
+      <label>随机种子（整数，留空=默认）</label>
+      <input type="number" id="simSeed" placeholder="0x9E3779B9" />
+      <button class="btn2" id="simBtn">运行审计</button>
+      <div id="simOut"></div>
+    </div>
+
+    <div id="mainArea">
+      <div id="tabs">
+        <button class="tab act" id="tabPreview">事件预览</button>
+        <button class="tab" id="tabFlow">游戏流程图</button>
+      </div>
+      <div id="app" class="app"></div>
+      <div id="flowView" style="display:none">
+        <div id="flowToolbar">
+          <h4>查找 / 过滤</h4>
+          <input type="text" id="flowSearch" placeholder="事件 id 或标题含…" />
+          <label><input type="checkbox" id="flowShowVar" checked /> 显示变体</label>
+          <label><input type="checkbox" id="flowShowEnd" checked /> 显示结局</label>
+          <label><input type="checkbox" id="flowShowAuto" checked /> 显示自动事件</label>
+          <label><input type="checkbox" id="flowShowInject" /> 显示变体注入连线（默认关：连线极多会卡）</label>
+          <h4>视图</h4>
+          <button class="btn2" id="flowFit">适应窗口</button>
+          <button class="btn2" id="flowZoomIn">放大 +</button>
+          <button class="btn2" id="flowZoomOut">缩小 −</button>
+          <button class="btn2 ghost" id="flowRebuild">用当前语言/状态重建</button>
+          <h4>图例</h4>
+          <div class="note">▮ 主线/选项事件<br>▮ 自动事件<br>▮ 结局（含假设线）<br>▮ 变体（虚线框）<br>— 实线：选项/自动 next<br>··· 虚线：变体可注入节点</div>
+          <div class="note" style="margin-top:8px;">点击节点查看选项与结果详情。拖拽平移，滚轮缩放。</div>
+        </div>
+        <div id="flowCanvas">
+          <svg id="flowSvg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0 L8,4 L0,8 z" fill="#5a4a2a" />
+              </marker>
+            </defs>
+            <g id="flowRoot"></g>
+          </svg>
+        </div>
+        <div id="flowDetail"><div class="note">点击左侧流程图中的任意节点，查看该事件的全部选项与结果（next / 写入的 flags·timeline / 属性影响）。</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 与 index.html 完全相同的模块加载顺序（经典脚本，双击即可运行） -->
+  <script src="../js/config.js"></script>
+  <script src="../js/i18n.js"></script>
+  <script src="../js/i18n_events_en.js"></script>
+  <script src="../js/events.js"></script>
+  <script src="../js/planner.js"></script>
+  <script src="../js/state.js"></script>
+  <script src="../js/engine.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    function fatal(e) {
+      var m = (e && e.stack) ? e.stack : ((e && e.message) ? e.message : String(e));
+      var b = document.getElementById('banner');
+      if (b) { b.textContent = '运行时错误：' + m; b.className = 'err'; }
+      console.error(e);
+    }
+    window.addEventListener('error', function (e) { fatal(e.error || e); });
+
+    function mulberry32(a) {
+      return function () {
+        a |= 0; a = a + 0x6D2B79F5 | 0;
+        var t = Math.imul(a ^ a >>> 15, 1 | a);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    function escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+      });
+    }
+    function truncate(s, n) { s = String(s == null ? '' : s); return s.length > n ? s.slice(0, n - 1) + '…' : s; }
+    function evTitle(e) { return e.titleKey ? MJ.t(e.titleKey, state, e.title) : e.title; }
+    function optLabel(opt) { return opt.labelKey ? MJ.t(opt.labelKey, state, opt.label) : opt.label; }
+    // 归一化选项：原始数据可能是数组或 function(s)，统一成数组（并取本地化标签）
+    function evOptions(ev) {
+      if (MJ.localizeEvent) return MJ.localizeEvent(ev, state).options;
+      var o = ev.options;
+      return (typeof o === 'function') ? o(state) : (o || []);
+    }
+
+    var state = new MJ.GameState();
+    var $ = function (s) { return document.querySelector(s); };
+    var evSel = $('#evSel'), bannerEl = $('#banner');
+
+    function banner(msg, type) { bannerEl.textContent = msg || ''; bannerEl.className = type || ''; }
+
+    // ---------------- 事件预览 / 目录 / 审计 ----------------
+    function buildEventSelect() {
+      var groups = { main: {}, variant: {}, ending: {}, other: {} };
+      Object.keys(MJ.EVENTS).forEach(function (k) {
+        var e = MJ.EVENTS[k];
+        if (e.kind === 'ending') groups.ending[k] = e;
+        else if (e.variant) groups.variant[k] = e;
+        else if (e.kind === 'choice' || e.kind === 'auto') groups.main[k] = e;
+        else groups.other[k] = e;
+      });
+      function opts(map, label) {
+        var h = '<optgroup label="' + label + '">';
+        Object.keys(map).sort().forEach(function (k) { h += '<option value="' + k + '">' + k + '</option>'; });
+        return h + '</optgroup>';
+      }
+      evSel.innerHTML = opts(groups.main, '主线') + opts(groups.variant, '变体') + opts(groups.ending, '结局') + opts(groups.other, '其他');
+    }
+
+    function syncInputs() {
+      ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+        var el = $('#attr_' + k);
+        if (el) { el.value = state.attributes[k] || 0; $('#val_' + k).textContent = state.attributes[k] || 0; }
+      });
+      $('#flagsTa').value = JSON.stringify(state.flags);
+      $('#tlTa').value = JSON.stringify(state.timeline);
+    }
+
+    function renderSelected() {
+      var id = evSel.value;
+      var ev = MJ.EVENTS[id];
+      if (!ev) { banner('事件不存在: ' + id, 'warn'); return; }
+      $('#curView').textContent = id;
+      var interactive = $('#interactiveChk').checked;
+      if (interactive) {
+        if (ev.cond && !ev.cond(state)) {
+          banner('⚠ 事件 ' + id + ' 有条件限制，当前状态未满足；交互试玩将跳转其后备事件。可在左侧设置对应 flag/timeline 后重试。', 'warn');
+        } else { banner('交互试玩模式：点击选项将由真实引擎推进。'); }
+        try {
+          MJ.engine.start();
+          MJ.engine.state = state;
+          MJ.engine._usedVariants = {};
+          MJ.engine.go(id);
+        } catch (e) { banner('渲染失败: ' + e.message, 'warn'); }
+      } else {
+        var condInfo = '';
+        if (ev.cond) condInfo = ev.cond(state) ? '（条件满足 ✓）' : '（条件未满足，纯预览仍显示）';
+        banner('纯预览模式：仅显示 UI，选项不可点击。' + condInfo);
+        try { MJ.ui.showEvent(ev, state); } catch (e) { banner('渲染失败: ' + e.message, 'warn'); return; }
+        document.querySelectorAll('#app .btn, #app .option').forEach(function (b) {
+          b.setAttribute('disabled', 'disabled'); b.title = '纯预览模式：不可交互';
+        });
+      }
+    }
+
+    function applyState() {
+      ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+        var el = $('#attr_' + k); if (el) state.attributes[k] = +el.value || 0;
+      });
+      try { state.flags = JSON.parse($('#flagsTa').value); }
+      catch (e) { banner('flags JSON 解析失败：' + e.message, 'warn'); return; }
+      try { state.timeline = JSON.parse($('#tlTa').value); }
+      catch (e) { banner('timeline JSON 解析失败：' + e.message, 'warn'); return; }
+      banner('状态已应用。', 'ok');
+      buildCatalog();
+      renderSelected();
+      if (graph) { buildGraph(); renderFlow(); }
+    }
+
+    function resetState() {
+      state = new MJ.GameState();
+      syncInputs(); buildCatalog(); renderSelected();
+      if (graph) { buildGraph(); renderFlow(); }
+      banner('已重置为新游戏状态。', 'ok');
+    }
+
+    function buildCatalog() {
+      var tb = $('#catBody');
+      var filter = ($('#catFilter').value || '').toLowerCase();
+      var rows = Object.keys(MJ.EVENTS).map(function (k) {
+        var e = MJ.EVENTS[k];
+        var condMet = (typeof e.cond === 'function') ? (e.cond(state) ? '✓' : '✗') : '';
+        var yr = (e.year != null) ? e.year : (e.window ? ('[' + e.window[0] + '-' + e.window[1] + ']') : '');
+        return { id: k, kind: e.kind, yr: yr, variant: e.variant ? 'Y' : '', force: e.force ? 'Y' : '', weight: e.weight || '', condMet: condMet, next: e.next || '' };
+      });
+      var html = '';
+      rows.forEach(function (r) {
+        if (filter && r.id.toLowerCase().indexOf(filter) < 0) return;
+        var cls = (r.condMet === '✗') ? 'warn' : '';
+        html += '<tr class="' + cls + '"><td>' + r.id + '</td><td>' + r.kind + '</td><td>' + r.yr + '</td><td>' + r.variant + '</td><td>' + r.force + '</td><td>' + r.weight + '</td><td>' + r.condMet + '</td><td>' + r.next + '</td></tr>';
+      });
+      tb.innerHTML = html;
+
+      var eb = $('#endBody'), eh = '';
+      Object.keys(MJ.config.endings).forEach(function (k) {
+        var e = MJ.config.endings[k];
+        var name = MJ.t('ending.' + k + '.name', null, e.name || k);
+        eh += '<tr><td>' + k + '</td><td>' + (e.assumption ? '假设线' : '') + '</td><td>' + escapeHtml(name) + '</td></tr>';
+      });
+      eb.innerHTML = eh;
+    }
+
+    function runSim() {
+      var N = Math.max(1, Math.min(20000, +$('#simN').value || 1000));
+      var seedRaw = $('#simSeed').value;
+      var seed = (seedRaw !== '' && !isNaN(+seedRaw)) ? (+seedRaw >>> 0) : 0x9E3779B9;
+      var rng = mulberry32(seed);
+      var realShow = MJ.ui.showEvent, realEnd = MJ.ui.showEnding, realEra = MJ.ui.showEraCard;
+      var _cur = null;
+      MJ.ui.showEvent = function (ev) { _cur = ev; };
+      MJ.ui.showEnding = function (id) { _cur = { kind: 'ended', id: id }; };
+      MJ.ui.showEraCard = function (c, s, cb) { cb(); };
+      var fire = {}, endings = {}, errs = 0;
+      try {
+        for (var i = 0; i < N; i++) {
+          MJ.engine.start();
+          var g = 0;
+          while (g++ < 6000) {
+            if (!_cur) break;
+            if (_cur.id) fire[_cur.id] = (fire[_cur.id] || 0) + 1;
+            if (_cur.kind === 'ended') { endings[_cur.id] = (endings[_cur.id] || 0) + 1; break; }
+            if (_cur.kind === 'ending') { MJ.engine.finishEnding(); continue; }
+            if (_cur.kind === 'auto') { MJ.engine.proceed(); continue; }
+            if (_cur.kind === 'choice') {
+              var os = MJ.engine.optionsOf(_cur);
+              if (!os || !os.length) { if (_cur.next) { MJ.engine.advance(_cur.next); continue; } break; }
+              MJ.engine.choose(Math.floor(rng() * os.length)); continue;
+            }
+            break;
+          }
+        }
+      } catch (e) { errs++; console.error(e); }
+      MJ.ui.showEvent = realShow; MJ.ui.showEnding = realEnd; MJ.ui.showEraCard = realEra;
+
+      var altMiss = [];
+      Object.keys(MJ.config.endings).forEach(function (k) {
+        if (k.indexOf('END_ALT_') === 0 && !(endings[k] > 0)) altMiss.push(k);
+      });
+      var pass = altMiss.length === 0 && errs === 0;
+      var out = '<div class="' + (pass ? 'ok' : 'warn') + '"><b>可达性校准：' + (pass ? 'PASS' : 'FAIL') + '</b>';
+      if (altMiss.length) out += ' ｜ 7 个 alt 结局中 0 现身：' + altMiss.join(', ');
+      if (errs) out += ' ｜ 异常 ' + errs + ' 次';
+      out += '</div>';
+
+      out += '<h4>结局分布（N=' + N + '）</h4><table><tr><th>结局</th><th>次数</th><th>率</th></tr>';
+      Object.keys(endings).sort(function (a, b) { return endings[b] - endings[a]; }).forEach(function (k) {
+        out += '<tr><td>' + k + '</td><td>' + endings[k] + '</td><td>' + (endings[k] / N * 100).toFixed(2) + '%</td></tr>';
+      });
+      out += '</table>';
+
+      out += '<h4>事件触发统计（N=' + N + '，0 触发标红）</h4><table><tr><th>事件</th><th>类型</th><th>次数</th><th>率</th></tr>';
+      Object.keys(MJ.EVENTS).map(function (k) {
+        return { id: k, kind: MJ.EVENTS[k].kind, n: fire[k] || 0 };
+      }).sort(function (a, b) { return b.n - a.n; }).forEach(function (r) {
+        var cls = r.n === 0 ? 'zero' : '';
+        out += '<tr class="' + cls + '"><td>' + r.id + '</td><td>' + r.kind + '</td><td>' + r.n + '</td><td>' + (r.n / N * 100).toFixed(2) + '%</td></tr>';
+      });
+      out += '</table>';
+
+      $('#simOut').innerHTML = out;
+      banner('审计完成：N=' + N + '，' + (pass ? 'PASS' : 'FAIL'), pass ? 'ok' : 'warn');
+    }
+
+    // ---------------- 游戏流程图 ----------------
+    var graph = null;
+    var startId = null;
+    var selectedId = null;
+    var NODEW = 168, NODEH = 50;
+    var view = { x: 0, y: 0, k: 1 };
+
+    function eventYearOf(e) {
+      try { return MJ.eventYear(e); } catch (e2) { return null; }
+    }
+
+    function buildGraph() {
+      graph = { nodes: {}, edges: [], solidOut: {}, injectOut: {}, returns: {} };
+      Object.keys(MJ.EVENTS).forEach(function (id) {
+        var e = MJ.EVENTS[id];
+        graph.nodes[id] = { id: id, ev: e, kind: e.kind, variant: !!e.variant, layer: Infinity, x: 0, y: 0 };
+      });
+      // 补充：所有 MJ.config.endings 作为「结局」节点。
+      // 引擎 advance 时把选项的 next=结局键 当作合成结局节点，故它们不出现在 MJ.EVENTS 中，
+      // 但正是玩家看到的「结果」，必须纳入流程图。
+      Object.keys(MJ.config.endings).forEach(function (eid) {
+        if (graph.nodes[eid]) return;
+        var ed = MJ.config.endings[eid];
+        graph.nodes[eid] = {
+          id: eid, kind: 'ending', variant: false, layer: Infinity, x: 0, y: 0,
+          ev: { id: eid, kind: 'ending', configEnding: true, assumption: !!ed.assumption,
+            title: MJ.t('ending.' + eid + '.name', null, ed.name || eid), hint: ed.hint }
+        };
+      });
+      startId = MJ.EVENTS['start'] ? 'start' : Object.keys(MJ.EVENTS)[0];
+
+      function addSolid(from, to) {
+        if (!to || to === '__RETURN__') { if (to === '__RETURN__') graph.returns[from] = true; return; }
+        if (!graph.nodes[to]) return;
+        graph.edges.push({ from: from, to: to, kind: 'solid' });
+        (graph.solidOut[from] = graph.solidOut[from] || []).push(to);
+      }
+      Object.keys(graph.nodes).forEach(function (id) {
+        var e = graph.nodes[id].ev;
+        if (e.kind === 'choice') {
+          evOptions(e).forEach(function (opt) { if (opt.next) addSolid(id, opt.next); });
+        } else if (e.kind === 'auto') {
+          if (e.next) addSolid(id, e.next);
+        }
+      });
+
+      // 变体注入连线：变体 window 内的主线/自动事件 → 变体
+      Object.keys(graph.nodes).forEach(function (vid) {
+        var ve = graph.nodes[vid].ev;
+        if (!ve.variant || !ve.window) return;
+        var w = ve.window;
+        Object.keys(graph.nodes).forEach(function (pid) {
+          var pe = graph.nodes[pid].ev;
+          if (pe.variant || pe.kind === 'ending') return;
+          var y = eventYearOf(pe);
+          if (y == null) return;
+          if (y >= w[0] && y <= w[1]) {
+            graph.edges.push({ from: pid, to: vid, kind: 'inject' });
+            (graph.injectOut[vid] = graph.injectOut[vid] || []).push(pid);
+          }
+        });
+      });
+
+      layoutGraph();
+    }
+
+    function layoutGraph() {
+      var nodes = graph.nodes;
+      nodes[startId].layer = 0;
+      var queue = [startId], seen = {}; seen[startId] = true;
+      while (queue.length) {
+        var cur = queue.shift();
+        (graph.solidOut[cur] || []).forEach(function (t) {
+          var nl = nodes[cur].layer + 1;
+          if (nodes[t].layer > nl) {
+            nodes[t].layer = nl;
+            if (!seen[t]) { seen[t] = true; queue.push(t); }
+          }
+        });
+      }
+      // 未达节点（多为变体/孤立）：放至其注入父节点同层
+      Object.keys(nodes).forEach(function (id) {
+        if (nodes[id].layer !== Infinity) return;
+        var minL = Infinity;
+        (graph.injectOut[id] || []).forEach(function (p) { if (nodes[p].layer < minL) minL = nodes[p].layer; });
+        nodes[id].layer = (minL === Infinity) ? 0 : minL;
+      });
+
+      var byLayer = {};
+      Object.keys(nodes).forEach(function (id) {
+        var L = nodes[id].layer;
+        (byLayer[L] = byLayer[L] || []).push(id);
+      });
+      var maxL = 0;
+      Object.keys(byLayer).forEach(function (L) { if (+L > maxL) maxL = +L; });
+      graph.cols = maxL + 1;
+      var COLW = 230, ROWH = 66, MX = 50, MY = 50;
+      var maxRows = 1;
+      Object.keys(byLayer).forEach(function (L) {
+        if (byLayer[L].length > maxRows) maxRows = byLayer[L].length;
+        byLayer[L].forEach(function (id, i) {
+          nodes[id].x = MX + L * COLW;
+          nodes[id].y = MY + i * ROWH;
+        });
+      });
+      graph.svgW = MX * 2 + graph.cols * COLW;
+      graph.svgH = MY * 2 + maxRows * ROWH;
+    }
+
+    function effectSummary(opt) {
+      var parts = [];
+      var ef = opt.effects || {};
+      ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+        if (ef[k]) parts.push(k + ((ef[k] > 0 ? '+' : '') + ef[k]));
+      });
+      if (ef.money) parts.push('金钱' + ef.money);
+      if (ef.timeline) Object.keys(ef.timeline).forEach(function (k) { parts.push('timeline[' + k + ']=' + ef.timeline[k]); });
+      if (opt.flags) Object.keys(opt.flags).forEach(function (k) { parts.push('flags.' + k + '=' + opt.flags[k]); });
+      return parts.join('，');
+    }
+
+    // 视口裁剪渲染：只画当前可见区域（含 margin）内的节点与边。
+    // 平移时只改 #flowRoot transform（不重建 DOM）；停下 150ms 或滚轮/过滤变更时才重建裁剪集，
+    // 这样 SVG 内 DOM 数量从 ~2000 降到几十，拖拽缩放顺畅。
+    function renderFlow() {
+      if (!graph) return;
+      var root = document.getElementById('flowRoot');
+      var showVar = $('#flowShowVar').checked, showEnd = $('#flowShowEnd').checked,
+          showAuto = $('#flowShowAuto').checked, showInject = $('#flowShowInject').checked;
+      var q = ($('#flowSearch').value || '').toLowerCase();
+      var c = document.getElementById('flowCanvas');
+      var cw = c.clientWidth || 800, ch = c.clientHeight || 600;
+      var margin = 360; // 世界坐标余量，避免平移时边缘露白
+      var r = {
+        x0: (0 - view.x) / view.k - margin, y0: (0 - view.y) / view.k - margin,
+        x1: (cw - view.x) / view.k + margin, y1: (ch - view.y) / view.k + margin
+      };
+      function inView(n) { return n.x + NODEW >= r.x0 && n.x <= r.x1 && n.y + NODEH >= r.y0 && n.y <= r.y1; }
+      function passFilter(n) {
+        if (n.variant && !showVar) return false;
+        if (n.kind === 'ending' && !showEnd) return false;
+        if (n.kind === 'auto' && !showAuto) return false;
+        return true;
+      }
+      var forceAll = !!q; // 有搜索词时渲染全部（含匹配项），便于跨图定位
+      var vis = {}, ids = [];
+      Object.keys(graph.nodes).forEach(function (id) {
+        var n = graph.nodes[id];
+        if (!passFilter(n)) return;
+        var match = !q || id.toLowerCase().indexOf(q) >= 0 || evTitle(n.ev).toLowerCase().indexOf(q) >= 0;
+        if (forceAll ? (match || inView(n)) : inView(n)) { vis[id] = true; ids.push(id); }
+      });
+      var parts = '';
+      graph.edges.forEach(function (e, i) {
+        if (e.kind === 'inject' && !showInject) return;
+        if (!vis[e.from] || !vis[e.to]) return;
+        var a = graph.nodes[e.from], b = graph.nodes[e.to];
+        var x1 = a.x + NODEW, y1 = a.y + NODEH / 2, x2 = b.x, y2 = b.y + NODEH / 2;
+        var mx = (x1 + x2) / 2;
+        var dash = e.kind === 'inject' ? 'stroke-dasharray="5 4" ' : '';
+        parts += '<path class="edge ' + e.kind + '" data-ei="' + i + '" ' + dash +
+          'd="M' + x1 + ',' + y1 + ' C' + mx + ',' + y1 + ' ' + mx + ',' + y2 + ' ' + x2 + ',' + y2 + '" marker-end="url(#arrow)"/>';
+      });
+      ids.forEach(function (id) {
+        var n = graph.nodes[id];
+        var cls = 'node ' + (n.variant ? 'variant' : n.kind) + (selectedId === id ? ' hl' : '');
+        parts += '<g class="' + cls + '" data-id="' + id + '" transform="translate(' + n.x + ',' + n.y + ')">' +
+          '<rect width="' + NODEW + '" height="' + NODEH + '" rx="9"/>' +
+          '<text x="10" y="21">' + escapeHtml(truncate(evTitle(n.ev), 14)) + '</text>' +
+          '<text class="nid" x="10" y="39">' + escapeHtml(id) + '</text>' +
+          '</g>';
+      });
+      root.innerHTML = parts;
+      root.querySelectorAll('.node').forEach(function (g) {
+        g.addEventListener('click', function () {
+          var id = g.getAttribute('data-id');
+          selectedId = id;
+          root.querySelectorAll('.node').forEach(function (x) { x.classList.remove('hl'); });
+          g.classList.add('hl');
+          showFlowDetail(id);
+        });
+      });
+      if (q) {
+        ids.forEach(function (id) {
+          var m = id.toLowerCase().indexOf(q) >= 0 || evTitle(graph.nodes[id].ev).toLowerCase().indexOf(q) >= 0;
+          var g = root.querySelector('.node[data-id="' + id + '"]');
+          if (g) { g.classList.toggle('dim', !m); g.classList.toggle('hl', m); }
+        });
+        graph.edges.forEach(function (e, i) {
+          if (e.kind === 'inject' && !showInject) return;
+          if (!vis[e.from] || !vis[e.to]) return;
+          var m = q.indexOf(e.from.toLowerCase()) >= 0 || q.indexOf(e.to.toLowerCase()) >= 0;
+          var p = root.querySelector('.edge[data-ei="' + i + '"]');
+          if (p) p.classList.toggle('dim', !m);
+        });
+      }
+      applyView();
+    }
+
+    function showFlowDetail(id) {
+      var n = graph.nodes[id], e = n.ev;
+      var title = evTitle(e);
+      var html = '<h2>' + escapeHtml(title) + ' <span class="muted">' + id + '</span></h2>';
+      var badges = '';
+      if (e.variant) badges += '<span class="badge" style="background:#5a4a1a;color:#ffe0a0">变体</span> ';
+      if (e.force) badges += '<span class="badge" style="background:#5a2a1a;color:#ffd0a0">强制必现</span> ';
+      if (e.assumption) badges += '<span class="badge asm">假设线</span> ';
+      if (badges) html += '<div style="margin:4px 0">' + badges + '</div>';
+      html += '<div class="kv">类型：' + e.kind + '</div>';
+      var yr = (e.year != null) ? e.year : (e.window ? ('[' + e.window[0] + '–' + e.window[1] + ']') : '—');
+      html += '<div class="kv">年 / 窗口：' + yr + '</div>';
+      if (typeof e.cond === 'function') html += '<div class="kv">条件：' + (e.cond(state) ? '✓ 当前状态满足' : '✗ 当前状态未满足') + '</div>';
+      if (e.kind === 'choice') {
+        html += '<h3>选项与结果</h3><ol class="opts">';
+        evOptions(e).forEach(function (opt) {
+          var lbl = optLabel(opt);
+          var nx = opt.next || (e.next || '—');
+          var fx = effectSummary(opt);
+          html += '<li><b>' + escapeHtml(lbl) + '</b> → <span class="muted">' + escapeHtml(nx) + '</span>' +
+            (fx ? '<br><span class="muted">' + escapeHtml(fx) + '</span>' : '') + '</li>';
+        });
+        html += '</ol>';
+      } else if (e.kind === 'auto') {
+        html += '<h3>自动推进</h3><div class="kv">→ ' + escapeHtml(e.next || '—') + '</div>';
+      } else if (e.kind === 'ending') {
+        var ed = MJ.config.endings[id];
+        html += '<h3>结局</h3><div class="kv">' + (ed ? escapeHtml(MJ.t('ending.' + id + '.name', null, ed.name || id)) : id) + '</div>';
+        if (e.assumption) html += '<div class="kv"><span class="badge asm">假设线</span></div>';
+        if (ed && ed.hint) html += '<div class="kv muted">如何达成：' + escapeHtml(ed.hint) + '</div>';
+        if (e.configEnding) html += '<div class="kv muted">注：选项/自动事件直接指向此结局；但引擎会按当前 flags/timeline 经 resolveEnding 重新判定，实际结局可能不同。</div>';
+      }
+      if (graph.returns[id]) html += '<div class="kv warn">注：含「返回主线」分支（变体结束后回到被注入节点）。</div>';
+      document.getElementById('flowDetail').innerHTML = html;
+    }
+
+    function applyView() {
+      document.getElementById('flowRoot').setAttribute('transform',
+        'translate(' + view.x + ',' + view.y + ') scale(' + view.k + ')');
+    }
+    function fitView() {
+      var c = document.getElementById('flowCanvas');
+      var cw = c.clientWidth || 800, ch = c.clientHeight || 600;
+      var k = Math.min(cw / graph.svgW, ch / graph.svgH, 1);
+      view.k = k;
+      view.x = (cw - graph.svgW * k) / 2;
+      view.y = (ch - graph.svgH * k) / 2;
+      applyView();
+    }
+    // 过滤与搜索高亮已内联进 renderFlow()（并含视口裁剪，避免全量 DOM），此处不再单独存在。
+
+    function switchTab(which) {
+      var flow = which === 'flow';
+      $('#flowView').style.display = flow ? 'flex' : 'none';
+      $('#app').style.display = flow ? 'none' : '';
+      $('#tabFlow').classList.toggle('act', flow);
+      $('#tabPreview').classList.toggle('act', !flow);
+      if (flow && !graph) { buildGraph(); fitView(); renderFlow(); }
+    }
+
+    // ---------------- 语言 ----------------
+    function setLang(l) {
+      MJ.i18n.setLang(l);
+      buildCatalog();
+      renderSelected();
+      if (graph) { buildGraph(); renderFlow(); }
+    }
+
+    // ---------------- 初始化 ----------------
+    function init() {
+      try { MJ.ui.init(); } catch (e) { fatal(e); }
+      buildEventSelect();
+      syncInputs();
+      ['health', 'reputation', 'wealth', 'family', 'art', 'stress'].forEach(function (k) {
+        var el = $('#attr_' + k);
+        el.addEventListener('input', function () { $('#val_' + k).textContent = el.value; });
+        el.addEventListener('change', applyState);
+      });
+      $('#renderBtn').addEventListener('click', renderSelected);
+      $('#applyBtn').addEventListener('click', applyState);
+      $('#resetBtn').addEventListener('click', resetState);
+      $('#simBtn').addEventListener('click', runSim);
+      $('#interactiveChk').addEventListener('change', renderSelected);
+      $('#catFilter').addEventListener('input', buildCatalog);
+      $('#langZh').addEventListener('click', function () { setLang('zh'); });
+      $('#langEn').addEventListener('click', function () { setLang('en'); });
+      evSel.value = MJ.EVENTS['1_8'] ? '1_8' : Object.keys(MJ.EVENTS)[0];
+      buildCatalog();
+      renderSelected();
+
+      // 流程图标签交互
+      $('#tabFlow').addEventListener('click', function () { switchTab('flow'); });
+      $('#tabPreview').addEventListener('click', function () { switchTab('preview'); });
+      $('#flowSearch').addEventListener('input', function () { if (graph) renderFlow(); });
+      $('#flowShowVar').addEventListener('change', function () { if (graph) renderFlow(); });
+      $('#flowShowEnd').addEventListener('change', function () { if (graph) renderFlow(); });
+      $('#flowShowAuto').addEventListener('change', function () { if (graph) renderFlow(); });
+      $('#flowShowInject').addEventListener('change', function () { if (graph) renderFlow(); });
+      $('#flowFit').addEventListener('click', fitView);
+      $('#flowZoomIn').addEventListener('click', function () { view.k = Math.min(4, view.k * 1.2); applyView(); });
+      $('#flowZoomOut').addEventListener('click', function () { view.k = Math.max(0.1, view.k / 1.2); applyView(); });
+      $('#flowRebuild').addEventListener('click', function () { if (!graph) return; buildGraph(); fitView(); renderFlow(); });
+
+      var svgEl = $('#flowSvg');
+      var cullTimer = null;
+      function scheduleCull() { if (cullTimer) clearTimeout(cullTimer); cullTimer = setTimeout(function () { if (graph) renderFlow(); }, 150); }
+      var panning = false, panStart = null;
+      svgEl.addEventListener('mousedown', function (e) {
+        if (e.button !== 0) return;
+        panning = true; panStart = { x: e.clientX - view.x, y: e.clientY - view.y }; svgEl.style.cursor = 'grabbing';
+      });
+      window.addEventListener('mouseup', function () { if (!panning) return; panning = false; svgEl.style.cursor = 'grab'; scheduleCull(); });
+      window.addEventListener('mousemove', function (e) { if (!panning) return; view.x = e.clientX - panStart.x; view.y = e.clientY - panStart.y; applyView(); });
+      svgEl.addEventListener('wheel', function (e) {
+        e.preventDefault();
+        var f = e.deltaY < 0 ? 1.1 : 0.9;
+        var rect = svgEl.getBoundingClientRect();
+        var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        view.x = mx - (mx - view.x) * f;
+        view.y = my - (my - view.y) * f;
+        view.k = Math.max(0.1, Math.min(4, view.k * f));
+        applyView(); scheduleCull();
+      }, { passive: false });
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  })();
+  </script>
+</body>
+</html>
