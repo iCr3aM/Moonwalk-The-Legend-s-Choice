@@ -1905,7 +1905,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_TOY_DRUM.opt0.label', null, 'A：敲给邻居孩子们听'), hint: T('event.V_TOY_DRUM.opt0.hint', null, '童年的掌声最纯粹（艺术+4，家庭+3）'), effects: { art: 4, family: 3 }, flags: { toydrum: true, garyRoots: true }, next: '__RETURN__' },
+      { label: T('event.V_TOY_DRUM.opt0.label', null, 'A：敲给邻居孩子们听'), hint: T('event.V_TOY_DRUM.opt0.hint', null, '童年的掌声最纯粹（艺术+4，家庭+3）'), effects: { art: 4, family: 3 }, flags: { egg_toydrum: true, toyDrum: true, garyRoots: true }, next: '__RETURN__' },
       { label: T('event.V_TOY_DRUM.opt1.label', null, 'B：自己偷偷练'), hint: T('event.V_TOY_DRUM.opt1.hint', null, '把热情藏起来（艺术+2，压力+2）'), effects: { art: 2, stress: 2 }, next: '__RETURN__' }
     ]
   };
@@ -1918,7 +1918,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，手足+5）'), effects: { family: 5, rel: { brothers: 5 } }, flags: { sisterDuet: true }, next: '__RETURN__' },
+      { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，手足+5）'), effects: { family: 5, rel: { brothers: 5 } }, flags: { egg_sisterduet: true }, next: '__RETURN__' },
       { label: T('event.V_SISTER_LATOYA.opt1.label', null, 'B：笑闹着糊弄过去'), hint: T('event.V_SISTER_LATOYA.opt1.hint', null, '轻松但潦草（家庭+2）'), effects: { family: 2 }, next: '__RETURN__' }
     ]
   };

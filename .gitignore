@@ -3,6 +3,7 @@ _smoke.js
 commit_msg.txt
 node_modules/
 dist/
+docs/
 
 # 开发/调试脚手架（不提交）
 check_keys.cjs
