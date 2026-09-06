@@ -248,7 +248,7 @@ window.MJ = window.MJ || {};
   };
 
   E['1_8'] = {
-    id: '1_8', year: 1976, title: T('event.1_8.title', null, '1975：留 Motown 还是转会 Epic？'), kind: 'choice',
+    id: '1_8', year: 1976, title: T('event.1_8.title', null, '1975：留 Motown 还是转会 Epic？'), kind: 'choice', noVariant: true,
     text: function (s) {
       return narr(T('event.1_8.text', null, '组合与 Motown 的合约将尽，转会 CBS（即 Epic 厂牌）的传闻四起。是守住 Motown 这块老招牌，还是跳上新的列车？这一笔，写的是你与“家”与“自我”的拉扯。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) <= 50; }, text: T('event.1_8.branch0.text', null, '与父亲的裂痕还在隐隐作痛，新合约更像一场逃离。') },
@@ -2451,8 +2451,8 @@ window.MJ = window.MJ || {};
       return narr(T('event.V_TIDBIT_BUBBLES.text', null, '你摊开一本画着星星的日记本，给猴子 Bubbles 画下今天的它——它歪着头，像在嫌弃你的画技。'), s, []);
     },
     options: [
-      { label: T('event.V_TIDBIT_BUBBLES.opt0.label', null, 'A：认真画完一页'), hint: T('event.V_TIDBIT_BUBBLES.opt0.hint', null, '安静的一笔（艺术+1）'), effects: { art: 1 }, flags: { tidbit_bubbles: true }, next: '__RETURN__' },
-      { label: T('event.V_TIDBIT_BUBBLES.opt1.label', null, 'B：念给 Bubbles 听'), hint: T('event.V_TIDBIT_BUBBLES.opt1.hint', null, '一点温柔（家庭+1）'), effects: { family: 1 }, flags: { tidbit_bubbles: true }, next: '__RETURN__' }
+      { label: T('event.V_TIDBIT_BUBBLES.opt0.label', null, 'A：认真画完一页'), hint: T('event.V_TIDBIT_BUBBLES.opt0.hint', null, '安静的一笔（艺术+1）'), effects: { art: 1 }, flags: { tidbit_bubbles_diary: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_BUBBLES.opt1.label', null, 'B：念给 Bubbles 听'), hint: T('event.V_TIDBIT_BUBBLES.opt1.hint', null, '一点温柔（家庭+1）'), effects: { family: 1 }, flags: { tidbit_bubbles_diary: true }, next: '__RETURN__' }
     ]
   };
   E.V_TIDBIT_NEPHEWS = {
@@ -2473,8 +2473,8 @@ window.MJ = window.MJ || {};
       return narr(T('event.V_TIDBIT_QUIET.text', null, '所有人都散了，你独自坐在放映室，把今晚的演出又看了一遍。镜头里的自己完美无瑕，你却盯着某个走神的一秒出神。'), s, []);
     },
     options: [
-      { label: T('event.V_TIDBIT_QUIET.opt0.label', null, 'A：记下那一秒的遗憾'), hint: T('event.V_TIDBIT_QUIET.opt0.hint', null, '从中学习（艺术+1）'), effects: { art: 1 }, flags: { tidbit_quiet: true }, next: '__RETURN__' },
-      { label: T('event.V_TIDBIT_QUIET.opt1.label', null, 'B：关灯，静静坐一会儿'), hint: T('event.V_TIDBIT_QUIET.opt1.hint', null, '喘口气（压力-1）'), effects: { stress: -1 }, flags: { tidbit_quiet: true }, next: '__RETURN__' }
+      { label: T('event.V_TIDBIT_QUIET.opt0.label', null, 'A：记下那一秒的遗憾'), hint: T('event.V_TIDBIT_QUIET.opt0.hint', null, '从中学习（艺术+1）'), effects: { art: 1 }, flags: { tidbit_quiet_replay: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_QUIET.opt1.label', null, 'B：关灯，静静坐一会儿'), hint: T('event.V_TIDBIT_QUIET.opt1.hint', null, '喘口气（压力-1）'), effects: { stress: -1 }, flags: { tidbit_quiet_replay: true }, next: '__RETURN__' }
     ]
   };
   E.V_TIDBIT_GARDEN = {
@@ -2495,8 +2495,63 @@ window.MJ = window.MJ || {};
       return narr(T('event.V_TIDBIT_REHEARSE.text', null, '你把一段舞步反复放了十遍，逐帧比对自己的重心。编舞师打趣你“较真得像在修钟表”，你笑着又来了一遍。'), s, []);
     },
     options: [
-      { label: T('event.V_TIDBIT_REHEARSE.opt0.label', null, 'A：继续打磨到满意'), hint: T('event.V_TIDBIT_REHEARSE.opt0.hint', null, '较真到底（艺术+1）'), effects: { art: 1 }, next: '__RETURN__' },
-      { label: T('event.V_TIDBIT_REHEARSE.opt1.label', null, 'B：留一点不完美'), hint: T('event.V_TIDBIT_REHEARSE.opt1.hint', null, '留点人情味（艺术+1，压力-1）'), effects: { art: 1, stress: -1 }, next: '__RETURN__' }
+      { label: T('event.V_TIDBIT_REHEARSE.opt0.label', null, 'A：继续打磨到满意'), hint: T('event.V_TIDBIT_REHEARSE.opt0.hint', null, '较真到底（艺术+1）'), effects: { art: 1 }, flags: { tidbit_rehearse: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_REHEARSE.opt1.label', null, 'B：留一点不完美'), hint: T('event.V_TIDBIT_REHEARSE.opt1.hint', null, '留点人情味（艺术+1，压力-1）'), effects: { art: 1, stress: -1 }, flags: { tidbit_rehearse: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_GLOVE = {
+    id: 'V_TIDBIT_GLOVE', variant: true, window: [1983, 1984], weight: 18,
+    title: T('event.V_TIDBIT_GLOVE.title', null, '一只手套的暗号'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_GLOVE.text', null, '彩排时你忽然把那只单只的闪亮手套戴上，对着镜子比了个只有自己懂的暗号——“只要戴上它，舞台就只属于我。”'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_GLOVE.opt0.label', null, 'A：戴上它走进聚光灯'), hint: T('event.V_TIDBIT_GLOVE.opt0.hint', null, '亮出暗号（艺术+1）'), effects: { art: 1 }, flags: { tidbit_glove: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_GLOVE.opt1.label', null, 'B：把它轻轻放在化妆台'), hint: T('event.V_TIDBIT_GLOVE.opt1.hint', null, '留作念想（艺术+1）'), effects: { art: 1 }, flags: { tidbit_glove: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_DISCO = {
+    id: 'V_TIDBIT_DISCO', variant: true, window: [1977, 1983], weight: 16,
+    title: T('event.V_TIDBIT_DISCO.title', null, '向迪斯科时代鞠躬'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_DISCO.text', null, '录音室的霓虹灯下，你跟着旧唱片扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_DISCO.opt0.label', null, 'A：认真学那段舞'), hint: T('event.V_TIDBIT_DISCO.opt0.hint', null, '致敬经典（艺术+1）'), effects: { art: 1 }, flags: { tidbit_disco: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_DISCO.opt1.label', null, 'B：笑着即兴改编'), hint: T('event.V_TIDBIT_DISCO.opt1.hint', null, '融入自己（艺术+1，压力-1）'), effects: { art: 1, stress: -1 }, flags: { tidbit_disco: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_STUDIO = {
+    id: 'V_TIDBIT_STUDIO', variant: true, window: [1979, 1995], weight: 14,
+    title: T('event.V_TIDBIT_STUDIO.title', null, '给乐手留一碗热汤'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_STUDIO.text', null, '凌晨的录音棚，你记得谁胃不好，差人端去一碗热汤，说“嗓子要紧”。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_STUDIO.opt0.label', null, 'A：亲自端到他手里'), hint: T('event.V_TIDBIT_STUDIO.opt0.hint', null, '一点暖意（家庭+1）'), effects: { family: 1 }, flags: { tidbit_studio_late: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_STUDIO.opt1.label', null, 'B：记在心里下次记得'), hint: T('event.V_TIDBIT_STUDIO.opt1.hint', null, '记挂伙伴（艺术+1）'), effects: { art: 1 }, flags: { tidbit_studio_late: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_DIALTONE = {
+    id: 'V_TIDBIT_DIALTONE', variant: true, window: [1979, 1995], weight: 12,
+    title: T('event.V_TIDBIT_DIALTONE.title', null, '拨号音里的节拍'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_DIALTONE.text', null, '你对着拨号音“嘟——嘟——”打拍子，电话那头以为是线路故障，你却笑出了声。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_DIALTONE.opt0.label', null, 'A：继续打着拍子'), hint: T('event.V_TIDBIT_DIALTONE.opt0.hint', null, '灵感来了（艺术+1）'), effects: { art: 1 }, flags: { tidbit_dialtone: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_DIALTONE.opt1.label', null, 'B：挂掉专心写歌'), hint: T('event.V_TIDBIT_DIALTONE.opt1.hint', null, '回到旋律（艺术+1）'), effects: { art: 1 }, flags: { tidbit_dialtone: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_TIDBIT_COMIC = {
+    id: 'V_TIDBIT_COMIC', variant: true, window: [1985, 2003], weight: 12,
+    title: T('event.V_TIDBIT_COMIC.title', null, '一柜子的连环画'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_TIDBIT_COMIC.text', null, '名利场之外，你囤了一柜子连环画和老科幻片，是只有孩子才懂的快乐。'), s, []);
+    },
+    options: [
+      { label: T('event.V_TIDBIT_COMIC.opt0.label', null, 'A：翻给侄子们看'), hint: T('event.V_TIDBIT_COMIC.opt0.hint', null, '分享童心（家庭+1）'), effects: { family: 1 }, flags: { tidbit_comic: true }, next: '__RETURN__' },
+      { label: T('event.V_TIDBIT_COMIC.opt1.label', null, 'B：一个人看到深夜'), hint: T('event.V_TIDBIT_COMIC.opt1.hint', null, '独处的快乐（艺术+1）'), effects: { art: 1 }, flags: { tidbit_comic: true }, next: '__RETURN__' }
     ]
   };
 
@@ -2546,7 +2601,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_ALBUM_FM = {
-    id: 'V_ALBUM_FM', variant: true, window: [1975, 1976], weight: 25,
+    id: 'V_ALBUM_FM', variant: true, window: [1972, 1974], weight: 25,
     title: T('event.V_ALBUM_FM.title', null, '少年心事：《Forever, Michael》'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_ALBUM_FM.text', null, '十五岁的声音开始变厚。《Forever, Michael》里，你试着把成长的迷惘写进旋律。'), s, [
@@ -2573,7 +2628,7 @@ window.MJ = window.MJ || {};
   };
   // ===== 阶段 3：架空历史 BP2–BP7 决策点变体（写入 state.timeline / flag，驱动 END_ALT_*；史实经 docs/mjwiki/ 逐项核实） =====
   E.V_OFFWALL_QJ = {
-    id: 'V_OFFWALL_QJ', variant: true, force: true, window: [1979, 1981], weight: 22,
+    id: 'V_OFFWALL_QJ', variant: true, force: true, window: [1979, 1981], weight: 22, cond: function (s) { return s.flags.isSolo === true; },
     title: T('event.V_OFFWALL_QJ.title', null, '1979：与 Quincy Jones 联手，还是独立制作？'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_OFFWALL_QJ.text', null, '1979 年，《Off the Wall》问世——这是你与制作人昆西·琼斯（Quincy Jones）首度合作的专辑。下一阶段的创作主导权，握在谁手里？是延续这位黄金搭档，还是收回主导权、以独立制作人身份掌舵？'), s, [

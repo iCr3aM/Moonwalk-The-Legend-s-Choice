@@ -307,6 +307,7 @@ window.MJ = window.MJ || {};
         var ev = MJ.EVENTS[k];
         if (!ev || !ev.variant || !ev.force || !ev.window) continue;
         if (this._usedVariants[k]) continue;
+        if (ev.cond && !ev.cond(this.state)) continue; // 强制变体同样遵守条件门控（如 BP2 须已单飞）
         if (year >= ev.window[0] && year <= ev.window[1]) return k;
       }
       return null;
@@ -328,7 +329,8 @@ window.MJ = window.MJ || {};
         // BP 决策点：force 变体优先注入（绕过冷却/上限，保证关键分叉必现）
         if (!vid) vid = this._findForcedVariant(ev.year);
         // §18.6 核心：每章上限 + 变体间冷却，控制弹出频率与聚簇
-        if (!vid && this._chapterVariantCount < VARIANT_CAP_PER_CHAPTER && this._sinceVariant >= VARIANT_COOLDOWN_NODES) {
+        // noVariant 节点（如 BP1 决策 1_8）：不再注入风味/彩蛋变体，避免冲淡关键分支分量
+        if (!vid && !ev.noVariant && this._chapterVariantCount < VARIANT_CAP_PER_CHAPTER && this._sinceVariant >= VARIANT_COOLDOWN_NODES) {
           vid = this.pickVariant(ev.year);
         }
         if (vid) {
@@ -643,24 +645,24 @@ window.MJ = window.MJ || {};
     key: 'mj_lifechoices_trivia_v1',
     defs: {
       TRIVIA_CHARITY:        { icon: '🤝', name: '匿名代付陌生人账单', desc: '你曾悄悄为排队的陌生人结清账单，不留姓名——善意于你，本就是日常。', cond: function (s) { return s.flags.healWorld || (s.meta.phil || 0) >= 1; } },
-      TRIVIA_REHEARSE:       { icon: '🎯', name: '逐帧抠动作到凌晨', desc: '录音棚的灯亮到天明，你把一个转身反复磨了十遍，只为那 0.1 秒的精准。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 60; } },
+      TRIVIA_REHEARSE:       { icon: '🎯', name: '逐帧抠动作到凌晨', desc: '录音棚的灯亮到天明，你把一个转身反复磨了十遍，只为那 0.1 秒的精准。' },
       TRIVIA_NEVERLAND_ANIMALS: { icon: '🐾', name: '给动物过生日', desc: '梦幻庄园里，你给每一只动物都过了生日，蜡烛比客人还多。', cond: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
-      TRIVIA_ONOMATOPOEIA:  { icon: '🎶', name: '用拟声词讲编曲', desc: '你说不清和弦时，就“咚呲哒哒”地比划给乐手听，他们竟真听懂了。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_ONOMATOPOEIA:  { icon: '🎶', name: '用拟声词讲编曲', desc: '你说不清和弦时，就“咚呲哒哒”地比划给乐手听，他们竟真听懂了。', cond: function (s) { return (s.meta.artPath || 0) >= 2; } },
       TRIVIA_FANMAIL:       { icon: '✉️', name: '手写回信给歌迷', desc: '面对成山的来信，你挑出几封亲手回了字句，落款总是“Love, Michael”。', cond: function (s) { return (s.relations.fans || 0) >= 20; } },
-      TRIVIA_COMIC:         { icon: '📚', name: '收藏连环画与科幻片', desc: '名利场之外，你囤了一柜子连环画和老科幻片，是只有孩子才懂的快乐。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_COMIC:         { icon: '📚', name: '收藏连环画与科幻片', desc: '名利场之外，你囤了一柜子连环画和老科幻片，是只有孩子才懂的快乐。' },
       TRIVIA_BLANKET:       { icon: '🛝', name: '陪幼子玩空中秋千', desc: '你托着小儿子在怀里晃啊晃，说这是“世界上最稳的秋千”。', cond: function (s) { return s.flags.blanketBorn || s.flags.surrogacy; } },
       TRIVIA_THISISIT:      { icon: '🎬', name: '为《This Is It》逐帧打磨走位', desc: '五十场演唱会的每个走位，你都和编舞师一帧帧对过，哪怕身体已亮起红灯。', cond: function (s) { return s.flags.thisItHeld || s.flags.thisItScale; } },
       TRIVIA_GRAMMY:        { icon: '🏆', name: '把奖杯让给团队', desc: '领奖台上的聚光灯很亮，你却把奖杯先递给了身后沉默的乐手们。', cond: function (s) { return (s.meta.grammyWins || 0) >= 1 || ['otw','thriller','bad','dangerous','history','invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
       TRIVIA_WATW:          { icon: '🕊️', name: '为《We Are The World》熬夜合声', desc: '那一夜录音棚挤满巨星，你最后一个离开，反复确认每一句合声都严丝合缝。', cond: function (s) { return s.flags.weAreTheWorld; } },
       TRIVIA_PEACE:         { icon: '🌍', name: '在战乱之地抱起陌生孩童', desc: '镜头之外，你蹲下身把当地的孩子抱起来，那张照片从没用来宣传。', cond: function (s) { return (s.meta.phil || 0) >= 2; } },
-      TRIVIA_STUDIO_LATE:   { icon: '☕', name: '深夜给乐手留热汤', desc: '你记得谁胃不好，半夜差人端去一碗热汤，说“嗓子要紧”。', cond: function (s) { return (s.meta.artPath || 0) >= 1; } },
-      TRIVIA_DISCO:         { icon: '🪩', name: '向迪斯科前辈致敬', desc: '你对着霓虹扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。', cond: function (s) { return (s.attributes.art || 0) >= 60; } },
+      TRIVIA_STUDIO_LATE:   { icon: '☕', name: '深夜给乐手留热汤', desc: '你记得谁胃不好，半夜差人端去一碗热汤，说“嗓子要紧”。' },
+      TRIVIA_DISCO:         { icon: '🪩', name: '向迪斯科前辈致敬', desc: '你对着霓虹扭了扭肩，向前辈们的迪斯科时代，郑重地鞠了一躬。' },
       TRIVIA_PETERPAN:      { icon: '🪶', name: '相信彼得潘不愿长大', desc: '你说自己心里也住着个不肯长大的男孩，所以才懂童话的重量。', cond: function (s) { return s.flags.dream_peterpan; } },
       TRIVIA_CHILDREN:      { icon: '🎠', name: '在 Neverland 办睡衣派对', desc: '庄园的草坪上，孩子们穿着睡衣看露天电影，你是那个递爆米花的大孩子。', cond: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
       TRIVIA_HUMBLE:        { icon: '🏠', name: '成名后仍回盖瑞老宅探望', desc: '再亮的舞台也抵不过盖瑞那条巷子，你常偷偷回去，看童年住过的窗。', cond: function (s) { return (s.relations.brothers || 0) >= 10; } },
       TRIVIA_QUINCY:        { icon: '🎼', name: '与昆西为一个和弦争到天亮', desc: '你和昆西为了一个转调红过脸，又在日出时击掌——最好的搭档都这样。', cond: function (s) { return (s.relations.quincy || 0) >= 10; } },
       TRIVIA_PEPSI:         { icon: '🔥', name: '百事火场后先安慰吓哭的粉丝', desc: '84 年那场火还没散尽，你先弯腰哄住了旁边吓哭的小歌迷。', cond: function (s) { return s.flags.isPepsiBurned; } },
-      TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 老友重聚弹起旧曲', desc: '老伙计们一来，你便坐到琴边，把几十年前的调子又弹了一遍。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || s.flags.isSolo === true; } },
+      TRIVIA_MOTOWN_REUNION: { icon: '💫', name: 'Motown 老友重聚弹起旧曲', desc: '老伙计们一来，你便坐到琴边，把几十年前的调子又弹了一遍。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || s.flags.isSolo === true; } },
       TRIVIA_BIOPIC:        { icon: '🎬', name: '2026 银幕上的自己由亲人演绎', desc: '传记电影里演你的，是流着你血脉的人——传奇换了张脸，仍未褪色。', cond: function (s) { return s.flags.biopic2026 || s.flags.biopicMJStar; } },
       TRIVIA_COCOA:         { icon: '☕', name: '深夜录音棚的一杯热可可', desc: '凌晨的录音棚，一杯热可可捧在手里，这一夜忽然没那么冷了。' },
       TRIVIA_BUBBLES_DIARY: { icon: '🐒', name: '给猴子 Bubbles 写日记', desc: '你摊开画星星的日记本，给 Bubbles 画下今天歪头的它。' },
@@ -671,8 +673,8 @@ window.MJ = window.MJ || {};
       TRIVIA_MOTOWN:        { icon: '💫', name: 'Motown 的试唱前夜', desc: '试唱前夜，哥哥们在后台紧紧围住你；第二天，你推开了摩城那扇通往世界的大门。', cond: function (s) { return s.flags.motownAudition === true; } },
 
       // —— Phase 2 内容扩充（解锁靠结局 revealAll 按 cond 扫描；不新增变体，严守 4 变体裁定）——
-      TRIVIA_DIALTONE:    { icon: '☎️', name: '拨号音里的节拍', desc: '你对着拨号音“嘟——嘟——”打拍子，电话那头以为是线路故障，你却笑出了声。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 60; } },
-      TRIVIA_GLOVE:       { icon: '🧤', name: '一只手套的魔法', desc: '那只闪着光的单只手套，是你给自己设的暗号：只要戴上它，舞台就只属于你一个人。', cond: function (s) { return (s.attributes.art || 0) >= 70; } },
+      TRIVIA_DIALTONE:    { icon: '☎️', name: '拨号音里的节拍', desc: '你对着拨号音“嘟——嘟——”打拍子，电话那头以为是线路故障，你却笑出了声。' },
+      TRIVIA_GLOVE:       { icon: '🧤', name: '一只手套的魔法', desc: '那只闪着光的单只手套，是你给自己设的暗号：只要戴上它，舞台就只属于你一个人。' },
       TRIVIA_QUIETSTAGE:  { icon: '🪑', name: '谢幕后的安静', desc: '掌声散尽，你独自坐在空荡的舞台边，听见自己的呼吸——那是最诚实的掌声。', cond: function (s) { return (s.attributes.stress || 0) <= 35; } },
       TRIVIA_MOTHERSONG:  { icon: '🎵', name: '唱给妈妈听', desc: '有次你随口哼起妈妈最爱的那首老歌，唱到一半，喉咙忽然发紧。', cond: function (s) { return (s.attributes.family || 0) >= 70; } },
       TRIVIA_HEALPLANET:  { icon: '🌍', name: '把地球缝补起来', desc: '你相信音乐能缝补裂痕：把不同肤色、不同语言的人，缝进同一段旋律里。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 2; } }

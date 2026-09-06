@@ -486,7 +486,7 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_HUMBLE.name': 'Back to the Gary House', 'trivia.TRIVIA_HUMBLE.desc': 'No stage outshone that Gary alley; you’d sneak back to peer at the window where childhood lived.',
         'trivia.TRIVIA_QUINCY.name': 'Arguing a Chord with Quincy', 'trivia.TRIVIA_QUINCY.desc': 'You and Quincy fell out over a modulation, then high-fived at sunrise — the way the best partners do.',
         'trivia.TRIVIA_PEPSI.name': 'Comforting a Fan After the Pepsi Fire', 'trivia.TRIVIA_PEPSI.desc': 'Before the 1984 fire’s smoke cleared, you bent to soothe the little fan who’d cried in fright.',
-        'trivia.TRIVIA_MOTOWN.name': 'Old Motown Friends, Old Tune', 'trivia.TRIVIA_MOTOWN.desc': 'When the old crew came around you sat at the keys and played a tune from decades back.',
+        'trivia.TRIVIA_MOTOWN_REUNION.name': 'Old Motown Friends, Old Tune', 'trivia.TRIVIA_MOTOWN_REUNION.desc': 'When the old crew came around you sat at the keys and played a tune from decades back.',
         'trivia.TRIVIA_BIOPIC.name': 'The 2026 Biopic, Played by Family', 'trivia.TRIVIA_BIOPIC.desc': 'In the biopic the one playing you shared your blood — legend changed face, never faded.',
         'trivia.TRIVIA_COCOA.name': 'A Hot Cocoa at the Studio', 'trivia.TRIVIA_COCOA.desc': 'At the studio past midnight, a cup of cocoa in hand — the night suddenly felt less cold.',
         'trivia.TRIVIA_BUBBLES_DIARY.name': 'Keeping a Diary for Bubbles', 'trivia.TRIVIA_BUBBLES_DIARY.desc': 'You opened a star-drawn journal and sketched Bubbles, head cocked, as today’s entry.',
