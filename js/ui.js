@@ -284,6 +284,7 @@ window.MJ = window.MJ || {};
         '<div class="g-icon">' + (on ? a.icon : '🏆') + '</div>' +
         '<div class="g-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         (on ? '<div class="g-rarity">' + rarityLabel(a.rarity) + '</div>' : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
+        '<div class="g-desc">' + (on ? escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
     html += '</div></div>';
