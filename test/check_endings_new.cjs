@@ -13,6 +13,7 @@ function mkEnding(over) {
   if (over.attr) Object.assign(st.attributes, over.attr);
   if (over.meta) Object.assign(st.meta, over.meta);
   if (over.flags) Object.assign(st.flags, over.flags);
+  if (over.timeline) Object.assign(st.timeline, over.timeline);
   if ('debt' in over) st.debt = over.debt;
   return MJ.resolveEnding(st, over.entryId);
 }
@@ -35,7 +36,8 @@ var ucases = [
   ['END_RECLUSE_SERENE', { meta: { recluse: 3 }, attr: { health: 60, loneliness: 10 } }],
   ['END_INNOVATOR', { meta: { mogul: 1 }, attr: { art: 85 }, flags: { cp_innovation: 85 } }],
   ['END_MENTOR', { meta: { collab: 2 }, attr: { family: 55, art: 65 } }],
-  ['END_STATESMAN', { meta: { phil: 2 }, attr: { reputation: 75, family: 60 } }]
+  ['END_STATESMAN', { meta: { phil: 2 }, attr: { reputation: 75, family: 60 } }],
+  ['END_ALT_STAY_MOTOWN', { timeline: { '1975': 'motown' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }]
 ];
 
 var pass = 0, fail = 0, bad = [];
@@ -50,11 +52,12 @@ if (bad.length) console.log('FAIL §17.7 结局解析：' + bad.join(', '));
 
 // 结构校验
 var ids = Object.keys(MJ.config.endings);
-if (ids.length !== 18) { console.log('FAIL 结局总数应为 18，实际 ' + ids.length); fail++; } else { pass++; console.log('  结局总数 18 ✓'); }
+var altIds = ids.filter(function (id) { return id.indexOf('END_ALT_') === 0; });
+if (ids.length !== 18 + altIds.length) { console.log('FAIL 结局总数应为 18+alt(' + altIds.length + ')，实际 ' + ids.length); fail++; } else { pass++; console.log('  结局总数 ' + ids.length + '（18 canonical + ' + altIds.length + ' alt）✓'); }
 ids.forEach(function (id) { if (!MJ.config.endingRarity[id]) { console.log('FAIL 缺 endingRarity: ' + id); fail++; } });
 
 // 新结局 EN 文案
-['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE'].forEach(function (id) {
+['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE', 'END_ALT_STAY_MOTOWN'].forEach(function (id) {
   ['name', 'tone', 'summary', 'monologue'].forEach(function (f) {
     if (!MJ.i18n.dict.en['ending.' + id + '.' + f]) { console.log('FAIL 缺 EN: ending.' + id + '.' + f); fail++; }
   });

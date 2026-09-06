@@ -46,6 +46,12 @@ window.MJ = window.MJ || {};
         for (var rk in ro) { if (ro.hasOwnProperty(rk)) state.changeRel(rk, ro[rk]); }
         continue;
       }
+      // 架空历史时间线分叉（BP 决策点写入 state.timeline）
+      if (k === 'timeline') {
+        var tl = eff[k];
+        for (var tk in tl) { if (tl.hasOwnProperty(tk)) state.timeline[tk] = tl[tk]; }
+        continue;
+      }
       state.changeAttr(k, eff[k]);
     }
   }
@@ -205,6 +211,8 @@ window.MJ = window.MJ || {};
     if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 44) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可，放宽艺术阈值 ≥44）
     if (a.art >= 60 && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志（放宽艺术 ≥60 / 健康 ≥42）
     if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（兜底，需声誉达标）
+    // 架空结局（方案 A，spec §11 阶段 1）：canonical 优先；主线条件不足（将落入默认 END_TRAGIC）且时间线分叉满足时，落入 alt 结局
+    if (state.timeline && state.timeline['1975'] === 'motown') return 'END_ALT_STAY_MOTOWN';
     return 'END_TRAGIC';                                     // 14 默认
   };
 

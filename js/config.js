@@ -48,8 +48,8 @@ window.MJ = window.MJ || {};
     ACH_COMEBACK: 0.0318, ACH_TIMELESS_KING: 0.2696, ACH_DIGITAL_PIONEER: 0.1352,
     ACH_ETERNAL: 0.003, ACH_TRUE_ETERNAL: 0, ACH_BIOPIC: 0.0618, ACH_BIOPIC_SELF: 0.0684,
     ACH_BEYOND: 0.1984, ACH_END_STATESMAN: 0.0228, ACH_END_INNOVATOR: 0.039,
-    ACH_END_MENTOR: 0.0018, ACH_END_RECLUSE_SERENE: 0.004, ACH_GRAMMY_SWEEP: 0,
-    ACH_GRAMMY_LEGEND: 0.0974, ACH_DREAMER: 0.0788, ACH_PETERPAN: 0.1928, ACH_GREATWALL: 0.07,
+    ACH_END_MENTOR: 0.0018, ACH_END_RECLUSE_SERENE: 0.004, ACH_GRAMMY_SWEEP: 0.2168,
+    ACH_GRAMMY_LEGEND: 0.6222, ACH_DREAMER: 0.0788, ACH_PETERPAN: 0.1928, ACH_GREATWALL: 0.07,
     ACH_THISISIT: 0.0636, ACH_DANCE_GOD: 0.006, ACH_PHIL_3: 0.6134, ACH_CHARITY_CONCERT: 0,
     ACH_CATALOG_KING: 0.0092, ACH_SMOOTH: 0.9972, ACH_PEACE_3: 0.581, ACH_LONELY_KING: 0,
     ACH_FAMILY_WARM: 0.386, ACH_COMEBACK_2: 0.0318, ACH_EGG_HUNTER: 0, ACH_VARIANT_20: 0.2548,
@@ -68,7 +68,8 @@ window.MJ = window.MJ || {};
     END_INNOVATOR: 'rare', END_RECLUSE: 'rare', END_RECLUSE_SERENE: 'rare', END_MENTOR: 'rare',
     END_ETERNAL: 'rare', END_SURVIVE_DEBT: 'rare', END_FINANCIAL: 'rare',
     END_PERFECT: 'epic', END_STATESMAN: 'epic', END_ART_PEAK: 'epic',
-    END_TRAGIC: 'legendary', END_TRUE_ETERNAL: 'legendary'
+    END_TRAGIC: 'legendary', END_TRUE_ETERNAL: 'legendary',
+    END_ALT_STAY_MOTOWN: 'rare'
   };
 
   // 元路线破平次序：艺术 > 慈善 > 商业 > 隐士（GDD 7.2 注释）
@@ -123,6 +124,11 @@ window.MJ = window.MJ || {};
       name: '历史悲剧', icon: '💔', tone: '悲伤、宿命', year: 2009, summary: '烧伤、依赖与 2009 离世交织的宿命。',
       hint: '经历百事烧伤后选择依赖药物、仍坚持 This Is It，并让健康跌至谷底。',
       monologue: '灼伤、药物，与那场永远停在 2009 年的夏天——你的故事被太多人写过，却少有人真正读懂。\n聚光灯有多亮，身后的影子就有多长。历史会记得你的旋律，也会记得你没能躲过的那些暗箭。'
+    },
+    END_ALT_STAY_MOTOWN: {
+      name: '厂牌老兵', icon: '🎺', tone: '安稳、温情', year: 2009, summary: '留在 Motown，与兄弟共度一生，艺术中庸却家庭安稳。',
+      hint: '在 1975 的岔口选择「留在 Motown」（架空决策 BP1），走一条不走单飞传奇的家族路线。',
+      monologue: '没有 Epic 的改名风波，没有 solo 的孤峰，你们始终是「杰克逊五人组」。\n唱片销量或许少了几座山峰，可年夜饭的桌上永远坐着所有人——有些荣耀，本来就该一家人分着领。'
     },
     END_ART_PEAK: {
       name: '艺术巅峰', icon: '🎵', tone: '辉煌、悲壮', year: 2009, summary: '克服依赖，以最高艺术谢幕。',
@@ -292,8 +298,8 @@ window.MJ = window.MJ || {};
       check: function (s) { return (s.meta.artPath || 0) >= 3; } },
     { id: 'ACH_PHIL_3', name: '慈善三重奏', icon: '🤲', rarity: 'rare', desc: '单局内 爱心 累计 ≥3。',
       check: function (s) { return (s.meta.phil || 0) >= 3; } },
-    { id: 'ACH_CHARITY_CONCERT', name: '义演行者', icon: '🎗️', rarity: 'rare', desc: '单局内触发 ≥2 次慈善/义演事件。',
-      check: function (s) { return (s.flags.charityConcert || 0) >= 2; } },
+    { id: 'ACH_CHARITY_CONCERT', name: '义演行者', icon: '🎗️', rarity: 'rare', desc: '单局内触发 ≥1 次慈善/义演事件（如《We Are The World》、治愈世界义演）。',
+      check: function (s) { return (s.flags.charityConcert || 0) >= 1; } },
     { id: 'ACH_CATALOG_KING', name: '版权之王', icon: '👑', rarity: 'epic', desc: '同时持有 ATV + Sony/ATV 半数 + 自创厂牌。',
       check: function (s) { return s.flags.atvBought === true && s.flags.sonyMerge === true && (s.meta.mogul || 0) >= 2; } },
     { id: 'ACH_SMOOTH', name: '完美月球漫步', icon: '🌠', rarity: 'rare', desc: '跨周目在 3_1b 选“完美演绎” ≥2 次。',

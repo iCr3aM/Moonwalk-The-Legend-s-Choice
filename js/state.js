@@ -12,6 +12,7 @@ window.MJ = window.MJ || {};
     this.flags = Object.assign({}, cfg.initialFlags);
     this.meta = Object.assign({}, cfg.initialMeta);
     this.netWorth = cfg.initialNetWorth; // 万元
+    this.timeline = {}; // 架空历史时间线分叉（BP 决策点写入，如 '1975':'motown'）
     this.debt = false;
     // 卓越档：声誉/艺术超出 100 的溢出值（独立计数，不污染 0–100 刻度与结局/成就阈值）
     this.overflow = { reputation: 0, art: 0 };
@@ -54,7 +55,7 @@ window.MJ = window.MJ || {};
   GameState.prototype.applyMoney = function (amount) {
     if (!amount) return;
     this.netWorth += amount;
-    if (this.netWorth < 0) this.debt = true;
+    this.debt = this.netWorth < 0; // 负债=当前资不抵债；资产转正即解除，修复"富有却财务崩溃"
     // 财富属性（0–100）由净资产推导，确保「财富」与「净资产」始终一致
     var scale = (MJ.config && MJ.config.wealthScale) || 150;
     var w = Math.round(this.netWorth / scale);
@@ -82,6 +83,7 @@ window.MJ = window.MJ || {};
     return {
       attributes: this.attributes,
       flags: this.flags,
+      timeline: this.timeline,
       meta: this.meta,
       netWorth: this.netWorth,
       debt: this.debt,
@@ -103,7 +105,8 @@ window.MJ = window.MJ || {};
     this.flags = data.flags || this.flags;
     this.meta = data.meta || this.meta;
     this.netWorth = data.netWorth != null ? data.netWorth : this.netWorth;
-    this.debt = !!data.debt;
+    this.debt = this.netWorth < 0; // 由净资产派生，存档不存债务快照
+    this.timeline = data.timeline || {};
     this.relations = data.relations || Object.assign({}, MJ.config.initialRelations);
     this.diary = data.diary || [];
     this.echoes = data.echoes || [];

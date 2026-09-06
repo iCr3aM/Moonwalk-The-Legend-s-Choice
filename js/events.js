@@ -359,7 +359,7 @@ window.MJ = window.MJ || {};
   // ---------- 主线偏薄章节拓展（g5：GDD §17.3） ----------
   // —— §17.14 格莱美揭晓：2_6 进入即结算 otw（见 planner.resolveGrammy）——
   E['2_6'] = {
-    id: '2_6', year: 1981, title: T('event.2_6.title', null, '格莱美加冕之夜'), kind: 'choice', key: true,
+    id: '2_6', year: 1981, title: T('event.2_6.title', null, '格莱美加冕之夜'), kind: 'choice', key: true, grammyReveal: 'otw',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'otw'); },
     text: function (s) {
       return narr(T('event.2_6.text', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。台下的昆西笑着鼓掌——这段黄金搭档，开始被世人记住。'), s, [
@@ -470,7 +470,7 @@ window.MJ = window.MJ || {};
 
   // —— §17.14 格莱美揭晓：onEnter 在展示前结算（见 planner.resolveGrammy），text 按座数分档叙事 ——
   E['3_3'] = {
-    id: '3_3', year: 1984, title: T('event.3_3.title', null, '《Thriller》格莱美之夜'), kind: 'auto',
+    id: '3_3', year: 1984, title: T('event.3_3.title', null, '《Thriller》格莱美之夜'), kind: 'auto', grammyReveal: 'thriller',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'thriller'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -1889,7 +1889,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_SFG_2026.opt0.label', null, 'A：云端同台（全息 / 预录）'), hint: T('event.V_SFG_2026.opt0.hint', null, '与里奇、成龙隔空合唱《We Are The World》（声誉+5，慈善+1，歌迷+8）'), effects: { reputation: 5, phil: 1 }, rel: { fans: 8 }, flags: { sfgDuet: true }, epilogue: T('event.V_SFG_2026.opt0.epilogue', null, '你点下那支虚拟的麦克风，与相隔半球的声音合成同一句“we are the world”。这一刻，距离被歌声抹平。'), next: '__RETURN__' },
+      { label: T('event.V_SFG_2026.opt0.label', null, 'A：云端同台（全息 / 预录）'), hint: T('event.V_SFG_2026.opt0.hint', null, '与里奇、成龙隔空合唱《We Are The World》（声誉+5，慈善+1，歌迷+8）'), effects: { reputation: 5, phil: 1, rel: { fans: 8 } }, flags: { sfgDuet: true }, epilogue: T('event.V_SFG_2026.opt0.epilogue', null, '你点下那支虚拟的麦克风，与相隔半球的声音合成同一句“we are the world”。这一刻，距离被歌声抹平。'), next: '__RETURN__' },
       { label: T('event.V_SFG_2026.opt1.label', null, 'B：致辞致敬和平'), hint: T('event.V_SFG_2026.opt1.hint', null, '发表“音乐无国界、童心即和平”的简短致辞（声誉+3，压力-3）'), effects: { reputation: 3, stress: -3 }, flags: { sfgSpeech: true }, epilogue: T('event.V_SFG_2026.opt1.epilogue', null, '你对着镜头只说了一句：“让童心，做这世上最长久的和平。”台下的掌声，隔着屏幕仍能听见。'), next: '__RETURN__' },
       { label: T('event.V_SFG_2026.opt2.label', null, 'C：婉拒，守在家的炉火边'), hint: T('event.V_SFG_2026.opt2.hint', null, '更想安静地看直播（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, flags: { sfgDecline: true }, epilogue: T('event.V_SFG_2026.opt2.epilogue', null, '你关掉邀约，窝在沙发里看直播；屏幕里的合唱很暖，身边的炉火更暖。有些团圆，不必到场也算。'), next: '__RETURN__' }
     ]
@@ -2380,7 +2380,7 @@ window.MJ = window.MJ || {};
   // ---------- §17.14 格莱美揭晓节点（企划器+巡演 → 涌现结算，见 planner.resolveGrammy） ----------
   // 由各自 era 的巡演/专辑节点后进入，onEnter 在展示前结算，text 按座数分档叙事。
   E['4_2a_g'] = {
-    id: '4_2a_g', year: 1988, title: T('event.4_2a_g.title', null, '《Bad》格莱美之夜'), kind: 'auto',
+    id: '4_2a_g', year: 1988, title: T('event.4_2a_g.title', null, '《Bad》格莱美之夜'), kind: 'auto', grammyReveal: 'bad',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'bad'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -2393,7 +2393,7 @@ window.MJ = window.MJ || {};
     next: '4_2b'
   };
   E['5_2g'] = {
-    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '《Dangerous》格莱美之夜'), kind: 'auto',
+    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '《Dangerous》格莱美之夜'), kind: 'auto', grammyReveal: 'dangerous',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'dangerous'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -2406,7 +2406,7 @@ window.MJ = window.MJ || {};
     next: '5_2b'
   };
   E['6_1e_g'] = {
-    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '《HIStory》格莱美之夜'), kind: 'auto',
+    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '《HIStory》格莱美之夜'), kind: 'auto', grammyReveal: 'history',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'history'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -2419,7 +2419,7 @@ window.MJ = window.MJ || {};
     next: '6_2'
   };
   E['6_3b_g'] = {
-    id: '6_3b_g', year: 2002, title: T('event.6_3b_g.title', null, '《Invincible》格莱美之夜'), kind: 'auto',
+    id: '6_3b_g', year: 2002, title: T('event.6_3b_g.title', null, '《Invincible》格莱美之夜'), kind: 'auto', grammyReveal: 'invincible',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'invincible'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -2573,15 +2573,15 @@ window.MJ = window.MJ || {};
   };
   E.V_J5_EPIC = {
     id: 'V_J5_EPIC', variant: true, window: [1975, 1976], weight: 24,
-    title: T('event.V_J5_EPIC.title', null, '易主与更名'), kind: 'choice',
+    title: T('event.V_J5_EPIC.title', null, '1975：留 Motown 还是转会 Epic？'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.V_J5_EPIC.text', null, '1975 年，组合离开摩城（Motown），转投 Epic 唱片，并更名“The Jacksons”。杰梅因留在原公司，由弟弟兰迪（Randy）补入阵容。一个新的起点，在争议中拉开。'), s, [
-        { cond: function (s) { return (s.attributes.recluse || 0) >= 1; }, text: T('event.V_J5_EPIC.branch0.text', null, '名字换了，血缘没换；你更明白什么才真正属于自己。') }
+      return narr(T('event.V_J5_EPIC.text', null, '1975 年，Motown 的续约条件愈发苛刻，而 Epic 递来更自由的创作空间。Jackson 5 站在命运的岔口：是守住老东家的温情、与兄弟共进退，还是转投 Epic、更名 The Jacksons（杰梅因留任 Motown，弟弟兰迪补入）？'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_J5_EPIC.branch0.text', null, '兄弟们挤在一处商量，像小时候分吃一块糖——谁也舍不得先开口。') }
       ]);
     },
     options: [
-      { label: T('event.V_J5_EPIC.opt0.label', null, 'A：拥抱新阵型'), hint: T('event.V_J5_EPIC.opt0.hint', null, '顺势新生（声誉+4，手足+4）'), effects: { reputation: 4, rel: { brothers: 4 } }, epilogue: T('event.V_J5_EPIC.opt0.epilogue', null, '排练时你与兰迪握了握手——和声自会找到新的形状。'), next: '__RETURN__' },
-      { label: T('event.V_J5_EPIC.opt1.label', null, 'B：惦记旧情谊'), hint: T('event.V_J5_EPIC.opt1.hint', null, '念旧亦重（家庭+3，压力+2）'), effects: { family: 3, stress: 2 }, next: '__RETURN__' }
+      { label: T('event.V_J5_EPIC.opt0.label', null, 'A：留在 Motown，与兄弟共进退'), hint: T('event.V_J5_EPIC.opt0.hint', null, '忠诚老东家，走一条更安稳的家族路线（家庭+6，艺术+2）'), effects: { family: 6, art: 2, timeline: { '1975': 'motown' } }, next: '__RETURN__' },
+      { label: T('event.V_J5_EPIC.opt1.label', null, 'B：转会 Epic，更名 The Jacksons'), hint: T('event.V_J5_EPIC.opt1.hint', null, '拥抱更大舞台，兰迪补入新阵型（声誉+4，手足+4）'), effects: { reputation: 4, rel: { brothers: 4 }, timeline: { '1975': 'epic' } }, epilogue: T('event.V_J5_EPIC.opt1.epilogue', null, '排练时你与兰迪握了握手——和声自会找到新的形状。'), next: '__RETURN__' }
     ]
   };
   E.V_AWARD_LEGEND = {
