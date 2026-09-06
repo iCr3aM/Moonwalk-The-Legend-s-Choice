@@ -23,6 +23,8 @@ MJ.ui = {
 var triggers = {};
 var _orig = MJ.engine.pickVariant;
 MJ.engine.pickVariant = function (year) { var vid = _orig.call(MJ.engine, year); if (vid) triggers[vid] = (triggers[vid] || 0) + 1; return vid; };
+var _origF = MJ.engine._findForcedVariant;
+MJ.engine._findForcedVariant = function (year) { var vid = _origF.call(MJ.engine, year); if (vid) triggers[vid] = (triggers[vid] || 0) + 1; return vid; };
 
 function play() {
   MJ.engine.start();
@@ -81,6 +83,12 @@ rows.forEach(function (r) {
   var span = r.win[1] - r.win[0] + 1;
   if (r.t === 0 && coversMainline({ window: r.win }) && span >= 2) { console.log('FAIL 变体实际不可达(宽窗口仍 0 触发): ' + r.id + ' ' + JSON.stringify(r.win)); fail = 1; }
 });
+// 阶段 4 回归门禁：7 个 alt（假设线）结局必须在真实游玩中至少现身一次；
+// 防止「可达性门禁仅测直接求值、未测真实写入」类回归（如 STAY_MOTOWN=0）。
+for (var eid in MJ.config.endings) {
+  if (!MJ.config.endings.hasOwnProperty(eid) || eid.indexOf('END_ALT_') !== 0) continue;
+  if ((endings[eid] || 0) === 0) { console.log('FAIL 架空(alt)结局在真实游玩中 0 现身：' + eid); fail = 1; }
+}
 if (interiorEmpty.length) console.log('WARN 存在变体荒漠年份：' + interiorEmpty.join(','));
 
 console.log('\n概率平衡/可达性校准：' + (fail ? 'FAIL' : 'PASS（信息型报告，详见上）'));

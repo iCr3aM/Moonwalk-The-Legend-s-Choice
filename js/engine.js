@@ -300,6 +300,18 @@ window.MJ = window.MJ || {};
       return last.id;
     },
 
+    _findForcedVariant: function (year) {
+      if (year == null) return null;
+      for (var k in MJ.EVENTS) {
+        if (!MJ.EVENTS.hasOwnProperty(k)) continue;
+        var ev = MJ.EVENTS[k];
+        if (!ev || !ev.variant || !ev.force || !ev.window) continue;
+        if (this._usedVariants[k]) continue;
+        if (year >= ev.window[0] && year <= ev.window[1]) return k;
+      }
+      return null;
+    },
+
     go: function (id) {
       var ev = MJ.EVENTS[id];
       if (!ev) { console.error('事件缺失:', id); this.go('start'); return; }
@@ -313,8 +325,10 @@ window.MJ = window.MJ || {};
       // 变体事件插入（仅对主线非结局事件）
       if (!ev.variant && ev.kind !== 'ending') {
         var vid = null;
+        // BP 决策点：force 变体优先注入（绕过冷却/上限，保证关键分叉必现）
+        if (!vid) vid = this._findForcedVariant(ev.year);
         // §18.6 核心：每章上限 + 变体间冷却，控制弹出频率与聚簇
-        if (this._chapterVariantCount < VARIANT_CAP_PER_CHAPTER && this._sinceVariant >= VARIANT_COOLDOWN_NODES) {
+        if (!vid && this._chapterVariantCount < VARIANT_CAP_PER_CHAPTER && this._sinceVariant >= VARIANT_COOLDOWN_NODES) {
           vid = this.pickVariant(ev.year);
         }
         if (vid) {
@@ -327,6 +341,7 @@ window.MJ = window.MJ || {};
           this._return = id;
           this.state.stats.events = (this.state.stats.events || 0) + 1;
           if (vinst.onEnter) vinst.onEnter(this.state); // 变体分支同样在进入即结算
+          this._usedVariants[vid] = true; // 强制/普通变体均标记，避免 __RETURN__ 回到父节点后重复注入
           this._chapterVariantCount++;
           this._sinceVariant = 0;
           MJ.saveSystem.save(this.state);

@@ -248,17 +248,17 @@ window.MJ = window.MJ || {};
   };
 
   E['1_8'] = {
-    id: '1_8', year: 1976, title: T('event.1_8.title', null, '转投 CBS'), kind: 'choice',
+    id: '1_8', year: 1976, title: T('event.1_8.title', null, '1975：留 Motown 还是转会 Epic？'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.1_8.text', null, '组合转投 CBS，改名“The Jacksons”，旧招牌翻作新序章。路怎么走，每个人心里都打着算盘。'), s, [
+      return narr(T('event.1_8.text', null, '组合与 Motown 的合约将尽，转会 CBS（即 Epic 厂牌）的传闻四起。是守住 Motown 这块老招牌，还是跳上新的列车？这一笔，写的是你与“家”与“自我”的拉扯。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) <= 50; }, text: T('event.1_8.branch0.text', null, '与父亲的裂痕还在隐隐作痛，新合约更像一场逃离。') },
         { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.1_8.branch1.text', null, '名气的惯性推着你往前，团体的船调转了新航向。') }
       ]);
     },
     options: [
-      { label: T('event.1_8.opt0.label', null, 'A：拥抱团体的新起点'), hint: T('event.1_8.opt0.hint', null, '家和万事兴（家庭+10，艺术+5）'), effects: { family: 10, art: 5 }, next: '2_1' },
-      { label: T('event.1_8.opt1.label', null, 'B：借船出海推自己'), hint: T('event.1_8.opt1.hint', null, '个人声量悄悄上涨（艺术+10，声誉+5）'), effects: { art: 10, reputation: 5 }, next: '2_1' },
-      { label: T('event.1_8.opt2.label', null, 'C：和父亲彻底决裂'), hint: T('event.1_8.opt2.hint', null, '挣脱桎梏，也失了来处（家庭-15，压力+10）'), effects: { family: -15, stress: 10 }, next: '2_1' }
+      { label: T('event.1_8.opt0.label', null, 'A：留在 Motown，守住初心'), hint: T('event.1_8.opt0.hint', null, '不离老厂牌（家庭+10，艺术+5）'), effects: { family: 10, art: 5, timeline: { '1975': 'motown' } }, next: '2_1' },
+      { label: T('event.1_8.opt1.label', null, 'B：转投 CBS/Epic，开创新局'), hint: T('event.1_8.opt1.hint', null, '拥抱新厂牌（艺术+10，声誉+5）'), effects: { art: 10, reputation: 5, timeline: { '1975': 'epic' } }, next: '2_1' },
+      { label: T('event.1_8.opt2.label', null, 'C：与父亲及旧体系决裂'), hint: T('event.1_8.opt2.hint', null, '挣脱桎梏，也失了来处（家庭-15，压力+10）'), effects: { family: -15, stress: 10, timeline: { '1975': 'epic' } }, next: '2_1' }
     ]
   };
 
@@ -2571,22 +2571,9 @@ window.MJ = window.MJ || {};
       { label: T('event.V_J5_TOUR.opt1.label', null, 'B：暗中较劲更卖力'), hint: T('event.V_J5_TOUR.opt1.hint', null, '兄弟竞合（艺术+4，压力+2）'), effects: { art: 4, stress: 2 }, next: '__RETURN__' }
     ]
   };
-  E.V_J5_EPIC = {
-    id: 'V_J5_EPIC', variant: true, window: [1975, 1976], weight: 24,
-    title: T('event.V_J5_EPIC.title', null, '1975：留 Motown 还是转会 Epic？'), kind: 'choice',
-    text: function (s) {
-      return narr(T('event.V_J5_EPIC.text', null, '1975 年，Motown 的续约条件愈发苛刻，而 Epic 递来更自由的创作空间。Jackson 5 站在命运的岔口：是守住老东家的温情、与兄弟共进退，还是转投 Epic、更名 The Jacksons（杰梅因留任 Motown，弟弟兰迪补入）？'), s, [
-        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_J5_EPIC.branch0.text', null, '兄弟们挤在一处商量，像小时候分吃一块糖——谁也舍不得先开口。') }
-      ]);
-    },
-    options: [
-      { label: T('event.V_J5_EPIC.opt0.label', null, 'A：留在 Motown，与兄弟共进退'), hint: T('event.V_J5_EPIC.opt0.hint', null, '忠诚老东家，走一条更安稳的家族路线（家庭+6，艺术+2）'), effects: { family: 6, art: 2, timeline: { '1975': 'motown' } }, next: '__RETURN__' },
-      { label: T('event.V_J5_EPIC.opt1.label', null, 'B：转会 Epic，更名 The Jacksons'), hint: T('event.V_J5_EPIC.opt1.hint', null, '拥抱更大舞台，兰迪补入新阵型（声誉+4，手足+4）'), effects: { reputation: 4, rel: { brothers: 4 }, timeline: { '1975': 'epic' } }, epilogue: T('event.V_J5_EPIC.opt1.epilogue', null, '排练时你与兰迪握了握手——和声自会找到新的形状。'), next: '__RETURN__' }
-    ]
-  };
   // ===== 阶段 3：架空历史 BP2–BP7 决策点变体（写入 state.timeline / flag，驱动 END_ALT_*；史实经 docs/mjwiki/ 逐项核实） =====
   E.V_OFFWALL_QJ = {
-    id: 'V_OFFWALL_QJ', variant: true, window: [1979, 1981], weight: 22,
+    id: 'V_OFFWALL_QJ', variant: true, force: true, window: [1979, 1981], weight: 22,
     title: T('event.V_OFFWALL_QJ.title', null, '1979：与 Quincy Jones 联手，还是独立制作？'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_OFFWALL_QJ.text', null, '1979 年，《Off the Wall》问世——这是你与制作人昆西·琼斯（Quincy Jones）首度合作的专辑。下一阶段的创作主导权，握在谁手里？是延续这位黄金搭档，还是收回主导权、以独立制作人身份掌舵？'), s, [
