@@ -390,7 +390,7 @@ window.MJ = window.MJ || {};
       check: function () { try { return MJ.eggSystem && MJ.eggSystem.count && MJ.eggSystem.count() >= 8; } catch (e) { return false; } } },
     { id: 'ACH_VARIANT_20', name: '变体收藏家', icon: '🎲', rarity: 'epic', desc: '单局内触发 ≥20 次变体事件。',
       check: function (s) { return (s.stats.variants || 0) >= 20; } },
-    { id: 'ACH_ALL_ENDINGS', name: '人生百态', icon: '🗺️', rarity: 'legendary', desc: '解锁全部 25 个结局。',
+    { id: 'ACH_ALL_ENDINGS', name: '人生百态', icon: '🗺️', rarity: 'legendary', desc: '解锁全部 30 个结局。',
       check: function () { try { var g = MJ.saveSystem.getGallery ? MJ.saveSystem.getGallery() : {}; return Object.keys(g).length >= Object.keys(MJ.config.endings).length; } catch (e) { return false; } } },
     { id: 'ACH_SPEEDRUN', name: '速通人生', icon: '⚡', rarity: 'rare', desc: '以极简路径（极少节点）抵达任一结局。',
       check: function (s) { return (s.stats.events || 99) <= 24; } },
