@@ -36,7 +36,7 @@ let html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 
 // 1) 内联 CSS（用函数式替换，避免 css 内容里的 $&/$'/$\`/$$ 被当作特殊模式解释）
 html = html.replace(
-  /<link rel="stylesheet" href="css\/style\.css" \/>/,
+  /<link rel="stylesheet" href="css\/style\.css(\?[^"]*)?" \/>/,
   function () { return '<style>\n' + css + '\n</style>'; }
 );
 
