@@ -233,7 +233,8 @@ window.MJ = window.MJ || {};
   };
 
   E['1_5'] = {
-    id: '1_5', year: 1971, title: T('event.1_5.title', null, '是否单飞'), kind: 'choice', key: true,
+    id: '1_5', year: 1971, title: T('event.1_5.title', null, '是否单飞'), kind: 'choice', key: true, keyWeight: 3,
+    keyNote: T('event.1_5.keyNote', null, '这一步将决定你是以组合成员还是独唱巨星的身份走向世界，也牵动身后数十年的作品版权与公众形象。'),
     text: function (s) {
       return narr(T('event.1_5.text', null, '经纪公司递来一份个人合约。单飞意味着挣脱兄弟的影子、握住自己的方向盘，也意味着庆功宴上少了几张熟悉的面孔。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.1_5.branch0.text', null, '你望向兄弟们，单飞的决定像一把悄悄抽走的椅子。') },
@@ -371,7 +372,8 @@ window.MJ = window.MJ || {};
   };
 
   E['2_4'] = {
-    id: '2_4', year: 1979, title: T('event.2_4.title', null, '与 Epic 深度合作'), kind: 'choice', key: true,
+    id: '2_4', year: 1979, title: T('event.2_4.title', null, '与 Epic 深度合作'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.2_4.keyNote', null, '与 Epic 的深度合作程度，决定了你能否真正掌控自己的音乐方向，也为日后的厂牌博弈埋下伏笔。'),
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '3_1',
     text: function (s) {
       return narr(T('event.2_4.text', null, '厂牌伸出橄榄枝，邀你更深地绑定。合约的字里行间，藏着创作主导权与自由之间的权衡。'), s, [
@@ -420,7 +422,8 @@ window.MJ = window.MJ || {};
 
   // —— §17.3 主线偏薄章节拓展（Diana Ross 合作深化；单飞线 2_6→2_7→3_1）——
   E['2_7'] = {
-    id: '2_7', year: 1981, title: T('event.2_7.title', null, '戴安娜的引路'), kind: 'choice', key: true,
+    id: '2_7', year: 1981, title: T('event.2_7.title', null, '戴安娜的引路'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.2_7.keyNote', null, '戴安娜递来的不仅是引路，还有一段被全世界注视的婚姻；这一步会改写你的私人叙事与公众形象。'),
     text: function (s) {
       return narr(T('event.2_7.text', null, '单飞后的第一次低谷，戴安娜·罗斯递来一双温暖的手。她记得你还是盖瑞那个追着她跑的小男孩，如今却先于她站上了独唱的塔尖。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.2_7.branch0.text', null, '你忽然懂了：所谓引路，是把后来者托到自己所不及的高度。') }
@@ -453,7 +456,8 @@ window.MJ = window.MJ || {};
   };
 
   E['3_1b'] = {
-    id: '3_1b', year: 1983, title: T('event.3_1b.title', null, 'Motown 25 月球漫步'), kind: 'choice', key: true,
+    id: '3_1b', year: 1983, title: T('event.3_1b.title', null, 'Motown 25 月球漫步'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.3_1b.keyNote', null, 'Motown 25 的那一步月球漫步，让全世界第一次记住了属于你的标志性动作，也点燃了独唱生涯的星火。'),
     text: function (s) {
       return narr(T('event.3_1b.text', null, 'Motown 25 周年直播现场，灯光暗下又骤亮。你决定，把那段藏在袜子里的舞步，献给全世界。'), s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.3_1b.branch0.text', null, '长久的苦练在这一刻有了出口，脚下的滑步像是早已注定。') },
@@ -483,7 +487,8 @@ window.MJ = window.MJ || {};
   };
 
   E['3_2'] = {
-    id: '3_2', year: 1984, title: T('event.3_2.title', null, '百事广告'), kind: 'choice', key: true,
+    id: '3_2', year: 1984, title: T('event.3_2.title', null, '百事广告'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.3_2.keyNote', null, '百事广告带来破纪录的曝光与收入，却也埋下一场意外烧伤的伏笔，牵动你此后的健康与止痛药依赖。'),
     text: function (s) {
       return narr(T('event.3_2.text', null, '百事可乐的合约铺开红毯，片场的聚光灯比演唱会还刺眼。谁也没料到，那一簇火苗会改写此后的人生。'), s, [
         { cond: function (s) { return (s.attributes.stress || 0) >= 45; }, text: T('event.3_2.branch0.text', null, '连广告片场都透着紧绷，你比谁都清楚，风光背后总有代价。') }
@@ -561,7 +566,8 @@ window.MJ = window.MJ || {};
   };
 
   E['3_6'] = {
-    id: '3_6', year: 1985, title: T('event.3_6.title', null, '收购 ATV 版权'), kind: 'choice', key: true,
+    id: '3_6', year: 1985, title: T('event.3_6.title', null, '收购 ATV 版权'), kind: 'choice', key: true, keyWeight: 3,
+    keyNote: T('event.3_6.keyNote', null, '收购 ATV 版权是一步惊动业界的棋：你握住了无数前辈的金曲，也握住了日后与索尼博弈的筹码。'),
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '4_0',
     text: function (s) {
       return narr(T('event.3_6.text', null, '机会来了：买下包含披头士作品的 ATV 版权目录。这不只是生意，更是把音乐版图纳入掌心的野心。'), s, [
@@ -592,7 +598,8 @@ window.MJ = window.MJ || {};
   };
 
   E['4_1'] = {
-    id: '4_1', year: 1988, title: T('event.4_1.title', null, '梦幻庄园'), kind: 'choice', key: true,
+    id: '4_1', year: 1988, title: T('event.4_1.title', null, '梦幻庄园'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.4_1.keyNote', null, '梦幻庄园不只是住所，它定义了你想要的童话乌托邦，也决定了「Neverland」成为你余生公众形象的注脚。'),
     text: function (s) {
       return narr(T('event.4_1.text', null, '你在加州买下一座庄园，取名“Neverland”——一个属于童真、旋转木马与欢笑的乌托邦。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.4_1.branch0.text', null, '你想象着孩子们的笑声填满庄园，那画面比任何舞台都动人。') },
@@ -695,7 +702,8 @@ window.MJ = window.MJ || {};
   };
 
   E['4_4'] = {
-    id: '4_4', year: 1989, title: T('event.4_4.title', null, '后《Bad》时代'), kind: 'choice', key: true,
+    id: '4_4', year: 1989, title: T('event.4_4.title', null, '后《Bad》时代'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.4_4.keyNote', null, '《Bad》之后的走向，决定你是乘胜追击还是转身沉淀，影响艺术声誉与下一张专辑的势能。'),
     text: function (s) {
       return narr(T('event.4_4.text', null, '《Bad》的余温还在，世界已经把你看作流行乐的代名词。站在 1989 的十字路口，你要想想，接下来的名字该写向哪里。'), s, [
         { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.4_4.branch0.text', null, '商人的直觉告诉你，名气之外还有更大的版图可画。') }
@@ -758,7 +766,8 @@ window.MJ = window.MJ || {};
   };
 
   E['5_2b'] = {
-    id: '5_2b', year: 1992, title: T('event.5_2b.title', null, 'Heal the World 基金会'), kind: 'choice', key: true,
+    id: '5_2b', year: 1992, title: T('event.5_2b.title', null, 'Heal the World 基金会'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.5_2b.keyNote', null, 'Heal the World 基金会让你的善意有了制度化的出口，也把「慈善」写进了你的公众身份。'),
     text: function (s) {
       return narr(T('event.5_2b.text', null, '你创立 Heal the World 基金会，想把舞台上的爱，分一点给那些够不着灯光的孩子。'), s, [
         { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.5_2b.branch0.text', null, '公益的火苗已经点燃，这一次你只是往里添了更多柴。') },
@@ -803,7 +812,8 @@ window.MJ = window.MJ || {};
   };
 
   E['5_3'] = {
-    id: '5_3', year: 1993, title: T('event.5_3.title', null, '1993 年民事指控'), kind: 'choice', key: true,
+    id: '5_3', year: 1993, title: T('event.5_3.title', null, '1993 年民事指控'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.5_3.keyNote', null, '1993 年的指控把你推到舆论与法庭的交汇点，如何回应将深刻影响声誉与随后的处境。'),
     cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; }, fallback: '5_5',
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {
@@ -821,7 +831,8 @@ window.MJ = window.MJ || {};
   };
 
   E['5_4'] = {
-    id: '5_4', year: 1993, title: T('event.5_4.title', null, '药物依赖公开'), kind: 'auto', key: true,
+    id: '5_4', year: 1993, title: T('event.5_4.title', null, '药物依赖公开'), kind: 'auto', key: true, keyWeight: 3,
+    keyNote: T('event.5_4.keyNote', null, '止痛药的依赖在伤痛之后悄然生根；这一步公开与否，关系到健康、形象与日后最危险的滑坡。'),
     cond: function (s) { return s.flags.isPepsiBurned === true && s.flags.painkillerDependent === true; }, fallback: '5_5',
     text: function (s) {
       return narr(T('event.5_4.text', null, '长年倚赖的止痛药物，终于被外界的目光揪了出来。依赖，从私密的伤口变成了公开的注脚。'), s, [
@@ -832,7 +843,8 @@ window.MJ = window.MJ || {};
   };
 
   E['5_5'] = {
-    id: '5_5', year: 1994, title: T('event.5_5.title', null, '与 Lisa Marie 结婚'), kind: 'choice', key: true,
+    id: '5_5', year: 1994, title: T('event.5_5.title', null, '与 Lisa Marie 结婚'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.5_5.keyNote', null, '与 Lisa Marie 的婚姻是世纪话题，也是你在风暴中寻求同盟的一步，牵动私生活与公众叙事。'),
     text: function (s) {
       return narr(T('event.5_5.text', null, '你与 Lisa Marie Presley 携手步入婚姻，两段孤独的星轨，在镜头前短暂交叠。'), s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.5_5.branch0.text', null, '两道星轨的交叠被镜头津津乐道，你分不清是爱还是表演。') },
@@ -865,7 +877,8 @@ window.MJ = window.MJ || {};
   };
 
   E['6_1b'] = {
-    id: '6_1b', year: 1995, title: T('event.6_1b.title', null, '索尼合并'), kind: 'choice', key: true,
+    id: '6_1b', year: 1995, title: T('event.6_1b.title', null, '索尼合并'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.6_1b.keyNote', null, '与索尼的合并把你的版权版图推到新高度，也让你更深地卷入资本与创作的拉锯。'),
     cond: function (s) { return s.flags.isSolo === true && s.flags.epicDeep === true; }, fallback: '6_1c',
     text: function (s) {
       return narr(T('event.6_1b.text', null, '你可将 ATV 版权与索尼合并，把零散的版图拼成一张王座。这是商业棋局里最凶险也最诱人的一步。'), s, [
@@ -1056,7 +1069,8 @@ window.MJ = window.MJ || {};
   };
 
   E['6_4'] = {
-    id: '6_4', year: 2003, title: T('event.6_4.title', null, '第二次刑事指控'), kind: 'choice', key: true,
+    id: '6_4', year: 2003, title: T('event.6_4.title', null, '第二次刑事指控'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.6_4.keyNote', null, '2003 年的指控再度把你推上风口浪尖，回应方式将决定声誉的走向与续章的可能性。'),
     cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; }, fallback: '7_1',
     text: function (s) {
       if (s.flags.isSolo === true && s.flags.neverlandType !== 'none') {
@@ -1166,7 +1180,8 @@ window.MJ = window.MJ || {};
   };
 
   E['7_1'] = {
-    id: '7_1', year: 2008, title: T('event.7_1.title', null, '债务危机'), kind: 'choice', key: true,
+    id: '7_1', year: 2008, title: T('event.7_1.title', null, '债务危机'), kind: 'choice', key: true, keyWeight: 3,
+    keyNote: T('event.7_1.keyNote', null, '债务危机逼你直面财富的虚实：这一步处理不当，可能直接通向破产与最灰暗的结局。'),
     cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '7_1b',
     text: function (s) {
       return narr(T('event.7_1.text', null, '梦幻庄园像个吞金的无底洞，债务危机逼上门来。Colony Capital 递来一根浮木——条件是让你松手些许。'), s, [
@@ -1197,7 +1212,8 @@ window.MJ = window.MJ || {};
   };
 
   E['7_2'] = {
-    id: '7_2', year: 2009, title: T('event.7_2.title', null, 'This Is It'), kind: 'choice', key: true,
+    id: '7_2', year: 2009, title: T('event.7_2.title', null, 'This Is It'), kind: 'choice', key: true, keyWeight: 3,
+    keyNote: T('event.7_2.keyNote', null, 'This Is It 是你重返舞台的承诺，也是 2009 年命运的最后一次回响——这一程的终章由此落笔。'),
     text: function (s) {
       return narr(T('event.7_2.text', null, '你宣布《This Is It》系列演唱会，像要和岁月再赌一把。伦敦的舞台已经搭好，聚光灯在等你归来。'), s, [
         { cond: function (s) { return (s.attributes.health || 0) <= 45; }, text: T('event.7_2.branch0.text', null, '医生的叮嘱还悬在耳边，你却仍在盘算能撑几场。') },
@@ -1240,7 +1256,8 @@ window.MJ = window.MJ || {};
 
   // ---------- 续章：假设 2009 未离世（2010–2026） ----------
   E['8_0'] = {
-    id: '8_0', year: 2010, title: T('event.8_0.title', null, '续章 · 新的十年'), kind: 'choice', key: true,
+    id: '8_0', year: 2010, title: T('event.8_0.title', null, '续章 · 新的十年'), kind: 'choice', key: true, keyWeight: 2,
+    keyNote: T('event.8_0.keyNote', null, '续章开启新的十年：此前的种种选择，将在身后世界以遗产、音乐与争议的方式继续回响。'),
     text: function (s) {
       return narr(T('event.8_0.text', null, '2009 年的夏天，你撑过了那场关乎性命的排练。聚光灯没有熄灭——它只是换了个方向。'), s, [
         { cond: function (s) { return (s.attributes.health || 0) <= 50; }, text: T('event.8_0.branch0.text', null, '身体仍需小心养护，但你终于学会了与时钟讲和。') },

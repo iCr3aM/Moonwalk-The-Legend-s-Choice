@@ -416,7 +416,7 @@ window.MJ = window.MJ || {};
       var opt = opts[optIndex];
       if (!opt) return;
 
-      this.state.pushHistory({ id: ev.id, year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: opt.label, opt: optIndex, key: !!ev.key });
+      this.state.pushHistory({ id: ev.id, year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: opt.label, opt: optIndex, key: !!ev.key, keyWeight: (ev.keyWeight || 1) });
       if (ev.key) this.state.stats.keyChoices++;
       applyEffects(opt.effects, this.state);
       if (opt.moneyEffect) this.state.applyMoney(opt.moneyEffect);
@@ -444,7 +444,7 @@ window.MJ = window.MJ || {};
       var ev = this.current;
       applyEffects(ev.effects, this.state);
       if (ev.flags) for (var k in ev.flags) this.state.setFlag(k, ev.flags[k]);
-      this.state.pushHistory({ id: ev.id, year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: T('engine.experienced', null, '（经历）'), opt: -1, key: !!ev.key });
+      this.state.pushHistory({ id: ev.id, year: MJ.eventYear(ev), title: (MJ.localizeEvent ? MJ.localizeEvent(ev, this.state).title : ev.title), choice: T('engine.experienced', null, '（经历）'), opt: -1, key: !!ev.key, keyWeight: (ev.keyWeight || 1) });
       MJ.ruleEngine.afterEvent(this.state);
       MJ.saveSystem.save(this.state);
       this.advance(ev.next);

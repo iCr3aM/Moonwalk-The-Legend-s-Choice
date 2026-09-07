@@ -206,6 +206,20 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .history .step .t { color: var(--ink); min-width: 96px; }
 .history .step .c { color: var(--ink-dim); }
 .history .empty { color: var(--ink-dim); font-size: var(--fs-md); text-align: center; padding: 16px; }
+.history .step.top .t { color: var(--gold); font-weight: 600; }
+.history .kmore { margin-top: 4px; }
+.history .kmore > summary { cursor: pointer; color: var(--gold-soft); font-size: var(--fs-sm); padding: 3px 0; list-style: none; }
+.history .kmore > summary::-webkit-details-marker { display: none; }
+.key-note {
+  margin: 12px 0 2px; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--gold-soft); background: rgba(212,175,55,0.06);
+  font-size: var(--fs-sm); line-height: 1.7; color: var(--ink);
+}
+.key-note .kn-tag {
+  display: inline-block; margin-right: 6px; padding: 1px 9px; border-radius: 999px;
+  font-size: var(--fs-xs); font-weight: 600; color: var(--gold);
+  border: 1px solid var(--gold-soft); background: rgba(212,175,55,0.10);
+}
 
 /* ---------- 结局图鉴 ---------- */
 .gallery { padding: 14px 16px; }

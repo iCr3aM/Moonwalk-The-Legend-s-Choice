@@ -193,20 +193,35 @@ window.MJ = window.MJ || {};
   }
 
   // 关键抉择回顾：仅汇总被标记为关键节点的选择/经历（复用 history 数据）
+  // 按 keyWeight 降序、year 升序「精选置顶」，默认展开前 6 条，其余折叠为「+N 条」
+  function keyStepHtml(e) {
+    var w = e.keyWeight || 1;
+    return '<div class="step' + (w >= 3 ? ' top' : '') + '"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
+      '<span class="t">' + escapeHtml(historyTitle(e)) + '</span>' +
+      '<span class="c">' + escapeHtml(e.choice) + '</span></div>';
+  }
   function keyReviewPanel(state) {
     var h = state.history || [];
     var keys = h.filter(function (e) { return e.key; });
+    keys.sort(function (a, b) {
+      var wa = a.keyWeight || 1, wb = b.keyWeight || 1;
+      if (wa !== wb) return wb - wa;
+      return numYear(a.year) - numYear(b.year);
+    });
+    var CAP = 6;
+    var visible = keys.slice(0, CAP), rest = keys.slice(CAP);
     var inner = '<details class="panel history kreview" open>' +
       '<summary>' + T('ui.keyReviewTitle', null, '关键抉择回顾') + ' <span class="cnt">(' + keys.length + ')</span></summary>' +
       '<div class="timeline">';
     if (keys.length === 0) {
       inner += '<div class="empty">' + T('ui.keyReviewEmpty', null, '这一程没有惊心动魄的岔路，平凡本身也是一种答案。') + '</div>';
     } else {
-      chronoSteps(keys).forEach(function (e) {
-        inner += '<div class="step"><span class="yr">' + (e.year != null ? e.year : '—') + '</span>' +
-          '<span class="t">' + escapeHtml(historyTitle(e)) + '</span>' +
-          '<span class="c">' + escapeHtml(e.choice) + '</span></div>';
-      });
+      visible.forEach(function (e) { inner += keyStepHtml(e); });
+      if (rest.length) {
+        inner += '<details class="kmore"><summary>' + T('ui.keyReviewMore', { n: rest.length }, '展开其余 {n} 条') + '</summary>';
+        rest.forEach(function (e) { inner += keyStepHtml(e); });
+        inner += '</details>';
+      }
     }
     inner += '</div></details>';
     return inner;
@@ -1006,7 +1021,12 @@ window.MJ = window.MJ || {};
       ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif';
       ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22;
     } else {
-      var _picks = [_keys[0]]; if (_keys.length > 1) _picks.push(_keys[_keys.length - 1]);
+      _keys.sort(function (a, b) {
+        var wa = a.keyWeight || 1, wb = b.keyWeight || 1;
+        if (wa !== wb) return wb - wa;
+        return (a.year || 0) - (b.year || 0);
+      });
+      var _picks = _keys.slice(0, 2);
       for (var _ki = 0; _ki < _picks.length; _ki++) {
         var _kk = _picks[_ki];
         var _kt = _kk.title || '';
@@ -1250,9 +1270,13 @@ window.MJ = window.MJ || {};
     }
     var body =
       '<div class="panel event">' + epilogueHtml +
-        '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年</div>' +
+        '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年' + (ev.key ? ' <span class="pill pill-gold pill-xs">' + T('ui.keyChoicePill', null, '关键抉择') + '</span>' : '') + '</div>' +
         '<h2>' + escapeHtml(title) + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';
+    if (ev.keyNote) {
+      var _kn = (typeof ev.keyNote === 'function') ? ev.keyNote(state) : ev.keyNote;
+      body += '<div class="key-note"><span class="kn-tag">' + T('ui.keyNoteTag', null, '为什么关键') + '</span>' + escapeHtml(_kn) + '</div>';
+    }
 
     if (ev.grammyReveal) body += grammyAwardPanel(state, ev.grammyReveal);
 
