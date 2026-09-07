@@ -9,7 +9,7 @@ docs/
 check_keys.cjs
 debug_events.cjs
 event_keys.txt
-js/events.wrapped.js
+events.wrapped.js
 wrap_events.cjs
 
 # 系统 / 编辑器
