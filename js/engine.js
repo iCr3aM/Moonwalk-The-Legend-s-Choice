@@ -599,7 +599,12 @@ window.MJ = window.MJ || {};
       EGG_INVINCIBLE_COST: { icon: '💰', name: '最贵专辑', desc: '2001 年的《Invincible》制作历时四年、耗资约 3000 万美元，被称为“史上最贵专辑”。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50 || (s.attributes.wealth || 0) >= 40; } },
       EGG_HISTORY_DOUBLE:  { icon: '💿', name: '双碟《HIStory》', desc: '1995 年的《HIStory》是一张双碟专辑，被誉为独唱艺人最畅销的双碟之一。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
       EGG_BOTDF_REMIX:     { icon: '🎶', name: '最畅销混音辑', desc: '1997 年的《Blood on the Dance Floor》成为史上最畅销的混音专辑。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
-      EGG_13_NO1:          { icon: '🔝', name: '十三支冠军单曲', desc: '他拥有 13 支 Billboard Hot 100 冠军单曲，并列男性独唱艺人的纪录。', cond: function (s) { return (s.attributes.art || 0) >= 60 || (s.meta.artPath || 0) >= 2 || (s.attributes.reputation || 0) >= 70; } }
+      EGG_13_NO1:          { icon: '🔝', name: '十三支冠军单曲', desc: '他拥有 13 支 Billboard Hot 100 冠军单曲，并列男性独唱艺人的纪录。', cond: function (s) { return (s.attributes.art || 0) >= 60 || (s.meta.artPath || 0) >= 2 || (s.attributes.reputation || 0) >= 70; } },
+      EGG_MOTOWN25_REPLAY: { icon: '🌕', name: '重演月球漫步', desc: '你又一次把脚尖点地、向后滑行——那一夜 Motown 25 的欢呼，从未真正散场。' },
+      EGG_BAD_TOUR:        { icon: '🎤', name: 'Bad 全球巡演', desc: '1987–1989 的 Bad 世界巡演一场接一场，把流行王的版图铺到了五大洲的体育场。' },
+      EGG_DANGEROUS_PREM:  { icon: '🐆', name: 'Dangerous 首演', desc: '1991 年的《Dangerous》以黑豹与白袜的全新符号登场，把流行舞台又向前推了一步。' },
+      EGG_REMEMBER_TIME:   { icon: '🏛️', name: 'Remember the Time', desc: '1992 年的《Remember the Time》以古埃及为舞台的 MV，成了流行录影带视觉的一次大胆实验。' },
+      EGG_HISTORY_COMEBACK:{ icon: '👑', name: 'HIStory 回归', desc: '1995 年的《HIStory》以双碟姿态宣告回归，新歌与旧作一起，重新定义了“传奇仍在继续”。' }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
@@ -747,7 +752,12 @@ window.MJ = window.MJ || {};
 
       // —— P2-B：Cascio/Porte 相关冷知识（§17.15 严格中性：不点名、不渲染、不断言，仅陈述可考证公开事实）——
       TRIVIA_DOC_2003:  { icon: '📺', name: '一部纪录片的回响', desc: '2003 年，一部电视纪录片把聚光灯重新打在你身上，引发了一场旷日持久的公共讨论——镜头之外，是非留给了时间。', cond: function (s) { return s.flags.survived2009 === true; } },
-      TRIVIA_ESTATE_LITIGATION: { icon: '⚖️', name: '遗产相关的数起诉讼', desc: '你离场之后，围绕遗产的数起诉讼陆续提起、也陆续结案——账册合上，传奇仍在被一代代讲述。', cond: function (s) { return s.flags.survived2009 === true; } }
+      TRIVIA_ESTATE_LITIGATION: { icon: '⚖️', name: '遗产相关的数起诉讼', desc: '你离场之后，围绕遗产的数起诉讼陆续提起、也陆续结案——账册合上，传奇仍在被一代代讲述。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_BILLIE_JEAN_MTV: { icon: '📺', name: '《Billie Jean》破壁 MTV', desc: '1983 年，《Billie Jean》的黑白影像成为 MTV 首批大量播出的黑人艺人作品之一，悄悄改写了电视台的肤色边界。', cond: function (s) { return s.flags.thriller25 === true || (s.attributes.art || 0) >= 50; } },
+      TRIVIA_DONATED_500M:   { icon: '💛', name: '匿名捐出约五亿美元', desc: '据公开估算，你一生向慈善机构捐款约五亿美元，善意从不写在收据上。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 1; } },
+      TRIVIA_13_GRAMMY:     { icon: '🏆', name: '十三座格莱美', desc: '你职业生涯共获 13 座格莱美奖，其中包括传奇与终身成就类的加冕。', cond: function (s) { return (s.meta.grammyWins || 0) >= 1 || (s.attributes.reputation || 0) >= 70; } },
+      TRIVIA_FIVE_DECADES:  { icon: '📈', name: '横跨五个十年的前十', desc: '你是史上首位在五个不同十年都进入 Billboard 前十的艺人，时间没能拦住旋律。', cond: function (s) { return (s.attributes.reputation || 0) >= 70 || (s.meta.artPath || 0) >= 2; } },
+      TRIVIA_PEPSI_DEAL:    { icon: '🥤', name: '百事破纪录的代言', desc: '1984 年，你以约 500 万美元签下百事代言，刷新了当时艺人商业合作的纪录——镜头之外的故事，从不写进合同。', cond: function (s) { return s.flags.isSolo === true || (s.attributes.wealth || 0) >= 40; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }

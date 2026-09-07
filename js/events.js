@@ -3004,5 +3004,72 @@ window.MJ = window.MJ || {};
     ]
   };
 
+  // ---------- P4 内容扩充：5 个史实彩蛋变体（mjwiki 核实，§17.15 中性） ----------
+  E.V_MOTOWN25_REPLAY = {
+    id: 'V_MOTOWN25_REPLAY', variant: true, window: [1983, 1984], weight: 30,
+    title: T('event.V_MOTOWN25_REPLAY.title', null, 'Motown 25 的回响'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_MOTOWN25_REPLAY.text', null, '聚光灯再次亮起，你想起 1983 年那个深夜——电视直播里，你第一次把脚尖点地、向身后滑去。此刻，是否再跳一次给世界看？'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.V_MOTOWN25_REPLAY.branch0.text', null, '完美主义的你，连一个滑行都想精确到帧。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_MOTOWN25_REPLAY.opt0.label', null, 'A：再跳一次月球漫步'), hint: T('event.V_MOTOWN25_REPLAY.opt0.hint', null, '向经典致敬（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, flags: { egg_motown25_replay: true }, next: '__RETURN__' },
+      { label: T('event.V_MOTOWN25_REPLAY.opt1.label', null, 'B：把瞬间留给回忆'), hint: T('event.V_MOTOWN25_REPLAY.opt1.hint', null, '克制也是一种成熟（压力-3）'), effects: { stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_BAD_TOUR = {
+    id: 'V_BAD_TOUR', variant: true, window: [1987, 1989], weight: 28,
+    title: T('event.V_BAD_TOUR.title', null, '《Bad》全球巡演'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_BAD_TOUR.text', null, '《Bad》的舞台要走向世界了。经纪人数着一座座体育馆的档期，问你：这场远征，去还是不去？'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.V_BAD_TOUR.branch0.text', null, '你是符号般的存在，所到之处都是头条。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_BAD_TOUR.opt0.label', null, 'A：启程全球巡演'), hint: T('event.V_BAD_TOUR.opt0.hint', null, '巅峰舞台（声誉+10，财富+15，压力+6）'), effects: { reputation: 10, wealth: 15, stress: 6 }, flags: { egg_bad_tour: true }, next: '__RETURN__' },
+      { label: T('event.V_BAD_TOUR.opt1.label', null, 'B：精简几站，保重身体'), hint: T('event.V_BAD_TOUR.opt1.hint', null, '留白养身（压力-4，艺术+3）'), effects: { stress: -4, art: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_DANGEROUS_PREM = {
+    id: 'V_DANGEROUS_PREM', variant: true, window: [1991, 1992], weight: 28,
+    title: T('event.V_DANGEROUS_PREM.title', null, '《Dangerous》首演之夜'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_DANGEROUS_PREM.text', null, '1991 年，《Dangerous》来了。黑豹纹与白袜的造型在排练厅镜子前成形，首演的灯，等你按下。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.V_DANGEROUS_PREM.branch0.text', null, '每一个转身，你都练到肌肉记住了节拍。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_DANGEROUS_PREM.opt0.label', null, 'A：以新造型首演'), hint: T('event.V_DANGEROUS_PREM.opt0.hint', null, '重塑舞台符号（艺术+8，声誉+5）'), effects: { art: 8, reputation: 5 }, flags: { egg_dangerous_prem: true }, next: '__RETURN__' },
+      { label: T('event.V_DANGEROUS_PREM.opt1.label', null, 'B：保守亮相'), hint: T('event.V_DANGEROUS_PREM.opt1.hint', null, '稳妥（声誉+2）'), effects: { reputation: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_REMEMBER_TIME = {
+    id: 'V_REMEMBER_TIME', variant: true, window: [1992, 1993], weight: 26,
+    title: T('event.V_REMEMBER_TIME.title', null, '《Remember the Time》的片场'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REMEMBER_TIME.text', null, '1992 年，《Remember the Time》的 MV 要把舞台变成古埃及。导演喊着“法老驾到”，问你要不要入戏深一点？'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.V_REMEMBER_TIME.branch0.text', null, '你本就是个爱把想象搬上画面的人。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REMEMBER_TIME.opt0.label', null, 'A：沉浸古埃及幻境'), hint: T('event.V_REMEMBER_TIME.opt0.hint', null, '视觉大胆实验（艺术+7，声誉+4）'), effects: { art: 7, reputation: 4 }, flags: { egg_remember_time: true }, next: '__RETURN__' },
+      { label: T('event.V_REMEMBER_TIME.opt1.label', null, 'B：保持写实基调'), hint: T('event.V_REMEMBER_TIME.opt1.hint', null, '克制（艺术+2）'), effects: { art: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_HISTORY_COMEBACK = {
+    id: 'V_HISTORY_COMEBACK', variant: true, window: [1995, 1996], weight: 26,
+    title: T('event.V_HISTORY_COMEBACK.title', null, '《HIStory》的回归'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_HISTORY_COMEBACK.text', null, '1995 年，《HIStory》来了——一张双碟，一半是新歌，一半是传奇的重述。复出的聚光灯，等你接。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.V_HISTORY_COMEBACK.branch0.text', null, '你从不是被时间遗忘的名字。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_HISTORY_COMEBACK.opt0.label', null, 'A：以双碟回归'), hint: T('event.V_HISTORY_COMEBACK.opt0.hint', null, '宣告归来（声誉+10，艺术+6，压力+5）'), effects: { reputation: 10, art: 6, stress: 5 }, flags: { egg_history_comeback: true }, next: '__RETURN__' },
+      { label: T('event.V_HISTORY_COMEBACK.opt1.label', null, 'B：低调发行'), hint: T('event.V_HISTORY_COMEBACK.opt1.hint', null, '沉稳（压力-3）'), effects: { stress: -3 }, next: '__RETURN__' }
+    ]
+  };
+
   MJ.EVENTS = E;
 })();

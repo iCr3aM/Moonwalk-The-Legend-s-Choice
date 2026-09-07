@@ -488,6 +488,11 @@ window.MJ = window.MJ || {};
         'egg.EGG_THISISIT_FILM.name': 'This Is It', 'egg.EGG_THISISIT_FILM.desc': 'The 2009 concert film assembled from your final rehearsals let the world watch, one last time, the show that never opened.',
         'egg.EGG_BAD25.name': 'Bad 25', 'egg.EGG_BAD25.desc': 'The 2012 documentary marking Bad’s 25th anniversary revisited the album that reshaped the pop era.',
         'egg.EGG_MJ_HALLOWEEN.name': 'Michael Jackson’s Halloween', 'egg.EGG_MJ_HALLOWEEN.desc': 'The 2017 animated TV special brought his songs to a new generation as a Halloween-night fantasy.',
+        'egg.EGG_MOTOWN25_REPLAY.name': 'Encore of the Moonwalk', 'egg.EGG_MOTOWN25_REPLAY.desc': 'Once more you tiptoe and glide backward — the Motown 25 cheer never truly faded.',
+        'egg.EGG_BAD_TOUR.name': 'The Bad World Tour', 'egg.EGG_BAD_TOUR.desc': 'The 1987–1989 Bad World Tour swept city after city, spreading the King of Pop across five continents’ stadiums.',
+        'egg.EGG_DANGEROUS_PREM.name': 'Dangerous Premiere', 'egg.EGG_DANGEROUS_PREM.desc': 'In 1991 Dangerous arrived with a new symbol — black panther and white socks — pushing the pop stage one step further.',
+        'egg.EGG_REMEMBER_TIME.name': 'Remember the Time', 'egg.EGG_REMEMBER_TIME.desc': 'The 1992 “Remember the Time” video set its stage in ancient Egypt — a bold experiment in pop-video visuals.',
+        'egg.EGG_HISTORY_COMEBACK.name': 'The HIStory Comeback', 'egg.EGG_HISTORY_COMEBACK.desc': 'In 1995 HIStory returned as a double album — new songs and old anthems together, redefining “the legend goes on.”',
 
         // ---------- 趣事与轶事（GDD §17.11：Trivia & Anecdotes） ----------
         'ui.triviaCodex': 'Trivia Codex',
@@ -567,6 +572,11 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_ATV_CATALOG.name': 'The ATV Catalog', 'trivia.TRIVIA_ATV_CATALOG.desc': 'In 1985 he bought the Beatles and ATV song catalogs, turning melodies into inheritable assets.',
         'trivia.TRIVIA_BEATIT_GANGS.name': 'The Real Faces of “Beat It”', 'trivia.TRIVIA_BEATIT_GANGS.desc': '“Beat It” cast real gang youths, answering violence with dance — a stance against fighting.',
         'trivia.TRIVIA_BLACKORWHITE_PREMIERE.name': '“Black or White” Premiere', 'trivia.TRIVIA_BLACKORWHITE_PREMIERE.desc': 'In 1991 “Black or White” premiered worldwide, with some one hundred million viewers watching at once.',
+        'trivia.TRIVIA_BILLIE_JEAN_MTV.name': 'Billie Jean Breaks MTV’s Color Line', 'trivia.TRIVIA_BILLIE_JEAN_MTV.desc': 'In 1983, the black-and-white “Billie Jean” became one of the first videos by a Black artist to win heavy MTV rotation — quietly redrawing the network’s racial boundary.',
+        'trivia.TRIVIA_DONATED_500M.name': 'Some $500 Million to Charity', 'trivia.TRIVIA_DONATED_500M.desc': 'By public estimate you donated around $500 million to charity across your lifetime — kindness never written on a receipt.',
+        'trivia.TRIVIA_13_GRAMMY.name': 'Thirteen Grammy Awards', 'trivia.TRIVIA_13_GRAMMY.desc': 'Across your career you won 13 Grammy Awards, including Legend and Lifetime Achievement honors.',
+        'trivia.TRIVIA_FIVE_DECADES.name': 'Top Ten Across Five Decades', 'trivia.TRIVIA_FIVE_DECADES.desc': 'You were the first artist to land a top-ten single on the Billboard chart in five different decades — time could not stop the melody.',
+        'trivia.TRIVIA_PEPSI_DEAL.name': 'A Record-Breaking Pepsi Deal', 'trivia.TRIVIA_PEPSI_DEAL.desc': 'In 1984 you signed a Pepsi endorsement for about $5 million, rewriting the record for artist commercial deals — the story off-camera never made the contract.',
 
         // —— Phase 3 内容扩充（§4.2.1 彩蛋最强候选）——
         'egg.EGG_J5_FOUR_NO1.name': 'Four #1s Out the Gate', 'egg.EGG_J5_FOUR_NO1.desc': '“I Want You Back,” “ABC,” “The Love You Save,” and “I’ll Be There” topped the Hot 100 in a row — the Jackson 5 became the first group to debut with four consecutive #1s.',
