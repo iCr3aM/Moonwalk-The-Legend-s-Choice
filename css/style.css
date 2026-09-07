@@ -210,6 +210,13 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .history .kmore { margin-top: 4px; }
 .history .kmore > summary { cursor: pointer; color: var(--gold-soft); font-size: var(--fs-sm); padding: 3px 0; list-style: none; }
 .history .kmore > summary::-webkit-details-marker { display: none; }
+/* 关键抉择回顾：2 列网格（预览取权重最高 4 条 → 2×2），卡片化 + 窄列省略防溢出 */
+.kreview .kgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; margin-top: 10px; }
+.kreview .step { display: block; font-size: var(--fs-xs); padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: rgba(0,0,0,0.18); }
+.kreview .step .yr { display: block; min-width: 0; color: var(--gold-soft); }
+.kreview .step .t { display: block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kreview .step .c { display: block; min-width: 0; color: var(--ink-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kreview .step.top .t { color: var(--gold); font-weight: 600; }
 .key-note {
   margin: 12px 0 2px; padding: 10px 12px; border-radius: 12px;
   border: 1px solid var(--gold-soft); background: rgba(212,175,55,0.06);
@@ -591,6 +598,7 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 /* 结局/成就图鉴：原 82px 多列（桌面约 7 列）导致中英文案挤压；放宽列宽并限行防溢出 */
 .modal .gallery.ending-gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
 .modal .gallery.ach-gallery .g-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.modal .gallery.ach-gallery .g-icon { font-size: var(--ic-sm); }
 .modal .gallery.ending-gallery .g-name,
 .modal .gallery.ach-gallery .g-name {
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;

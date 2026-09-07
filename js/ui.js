@@ -100,8 +100,8 @@ window.MJ = window.MJ || {};
       var m = a / 100;
       return sign + '$' + (m >= 100 ? m.toFixed(0) : m.toFixed(1)) + 'M';
     }
-    if (a >= 10000) return sign + (a / 10000).toFixed(2) + ' 亿';
-    return sign + a + ' 万';
+    if (a >= 10000) return sign + '$' + (a / 10000).toFixed(2) + ' 亿';
+    return sign + '$' + a + ' 万';
   }
 
   function attrBars(state) {
@@ -208,7 +208,7 @@ window.MJ = window.MJ || {};
       if (wa !== wb) return wb - wa;
       return numYear(a.year) - numYear(b.year);
     });
-    var CAP = 6;
+    var CAP = 4;
     var visible = keys.slice(0, CAP), rest = keys.slice(CAP);
     var inner = '<details class="panel history kreview" open>' +
       '<summary>' + T('ui.keyReviewTitle', null, '关键抉择回顾') + ' <span class="cnt">(' + keys.length + ')</span></summary>' +
@@ -216,7 +216,9 @@ window.MJ = window.MJ || {};
     if (keys.length === 0) {
       inner += '<div class="empty">' + T('ui.keyReviewEmpty', null, '这一程没有惊心动魄的岔路，平凡本身也是一种答案。') + '</div>';
     } else {
+      inner += '<div class="kgrid">';
       visible.forEach(function (e) { inner += keyStepHtml(e); });
+      inner += '</div>';
       if (rest.length) {
         inner += '<details class="kmore"><summary>' + T('ui.keyReviewMore', { n: rest.length }, '展开其余 {n} 条') + '</summary>';
         rest.forEach(function (e) { inner += keyStepHtml(e); });
@@ -945,8 +947,25 @@ window.MJ = window.MJ || {};
 
     var y = top + 3 * rowH + 14;
     ctx.textAlign = 'center';
+    // 主导路线（左） + 人生关键词（右，中间空开）同行展示
+    var _route = T('ui.metaRoutePrefix', null, '主导路线：') + metaName;
+    ctx.textAlign = 'left';
     ctx.fillStyle = G.bright; ctx.font = '600 18px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.metaRoutePrefix', null, '主导路线：') + metaName, W / 2, y);
+    ctx.fillText(_route, 60, y);
+    var _rw = ctx.measureText(_route).width;
+    var _kwTags = [];
+    if (dm) _kwTags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
+    var _kwSorted = dims.slice().sort(function (a, b) { return b[2] - a[2]; });
+    _kwTags.push(_kwSorted[0][0], _kwSorted[1][0]);
+    var _kwStr = T('ui.posterKeywords', null, '人生关键词') + '：' + _kwTags.join(' · ');
+    ctx.font = '600 14px "PingFang SC",sans-serif';
+    var _kwW = ctx.measureText(_kwStr).width;
+    var _overlap = (_rw + 40 + _kwW > (W - 120));
+    ctx.textAlign = _overlap ? 'center' : 'right';
+    ctx.fillStyle = G.base;
+    ctx.fillText(_kwStr, _overlap ? (W / 2) : (W - 60), y);
+    ctx.textAlign = 'center';
+    // 传奇评分（居中，下一行）
     ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
 
@@ -980,32 +999,7 @@ window.MJ = window.MJ || {};
     }
     ctx.textBaseline = 'alphabetic';
 
-    // §18.8 人生关键词标签云：主导元路线 + 属性降序前 2
-    y += 16;
-    ctx.textAlign = 'center';
-    ctx.fillStyle = G.base; ctx.font = '600 14px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterKeywords', null, '人生关键词'), W / 2, y);
-    var _tags = [];
-    if (dm) _tags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
-    var _sorted = dims.slice().sort(function (a, b) { return b[2] - a[2]; });
-    _tags.push(_sorted[0][0], _sorted[1][0]);
-    ctx.font = '600 13px "PingFang SC",sans-serif';
-    var _pad = 14, _gap = 10, _ph = 28, _ws = [];
-    for (var _t = 0; _t < _tags.length; _t++) _ws.push(ctx.measureText(_tags[_t]).width + _pad * 2);
-    var _tot = _ws.reduce(function (s, w) { return s + w; }, 0) + _gap * (_tags.length - 1);
-    var _x = (W - _tot) / 2;
-    ctx.textBaseline = 'middle';
-    for (var _t2 = 0; _t2 < _tags.length; _t2++) {
-      var _px = _x, _pw = _ws[_t2];
-      ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 1;
-      ctx.fillStyle = 'rgba(212,175,55,0.10)';
-      roundRect(ctx, _px, y + 8, _pw, _ph, 14); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = G.bright;
-      ctx.fillText(_tags[_t2], _px + _pw / 2, y + 8 + _ph / 2);
-      _x += _pw + _gap;
-    }
-    ctx.textBaseline = 'alphabetic';
-    y += 8 + _ph + 18;
+    // 人生关键词已上移至主导路线右侧（同 band 展示），此处不再重复绘制
 
     // §18.8 本局最关键 1–2 个抉择回看（取自 state.history 中 key 标记为真的节点）
     y += 6;
@@ -1026,7 +1020,10 @@ window.MJ = window.MJ || {};
         if (wa !== wb) return wb - wa;
         return (a.year || 0) - (b.year || 0);
       });
-      var _picks = _keys.slice(0, 2);
+      // §18.9 本局最关键抉择 2×2 网格呈现（取权重最高 4 条）；超宽截断加省略号，必要时可缩小字体
+      var _picks = _keys.slice(0, 4);
+      var _colGap = 20, _colW = (W - 120 - _colGap) / 2, _rowH = 46;
+      var _gy = y;
       for (var _ki = 0; _ki < _picks.length; _ki++) {
         var _kk = _picks[_ki];
         var _kt = _kk.title || '';
@@ -1052,29 +1049,27 @@ window.MJ = window.MJ || {};
           if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = '';
           if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—';
         }
-        // 单行呈现：「年份 · 标题」（亮）→「选项」（暗）；超宽时按各自可用空间截断加省略号
-        var _maxW = W - 120;                       // 左右各留 60 边距
+        var _col = _ki % 2, _row = (_ki / 2) | 0;
+        var _cx = 60 + _col * (_colW + _colGap);
+        var _cy = _gy + _row * _rowH;
         ctx.font = '600 13px "PingFang SC",sans-serif';
         var _head = (_kk.year || '') + ' · ' + _kt;
-        var _headCap = Math.round(_maxW * 0.62);   // 标题最多占 62%，其余留给选项
-        if (ctx.measureText(_head).width > _headCap) {
-          while (_head.length > 1 && ctx.measureText(_head + '…').width > _headCap) _head = _head.slice(0, -1);
+        if (ctx.measureText(_head).width > _colW) {
+          while (_head.length > 1 && ctx.measureText(_head + '…').width > _colW) _head = _head.slice(0, -1);
           _head += '…';
         }
-        var _hw = ctx.measureText(_head).width;
         ctx.fillStyle = G.bright;
-        ctx.fillText(_head, 60, y);
+        ctx.fillText(_head, _cx, _cy);
         ctx.font = '13px "PingFang SC",sans-serif';
-        var _sep = ' → ';
-        var _avail = Math.max(40, _maxW - _hw - ctx.measureText(_sep).width);
-        if (ctx.measureText(_kc).width > _avail) {
-          while (_kc.length > 1 && ctx.measureText(_kc + '…').width > _avail) _kc = _kc.slice(0, -1);
-          _kc += '…';
+        var _cc = _kc;
+        if (ctx.measureText(_cc).width > _colW) {
+          while (_cc.length > 1 && ctx.measureText(_cc + '…').width > _colW) _cc = _cc.slice(0, -1);
+          _cc += '…';
         }
         ctx.fillStyle = G.deep;
-        ctx.fillText(_sep + _kc, 60 + _hw, y);
-        y += 21;
+        ctx.fillText(_cc, _cx, _cy + 18);
       }
+      y = _gy + 2 * _rowH;
     }
 
     y += 24;
