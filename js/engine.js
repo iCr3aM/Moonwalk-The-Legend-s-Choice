@@ -604,7 +604,15 @@ window.MJ = window.MJ || {};
       EGG_BAD_TOUR:        { icon: '🎤', name: 'Bad 全球巡演', desc: '1987–1989 的 Bad 世界巡演一场接一场，把流行王的版图铺到了五大洲的体育场。' },
       EGG_DANGEROUS_PREM:  { icon: '🐆', name: 'Dangerous 首演', desc: '1991 年的《Dangerous》以黑豹与白袜的全新符号登场，把流行舞台又向前推了一步。' },
       EGG_REMEMBER_TIME:   { icon: '🏛️', name: 'Remember the Time', desc: '1992 年的《Remember the Time》以古埃及为舞台的 MV，成了流行录影带视觉的一次大胆实验。' },
-      EGG_HISTORY_COMEBACK:{ icon: '👑', name: 'HIStory 回归', desc: '1995 年的《HIStory》以双碟姿态宣告回归，新歌与旧作一起，重新定义了“传奇仍在继续”。' }
+      EGG_HISTORY_COMEBACK:{ icon: '👑', name: 'HIStory 回归', desc: '1995 年的《HIStory》以双碟姿态宣告回归，新歌与旧作一起，重新定义了“传奇仍在继续”。' },
+      // —— P2 彩蛋扩充（7 枚；flag 驱动经 checkFlags 扫描，cond 驱动经结局 revealAll）——
+      EGG_APOLLO_LAST:   { icon: '🏟️', name: '重返阿波罗', desc: '2002 年你重返哈莱姆阿波罗剧院登台——那是年少夺冠的故地，也是生前最后几次公开演唱之一。' },
+      EGG_LLAMA:         { icon: '🦙', name: '羊驼 Louie', desc: 'Neverland 的草场上，羊驼 Louie 依偎在你身边，是孩子们最爱的“长脖子朋友”。', cond: function (s) { return s.flags.bubbles === true; } },
+      EGG_THRILLER_70M:  { icon: '💿', name: 'Thriller 七千万销量', desc: '《Thriller》全球销量逾七千万张，是史上最畅销的录音室专辑之一。', cond: function (s) { return s.flags.thriller25 === true || (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 55; } },
+      EGG_HISTSTATUE:    { icon: '🗿', name: 'HIStory 巨像', desc: '1995 年 HIStory 巡演在各国立起你的巨型雕像，流行王成了广场上的地标。', cond: function (s) { return (s.flags.grammy_history || 0) >= 1 || (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 60; } },
+      EGG_HEALWORLD:     { icon: '🌍', name: 'Heal the World', desc: '1991 年你创立 Heal the World 基金会，把《Heal the World》的善意变成持续行动。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 2 || (s.attributes.phil || 0) >= 30; } },
+      EGG_VICTORY_CHARITY:{ icon: '🤝', name: 'Victory 善款', desc: '1984 年 Victory 巡演，你把部分收益捐给儿童慈善，让舞台也长出温柔。' },
+      EGG_GHOSTS_GUINNESS:{ icon: '📜', name: '《Ghosts》长片', desc: '1996 年的《Ghosts》长约 39 分钟，曾获“最长音乐录影带”吉尼斯世界纪录。', cond: function (s) { return s.flags.ghosts === true; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }

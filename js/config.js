@@ -57,7 +57,7 @@ window.MJ = window.MJ || {};
     // —— Phase 2 内容扩充（可达性由 compute_ach_reach N=5000 实测）——
     ACH_TOY_DRUM: 0.2644, ACH_FIRST_LIGHT: 0.7652, ACH_PEACE_AMBASSADOR: 0.5986,
     ACH_ELDEST_BOND: 0.2358, ACH_RECLUSE_PEACE: 0.255, ACH_STAGE_LEGEND: 0.0148,
-    ACH_COMEBACK_KING: 0.0374, ACH_DIGITAL_ERA: 0.138, ACH_LEGACY_2026: 0.1412,     ACH_WHOLE_LIFE: 0.116,
+    ACH_COMEBACK_KING: 0.0374, ACH_DIGITAL_ERA: 0.138, ACH_LEGACY_2026: 0.1412,     ACH_WHOLE_LIFE: 0.116, ACH_NEVERLAND_ZOO: 0, ACH_ENCINO: 0,
   ACH_ALT_FORK: 0, ACH_ALT_STAY_MOTOWN: 0, ACH_ALT_NO_QJ: 0, ACH_ALT_HEALED: 0,
   ACH_ALT_MEDIA_MOGUL: 0, ACH_ALT_PEACE_LAUREATE: 0, ACH_ALT_SURVIVE_LEGACY: 0, ACH_ALT_QUIET_RETIREE: 0
   };
@@ -469,7 +469,11 @@ window.MJ = window.MJ || {};
     { id: 'ACH_PHIL_LEGEND', name: '慈善传奇', icon: '🌍', rarity: 'legendary', desc: '你以一代歌者的能量，把善意送往世界各地。',
       check: function (s) { return (s.meta.phil || 0) >= 4; } },
     { id: 'ACH_WORLD_TOUR', name: '世界巡演', icon: '🌐', rarity: 'rare', desc: '你踏上史上最大规模的 solo 艺人巡演，广场上立起你的巨像。',
-      check: function (s) { return s.flags.worldTour === true; } }
+      check: function (s) { return s.flags.worldTour === true; } },
+    { id: 'ACH_NEVERLAND_ZOO', name: '梦幻庄园动物园', icon: '🦁', rarity: 'rare', desc: 'Neverland 里有动物园、摩天轮与一只叫 Louie 的羊驼——童话不必向大人解释。',
+      check: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType === 'public'; } },
+    { id: 'ACH_ENCINO', name: '恩西诺岁月', icon: '🏡', rarity: 'uncommon', desc: '1971 年后迁入加州恩西诺大宅，院子里的小动物园与录音棚，是童年迟来的角落。',
+      check: function (s) { return s.flags.encino === true; } }
   ];
 
   // ---------- 体验深化（§17.1 高优先模块 M1–M4） ----------
@@ -490,7 +494,12 @@ window.MJ = window.MJ || {};
     { key: 'lisa', name: 'Lisa Marie', icon: '💍' },
     { key: 'debbie', name: '黛比·罗', icon: '💑' },
     { key: 'kids', name: '孩子们', icon: '🧒' },
-    { key: 'fans', name: '歌迷', icon: '🌟' }
+    { key: 'fans', name: '歌迷', icon: '🌟' },
+    { key: 'janet', name: '珍妮·杰克逊', icon: '👧' },
+    { key: 'joe', name: '父亲乔·杰克逊', icon: '👨' },
+    { key: 'katherine', name: '母亲凯瑟琳', icon: '🙏' },
+    { key: 'jermaine', name: '哥哥杰梅因', icon: '🎸' },
+    { key: 'latoya', name: '姐姐拉托亚', icon: '👩' }
   ];
   C.initialRelations = {};
   C.relationsDefs.forEach(function (r) { C.initialRelations[r.key] = 0; });

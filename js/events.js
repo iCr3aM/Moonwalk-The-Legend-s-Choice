@@ -2040,8 +2040,81 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，手足+5）'), effects: { family: 5, rel: { brothers: 5 } }, flags: { egg_sisterduet: true }, next: '__RETURN__' },
+      { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，拉托亚+5）'), effects: { family: 5, rel: { latoya: 5 } }, flags: { egg_sisterduet: true }, next: '__RETURN__' },
       { label: T('event.V_SISTER_LATOYA.opt1.label', null, 'B：笑闹着糊弄过去'), hint: T('event.V_SISTER_LATOYA.opt1.hint', null, '轻松但潦草（家庭+2）'), effects: { family: 2 }, next: '__RETURN__' }
+    ]
+  };
+  // —— P2：关系网深化（新增具名家庭成员关系键的结合事件）——
+  E.V_REL_JANET = {
+    id: 'V_REL_JANET', variant: true, kind: 'choice', key: 'V_REL_JANET', type: 'flavor',
+    window: [1982, 1997], weight: 22,
+    title: T('event.V_REL_JANET.title', null, '与珍妮的同台'),
+    text: T('event.V_REL_JANET.text', null, '珍妮已经长大了，她也想在聚光灯下找到自己的位置。两个杰克逊，能否在同一束光里各自闪耀？'),
+    options: [
+      { label: T('event.V_REL_JANET.opt0.label', null, 'A：与她合录《Scream》'), hint: T('event.V_REL_JANET.opt0.hint', null, '珍妮+8，艺术+3'), effects: { art: 3, rel: { janet: 8 } }, epilogue: T('event.V_REL_JANET.opt0.epilogue', null, '《Scream》的镜头里，你们并肩呐喊——姐弟的默契，比任何编排都真实。'), next: '__RETURN__' },
+      { label: T('event.V_REL_JANET.opt1.label', null, 'B：给彼此留一点空间'), hint: T('event.V_REL_JANET.opt1.hint', null, '珍妮+4'), effects: { rel: { janet: 4 } }, epilogue: T('event.V_REL_JANET.opt1.epilogue', null, '你笑着把她推向自己的舞台，sibling 之间的灯各自亮着也很好。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_REL_JOE = {
+    id: 'V_REL_JOE', variant: true, kind: 'choice', key: 'V_REL_JOE', type: 'flavor',
+    window: [1975, 1990], weight: 20,
+    title: T('event.V_REL_JOE.title', null, '父亲乔的节拍器'),
+    text: T('event.V_REL_JOE.text', null, '乔·杰克逊仍是那个严苛的节拍器，他相信纪律能换来舞台。'),
+    options: [
+      { label: T('event.V_REL_JOE.opt0.label', null, 'A：听他把舞台经讲完'), hint: T('event.V_REL_JOE.opt0.hint', null, '乔+6，艺术+2'), effects: { art: 2, rel: { joe: 6 } }, epilogue: T('event.V_REL_JOE.opt0.epilogue', null, '他拍着你的肩说“再来一遍”，那双推你上台的手始终没松开。'), next: '__RETURN__' },
+      { label: T('event.V_REL_JOE.opt1.label', null, 'B：保持一点距离'), hint: T('event.V_REL_JOE.opt1.hint', null, '乔-4'), effects: { rel: { joe: -4 } }, epilogue: T('event.V_REL_JOE.opt1.epilogue', null, '你敬他，却也想走出他的影子——有些功课只能自己学。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_REL_KATHERINE = {
+    id: 'V_REL_KATHERINE', variant: true, kind: 'choice', key: 'V_REL_KATHERINE', type: 'flavor',
+    window: [1975, 1990], weight: 20,
+    title: T('event.V_REL_KATHERINE.title', null, '母亲的祷告'),
+    text: T('event.V_REL_KATHERINE.text', null, '凯瑟琳在门廊上念着祷词，她把温柔留给了每一个孩子。'),
+    options: [
+      { label: T('event.V_REL_KATHERINE.opt0.label', null, 'A：陪她做一次祷告'), hint: T('event.V_REL_KATHERINE.opt0.hint', null, '凯瑟琳+8，家庭+2'), effects: { family: 2, rel: { katherine: 8 } }, epilogue: T('event.V_REL_KATHERINE.opt0.epilogue', null, '她握住你的手，那句“主保佑你”比任何奖杯都重。'), next: '__RETURN__' },
+      { label: T('event.V_REL_KATHERINE.opt1.label', null, 'B：把心事藏在歌里'), hint: T('event.V_REL_KATHERINE.opt1.hint', null, '凯瑟琳+3'), effects: { rel: { katherine: 3 } }, epilogue: T('event.V_REL_KATHERINE.opt1.epilogue', null, '你没说出口的话，最终都写进了旋律。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_REL_JERMAINE = {
+    id: 'V_REL_JERMAINE', variant: true, kind: 'choice', key: 'V_REL_JERMAINE', type: 'flavor',
+    window: [1975, 1986], weight: 20,
+    title: T('event.V_REL_JERMAINE.title', null, '与杰梅因的吉他'),
+    text: T('event.V_REL_JERMAINE.text', null, '杰梅因曾是主唱，后来离开了乐队。两把吉他的距离，是兄弟间的旧事。'),
+    options: [
+      { label: T('event.V_REL_JERMAINE.opt0.label', null, 'A：邀他合奏一曲'), hint: T('event.V_REL_JERMAINE.opt0.hint', null, '杰梅因+7，家庭+2'), effects: { family: 2, rel: { jermaine: 7 } }, epilogue: T('event.V_REL_JERMAINE.opt0.epilogue', null, '同一段 riff，把当年的兄弟又连在了一起。'), next: '__RETURN__' },
+      { label: T('event.V_REL_JERMAINE.opt1.label', null, 'B：各自精彩'), hint: T('event.V_REL_JERMAINE.opt1.hint', null, '杰梅因+3'), effects: { rel: { jermaine: 3 } }, epilogue: T('event.V_REL_JERMAINE.opt1.epilogue', null, '你们走向不同的舞台，血缘仍在弦外。'), next: '__RETURN__' }
+    ]
+  };
+  // —— P2：创作企划器「具名合作」子结构（solo 专辑企划期注入，提升 cp_collab 并留下合作者印记）——
+  E.V_COLLAB_OTW = {
+    id: 'V_COLLAB_OTW', variant: true, kind: 'choice', key: 'V_COLLAB_OTW', type: 'flavor',
+    window: [1979, 1980], weight: 26, cond: function (s) { return s.flags.isSolo === true; },
+    title: T('event.V_COLLAB_OTW.title', null, '《Off the Wall》的搭档们'),
+    text: T('event.V_COLLAB_OTW.text', null, '首张 solo 专辑需要对的耳朵与对的笔。你身边站着几位关键搭档。'),
+    options: [
+      { label: T('event.V_COLLAB_OTW.opt0.label', null, 'A：请昆西掌舵'), hint: T('event.V_COLLAB_OTW.opt0.hint', null, '合作+80，昆西+5'), effects: { cp_collab: 80, rel: { quincy: 5 } }, epilogue: T('event.V_COLLAB_OTW.opt0.epilogue', null, '昆西的点头，让整张专辑有了呼吸的节奏。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_OTW.opt1.label', null, 'B：邀 Paul McCartney 对唱《Say Say Say》'), hint: T('event.V_COLLAB_OTW.opt1.hint', null, '合作+75'), effects: { cp_collab: 75 }, flags: { collab_mccartney: true }, epilogue: T('event.V_COLLAB_OTW.opt1.epilogue', null, '两位流行天王同框，电台里全是玩笑与和声。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_OTW.opt2.label', null, 'C：让 Rod Temperton 写曲'), hint: T('event.V_COLLAB_OTW.opt2.hint', null, '合作+70'), effects: { cp_collab: 70 }, flags: { collab_temperton: true }, epilogue: T('event.V_COLLAB_OTW.opt2.epilogue', null, '《Rock with You》的律动，出自这位幕后笔锋。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_COLLAB_THRILLER = {
+    id: 'V_COLLAB_THRILLER', variant: true, kind: 'choice', key: 'V_COLLAB_THRILLER', type: 'flavor',
+    window: [1982, 1983], weight: 26, cond: function (s) { return s.flags.isSolo === true; },
+    title: T('event.V_COLLAB_THRILLER.title', null, '《Thriller》的幕后'),
+    text: T('event.V_COLLAB_THRILLER.text', null, '怪物要如何被听见？几位客座让这张专辑成了传说。'),
+    options: [
+      { label: T('event.V_COLLAB_THRILLER.opt0.label', null, 'A：邀 Eddie Van Halen 弹《Beat It》'), hint: T('event.V_COLLAB_THRILLER.opt0.hint', null, '合作+82'), effects: { cp_collab: 82 }, flags: { collab_evh: true }, epilogue: T('event.V_COLLAB_THRILLER.opt0.epilogue', null, '那段吉他 solo 像闪电，硬摇滚与流行第一次握手。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_THRILLER.opt1.label', null, 'B：请 Vincent Price 念白'), hint: T('event.V_COLLAB_THRILLER.opt1.hint', null, '合作+70'), effects: { cp_collab: 70 }, flags: { collab_price: true }, epilogue: T('event.V_COLLAB_THRILLER.opt1.epilogue', null, '低沉的旁白落下，恐怖成了一种时髦。'), next: '__RETURN__' }
+    ]
+  };
+  E.V_COLLAB_BAD = {
+    id: 'V_COLLAB_BAD', variant: true, kind: 'choice', key: 'V_COLLAB_BAD', type: 'flavor',
+    window: [1987, 1988], weight: 26, cond: function (s) { return s.flags.isSolo === true; },
+    title: T('event.V_COLLAB_BAD.title', null, '《Bad》的吉他客座'),
+    text: T('event.V_COLLAB_BAD.text', null, '《Bad》想要更硬的城市脉搏，一位吉他英雄可以点上狠劲。'),
+    options: [
+      { label: T('event.V_COLLAB_BAD.opt0.label', null, 'A：邀 Slash 助阵《Give In to Me》'), hint: T('event.V_COLLAB_BAD.opt0.hint', null, '合作+80'), effects: { cp_collab: 80 }, flags: { collab_slash: true }, epilogue: T('event.V_COLLAB_BAD.opt0.epilogue', null, 'Slash 的 riff 把舞台烧得更烫，两个时代的吉他手隔空击掌。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_BAD.opt1.label', null, 'B：靠自己扛下编曲'), hint: T('event.V_COLLAB_BAD.opt1.hint', null, '合作+60'), effects: { cp_collab: 60 }, epilogue: T('event.V_COLLAB_BAD.opt1.epilogue', null, '你亲自掌舵，证明不必借谁的光芒也能发光。'), next: '__RETURN__' }
     ]
   };
   E.V_TV_SPECIAL = {
@@ -2950,7 +3023,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_VICTORY_CHARITY.opt0.label', null, 'A：把善款落到实处'), hint: T('event.V_VICTORY_CHARITY.opt0.hint', null, '慈善+3，声誉+2'), effects: { phil: 3, reputation: 2 }, epilogue: T('event.V_VICTORY_CHARITY.opt0.epilogue', null, '你签下那张支票时想着孩子们，台下的欢呼仿佛也暖了几分。'), next: '__RETURN__' },
+      { label: T('event.V_VICTORY_CHARITY.opt0.label', null, 'A：把善款落到实处'), hint: T('event.V_VICTORY_CHARITY.opt0.hint', null, '慈善+3，声誉+2'), effects: { phil: 3, reputation: 2 }, flags: { egg_victorycharity: true }, epilogue: T('event.V_VICTORY_CHARITY.opt0.epilogue', null, '你签下那张支票时想着孩子们，台下的欢呼仿佛也暖了几分。'), next: '__RETURN__' },
       { label: T('event.V_VICTORY_CHARITY.opt1.label', null, 'B：先壮大事业'), hint: T('event.V_VICTORY_CHARITY.opt1.hint', null, '财富+5'), effects: { wealth: 5 }, next: '__RETURN__' }
     ]
   };
@@ -2990,7 +3063,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_APOLLO_LAST.opt0.label', null, 'A：把回忆唱给故地'), hint: T('event.V_APOLLO_LAST.opt0.hint', null, '家庭+4，艺术+3'), effects: { family: 4, art: 3 }, epilogue: T('event.V_APOLLO_LAST.opt0.epilogue', null, '在那束熟悉的聚光灯下，岁月折回了盖瑞巷口。'), next: '__RETURN__' },
+      { label: T('event.V_APOLLO_LAST.opt0.label', null, 'A：把回忆唱给故地'), hint: T('event.V_APOLLO_LAST.opt0.hint', null, '家庭+4，艺术+3'), effects: { family: 4, art: 3 }, flags: { egg_apollolast: true }, epilogue: T('event.V_APOLLO_LAST.opt0.epilogue', null, '在那束熟悉的聚光灯下，岁月折回了盖瑞巷口。'), next: '__RETURN__' },
       { label: T('event.V_APOLLO_LAST.opt1.label', null, 'B：安静致意'), hint: T('event.V_APOLLO_LAST.opt1.hint', null, '家庭+2，压力-2'), effects: { family: 2, stress: -2 }, next: '__RETURN__' }
     ]
   };
@@ -3016,8 +3089,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_ENCINO.opt0.label', null, 'A：把院子变成乐园'), hint: T('event.V_ENCINO.opt0.hint', null, '家庭+5'), effects: { family: 5 }, epilogue: T('event.V_ENCINO.opt0.epilogue', null, '你在草坪上奔跑，这一次，院门把世界的喧嚣挡在了外面。'), next: '__RETURN__' },
-      { label: T('event.V_ENCINO.opt1.label', null, 'B：在录音棚里沉淀'), hint: T('event.V_ENCINO.opt1.hint', null, '艺术+4'), effects: { art: 4 }, next: '__RETURN__' }
+      { label: T('event.V_ENCINO.opt0.label', null, 'A：把院子变成乐园'), hint: T('event.V_ENCINO.opt0.hint', null, '家庭+5'), effects: { family: 5 }, flags: { encino: true }, epilogue: T('event.V_ENCINO.opt0.epilogue', null, '你在草坪上奔跑，这一次，院门把世界的喧嚣挡在了外面。'), next: '__RETURN__' },
+      { label: T('event.V_ENCINO.opt1.label', null, 'B：在录音棚里沉淀'), hint: T('event.V_ENCINO.opt1.hint', null, '艺术+4'), effects: { art: 4 }, flags: { encino: true }, next: '__RETURN__' }
     ]
   };
 
