@@ -96,9 +96,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.0_2.opt0.label', null, 'A：把奖杯举过哥哥们的头顶'), hint: T('event.0_2.opt0.hint', null, '荣耀属于这一家人（声誉+8，家庭+3，手足+8）'), effects: { reputation: 8, family: 3, rel: { brothers: 8 } }, flags: { apolloChampion: true }, next: '1_2' },
-      { label: T('event.0_2.opt1.label', null, 'B：独自享受聚光灯'), hint: T('event.0_2.opt1.hint', null, '少年锋芒初露（声誉+10，艺术+3）'), effects: { reputation: 10, art: 3 }, flags: { apolloChampion: true }, next: '1_2' },
-      { label: T('event.0_2.opt2.label', null, 'C：谦虚地说“我们只是运气好”'), hint: T('event.0_2.opt2.hint', null, '谦逊换来好感（声誉+3，家庭+3）'), effects: { reputation: 3, family: 3 }, next: '1_2' }
+      { label: T('event.0_2.opt0.label', null, 'A：把奖杯举过哥哥们的头顶'), hint: T('event.0_2.opt0.hint', null, '荣耀属于这一家人（声誉+8，家庭+3，手足+8）'), effects: { reputation: 8, family: 3, rel: { brothers: 8 } }, flags: { apolloChampion: true }, next: '0_2b' },
+      { label: T('event.0_2.opt1.label', null, 'B：独自享受聚光灯'), hint: T('event.0_2.opt1.hint', null, '少年锋芒初露（声誉+10，艺术+3）'), effects: { reputation: 10, art: 3 }, flags: { apolloChampion: true }, next: '0_2b' },
+      { label: T('event.0_2.opt2.label', null, 'C：谦虚地说“我们只是运气好”'), hint: T('event.0_2.opt2.hint', null, '谦逊换来好感（声誉+3，家庭+3）'), effects: { reputation: 3, family: 3 }, next: '0_2b' }
+    ]
+  };
+
+  E['0_2b'] = {
+    id: '0_2b', year: 1968, title: T('event.0_2b.title', null, 'Steeltown 首单《Big Boy》'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_2b.text', null, '签约 Motown 之前，杰克逊五人组先在盖瑞的本地球标 Steeltown 录下了第一支单曲《Big Boy》。简陋的录音棚里，少年嗓音第一次被刻进磁带——它没掀起风暴，却让你们听见了自己值得被记录。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 45; }, text: T('event.0_2b.branch0.text', null, '录音棚的回声让你确信，这把声音注定要被更多人听见。') },
+        { cond: function (s) { return (s.attributes.stress || 0) >= 35; }, text: T('event.0_2b.branch1.text', null, '第一次进专业录音棚，紧张得连呼吸都小心。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_2b.opt0.label', null, 'A：把《Big Boy》当成起点'), hint: T('event.0_2b.opt0.hint', null, '微小的第一步，却是职业化的开端（艺术+5，声誉+3）'), effects: { art: 5, reputation: 3 }, next: '1_2' },
+      { label: T('event.0_2b.opt1.label', null, 'B：觉得还不够好，继续打磨'), hint: T('event.0_2b.opt1.hint', null, '沉住气打磨（艺术+8，压力+3）'), effects: { art: 8, stress: 3 }, next: '1_2' },
+      { label: T('event.0_2b.opt2.label', null, 'C：对唱片业的前景感到不安'), hint: T('event.0_2b.opt2.hint', null, '未知让人忐忑（压力+5）'), effects: { stress: 5 }, next: '1_2' }
     ]
   };
 
@@ -1092,7 +1107,7 @@ window.MJ = window.MJ || {};
 
   E['7_1'] = {
     id: '7_1', year: 2008, title: T('event.7_1.title', null, '债务危机'), kind: 'choice', key: true,
-    cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '7_2',
+    cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '7_1b',
     text: function (s) {
       return narr(T('event.7_1.text', null, '梦幻庄园像个吞金的无底洞，债务危机逼上门来。Colony Capital 递来一根浮木——条件是让你松手些许。'), s, [
         { cond: function (s) { return (s.attributes.wealth || 0) <= 30; }, text: T('event.7_1.branch0.text', null, '账上的窘迫让“吞金庄园”四个字格外刺眼。') },
@@ -1100,9 +1115,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.7_1.opt0.label', null, 'A：转让部分权益'), hint: T('event.7_1.opt0.hint', null, '引入注资断尾求生，家更冷但避债（家庭-15，净资产 +2 亿）'), effects: { family: -15 }, moneyEffect: 20000, flags: { debtCrisis: true }, next: '7_2' },
-      { label: T('event.7_1.opt1.label', null, 'B：死撑不卖'), hint: T('event.7_1.opt1.hint', null, '硬扛到底，濒临窒息（压力+10，净资产 -6 亿，可能负债）'), effects: { stress: 10 }, moneyEffect: -60000, flags: { debtCrisis: false }, next: '7_2' },
-      { label: T('event.7_1.opt2.label', null, 'C：引入注资'), hint: T('event.7_1.opt2.hint', null, '外人入局，压力稍缓（压力-5，净资产 +8000 万）'), effects: { stress: -5 }, moneyEffect: 8000, next: '7_2' }
+      { label: T('event.7_1.opt0.label', null, 'A：转让部分权益'), hint: T('event.7_1.opt0.hint', null, '引入注资断尾求生，家更冷但避债（家庭-15，净资产 +2 亿）'), effects: { family: -15 }, moneyEffect: 20000, flags: { debtCrisis: true }, next: '7_1b' },
+      { label: T('event.7_1.opt1.label', null, 'B：死撑不卖'), hint: T('event.7_1.opt1.hint', null, '硬扛到底，濒临窒息（压力+10，净资产 -6 亿，可能负债）'), effects: { stress: 10 }, moneyEffect: -60000, flags: { debtCrisis: false }, next: '7_1b' },
+      { label: T('event.7_1.opt2.label', null, 'C：引入注资'), hint: T('event.7_1.opt2.hint', null, '外人入局，压力稍缓（压力-5，净资产 +8000 万）'), effects: { stress: -5 }, moneyEffect: 8000, next: '7_1b' }
+    ]
+  };
+
+  E['7_1b'] = {
+    id: '7_1b', year: 2009, title: T('event.7_1b.title', null, 'O2 的官宣'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.7_1b.text', null, '2009 年 3 月，伦敦 O2 体育馆的记者会上，你宣布了《This Is It》系列演唱会——最初 10 场，后应歌迷呼声加至 50 场。聚光灯还没亮，门票已经炒成了传奇。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 65; }, text: T('event.7_1b.branch0.text', null, '久违的舞台召唤，让沉寂的岁月一下子有了声响。') },
+        { cond: function (s) { return (s.attributes.stress || 0) >= 50; }, text: T('event.7_1b.branch1.text', null, '复出意味着再次被千万双眼睛称量，你心里并非全无犹疑。') }
+      ]);
+    },
+    options: [
+      { label: T('event.7_1b.opt0.label', null, 'A：把 50 场当作荣耀之战'), hint: T('event.7_1b.opt0.hint', null, '王者归来气场全开（声誉+12，艺术+5）'), effects: { reputation: 12, art: 5 }, next: '7_2' },
+      { label: T('event.7_1b.opt1.label', null, 'B：冷静规划档期'), hint: T('event.7_1b.opt1.hint', null, '稳扎稳打（声誉+6，压力-3）'), effects: { reputation: 6, stress: -3 }, next: '7_2' },
+      { label: T('event.7_1b.opt2.label', null, 'C：担心体力跟不上'), hint: T('event.7_1b.opt2.hint', null, '年岁与体能的现实摆在眼前（压力+8）'), effects: { stress: 8 }, next: '7_2' }
     ]
   };
 
@@ -1119,18 +1149,33 @@ window.MJ = window.MJ || {};
     options: function (s) {
       if (s.flags.isSolo) {
         return [
-          { label: T('event.7_2.opt0.label', null, 'A：咬牙撑满 50 场'), hint: T('event.7_2.opt0.hint', null, '财富暴涨，身体濒临极限（财富+100，压力+40，净资产 +1.5 亿）'), effects: { wealth: 100, stress: 40 }, flags: { thisItHeld: true, thisItFull: true }, epilogue: T('event.7_2.opt0.epilogue', null, '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。'), next: '7_3' },
-          { label: T('event.7_2.opt1.label', null, 'B：忍痛取消'), hint: T('event.7_2.opt1.hint', null, '保住健康，声誉微损（健康+20，声誉-10）'), effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, epilogue: T('event.7_2.opt1.epilogue', null, '你按下暂停键，把命留给了自己，哪怕掌声因此远了。'), next: '7_3' },
-          { label: T('event.7_2.opt2.label', null, 'C：缩减到 20 场'), hint: T('event.7_2.opt2.hint', null, '折中之选，张弛有度（财富+40，压力+20，健康+10，净资产 +6000 万）'), effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, epilogue: T('event.7_2.opt2.epilogue', null, '你折中地数着场次，想既不负舞台，也不负这副身子。'), next: '7_3' },
+          { label: T('event.7_2.opt0.label', null, 'A：咬牙撑满 50 场'), hint: T('event.7_2.opt0.hint', null, '财富暴涨，身体濒临极限（财富+100，压力+40，净资产 +1.5 亿）'), effects: { wealth: 100, stress: 40 }, flags: { thisItHeld: true, thisItFull: true }, epilogue: T('event.7_2.opt0.epilogue', null, '伦敦的舞台已经搭好，你心里那团火，压过了对身体的所有警告。'), next: '7_2b' },
+          { label: T('event.7_2.opt1.label', null, 'B：忍痛取消'), hint: T('event.7_2.opt1.hint', null, '保住健康，声誉微损（健康+20，声誉-10）'), effects: { health: 20, reputation: -10 }, flags: { thisItHeld: false }, epilogue: T('event.7_2.opt1.epilogue', null, '你按下暂停键，把命留给了自己，哪怕掌声因此远了。'), next: '7_2b' },
+          { label: T('event.7_2.opt2.label', null, 'C：缩减到 20 场'), hint: T('event.7_2.opt2.hint', null, '折中之选，张弛有度（财富+40，压力+20，健康+10，净资产 +6000 万）'), effects: { wealth: 40, stress: 20, health: 10 }, flags: { thisItHeld: true, thisItReduced: true }, epilogue: T('event.7_2.opt2.epilogue', null, '你折中地数着场次，想既不负舞台，也不负这副身子。'), next: '7_2b' },
           { label: T('event.7_2.opt3.label', null, 'D：续写人生（假设未离世）'), hint: T('event.7_2.opt3.hint', null, '若 2009 没有成为终点，把这段传奇接着写下去（进入续章）'), effects: { health: 5 }, flags: { survived2009: true }, epilogue: T('event.7_2.opt3.epilogue', null, '你深吸一口气——这一次，故事不在这里落幕。'), next: '8_0' }
         ];
       }
       return [
-        { label: T('event.7_2.opt4.label', null, 'A：20 场团体巡演'), hint: T('event.7_2.opt4.hint', null, '兄弟同台，稳健收官（财富+40，压力+20，健康+5，净资产 +6000 万）'), effects: { wealth: 40, stress: 20, health: 5 }, flags: { thisItHeld: true, thisItFull: false }, epilogue: T('event.7_2.opt4.epilogue', null, '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。'), next: '7_3' },
-        { label: T('event.7_2.opt5.label', null, 'B：取消退休巡演'), hint: T('event.7_2.opt5.hint', null, '安心养身，进账略损（健康+20，净资产 -4500 万）'), effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: T('event.7_2.opt5.epilogue', null, '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。'), next: '7_3' },
+        { label: T('event.7_2.opt4.label', null, 'A：20 场团体巡演'), hint: T('event.7_2.opt4.hint', null, '兄弟同台，稳健收官（财富+40，压力+20，健康+5，净资产 +6000 万）'), effects: { wealth: 40, stress: 20, health: 5 }, flags: { thisItHeld: true, thisItFull: false }, epilogue: T('event.7_2.opt4.epilogue', null, '兄弟同台的巡演敲定，久违的合唱里，你找回了一点年轻的底气。'), next: '7_2b' },
+        { label: T('event.7_2.opt5.label', null, 'B：取消退休巡演'), hint: T('event.7_2.opt5.hint', null, '安心养身，进账略损（健康+20，净资产 -4500 万）'), effects: { health: 20, wealth: -30 }, flags: { thisItHeld: false }, epilogue: T('event.7_2.opt5.epilogue', null, '你选择先顾身体，把这场迟来的团聚，留给了更稳妥的将来。'), next: '7_2b' },
         { label: T('event.7_2.opt6.label', null, 'D：续写人生（假设未离世）'), hint: T('event.7_2.opt6.hint', null, '若 2009 没有成为终点，把这段传奇接着写下去（进入续章）'), effects: { health: 5 }, flags: { survived2009: true }, epilogue: T('event.7_2.opt6.epilogue', null, '你深吸一口气——这一次，故事不在这里落幕。'), next: '8_0' }
       ];
     }
+  };
+
+  E['7_2b'] = {
+    id: '7_2b', year: 2009, title: T('event.7_2b.title', null, '洛杉矶的排练'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.7_2b.text', null, '演唱会的筹备在洛杉矶的排练厅展开。编舞、灯光、乐队一遍遍合练，你认真对待每一个走位——这是给舞台的承诺，也是给歌迷的交代。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) <= 50; }, text: T('event.7_2b.branch0.text', null, '医嘱仍悬在耳边，但你更想把每个动作做到位。') },
+        { cond: function (s) { return (s.meta.artPath || 0) >= 1; }, text: T('event.7_2b.branch1.text', null, '舞台是你的朝圣之地，哪怕只是排练，你也想站得笔直。') }
+      ]);
+    },
+    options: [
+      { label: T('event.7_2b.opt0.label', null, 'A：追求极致的现场'), hint: T('event.7_2b.opt0.hint', null, '苛刻的完美主义（艺术+10，压力+10）'), effects: { art: 10, stress: 10 }, next: '7_3' },
+      { label: T('event.7_2b.opt1.label', null, 'B：保重身体，量力而行'), hint: T('event.7_2b.opt1.hint', null, '分寸之间求稳（健康+5，压力-5）'), effects: { health: 5, stress: -5 }, next: '7_3' },
+      { label: T('event.7_2b.opt2.label', null, 'C：把排练当成享受'), hint: T('event.7_2b.opt2.hint', null, '重回聚光灯下的纯粹快乐（艺术+5，声誉+3）'), effects: { art: 5, reputation: 3 }, next: '7_3' }
+    ]
   };
 
   // ---------- 续章：假设 2009 未离世（2010–2026） ----------
