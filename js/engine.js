@@ -570,7 +570,20 @@ window.MJ = window.MJ || {};
       EGG_MOONWALKER: { icon: '🎞️', name: '《月球漫步者》', desc: '1988 年的跨界电影，把音乐、动画与真人串成了一场属于孩子的狂欢。' },
       EGG_GHOSTS: { icon: '👻', name: '《Ghosts》长片', desc: '你构想并主演的长篇短片，把不被理解的怪诞搬上了银幕。' },
       EGG_BUBBLES: { icon: '🐵', name: '黑猩猩伙伴', desc: '你豢养的黑猩猩 Bubbles，曾是时代镜头里最出圈的童年符号。' },
-      EGG_HALFTIME: { icon: '🏈', name: '中场之王', desc: '1993 年超级碗的中场，你用一场表演定义了不止一代人的记忆。' }
+      EGG_HALFTIME: { icon: '🏈', name: '中场之王', desc: '1993 年超级碗的中场，你用一场表演定义了不止一代人的记忆。' },
+
+      // —— Phase 3 内容扩充（§4.2.1 最强候选，结局 onEnding 按 cond 扫描解锁；不新增独立系统）——
+      EGG_J5_FOUR_NO1:     { icon: '🥇', name: '四连冠出道', desc: '《I Want You Back》《ABC》《The Love You Save》《I’ll Be There》连冠 Billboard Hot 100，Jackson 5 成为首支出道即四连冠的组合。', cond: function (s) { return s.flags.motownAudition === true || (s.relations.brothers || 0) >= 10; } },
+      EGG_OFFTHEWALL_1979: { icon: '🪩', name: '《Off the Wall》', desc: '1979 年与昆西·琼斯合作的《Off the Wall》，确立了他作为独唱巨星的里程碑。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 45; } },
+      EGG_THRILLER_BESTSELLING: { icon: '💿', name: '史上最畅销专辑', desc: '1982 年的《Thriller》成为史上最畅销的专辑，把流行音乐推向前所未有的高度。', cond: function (s) { return s.flags.thriller25 === true || (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 55; } },
+      EGG_THRILLER_GRAMMY8: { icon: '🏆', name: '格莱美八奖之夜', desc: '第 26 届格莱美他一举拿下 8 座奖杯（《Thriller》包揽），创下当届之最。', cond: function (s) { return (s.meta.grammyWins || 0) >= 8 || (s.meta.artPath || 0) >= 2 || (s.attributes.reputation || 0) >= 70; } },
+      EGG_ROCKHALL_TWICE:  { icon: '🎸', name: '两入摇滚名人堂', desc: '他两度入选摇滚名人堂（个人 + Jackson 5），是极少数获此殊荣的音乐人。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || (s.attributes.reputation || 0) >= 70; } },
+      EGG_GUINNESS13:      { icon: '📖', name: '十三项吉尼斯', desc: '他保持着 13 项吉尼斯世界纪录（逾任何艺人），含“史上最成功艺人”。', cond: function (s) { return (s.attributes.reputation || 0) >= 70 || (s.meta.artPath || 0) >= 2; } },
+      EGG_AMA_CENTURY:     { icon: '🏆', name: '世纪艺人', desc: '他拿下 26 座全美音乐奖（逾任何艺人），并获颁“世纪艺人”。', cond: function (s) { return (s.attributes.reputation || 0) >= 60 || (s.meta.artPath || 0) >= 1; } },
+      EGG_INVINCIBLE_COST: { icon: '💰', name: '最贵专辑', desc: '2001 年的《Invincible》制作历时四年、耗资约 3000 万美元，被称为“史上最贵专辑”。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50 || (s.attributes.wealth || 0) >= 40; } },
+      EGG_HISTORY_DOUBLE:  { icon: '💿', name: '双碟《HIStory》', desc: '1995 年的《HIStory》是一张双碟专辑，被誉为独唱艺人最畅销的双碟之一。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
+      EGG_BOTDF_REMIX:     { icon: '🎶', name: '最畅销混音辑', desc: '1997 年的《Blood on the Dance Floor》成为史上最畅销的混音专辑。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
+      EGG_13_NO1:          { icon: '🔝', name: '十三支冠军单曲', desc: '他拥有 13 支 Billboard Hot 100 冠军单曲，并列男性独唱艺人的纪录。', cond: function (s) { return (s.attributes.art || 0) >= 60 || (s.meta.artPath || 0) >= 2 || (s.attributes.reputation || 0) >= 70; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {}, moonwalkPerfect: 0, playthroughs: 0 }; }
@@ -614,6 +627,14 @@ window.MJ = window.MJ || {};
       if (state.flags.superBowl) this.unlock('EGG_HALFTIME');
       return n;
     },
+    // 结局时按各条目 cond 扫描玩家人生，解锁「考据彩蛋」（与趣事 revealAll 同构；§4.2.1 新增条目均带 cond）
+    revealAll: function (state) {
+      var self = this;
+      Object.keys(this.defs).forEach(function (k) {
+        var def = self.defs[k];
+        if (def.cond) { try { if (def.cond(state)) self.unlock(k); } catch (e) {} }
+      });
+    },
     // 跨周目累计：3_1b「完美演绎」累计 3 次 → 月球漫步起源
     incMoonwalkPerfect: function () {
       var d = this._load(); d.moonwalkPerfect = (d.moonwalkPerfect || 0) + 1; this._save(d);
@@ -622,6 +643,7 @@ window.MJ = window.MJ || {};
     // 结局时：致敬联动 + 元彩蛋（集齐 30 成就）+ 周目计数
     onEnding: function (state, endingId) {
       var s = state || (MJ.engine && MJ.engine.state);
+      this.revealAll(state);
       if (s && s.meta && (s.meta.artPath || 0) >= 2 && s.flags && s.flags.anniv2001 && s.flags.thriller25) this.unlock('EGG_TRIBUTE');
       if (MJ.achievementSystem) {
         // 成就已在 ui.showEnding 统一 evaluate 并串行弹窗；此处仅用于"集齐全部"判定，避免重复评估
@@ -678,7 +700,27 @@ window.MJ = window.MJ || {};
       TRIVIA_GLOVE:       { icon: '🧤', name: '一只手套的魔法', desc: '那只闪着光的单只手套，是你给自己设的暗号：只要戴上它，舞台就只属于你一个人。' },
       TRIVIA_QUIETSTAGE:  { icon: '🪑', name: '谢幕后的安静', desc: '掌声散尽，你独自坐在空荡的舞台边，听见自己的呼吸——那是最诚实的掌声。', cond: function (s) { return (s.attributes.stress || 0) <= 35; } },
       TRIVIA_MOTHERSONG:  { icon: '🎵', name: '唱给妈妈听', desc: '有次你随口哼起妈妈最爱的那首老歌，唱到一半，喉咙忽然发紧。', cond: function (s) { return (s.attributes.family || 0) >= 70; } },
-      TRIVIA_HEALPLANET:  { icon: '🌍', name: '把地球缝补起来', desc: '你相信音乐能缝补裂痕：把不同肤色、不同语言的人，缝进同一段旋律里。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 2; } }
+      TRIVIA_HEALPLANET:  { icon: '🌍', name: '把地球缝补起来', desc: '你相信音乐能缝补裂痕：把不同肤色、不同语言的人，缝进同一段旋律里。', cond: function (s) { return s.flags.healWorld === true || (s.meta.phil || 0) >= 2; } },
+
+      // —— Phase 3 内容扩充（§4.2.2 + §4.2.4 候选全量，结局 revealAll 按 cond 扫描解锁）——
+      TRIVIA_LOUIE:           { icon: '🦙', name: '羊驼 Louie', desc: 'Neverland 的草场上，羊驼 Louie 是他的宠物之一，也是孩子们最爱的“长脖子朋友”。', cond: function (s) { return s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
+      TRIVIA_HAYVENHURST:    { icon: '🏡', name: 'Hayvenhurst 的家', desc: '洛杉矶的 Hayvenhurst 是杰克逊一家的住所，也是《Bad》早期 Demo 被写下的地方。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || s.flags.isSolo === true; } },
+      TRIVIA_ROBOT_DANCE:    { icon: '🤖', name: '机器人舞步', desc: '1974 年《Dancing Machine》在 Soul Train 引爆“机器人舞”，那套机械律动后来成了他的招牌。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 45; } },
+      TRIVIA_MOONWALK_BOOK:  { icon: '📖', name: '自传《Moonwalk》', desc: '1988 年他出版个人自传《Moonwalk》，把聚光灯外的童年与心事写进了书页。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
+      TRIVIA_DANCING_DREAM:  { icon: '📝', name: '诗集《Dancing the Dream》', desc: '1992 年他出版诗集《Dancing the Dream》，字里行间是一个孩子未曾熄灭的想象。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 50; } },
+      TRIVIA_THRILLER_SHORT: { icon: '🎬', name: '《Thriller》短片', desc: '1983 年的《Thriller》MV 是开创性的叙事恐怖短片，重塑了音乐录影带的形态。', cond: function (s) { return s.flags.thriller25 === true || (s.attributes.art || 0) >= 50; } },
+      TRIVIA_JANET_SCREAM:   { icon: '👩', name: '与 Janet 的《Scream》', desc: '妹妹 Janet 同为巨星，1995 年二人合作《Scream》，荧幕上的兄妹对唱成了经典。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || (s.attributes.reputation || 0) >= 60; } },
+      TRIVIA_JACKSON5_DEBUT: { icon: '🎤', name: 'Jackson 5 出道', desc: 'Jackson 5 由家兄弟组成，1969 年以《Diana Ross Presents The Jackson 5》正式出道。', cond: function (s) { return (s.relations.brothers || 0) >= 10 || s.flags.isSolo === true; } },
+      TRIVIA_VICTORY_TOUR:   { icon: '🚌', name: 'Victory 巡演', desc: '1984 年的 Victory Tour 是兄弟们最后一次同台巡演，年底他便离开了组合。', cond: function (s) { return (s.relations.brothers || 0) >= 10; } },
+      TRIVIA_WEMBLEY:        { icon: '🏟️', name: '温布利之夜', desc: '1988.7.16 的温布利演唱会（Bad World Tour）成为传奇现场，数万人的合唱响彻夜空。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 55; } },
+      TRIVIA_30TH_ANNIV:     { icon: '🎉', name: '30 周年庆典', desc: '2001 年的“30 周年庆典”在纽约麦迪逊广场花园举行，故人新朋同台致敬。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 55 || (s.attributes.reputation || 0) >= 60; } },
+      TRIVIA_THRILLER25:     { icon: '💿', name: '《Thriller 25》', desc: '2008 年的《Thriller 25》是 25 周年纪念专辑，收录了未发表的曲目。', cond: function (s) { return s.flags.thriller25 === true || (s.attributes.art || 0) >= 50; } },
+      TRIVIA_THRILLER40:     { icon: '💽', name: '《Thriller 40》', desc: '2022 年的《Thriller 40》是 40 周年纪念专辑，让经典在新时代再度回响。', cond: function (s) { return s.flags.thriller25 === true || (s.meta.artPath || 0) >= 1; } },
+      TRIVIA_KING_OF_POP:    { icon: '👑', name: '流行之王', desc: '他被冠以“流行之王（King of Pop）”之名，是 20 世纪最具文化影响力的音乐人之一。', cond: function (s) { return (s.attributes.reputation || 0) >= 65; } },
+      TRIVIA_BEN_SOLO1:      { icon: '🐶', name: '《Ben》登顶 Solo', desc: '1972 年的《Ben》是他首支个人冠军单曲，少年的嗓音第一次独自站上榜首。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 40; } },
+      TRIVIA_ATV_CATALOG:    { icon: '📜', name: 'ATV 版权版图', desc: '1985 年他购入 Beatles 与 ATV 曲库版权，把旋律变成了可传承的资产。', cond: function (s) { return (s.attributes.wealth || 0) >= 45 || (s.meta.mogul || 0) >= 1 || (s.attributes.reputation || 0) >= 60; } },
+      TRIVIA_BEATIT_GANGS:   { icon: '🤝', name: '《Beat It》的真实面孔', desc: '《Beat It》请来真实的帮派青年出演，用舞蹈代替对抗，唱出反暴力的姿态。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 45; } },
+      TRIVIA_BLACKORWHITE_PREMIERE: { icon: '📺', name: '《Black or White》首播', desc: '1991 年《Black or White》全球首播，约一亿观众同时守在屏幕前。', cond: function (s) { return s.flags.blackOrWhite === true || (s.attributes.reputation || 0) >= 55 || (s.meta.artPath || 0) >= 1; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }

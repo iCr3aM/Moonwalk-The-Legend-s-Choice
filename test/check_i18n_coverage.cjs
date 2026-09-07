@@ -2,7 +2,7 @@
 //   75 变体（event.<id>.title/text，存于 eventEn）
 //   60 成就（ach.<id>.name/desc）
 //   10 彩蛋（egg.<id>.name/desc）
-//   27 趣事（trivia.<id>.name/desc）
+//   32 趣事（trivia.<id>.name/desc，含修复后独立的 TRIVIA_MOTOWN_REUNION）
 //   （语录图鉴已移除，故不再校验 quote.*）
 // 做法：置 lang='en'，对每个 (id, field) 调 MJ.t(key, null, SENTINEL)，
 //   缺失（回退到 SENTINEL）或仍为中文（zh 回退）→ 判 FAIL。
