@@ -23,7 +23,10 @@ var checks = [
   ['640: 图鉴网格两列', inMedia('max-width: 640px', /(\.menu-grid|\.menu-row)\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['640: .toolbar 可换行', inMedia('max-width: 640px', /\.toolbar\s*\{[^}]*flex-wrap:\s*wrap/)],
   ['640: .subdim-grid 单列', inMedia('max-width: 640px', /\.subdim-grid\s*\{[^}]*grid-template-columns:\s*1fr/)],
-  ['模态 max-height + 滚动', /\.modal\s*\{[^}]*max-height[^}]*overflow:\s*auto/.test(css)]
+  // 契约变更：原先 .modal 与 .modal-body 双层 overflow（双滚动条），
+  // 现改为 .modal 限高 + .modal-body 唯一滚动区，故断言同步更新。
+  ['模态 max-height', /\.modal\s*\{[^}]*max-height/.test(css)],
+  ['模态单一滚动区（.modal-body）', /\.modal-body\s*\{[^}]*overflow:\s*auto/.test(css)]
 ];
 
 var fail = 0;

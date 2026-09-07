@@ -255,7 +255,6 @@ window.MJ = window.MJ || {};
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
         '<div class="g-rarity">' + (on ? rarityLabel(MJ.config.endingRarity[k]) : T('ui.locked', null, '未解锁')) + '</div>' +
-        (e.assumption ? '<div class="asum-tag">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
       '</div>';
     });
     html += '</div></div>';
@@ -363,8 +362,10 @@ window.MJ = window.MJ || {};
       // 已解锁：名称 / 基调 / 简介 / 如何达成 / 独白 全部展示
       headTxt = e.icon + ' ' + escapeHtml(T('ending.' + key + '.name', null, e.name));
       bodyHtml =
-        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
-        (e.tone ? '<div class="ed-tone">' + escapeHtml(T('ending.' + key + '.tone', null, e.tone)) + '</div>' : '') +
+        ((e.assumption || e.tone) ? '<div class="ed-tags">' +
+          (e.assumption ? '<span class="pill pill-violet">✦ ' + T('ui.assumptionLine', null, '假设线') + '</span>' : '') +
+          (e.tone ? '<span class="pill pill-gold">' + escapeHtml(T('ending.' + key + '.tone', null, e.tone)) + '</span>' : '') +
+        '</div>' : '') +
         '<div class="ed-summary">' + escapeHtml(T('ending.' + key + '.summary', null, e.summary || '')) + '</div>' +
         (hint ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>' : '') +
         (e.monologue ? '<div class="ed-monologue">' + escapeHtml(T('ending.' + key + '.monologue', null, e.monologue)) + '</div>' : '');
@@ -376,7 +377,7 @@ window.MJ = window.MJ || {};
       // 未解锁（非隐藏）：只显示「如何达成」，名称/基调/简介/独白均不显示
       headTxt = '❓ ' + T('ui.unknown', null, '？？？');
       bodyHtml =
-        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
+        (e.assumption ? '<div class="ed-tags"><span class="pill pill-violet">✦ ' + T('ui.assumptionLine', null, '假设线') + '</span></div>' : '') +
         (hint
         ? '<div class="ed-hint"><span class="ed-hint-label">🎯 ' + T('ui.howTo', null, '如何达成') + '</span>' + escapeHtml(hint) + '</div>'
         : '<div class="ed-summary">' + T('ui.locked', null, '未解锁') + '</div>');
@@ -421,8 +422,10 @@ window.MJ = window.MJ || {};
       var e = defs[k], on = false;
       for (var i = 0; i < list.length; i++) { if (list[i].id === k) { on = true; break; } }
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
-        '<div class="g-icon">' + (on ? e.icon : '🥚') + '</div>' +
-        '<div class="g-name">' + (on ? escapeHtml(T('egg.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-hd">' +
+          '<span class="g-icon">' + (on ? e.icon : '🥚') + '</span>' +
+          '<span class="g-name">' + (on ? escapeHtml(T('egg.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</span>' +
+        '</div>' +
         '<div class="g-desc">' + (on ? escapeHtml(T('egg.' + k + '.desc', null, e.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
@@ -463,8 +466,10 @@ window.MJ = window.MJ || {};
       var e = defs[k], on = false;
       for (var i = 0; i < list.length; i++) { if (list[i].id === k) { on = true; break; } }
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + '">' +
-        '<div class="g-icon">' + (on ? e.icon : '📝') + '</div>' +
-        '<div class="g-name">' + (on ? escapeHtml(T('trivia.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</div>' +
+        '<div class="g-hd">' +
+          '<span class="g-icon">' + (on ? e.icon : '📝') + '</span>' +
+          '<span class="g-name">' + (on ? escapeHtml(T('trivia.' + k + '.name', null, e.name)) : T('ui.unknown', null, '？？？')) + '</span>' +
+        '</div>' +
         '<div class="g-desc">' + (on ? escapeHtml(T('trivia.' + k + '.desc', null, e.desc)) : T('ui.locked', null, '未解锁')) + '</div>' +
         '</div>';
     });
@@ -541,7 +546,7 @@ window.MJ = window.MJ || {};
   }
   function toastTrivia(e) {
     var t = document.createElement('div');
-    t.className = 'trivia-toast';
+    t.className = 'toast toast-teal';
     t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.triviaToast', null, '趣事发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
@@ -581,7 +586,7 @@ window.MJ = window.MJ || {};
   // 成就解锁即时弹窗（追加到 body，避免被 #app 重渲染清除；经队列串行，避免重叠）
   function toastAchievement(a) {
     var t = document.createElement('div');
-    t.className = 'ach-toast';
+    t.className = 'toast toast-gold';
     t.innerHTML = '<div class="at-icon">' + a.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) + '</div>' +
       '<div class="at-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div></div>';
@@ -591,7 +596,7 @@ window.MJ = window.MJ || {};
   // 彩蛋解锁即时弹窗（GDD §17.9；经队列串行）
   function toastEgg(e) {
     var t = document.createElement('div');
-    t.className = 'egg-toast';
+    t.className = 'toast toast-violet';
     t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.eggToast', null, '彩蛋发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
@@ -1027,10 +1032,28 @@ window.MJ = window.MJ || {};
           if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = '';
           if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—';
         }
-        ctx.fillStyle = G.bright; ctx.font = '600 13px "PingFang SC",sans-serif';
-        ctx.fillText((_kk.year || '') + ' · ' + _kt, 60, y); y += 19;
-        ctx.fillStyle = G.deep; ctx.font = '13px "PingFang SC",sans-serif';
-        ctx.fillText('↳ ' + _kc, 74, y); y += 23;
+        // 单行呈现：「年份 · 标题」（亮）→「选项」（暗）；超宽时按各自可用空间截断加省略号
+        var _maxW = W - 120;                       // 左右各留 60 边距
+        ctx.font = '600 13px "PingFang SC",sans-serif';
+        var _head = (_kk.year || '') + ' · ' + _kt;
+        var _headCap = Math.round(_maxW * 0.62);   // 标题最多占 62%，其余留给选项
+        if (ctx.measureText(_head).width > _headCap) {
+          while (_head.length > 1 && ctx.measureText(_head + '…').width > _headCap) _head = _head.slice(0, -1);
+          _head += '…';
+        }
+        var _hw = ctx.measureText(_head).width;
+        ctx.fillStyle = G.bright;
+        ctx.fillText(_head, 60, y);
+        ctx.font = '13px "PingFang SC",sans-serif';
+        var _sep = ' → ';
+        var _avail = Math.max(40, _maxW - _hw - ctx.measureText(_sep).width);
+        if (ctx.measureText(_kc).width > _avail) {
+          while (_kc.length > 1 && ctx.measureText(_kc + '…').width > _avail) _kc = _kc.slice(0, -1);
+          _kc += '…';
+        }
+        ctx.fillStyle = G.deep;
+        ctx.fillText(_sep + _kc, 60 + _hw, y);
+        y += 21;
       }
     }
 
@@ -1044,7 +1067,8 @@ window.MJ = window.MJ || {};
     y += 24;
     ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
     var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
-    y = wrapParagraph(ctx, narr, 60, y, W - 120, 26, H - 150);
+    // 底部"签名区"（名言 ≤2 行 + 署名 + 版权）约需 108px，独白在此提前截断让位，避免版权被画布裁切
+    y = wrapParagraph(ctx, narr, 60, y, W - 120, 26, H - 158);
 
     ctx.textAlign = 'center';
     // 名言（随机 + 去重上一条，居中多行；相对最后内容定位，避免被成就挤压覆盖）
@@ -1068,7 +1092,12 @@ window.MJ = window.MJ || {};
     // 方案 B：字号 15px、行距 22，支持至多 2 行（2 行时版权≈1238，仍在边框 1256 内）
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qLines = wrapCenter(ctx, _posterQuote, W - 120);
-    var taglineY = Math.max(H - 130, y + 42);
+    if (_qLines.length > 2) _qLines = _qLines.slice(0, 2); // 保险：名言最多 2 行，超出截断防溢出
+    // 双重钳制：既不与正文重叠（下界），也保证署名+版权不越过底部边框（上界）
+    var taglineY = Math.min(H - 112, Math.max(H - 130, y + 42));
+    // 名言上方居中的金色发丝线，让底部成为"签名区"而非被挤压的角落
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(W / 2 - 30, taglineY - 18); ctx.lineTo(W / 2 + 30, taglineY - 18); ctx.stroke();
     for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 22);
     var _sigY = taglineY + _qLines.length * 22 + 14;
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
@@ -1318,10 +1347,12 @@ window.MJ = window.MJ || {};
       statusBar(state, { year: e.year || 2009 }) +
       '<div class="panel ending' + (e.hidden ? ' hidden-ending' : '') + '">' +
         (e.hidden ? '<div class="badge-ultimate">' + T('ui.badgeUltimate', null, '★ 终极隐藏结局') + '</div>' : '') +
-        (e.assumption ? '<div class="asum-tag ed-asum">' + T('ui.assumptionLine', null, '假设线') + '</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
         '<h2>' + T('ending.' + id + '.name', null, e.name) + '</h2>' +
-        '<p class="tone">' + T('ending.' + id + '.tone', null, e.tone) + '</p>' +
+        ((e.assumption || e.tone) ? '<div class="ed-tags">' +
+          (e.assumption ? '<span class="pill pill-violet">✦ ' + T('ui.assumptionLine', null, '假设线') + '</span>' : '') +
+          (e.tone ? '<span class="pill pill-gold">' + escapeHtml(T('ending.' + id + '.tone', null, e.tone)) + '</span>' : '') +
+        '</div>' : '') +
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
         (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
         '<div class="poster-section">' +

@@ -88,3 +88,10 @@ if (process.argv.includes('--low')) {
 }
 
 console.log('\n=== 审计完成：彩蛋未落地 ' + eggMiss.length + ' / 趣事未落地 ' + triviaMiss.length + ' ===');
+
+// ---------- 回归门禁：趣事须全部可达；彩蛋含故意隐藏的密蛋，仅作信息提示 ----------
+if (triviaMiss.length > 0) {
+  console.error('FAIL 趣事可达性：' + triviaMiss.length + ' 条从未在 ' + N + ' 局真实游玩中发现 → ' + triviaMiss.join(', '));
+  process.exit(1);
+}
+console.error('PASS 趣事可达性：全部 ' + triviaDefs.length + ' 条均在随机真实游玩中可达（彩蛋未落地 ' + eggMiss.length + ' 条为已知密蛋，信息提示）');

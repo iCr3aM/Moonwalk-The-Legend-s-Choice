@@ -200,3 +200,11 @@ if (multi.length) multi.forEach(function (k) { console.log('  ' + k + ': ' + fla
 else console.log('  ✓ 无被多处写入的 flag');
 
 console.log('\nAUDIT_DONE');
+
+// ---------- 回归门禁：矛盾局 / 悬空链接 / 粘性 debt 即 fail（稀有结局/成就未在随机主线条现属正常，不计入） ----------
+var auditFailed = (contraRuns.length > 0) || (dangling.length > 0) || (debtStickyRuns > 0);
+if (auditFailed) {
+  console.error('FAIL 可达性/自洽审计：矛盾局=' + contraRuns.length + ' 悬空链接=' + dangling.length + ' 粘性debt=' + debtStickyRuns);
+  process.exit(1);
+}
+console.error('PASS 可达性/自洽审计：矛盾局=0 悬空链接=0 粘性debt=0');

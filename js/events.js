@@ -2666,6 +2666,38 @@ window.MJ = window.MJ || {};
       { label: T('event.V_CATALOG_EMPIRE.opt1.label', null, 'B：打造传媒帝国（版权+影视+地产）'), hint: T('event.V_CATALOG_EMPIRE.opt1.hint', null, '把版图扩成传媒帝国（财富+6）'), effects: { wealth: 6, timeline: { 'biz': 'empire' } }, next: '__RETURN__' }
     ]
   };
+  // ===== BP4（1993 首次指控应对）· 公开姿态分支变体（§17.15 中性：不点名、不渲染未成年细节、不暗示有罪；仅影响声誉/家庭/慈善轨迹，不改 canonical 无罪走向）=====
+  E.V_1993_RESPONSE = {
+    id: 'V_1993_RESPONSE', variant: true, window: [1993, 1994], weight: 35,
+    cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none'; },
+    title: T('event.V_1993_RESPONSE.title', null, '1993：风暴中的姿态'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_1993_RESPONSE.text', null, '1993 年，舆论与法律的风暴再度逼近你的生活。外界的目光空前灼烫，而你清楚：如何回应，将定义接下来许多年的公众记忆。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 50; }, text: T('event.V_1993_RESPONSE.branch0.text', null, '名声本就摇摇欲坠，每一道目光都像审判。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_1993_RESPONSE.opt0.label', null, 'A：低调回避，让时间冲淡'), hint: T('event.V_1993_RESPONSE.opt0.hint', null, '退回静默，心力仍被消耗（声誉-6，压力+8）'), effects: { reputation: -6, stress: 8 }, flags: { resp1993: 'lay_low' }, next: '__RETURN__' },
+      { label: T('event.V_1993_RESPONSE.opt1.label', null, 'B：主动发声，公开澄清'), hint: T('event.V_1993_RESPONSE.opt1.hint', null, '把真相交给公众，压力陡增（声誉-4，压力+10，媒体-2）'), effects: { reputation: -4, stress: 10, media: -2 }, flags: { resp1993: 'voice' }, next: '__RETURN__' },
+      { label: T('event.V_1993_RESPONSE.opt2.label', null, 'C：投身公益，以善行回应'), hint: T('event.V_1993_RESPONSE.opt2.hint', null, '以善意转移公众视线，回暖声望（慈善+1，声誉+5，家庭+3）'), effects: { phil: 1, reputation: 5, family: 3 }, flags: { resp1993: 'charity' }, next: '__RETURN__' }
+    ]
+  };
+  // ===== BP5（2003–2005 审判应对）· 公开姿态分支变体（canonical 无罪固定不可改写；仅"应对方式"分支影响声誉/家庭/慈善轨迹）=====
+  E.V_2005_RESPONSE = {
+    id: 'V_2005_RESPONSE', variant: true, window: [2005, 2006], weight: 35,
+    cond: function (s) { return s.flags.isSolo === true && s.flags.neverlandType !== 'none' && s.flags.secondCharge === true; },
+    title: T('event.V_2005_RESPONSE.title', null, '2005：审判尾声的姿态'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_2005_RESPONSE.text', null, '2005 年，漫长的审判走到尾声。无论结果如何，你都必须在公众面前选择一种姿态，去面对这场历时经年的审视。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 50; }, text: T('event.V_2005_RESPONSE.branch0.text', null, '名声的裂痕尚未弥合，这一程更显漫长。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_2005_RESPONSE.opt0.label', null, 'A：低调回避，让时间冲淡'), hint: T('event.V_2005_RESPONSE.opt0.hint', null, '退回静默，心力仍被消耗（声誉-4，压力+6）'), effects: { reputation: -4, stress: 6 }, flags: { resp2005: 'lay_low' }, next: '__RETURN__' },
+      { label: T('event.V_2005_RESPONSE.opt1.label', null, 'B：主动发声，公开澄清'), hint: T('event.V_2005_RESPONSE.opt1.hint', null, '把真相交给公众，压力陡增（声誉-2，压力+8，媒体-2）'), effects: { reputation: -2, stress: 8, media: -2 }, flags: { resp2005: 'voice' }, next: '__RETURN__' },
+      { label: T('event.V_2005_RESPONSE.opt2.label', null, 'C：投身公益，以善行回应'), hint: T('event.V_2005_RESPONSE.opt2.hint', null, '以善意转移公众视线，回暖声望（慈善+1，声誉+4，家庭+2）'), effects: { phil: 1, reputation: 4, family: 2 }, flags: { resp2005: 'charity' }, next: '__RETURN__' }
+    ]
+  };
   E.V_SURVIVE_PATH = {
     id: 'V_SURVIVE_PATH', variant: true, window: [2010, 2025], weight: 24, cond: function (s) { return s.flags.survived2009 === true; },
     title: T('event.V_SURVIVE_PATH.title', null, '续章 · 你撑过了 2009'), kind: 'choice',
