@@ -466,7 +466,7 @@ window.MJ.i18n.dict.eventEn = {
   "event.6_3.text": "Your marriage to Debbie Rowe came to an end under the glare of the spotlight. The small home once built quietly lost its warmth.",
   "event.6_3.branch0.text": "The already thin family warmth dropped another degree.",
   "event.6_3a.title": "9/11 and the 30th Anniversary",
-  "event.6_3a.text": "The 30th-anniversary concert met the shadow of 9/11. You took the stage in a grieving land, singing for the victims — turning a personal coronation into a collective healing.",
+  "event.6_3a.text": "The 30th-anniversary celebration was set for early September 2001 at New York's Madison Square Garden; days later 9/11 struck, and you took the stage again for the united benefit concert, singing for the victims — turning a personal coronation into a collective healing.",
   "event.6_3a.branch0.text": "You knew better than anyone to whom that song should be offered that night.",
   "event.6_3a.branch1.text": "The spotlight regained its warmth; the world remembered the night you stood beside the ruins.",
   "event.6_3a.opt0.label": "A: Throw yourself into the benefit",

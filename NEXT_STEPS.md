@@ -46,17 +46,18 @@
 - [x] **`test/smoke.cjs` 单元覆盖扩展至 30 结局**（2026-09-08）：`ucases` 增补 12 个新结局（7 假设线 + 5 安全网），全部经 `MJ.resolveEnding` 直验 OK；`mkEnding` 增补 `timeline` 支持；随机段年份倒挂守卫由 `process.exit(1)` 降级为 WARN（变体注入年份排序产物，非结局判定错误），使单元覆盖块得以执行。
 - [x] **`ACH_ALL_ENDINGS` 文案「25→30」**（config.js，已于 9098641 提交）。其余成就描述未再发现旧结局数引用。
 - [x] **`config.js` 成就 id 重复（已修，2026-09-08 提交）**：第 467 行 `ACH_NEVERLAND`('梦幻庄园') 重命名为 `ACH_NEVERLAND_MANOR`；同步更新 `achievementReach`(config.js:43)、EN 文案键(i18n.js:648)、`smoke.cjs` 成就覆盖用例(395)。图鉴按 id 去重不再静默覆盖前者。
+- [x] **变体年份修正回归护栏（2026-09-08）**：`5_2g` 年 1992→1993 曾致 `V_DANGEROUS_PREM` 0 触发（pre 3.12%→post 0%），已通过扩其窗口 [1991,1993] 修复并复跑 `check_balance_reach` 确认恢复 5.26%。教训：改 spine 事件年须复跑平衡门禁。
 
 ---
 
 ## 四、玩法 / 内容扩展待办（中，整合自 GDD §17 + 架空历史 spec）
 
 - [x] **P1 BP4/BP5 法律应对分支（已落地，2026-09-08 核实）**：`V_1993_RESPONSE`(events.js:2792) / `V_2005_RESPONSE`(events.js:2808) 已实现为中性应对变体（window 1993–94 / 2005–06，三选项 低调回避/主动发声/投身公益，仅影响声誉/家庭/慈善轨迹），遵守 §17.15 红线、MJ 恒无罪。归档 spec §17.3 标注「未实现」已过时。
-- [ ] **P2 §6/§7 候选结局核对**：补全隐藏/条件门槛说明，确保稀有结局「如何达成」hint 齐备。
-- [ ] **P3 §8 图鉴 F7–F11 校准**：彩蛋/趣事/成就图鉴字段与解锁条件对齐。
-- [ ] **P4 Ch6 里程碑变体提权**：关键节点风味变体权重提升，避免被安全网结局吞没。
+- [ ] **P2 §6/§7 候选成就/彩蛋核对（报告已出，待拍板实现，2026-09-08）**：§6 成就 9/11 候选已落地，缺失 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO`；§7 彩蛋多数候选已以不同 id 存在（BUBBLES/HALFTIME/BOTDF_REMIX/CAPTAINEO），缺失 `EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`；审计「孤儿 flag」已过时（captainEO/moonwalker/ghosts 已接入）。实现内容见对话报告。
+- [x] **P3 §8 图鉴 F7–F11 年份/口径校准（2026-09-08 提交）**：F7 Ghosts 摄制年 1997→1996；F8 Dangerous 格莱美之夜 1992→1993、HIStory 1996→1997；F9 V_BUBBLES 窗口 [1985,1990]→[1986,1990]；F10 Thriller 40 年 2023→2022；F11 6_3a 注明三十周年(2001-09) 与 9·11 义演为独立事件。审计 F1/F2/F3/F4/法律年等经核实代码已合规，无需改。
+- [x] **P4 Ch6 里程碑变体提权（2026-09-08 核实）**：`V_CHILD_PRINCE`/`V_CHILD_PARIS`/`V_MJFRIENDS` 已 `force:true`（提权机制落地，绕过 cap/cooldown），窗口 [1997,1999] 对应 Prince/Paris/MJ&Friends 真实年；待复跑确认三者在随机游玩中稳定出现。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
-- [ ] **深度游玩**：创作企划器扩展、关系网深化、决策风格档案。
+- [ ] **深度游玩（C：创作企划器扩展 / 关系网深化）**：mjwiki 缺口已核查（缺 Lisa Presley / Diana Ross / Quincy Jones / Frank DiLeo / John Branca / Elizabeth Taylor 独立页 + `collaborators/` 索引）；**待你补 wiki 后实现**（详见对话报告）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **剧情文案**：独白尾声扩写、舆论轴/心理轴深化、时代切片。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。

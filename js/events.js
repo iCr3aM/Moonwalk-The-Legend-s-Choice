@@ -984,7 +984,7 @@ window.MJ = window.MJ || {};
   };
 
   E['6_2d'] = {
-    id: '6_2d', year: 1997, title: T('event.6_2d.title', null, '《Ghosts》短片'), kind: 'choice',
+    id: '6_2d', year: 1996, title: T('event.6_2d.title', null, '《Ghosts》短片'), kind: 'choice',
     cond: function (s) { return s.flags.isSolo === true; }, fallback: '6_2e',
     text: function (s) {
       return narr(T('event.6_2d.text', null, '你构想并主演长篇短片《Ghosts》，把心里那些不被理解的怪诞，借银幕呈现。'), s, [
@@ -1027,7 +1027,7 @@ window.MJ = window.MJ || {};
   E['6_3a'] = {
     id: '6_3a', year: 2001, title: T('event.6_3a.title', null, '9·11 与三十周年'), kind: 'choice', key: true,
     text: function (s) {
-      return narr(T('event.6_3a.text', null, '出道三十周年的演唱会遇上 9·11 的阴霾。你在哀伤的国土上登台，为受难者献唱，把个人的加冕，唱成了众人的疗愈。'), s, [
+      return narr(T('event.6_3a.text', null, '出道三十周年庆典原定 2001 年 9 月初的纽约麦迪逊广场花园；数日后 9·11 骤然降临，你又站上万众一心的义演舞台，为受难者献唱——把个人的加冕，唱成了众人的疗愈。'), s, [
         { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.6_3a.branch0.text', null, '你比谁都清楚，此刻歌声该献给谁。') },
         { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.6_3a.branch1.text', null, '聚光灯重新有了温度，世人记得你站在废墟旁的那个夜晚。') }
       ]);
@@ -1442,7 +1442,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E['8_4c'] = {
-    id: '8_4c', year: 2023, title: T('event.8_4c.title', null, '《Thriller 40》周年'), kind: 'choice', key: true,
+    id: '8_4c', year: 2022, title: T('event.8_4c.title', null, '《Thriller 40》周年'), kind: 'choice', key: true,
     text: function (s) {
       return narr(T('event.8_4c.text', null, '《Thriller》迎来四十岁生日，一场横跨两年的纪念企划把老歌重新推上榜单。一代人的青春，被同一段节拍唤醒。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.8_4c.branch0.text', null, '你想起录制它时那群并肩的人，怀旧里多了一层暖意。') }
@@ -1783,7 +1783,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_BUBBLES = {
-    id: 'V_BUBBLES', variant: true, window: [1985, 1990], weight: 25,
+    id: 'V_BUBBLES', variant: true, window: [1986, 1990], weight: 25,
     title: T('event.V_BUBBLES.title', null, '童心宠物'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BUBBLES.text', null, '庄园里多了一只会陪你玩耍的宠物猩猩，童真的笑第一次这么近。'), s, [
@@ -2515,7 +2515,7 @@ window.MJ = window.MJ || {};
     next: '4_2b'
   };
   E['5_2g'] = {
-    id: '5_2g', year: 1992, title: T('event.5_2g.title', null, '《Dangerous》格莱美之夜'), kind: 'auto', grammyReveal: 'dangerous',
+    id: '5_2g', year: 1993, title: T('event.5_2g.title', null, '《Dangerous》格莱美之夜'), kind: 'auto', grammyReveal: 'dangerous',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'dangerous'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -2528,7 +2528,7 @@ window.MJ = window.MJ || {};
     next: '5_2b'
   };
   E['6_1e_g'] = {
-    id: '6_1e_g', year: 1996, title: T('event.6_1e_g.title', null, '《HIStory》格莱美之夜'), kind: 'auto', grammyReveal: 'history',
+    id: '6_1e_g', year: 1997, title: T('event.6_1e_g.title', null, '《HIStory》格莱美之夜'), kind: 'auto', grammyReveal: 'history',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'history'); },
     text: function (s) {
       if (!s.flags.isSolo) return T('event.3_3.ret0.text', null, '荣誉之夜，组合与你共享掌声，奖杯的反光里映着几张并肩的笑脸。');
@@ -3049,7 +3049,7 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_DANGEROUS_PREM = {
-    id: 'V_DANGEROUS_PREM', variant: true, window: [1991, 1992], weight: 28,
+    id: 'V_DANGEROUS_PREM', variant: true, window: [1991, 1993], weight: 28,
     title: T('event.V_DANGEROUS_PREM.title', null, '《Dangerous》首演之夜'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_DANGEROUS_PREM.text', null, '1991 年，《Dangerous》来了。黑豹纹与白袜的造型在排练厅镜子前成形，首演的灯，等你按下。'), s, [
