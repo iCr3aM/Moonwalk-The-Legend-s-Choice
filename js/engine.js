@@ -736,7 +736,14 @@ window.MJ = window.MJ || {};
       TRIVIA_BEN_SOLO1:      { icon: '🐶', name: '《Ben》登顶 Solo', desc: '1972 年的《Ben》是他首支个人冠军单曲，少年的嗓音第一次独自站上榜首。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 40; } },
       TRIVIA_ATV_CATALOG:    { icon: '📜', name: 'ATV 版权版图', desc: '1985 年他购入 Beatles 与 ATV 曲库版权，把旋律变成了可传承的资产。', cond: function (s) { return (s.attributes.wealth || 0) >= 45 || (s.meta.mogul || 0) >= 1 || (s.attributes.reputation || 0) >= 60; } },
       TRIVIA_BEATIT_GANGS:   { icon: '🤝', name: '《Beat It》的真实面孔', desc: '《Beat It》请来真实的帮派青年出演，用舞蹈代替对抗，唱出反暴力的姿态。', cond: function (s) { return (s.meta.artPath || 0) >= 1 || (s.attributes.art || 0) >= 45; } },
-      TRIVIA_BLACKORWHITE_PREMIERE: { icon: '📺', name: '《Black or White》首播', desc: '1991 年《Black or White》全球首播，约一亿观众同时守在屏幕前。', cond: function (s) { return s.flags.blackOrWhite === true || (s.attributes.reputation || 0) >= 55 || (s.meta.artPath || 0) >= 1; } }
+      TRIVIA_BLACKORWHITE_PREMIERE: { icon: '📺', name: '《Black or White》首播', desc: '1991 年《Black or White》全球首播，约一亿观众同时守在屏幕前。', cond: function (s) { return s.flags.blackOrWhite === true || (s.attributes.reputation || 0) >= 55 || (s.meta.artPath || 0) >= 1; } },
+      // ---------- P2：W6 身后冷知识（MJ the Musical / Cirque / Thriller 40 / 传记片 / 遗产慈善） ----------
+      // 仅对续章线（survived2009）解锁，符合「身后」语义；均为中性、零数值影响、可收藏侧写。
+      TRIVIA_MUSICAL_2022: { icon: '🎭', name: '《MJ》音乐剧', desc: '2022 年，《MJ》音乐剧在百老汇开演，以编舞与金曲重述你的一生，掌声里坐着无数后来者。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_CIRQUE:       { icon: '🎪', name: '太阳马戏的致敬', desc: '拉斯维加斯的《Michael Jackson: ONE》常驻秀，把你的舞步变成一场永不落幕的光影。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_THRILLER40:   { icon: '🧟', name: '《Thriller》四十周年', desc: '2023 年，《Thriller》重发四十周年，黑胶再度登上榜首——怪物仍在跳舞。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_BIOPIC_2026:  { icon: '🎬', name: '银幕上的传记', desc: '2026 年，一部关于你的传记电影官宣开拍，由后来者把这段传奇重新搬上大银幕。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_ESTATE_PHIL:  { icon: '💛', name: '遗产里的善意', desc: '即便你已不在舞台中央，遗产管理委员会仍持续运营慈善，让《Thriller》的旋律与善意一起流传。', cond: function (s) { return s.flags.survived2009 === true && (s.meta.phil || 0) >= 3; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }

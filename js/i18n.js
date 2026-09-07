@@ -520,6 +520,12 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_GARY.name': 'The Concrete of Gary Alley', 'trivia.TRIVIA_GARY.desc': 'That Gary alley, its concrete your first stage; you’d peep through the doorframe, watching your brothers pick at the guitar.',
         'trivia.TRIVIA_APOLLO.name': 'Apollo Amateur Night', 'trivia.TRIVIA_APOLLO.desc': 'At Harlem’s Apollo Theater, under the amateur-night spotlight, the Jackson 5 took the crown — a night written into Black music history.',
         'trivia.TRIVIA_MOTOWN.name': 'The Night Before the Motown Audition', 'trivia.TRIVIA_MOTOWN.desc': 'The night before the audition, your brothers huddled tight around you backstage; the next day you pushed open Motown’s door onto the world.',
+        // —— P2：W6 身后冷知识（仅续章线 survived2009 解锁） ——
+        'trivia.TRIVIA_MUSICAL_2022.name': 'MJ the Musical', 'trivia.TRIVIA_MUSICAL_2022.desc': 'In 2022, MJ the Musical opened on Broadway, retelling your life through choreography and hits — with countless newcomers in the applause.',
+        'trivia.TRIVIA_CIRQUE.name': 'Cirque du Soleil’s Tribute', 'trivia.TRIVIA_CIRQUE.desc': 'Las Vegas’s Michael Jackson: ONE resident show turns your steps into an ever-running play of light.',
+        'trivia.TRIVIA_THRILLER40.name': 'Thriller at 40', 'trivia.TRIVIA_THRILLER40.desc': 'In 2023 Thriller was reissued for its 40th anniversary and topped the vinyl chart again — the monster still dances.',
+        'trivia.TRIVIA_BIOPIC_2026.name': 'The Biopic on Screen', 'trivia.TRIVIA_BIOPIC_2026.desc': 'In 2026 a biopic about you was announced, with later hands restaging this legend on the big screen.',
+        'trivia.TRIVIA_ESTATE_PHIL.name': 'Kindness in the Estate', 'trivia.TRIVIA_ESTATE_PHIL.desc': 'Even off-center stage, the estate keeps charity alive, letting Thriller’s melody and its kindness travel on together.',
 
         // —— Phase 2 内容扩充 ——
         'trivia.TRIVIA_DIALTONE.name': 'Dial Tone Beat',

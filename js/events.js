@@ -2790,7 +2790,8 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_CHILD_PRINCE = {
-    id: 'V_CHILD_PRINCE', variant: true, window: [1997, 1997], weight: 30,
+    id: 'V_CHILD_PRINCE', variant: true, force: true, window: [1997, 1999], weight: 30,
+    cond: function (s) { return (s.rel && (s.rel.lisa > 0 || s.rel.debbie > 0)) || (s.attributes.family || 0) >= 50; },
     title: T('event.V_CHILD_PRINCE.title', null, '长子降生'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILD_PRINCE.text', null, '你的第一个孩子降生了。新生命带来的安静，是这喧嚣人间里你最想守护的奇迹。'), s, [
@@ -2803,7 +2804,8 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_CHILD_PARIS = {
-    id: 'V_CHILD_PARIS', variant: true, window: [1997, 1999], weight: 30,
+    id: 'V_CHILD_PARIS', variant: true, force: true, window: [1997, 1999], weight: 30,
+    cond: function (s) { return (s.rel && (s.rel.lisa > 0 || s.rel.debbie > 0)) || (s.attributes.family || 0) >= 50; },
     title: T('event.V_CHILD_PARIS.title', null, '女儿降生'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILD_PARIS.text', null, '你的女儿降生了。襁褓里的呼吸，让这喧嚣的人间忽然有了柔软的落点。'), s, [
@@ -2844,7 +2846,8 @@ window.MJ = window.MJ || {};
     ]
   };
   E.V_MJFRIENDS = {
-    id: 'V_MJFRIENDS', variant: true, window: [1997, 1999], weight: 30,
+    id: 'V_MJFRIENDS', variant: true, force: true, window: [1997, 1999], weight: 30,
+    cond: function (s) { return (s.meta.phil || 0) >= 2 || (s.attributes.reputation || 0) >= 55; },
     title: T('event.V_MJFRIENDS.title', null, '与世界同台'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_MJFRIENDS.text', null, '1999 年的 MJ & Friends 慈善演唱会，你与一代巨星同台，把掌声变成送往各地的善意。'), s, [
