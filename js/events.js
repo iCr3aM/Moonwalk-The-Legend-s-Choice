@@ -126,9 +126,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.0_3.opt0.label', null, 'A：与兄长们紧握着手上台'), hint: T('event.0_3.opt0.hint', null, '同心则无惧（声誉+8，艺术+3，手足+6）'), effects: { reputation: 8, art: 3, rel: { brothers: 6 } }, flags: { motownAudition: true }, next: '1_2b' },
-      { label: T('event.0_3.opt1.label', null, 'B：把这次试唱当作历练'), hint: T('event.0_3.opt1.hint', null, '平常心对待（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, flags: { motownAudition: true }, next: '1_2b' },
-      { label: T('event.0_3.opt2.label', null, 'C：担心被 Motown 拒之门外'), hint: T('event.0_3.opt2.hint', null, '未战先怯（压力+5）'), effects: { stress: 5 }, next: '1_2b' }
+      { label: T('event.0_3.opt0.label', null, 'A：与兄长们紧握着手上台'), hint: T('event.0_3.opt0.hint', null, '同心则无惧（声誉+8，艺术+3，手足+6）'), effects: { reputation: 8, art: 3, rel: { brothers: 6 } }, flags: { motownAudition: true }, next: '0_3b' },
+      { label: T('event.0_3.opt1.label', null, 'B：把这次试唱当作历练'), hint: T('event.0_3.opt1.hint', null, '平常心对待（艺术+8，声誉+3）'), effects: { art: 8, reputation: 3 }, flags: { motownAudition: true }, next: '0_3b' },
+      { label: T('event.0_3.opt2.label', null, 'C：担心被 Motown 拒之门外'), hint: T('event.0_3.opt2.hint', null, '未战先怯（压力+5）'), effects: { stress: 5 }, next: '0_3b' }
+    ]
+  };
+
+  E['0_3b'] = {
+    id: '0_3b', year: 1968, title: T('event.0_3b.title', null, 'Motown 的合约'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.0_3b.text', null, '试唱通过，Motown 的合约摆在桌上。贝里·戈迪把杰克逊五人组看作厂牌里最锋利的一把刀——底特律的 Hitsville U.S.A. 录音棚，将见证你们被打磨成流行机器。签字笔落下时，盖瑞的童年被远远甩在身后。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.0_3b.branch0.text', null, '巨头的光环罩下来，你第一次觉得自己既是“商品”也是“奇迹”。') },
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.0_3b.branch1.text', null, '离家越来越远，你忽然想念盖瑞那张拥挤的床。') }
+      ]);
+    },
+    options: [
+      { label: T('event.0_3b.opt0.label', null, 'A：把合约当作跳板'), hint: T('event.0_3b.opt0.hint', null, '野心启程（声誉+8，艺术+3）'), effects: { reputation: 8, art: 3 }, next: '1_2b' },
+      { label: T('event.0_3b.opt1.label', null, 'B：守住兄弟同心'), hint: T('event.0_3b.opt1.hint', null, '一家人绑定前行（家庭+8，手足+6）'), effects: { family: 8, rel: { brothers: 6 } }, next: '1_2b' },
+      { label: T('event.0_3b.opt2.label', null, 'C：对失去童年感到不安'), hint: T('event.0_3b.opt2.hint', null, '代价初显（压力+5）'), effects: { stress: 5 }, next: '1_2b' }
     ]
   };
 
@@ -292,17 +307,32 @@ window.MJ = window.MJ || {};
     options: function (s) {
       if (s.flags.isSolo) {
         return [
-          { label: T('event.2_1.opt0.label', null, 'A：倾尽所有去演'), hint: T('event.2_1.opt0.hint', null, '舞台感与口碑双收（艺术+15，声誉+10）'), effects: { art: 15, reputation: 10, rel: { quincy: 10 } }, next: '2_2' },
-          { label: T('event.2_1.opt1.label', null, 'B：把重心留给家人'), hint: T('event.2_1.opt1.hint', null, '温暖的角落自有分量（家庭+10）'), effects: { family: 10 }, next: '2_2' },
-          { label: T('event.2_1.opt2.label', null, 'C：临时退演护隐私'), hint: T('event.2_1.opt2.hint', null, '避开窥探，留住宁静（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, next: '2_2' }
+          { label: T('event.2_1.opt0.label', null, 'A：倾尽所有去演'), hint: T('event.2_1.opt0.hint', null, '舞台感与口碑双收（艺术+15，声誉+10）'), effects: { art: 15, reputation: 10, rel: { quincy: 10 } }, next: '2_1b' },
+          { label: T('event.2_1.opt1.label', null, 'B：把重心留给家人'), hint: T('event.2_1.opt1.hint', null, '温暖的角落自有分量（家庭+10）'), effects: { family: 10 }, next: '2_1b' },
+          { label: T('event.2_1.opt2.label', null, 'C：临时退演护隐私'), hint: T('event.2_1.opt2.hint', null, '避开窥探，留住宁静（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, next: '2_1b' }
         ];
       }
       return [
-        { label: T('event.2_1.opt3.label', null, 'A：全心参演'), hint: T('event.2_1.opt3.hint', null, '家族事业更上层楼（艺术+10，家庭+5）'), effects: { art: 10, family: 5 }, next: '2_2' },
-        { label: T('event.2_1.opt4.label', null, 'B：低调搭把手'), hint: T('event.2_1.opt4.hint', null, '安稳陪跑（艺术+5，家庭+10）'), effects: { art: 5, family: 10 }, next: '2_2' },
-        { label: T('event.2_1.opt5.label', null, 'C：专注组合本身'), hint: T('event.2_1.opt5.hint', null, '兄弟同心（家庭+15）'), effects: { family: 15 }, next: '2_2' }
+        { label: T('event.2_1.opt3.label', null, 'A：全心参演'), hint: T('event.2_1.opt3.hint', null, '家族事业更上层楼（艺术+10，家庭+5）'), effects: { art: 10, family: 5 }, next: '2_1b' },
+        { label: T('event.2_1.opt4.label', null, 'B：低调搭把手'), hint: T('event.2_1.opt4.hint', null, '安稳陪跑（艺术+5，家庭+10）'), effects: { art: 5, family: 10 }, next: '2_1b' },
+        { label: T('event.2_1.opt5.label', null, 'C：专注组合本身'), hint: T('event.2_1.opt5.hint', null, '兄弟同心（家庭+15）'), effects: { family: 15 }, next: '2_1b' }
       ];
     }
+  };
+
+  E['2_1b'] = {
+    id: '2_1b', year: 1978, title: T('event.2_1b.title', null, '《新绿野仙踪》首映'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.2_1b.text', null, '《新绿野仙踪》登上大银幕，你饰演的稻草人让观众记住了亮片手套与太空步的雏形。昆西·琼斯在影院后排，默默把你的名字写进了下一个计划。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.2_1b.branch0.text', null, '镜头比你想象中更诚实，你开始迷上电影的语言。') },
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.2_1b.branch1.text', null, '首映礼的闪光灯第一次为你个人而亮，而非整个组合。') }
+      ]);
+    },
+    options: [
+      { label: T('event.2_1b.opt0.label', null, 'A：把电影经验带进音乐'), hint: T('event.2_1b.opt0.hint', null, '跨界滋养创作（艺术+10，声誉+5）'), effects: { art: 10, reputation: 5 }, next: '2_2' },
+      { label: T('event.2_1b.opt1.label', null, 'B：专注组合舞台'), hint: T('event.2_1b.opt1.hint', null, '兄弟本位（家庭+5）'), effects: { family: 5 }, next: '2_2' },
+      { label: T('event.2_1b.opt2.label', null, 'C：享受明星的新身份'), hint: T('event.2_1b.opt2.hint', null, '个人光环初涨（声誉+8，压力+3）'), effects: { reputation: 8, stress: 3 }, next: '2_2' }
+    ]
   };
 
   E['2_2'] = {
@@ -570,9 +600,24 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.4_1.opt0.label', null, 'A：对公众敞开大门'), hint: T('event.4_1.opt0.hint', null, '孩子们的乐园，钱包的窟窿（家庭+20，财富-30）'), effects: { family: 20, wealth: -30 }, flags: { neverlandType: 'public' }, next: '4_2' },
-      { label: T('event.4_1.opt1.label', null, 'B：圈起私人天地'), hint: T('event.4_1.opt1.hint', null, '留一方静土（财富-20，家庭+5，隐士+1）'), effects: { wealth: -20, family: 5, recluse: 1 }, flags: { neverlandType: 'private' }, next: '4_2' },
-      { label: T('event.4_1.opt2.label', null, 'C：干脆不购置'), hint: T('event.4_1.opt2.hint', null, '无牵无挂，现金在手（财富+10）'), effects: { wealth: 10 }, flags: { neverlandType: 'none' }, next: '4_2' }
+      { label: T('event.4_1.opt0.label', null, 'A：对公众敞开大门'), hint: T('event.4_1.opt0.hint', null, '孩子们的乐园，钱包的窟窿（家庭+20，财富-30）'), effects: { family: 20, wealth: -30 }, flags: { neverlandType: 'public' }, next: '4_1b' },
+      { label: T('event.4_1.opt1.label', null, 'B：圈起私人天地'), hint: T('event.4_1.opt1.hint', null, '留一方静土（财富-20，家庭+5，隐士+1）'), effects: { wealth: -20, family: 5, recluse: 1 }, flags: { neverlandType: 'private' }, next: '4_1b' },
+      { label: T('event.4_1.opt2.label', null, 'C：干脆不购置'), hint: T('event.4_1.opt2.hint', null, '无牵无挂，现金在手（财富+10）'), effects: { wealth: 10 }, flags: { neverlandType: 'none' }, next: '4_1b' }
+    ]
+  };
+
+  E['4_1b'] = {
+    id: '4_1b', year: 1988, title: T('event.4_1b.title', null, '梦幻庄园的日子'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.4_1b.text', null, '搬进 Neverland 后，旋转木马、动物园与私人影院填满了日子。你在这里为自己造了一座童年没来得及拥有的游乐场——童话不必向外人解释。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.4_1b.branch0.text', null, '创作与玩心在这片园子里奇妙地和解了。') },
+        { cond: function (s) { return (s.attributes.wealth || 0) <= 30; }, text: T('event.4_1b.branch1.text', null, '维护这座童话很贵，但你乐意。') }
+      ]);
+    },
+    options: [
+      { label: T('event.4_1b.opt0.label', null, 'A：把庄园当作创作避世所'), hint: T('event.4_1b.opt0.hint', null, '灵感有了后花园（艺术+8，压力-3）'), effects: { art: 8, stress: -3 }, next: '4_2' },
+      { label: T('event.4_1b.opt1.label', null, 'B：邀请挚友同享'), hint: T('event.4_1b.opt1.hint', null, '温暖的角落（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3 }, next: '4_2' },
+      { label: T('event.4_1b.opt2.label', null, 'C：持续扩建乐园'), hint: T('event.4_1b.opt2.hint', null, '童话越做越大（财富-15，声誉+3）'), effects: { wealth: -15, reputation: 3 }, next: '4_2' }
     ]
   };
 
