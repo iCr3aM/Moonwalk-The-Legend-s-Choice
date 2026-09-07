@@ -1838,5 +1838,16 @@ window.MJ.i18n.dict.eventEn = {
   "event.7_2b.opt1.label": "B: Take care, pace yourself",
   "event.7_2b.opt1.hint": "Steady within limits (Health +5, Stress -5)",
   "event.7_2b.opt2.label": "C: Enjoy the rehearsals",
-  "event.7_2b.opt2.hint": "The pure joy of being back under the lights (Art +5, Reputation +3)"
+  "event.7_2b.opt2.hint": "The pure joy of being back under the lights (Art +5, Reputation +3)",
+
+  "event.4_3b.title": "Honor and Goodwill (1989)",
+  "event.4_3b.text": "In 1989, on the Soul Train Heritage Awards stage, Elizabeth Taylor called you 'the true king of pop, rock and soul' — and the name 'King of Pop' spread from there. Offstage, you quietly steered the proceeds of 'Man in the Mirror' and donations to the United Negro College Fund into goodwill.",
+  "event.4_3b.branch0.text": "The title was sugar and cage; what you cared about was whether anyone heard the song's 'make a change.'",
+  "event.4_3b.branch1.text": "Goodness need not be loud; you had learned to do good quietly, beyond the applause.",
+  "event.4_3b.opt0.label": "A: Treat 'King of Pop' as a duty, not a halo",
+  "event.4_3b.opt0.hint": "Clearer-headed under fame (Reputation +8, Stress +3)",
+  "event.4_3b.opt1.label": "B: Make charity a long-term promise",
+  "event.4_3b.opt1.hint": "Goodwill made real (Philanthropy +2, Reputation +3)",
+  "event.4_3b.opt2.label": "C: Keep distance from the title",
+  "event.4_3b.opt2.hint": "Never defined by a label (Art +5, Stress -3)"
 };

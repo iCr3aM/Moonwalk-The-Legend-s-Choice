@@ -631,7 +631,22 @@ window.MJ = window.MJ || {};
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.4_3.branch1.text', null, '功成名就后再回望，笔下的自己竟也有了几分陌生。') }
       ]);
     },
-    effects: { reputation: 10, wealth: 5 }, next: '4_4'
+    effects: { reputation: 10, wealth: 5 }, next: '4_3b'
+  };
+
+  E['4_3b'] = {
+    id: '4_3b', year: 1989, title: T('event.4_3b.title', null, '荣誉与善意（1989）'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.4_3b.text', null, '1989 年，Soul Train 传承奖的舞台上，伊丽莎白·泰勒当众称你为“流行、摇滚与灵魂真正的王者”——“流行天王”之名由此广传。而在聚光灯外，你持续把《Man in the Mirror》的收益、以及对联合黑人学院的捐助，悄悄放进善意里。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.4_3b.branch0.text', null, '称号是糖也是枷，你更在意歌里那句“改变自己”是否真的有人听进去。') },
+        { cond: function (s) { return (s.attributes.phil || 0) >= 1; }, text: T('event.4_3b.branch1.text', null, '善意不必喧哗，你早学会在掌声之外偷偷行善。') }
+      ]);
+    },
+    options: [
+      { label: T('event.4_3b.opt0.label', null, 'A：把“流行天王”当作责任而非光环'), hint: T('event.4_3b.opt0.hint', null, '盛名之下更清醒（声誉+8，压力+3）'), effects: { reputation: 8, stress: 3 }, next: '4_4' },
+      { label: T('event.4_3b.opt1.label', null, 'B：把慈善做成长期的承诺'), hint: T('event.4_3b.opt1.hint', null, '善意落地（慈善+2，声誉+3）'), effects: { phil: 2, reputation: 3 }, next: '4_4' },
+      { label: T('event.4_3b.opt2.label', null, 'C：对名号保持距离'), hint: T('event.4_3b.opt2.hint', null, '不曾被头衔定义（艺术+5，压力-3）'), effects: { art: 5, stress: -3 }, next: '4_4' }
+    ]
   };
 
   E['4_4'] = {
