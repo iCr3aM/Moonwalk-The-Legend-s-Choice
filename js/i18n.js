@@ -484,6 +484,11 @@ window.MJ = window.MJ || {};
         'egg.EGG_BUBBLES.name': 'Chimpanzee Companion', 'egg.EGG_BUBBLES.desc': 'The chimpanzee Bubbles you kept became one of the era’s most photographed symbols of childhood.',
         'egg.EGG_HALFTIME.name': 'King of the Halftime', 'egg.EGG_HALFTIME.desc': 'Your 1993 Super Bowl halftime defined a generation’s memory of the spectacle.',
 
+        // —— P2-B 影视集合增厚：新增影视作品彩蛋 EN（并入现有彩蛋图鉴·影视子组）——
+        'egg.EGG_THISISIT_FILM.name': 'This Is It', 'egg.EGG_THISISIT_FILM.desc': 'The 2009 concert film assembled from your final rehearsals let the world watch, one last time, the show that never opened.',
+        'egg.EGG_BAD25.name': 'Bad 25', 'egg.EGG_BAD25.desc': 'The 2012 documentary marking Bad’s 25th anniversary revisited the album that reshaped the pop era.',
+        'egg.EGG_MJ_HALLOWEEN.name': 'Michael Jackson’s Halloween', 'egg.EGG_MJ_HALLOWEEN.desc': 'The 2017 animated TV special brought his songs to a new generation as a Halloween-night fantasy.',
+
         // ---------- 趣事与轶事（GDD §17.11：Trivia & Anecdotes） ----------
         'ui.triviaCodex': 'Trivia Codex',
         'ui.triviaToast': 'Trivia Discovered · ',
@@ -526,6 +531,10 @@ window.MJ = window.MJ || {};
         'trivia.TRIVIA_THRILLER40.name': 'Thriller at 40', 'trivia.TRIVIA_THRILLER40.desc': 'In 2023 Thriller was reissued for its 40th anniversary and topped the vinyl chart again — the monster still dances.',
         'trivia.TRIVIA_BIOPIC_2026.name': 'The Biopic on Screen', 'trivia.TRIVIA_BIOPIC_2026.desc': 'In 2026 a biopic about you was announced, with later hands restaging this legend on the big screen.',
         'trivia.TRIVIA_ESTATE_PHIL.name': 'Kindness in the Estate', 'trivia.TRIVIA_ESTATE_PHIL.desc': 'Even off-center stage, the estate keeps charity alive, letting Thriller’s melody and its kindness travel on together.',
+
+        // —— P2-B：Cascio/Porte 相关冷知识 EN（§17.15 中性）——
+        'trivia.TRIVIA_DOC_2003.name': 'Echoes of a Documentary', 'trivia.TRIVIA_DOC_2003.desc': 'In 2003 a televised documentary swung the spotlight back onto you and stirred a long public discussion — beyond the lens, the verdict was left to time.',
+        'trivia.TRIVIA_ESTATE_LITIGATION.name': 'Litigation Around the Estate', 'trivia.TRIVIA_ESTATE_LITIGATION.desc': 'After you left the stage, several lawsuits tied to the estate were filed and in time closed — the ledger shut, yet the legend keeps being retold.',
 
         // —— Phase 2 内容扩充 ——
         'trivia.TRIVIA_DIALTONE.name': 'Dial Tone Beat',

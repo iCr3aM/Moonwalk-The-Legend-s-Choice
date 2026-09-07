@@ -743,7 +743,11 @@ window.MJ = window.MJ || {};
       TRIVIA_CIRQUE:       { icon: '🎪', name: '太阳马戏的致敬', desc: '拉斯维加斯的《Michael Jackson: ONE》常驻秀，把你的舞步变成一场永不落幕的光影。', cond: function (s) { return s.flags.survived2009 === true; } },
       TRIVIA_THRILLER40:   { icon: '🧟', name: '《Thriller》四十周年', desc: '2023 年，《Thriller》重发四十周年，黑胶再度登上榜首——怪物仍在跳舞。', cond: function (s) { return s.flags.survived2009 === true; } },
       TRIVIA_BIOPIC_2026:  { icon: '🎬', name: '银幕上的传记', desc: '2026 年，一部关于你的传记电影官宣开拍，由后来者把这段传奇重新搬上大银幕。', cond: function (s) { return s.flags.survived2009 === true; } },
-      TRIVIA_ESTATE_PHIL:  { icon: '💛', name: '遗产里的善意', desc: '即便你已不在舞台中央，遗产管理委员会仍持续运营慈善，让《Thriller》的旋律与善意一起流传。', cond: function (s) { return s.flags.survived2009 === true && (s.meta.phil || 0) >= 3; } }
+      TRIVIA_ESTATE_PHIL:  { icon: '💛', name: '遗产里的善意', desc: '即便你已不在舞台中央，遗产管理委员会仍持续运营慈善，让《Thriller》的旋律与善意一起流传。', cond: function (s) { return s.flags.survived2009 === true && (s.meta.phil || 0) >= 3; } },
+
+      // —— P2-B：Cascio/Porte 相关冷知识（§17.15 严格中性：不点名、不渲染、不断言，仅陈述可考证公开事实）——
+      TRIVIA_DOC_2003:  { icon: '📺', name: '一部纪录片的回响', desc: '2003 年，一部电视纪录片把聚光灯重新打在你身上，引发了一场旷日持久的公共讨论——镜头之外，是非留给了时间。', cond: function (s) { return s.flags.survived2009 === true; } },
+      TRIVIA_ESTATE_LITIGATION: { icon: '⚖️', name: '遗产相关的数起诉讼', desc: '你离场之后，围绕遗产的数起诉讼陆续提起、也陆续结案——账册合上，传奇仍在被一代代讲述。', cond: function (s) { return s.flags.survived2009 === true; } }
     },
     _load: function () {
       try { return JSON.parse(localStorage.getItem(this.key)) || { found: {} }; } catch (e) { return { found: {} }; }
