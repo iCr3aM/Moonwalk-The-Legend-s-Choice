@@ -13,6 +13,7 @@ var MJ = global.MJ;
 
 function mulberry32(a) { return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 var rng = mulberry32(0x9E3779B9);
+Math.random = rng; // 固定引擎内部变体选择 RNG，消除可达性门禁的随机抖动（V_MJFRIENDS 等宽窗口低触发率变体偶发 0 触发）
 
 var _cur = null;
 MJ.ui = {

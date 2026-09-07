@@ -187,11 +187,16 @@ window.MJ = window.MJ || {};
     // 3b. 续章（假设 2009 未离世）：永不归死亡结局，按人生状态收束（普通/稀有/史诗/传奇皆可抵达）
     if (f.survived2009 === true) {
       if (state.timeline && state.timeline['2009'] === 'survive') return 'END_ALT_SURVIVE_LEGACY'; // 架空续章长寿（BP7）
+      // ★ 缺口修复：本分支原先早于 ALT BAND 返回，玩家做过的架空分叉（1975/1979/1984/biz/altPeace/altQuiet）
+      //   在续章里被静默吞掉（实测 717/8000 局）。这里在续章内同样尊重架空选择（BP7 长寿已优先）。
+      var _altS = resolveAltEnding(state);
+      // 已烧伤的玩家即便做了「稳妥康复」分叉，也不应落到"那年的灼伤没有拖垮你"（文案矛盾）
+      if (_altS && !(_altS === 'END_ALT_HEALED' && f.isPepsiBurned)) return _altS;
       if (debt && !held) return 'END_SURVIVE_DEBT';
       if (debt) return 'END_FINANCIAL';
       if ((a.art || 0) >= 66 && (a.reputation || 0) >= 56 && (a.health || 0) >= 46 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL';
       if (m.mogul >= 2 && !debt && a.wealth >= 60) return 'END_MOGUL';
-      if ((m.phil || 0) >= 3 && !debt) return 'END_PHILANTHROPIST';
+      if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST'; // 与主分支一致：须慈善为主导路线
       if (dom === 'recluse' && a.health >= 35) return 'END_RECLUSE';
       if (a.health >= 50 && a.reputation >= 60) return 'END_PERFECT';
       return 'END_TIMELESS_PRESENT';
@@ -229,10 +234,21 @@ window.MJ = window.MJ || {};
     if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST';   // 6 须慈善主导
     if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 44) return 'END_MENTOR'; // 6a 提携后辈（§17.7，collab>=1 即可，放宽艺术阈值 ≥44）
     if (a.art >= 60 && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志（放宽艺术 ≥60 / 健康 ≥42）
+    // —— 以下为 2026-09-07 覆盖缺口审计后补的结局：专门接住原先「无专属归宿、落入兜底」的状态原型 ——
+    // 归家的人：单飞后仍把家庭经营到极致（原 END_FAMILY 只认未单飞，单飞玩家的家庭投入无出口）
+    if (f.isSolo === true && (a.family || 0) >= 70 && !debt && !burned) return 'END_HOMEBODY';
+    // 孤高的王：非隐士路线却孤独极高（原 loneliness 仅作 RECLUSE_SERENE 的排除阈值，无正向出口）
+    if ((a.loneliness || 0) >= 70 && dom !== 'recluse' && (a.health || 0) >= 40 && !debt && !burned) return 'END_LONELY_KING';
+    // 过劳的匠人：压力轴原先对结局零影响（实测 66% 的局压力≥70 却无叙事出口）
+    if ((a.stress || 0) >= 85 && (a.health || 0) < 50 && !debt && !burned && !dependent) return 'END_OVERWORKED';
+    // 燃尽的天才：声誉极高但健康低、且非烧伤/依赖/负债。
+    //   原先这类状态会掉进 END_TRAGIC，而后者文案写的是「烧伤、依赖与 2009 离世」——与状态矛盾。
+    if ((a.reputation || 0) >= 80 && (a.health || 0) < 42 && !debt && !burned && !dependent) return 'END_BURNT_OUT';
     if (a.health >= 40 && (a.reputation || 0) >= 48) return 'END_PERFECT';     // 8 健康谢幕（兜底，需声誉达标）
 
-
-    return 'END_TRAGIC';                                     // 14 默认
+    // 中性兜底：取代原先无门槛的 END_TRAGIC。能走到这里的状态必然是「未烧伤、未依赖、未负债」，
+    // 用「历史悲剧（灼伤与药物）」收束会与玩家实际人生矛盾（确定性探针已复现 3 例）。
+    return 'END_QUIET_LIFE';
   };
 
   // ---------- 事件引擎 ----------

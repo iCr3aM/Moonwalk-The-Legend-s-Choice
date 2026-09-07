@@ -43,7 +43,13 @@ var ucases = [
   ['END_ALT_MEDIA_MOGUL', { timeline: { 'biz': 'empire' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
   ['END_ALT_PEACE_LAUREATE', { flags: { altPeace: true }, meta: { phil: 3 }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
   ['END_ALT_SURVIVE_LEGACY', { flags: { survived2009: true }, timeline: { '2009': 'survive' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
-  ['END_ALT_QUIET_RETIREE', { flags: { altQuietRetiree: true }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }]
+  ['END_ALT_QUIET_RETIREE', { flags: { altQuietRetiree: true }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
+  // 缺口补结局：需带加冕标志以避开 END_PERFECT(227) 的先手（否则会被 PERFECT 先接走）
+  ['END_BURNT_OUT', { flags: { thriller25: true }, attr: { reputation: 85, health: 38, art: 50, family: 30, media: 40 } }],
+  ['END_OVERWORKED', { flags: { thriller25: true }, attr: { stress: 90, health: 45, reputation: 60, art: 50, family: 30, media: 40 } }],
+  ['END_HOMEBODY', { flags: { isSolo: true, thriller25: true }, attr: { family: 75, health: 60, reputation: 60, art: 50, media: 40 } }],
+  ['END_LONELY_KING', { flags: { thriller25: true }, attr: { loneliness: 80, health: 60, reputation: 60, art: 50, family: 20, media: 20 } }],
+  ['END_QUIET_LIFE', { flags: { isSolo: true }, attr: { health: 20, reputation: 30, art: 20, family: 20, media: 20, stress: 20, loneliness: 20 } }]
 ];
 
 var pass = 0, fail = 0, bad = [];
@@ -59,11 +65,14 @@ if (bad.length) console.log('FAIL §17.7 结局解析：' + bad.join(', '));
 // 结构校验
 var ids = Object.keys(MJ.config.endings);
 var altIds = ids.filter(function (id) { return id.indexOf('END_ALT_') === 0; });
-if (ids.length !== 18 + altIds.length) { console.log('FAIL 结局总数应为 18+alt(' + altIds.length + ')，实际 ' + ids.length); fail++; } else { pass++; console.log('  结局总数 ' + ids.length + '（18 canonical + ' + altIds.length + ' alt）✓'); }
+// 18 个原始 canonical + 2026-09-07 覆盖缺口补的 5 个（燃尽 / 过劳 / 归家 / 孤高 / 平淡）
+var CANONICAL_EXPECTED = 18 + 5;
+if (ids.length !== CANONICAL_EXPECTED + altIds.length) { console.log('FAIL 结局总数应为 ' + CANONICAL_EXPECTED + '+alt(' + altIds.length + ')，实际 ' + ids.length); fail++; } else { pass++; console.log('  结局总数 ' + ids.length + '（' + CANONICAL_EXPECTED + ' canonical + ' + altIds.length + ' alt）✓'); }
 ids.forEach(function (id) { if (!MJ.config.endingRarity[id]) { console.log('FAIL 缺 endingRarity: ' + id); fail++; } });
 
 // 新结局 EN 文案
-altIds.concat(['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE']).forEach(function (id) {
+altIds.concat(['END_STATESMAN', 'END_INNOVATOR', 'END_MENTOR', 'END_RECLUSE_SERENE',
+  'END_BURNT_OUT', 'END_OVERWORKED', 'END_HOMEBODY', 'END_LONELY_KING', 'END_QUIET_LIFE']).forEach(function (id) {
   ['name', 'tone', 'summary', 'monologue'].forEach(function (f) {
     if (!MJ.i18n.dict.en['ending.' + id + '.' + f]) { console.log('FAIL 缺 EN: ending.' + id + '.' + f); fail++; }
   });

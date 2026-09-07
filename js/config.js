@@ -71,6 +71,9 @@ window.MJ = window.MJ || {};
     END_ETERNAL: 'rare', END_SURVIVE_DEBT: 'rare', END_FINANCIAL: 'rare',
     END_PERFECT: 'epic', END_STATESMAN: 'epic', END_ART_PEAK: 'epic',
     END_TRAGIC: 'legendary', END_TRUE_ETERNAL: 'legendary',
+    // 2026-09-07 覆盖缺口补的 5 个结局
+    END_BURNT_OUT: 'epic', END_OVERWORKED: 'rare', END_HOMEBODY: 'rare',
+    END_LONELY_KING: 'rare', END_QUIET_LIFE: 'uncommon',
     END_ALT_STAY_MOTOWN: 'rare',
     END_ALT_NO_QJ: 'rare', END_ALT_HEALED: 'rare', END_ALT_MEDIA_MOGUL: 'epic',
     END_ALT_PEACE_LAUREATE: 'epic', END_ALT_SURVIVE_LEGACY: 'legendary', END_ALT_QUIET_RETIREE: 'rare'
@@ -235,6 +238,37 @@ window.MJ = window.MJ || {};
       summary: '你退场却不枯萎，在静默里修成了一处安宁。',
       hint: '隐士路线为主，但注意健康≥50、保持家庭/媒体不低迷，孤独度<55。',
       monologue: '你从聚光灯下退开，这一次却没有苦涩。\n高墙围住的不是牢笼，而是一座花园。\n孤独，曾是你的影子，如今成了同伴——而这一次，寂静听来像休息。'
+    },
+    // —— 2026-09-07 覆盖缺口补的 5 个结局（接住原先落入兜底、与状态矛盾的状态原型）——
+    END_BURNT_OUT: {
+      name: '燃尽的天才', icon: '🕯️', tone: '壮烈、惋惜', year: 2009,
+      summary: '你把最后的气力都给了舞台，声名抵达顶点，身体却先一步退场。',
+      hint: '全程不烧伤、不依赖药物、不负债，把声誉推到极高（≥80），却让健康在低处（<42）收束。',
+      monologue: '你没有倒在药物里，也没有被债务拖垮——你只是把自己烧得太亮了。\n掌声最响的那一夜，你听见身体轻轻说了一句"够了"，而你照例没有回头。\n后来人们说你是燃尽的天才；只有你知道，那不是燃尽，是一直亮到最后一格。'
+    },
+    END_OVERWORKED: {
+      name: '过劳的匠人', icon: '🛠️', tone: '疲惫、执着', year: 2009,
+      summary: '你把每一场都做到极致，压力却先于掌声把你压弯。',
+      hint: '不烧伤、不依赖、不负债，但把压力推到极高（≥85）且健康偏低（<50）。',
+      monologue: '你不是被击垮的，你是被自己不肯将就的那一部分耗尽的。\n每一个走位、每一句合声，你都要再来一遍；别人说够好了，你说还差一点。\n最后你终于肯坐下——只是这一次，舞台的灯已经先你一步熄了。'
+    },
+    END_HOMEBODY: {
+      name: '归家的人', icon: '🏠', tone: '温厚、踏实', year: 2009,
+      summary: '你走遍了世界的舞台，却把最重的分量留给了家里那盏灯。',
+      hint: '完成单飞后，仍把家庭维系到极高（≥70），且不负债、不烧伤。',
+      monologue: '你飞得很远，远到名字被写在无数城市的霓虹上。\n可每次推开家门，你都会先把那些名字留在门外。\n世界记得你的歌声，而家里那盏一直等你的灯，记得你。'
+    },
+    END_LONELY_KING: {
+      name: '孤高的王', icon: '🌙', tone: '高处、清冷', year: 2005,
+      summary: '你站得比所有人都高，也因此没有人能真正站到你身边。',
+      hint: '不负债、不烧伤、健康尚可（≥40），却把孤独累积到极高（≥70），且主导路线不是隐士。',
+      monologue: '王座很窄，坐得下一个人，坐不下第二副肩膀。\n你拥有了所有人想要的掌声，却在散场后找不到一个可以不必表演的人。\n后来你懂了：被仰望是一种成就，被理解才是奢侈。'
+    },
+    END_QUIET_LIFE: {
+      name: '平淡收场', icon: '🌾', tone: '平静、坦然', year: 2009,
+      summary: '没有惊天动地的起落，也没有被命运击垮，你平平淡淡走完了全程。',
+      hint: '不烧伤、不依赖、不负债，也未满足任何专属结局的条件（中性兜底收束）。',
+      monologue: '你的人生没有被写成传奇，也没有被写成悲剧——它只是一条安静的河。\n有人用一生追逐高潮，而你把日子过成了日子本身。\n落幕时没有焰火，可你回头看，每一步都算数。'
     }
   };
 
