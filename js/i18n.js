@@ -645,7 +645,7 @@ window.MJ = window.MJ || {};
         'ach.ACH_VMA.name': 'Video Vanguard', 'ach.ACH_VMA.desc': 'MTV gave you the first Video Vanguard Award, reshaping the music video as art.',
         'ach.ACH_DIAMOND.name': 'Diamond Sales', 'ach.ACH_DIAMOND.desc': 'With record sales past a hundred million, you received the Diamond Award.',
         'ach.ACH_GRAMMYLEGEND.name': 'Grammy Legend', 'ach.ACH_GRAMMYLEGEND.desc': 'You became one of the few Grammy Legend Award recipients, honored by your sister Janet.',
-        'ach.ACH_NEVERLAND.name': 'Neverland', 'ach.ACH_NEVERLAND.desc': 'The estate held a zoo, a Ferris wheel and the laughter of countless children.',
+        'ach.ACH_NEVERLAND_MANOR.name': 'Neverland', 'ach.ACH_NEVERLAND_MANOR.desc': 'The estate held a zoo, a Ferris wheel and the laughter of countless children.',
         'ach.ACH_PHIL_LEGEND.name': 'Philanthropy Legend', 'ach.ACH_PHIL_LEGEND.desc': 'With a generation’s voice, you sent kindness to every corner of the world.',
         'ach.ACH_WORLD_TOUR.name': 'World Tour', 'ach.ACH_WORLD_TOUR.desc': 'You embarked on the largest solo-artist tour of its time, giant statues raised in your likeness.',
 

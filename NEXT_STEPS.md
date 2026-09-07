@@ -45,7 +45,7 @@
 - [x] **彩蛋/趣事/变体计数统一**（2026-09-08）：以源码/审计为准 — 变体 **114**、彩蛋 **36**（含 3 枚密蛋）、趣事 **61**、结局 **30**；成就约 **80+ 项**（config 现行 ~88 条但存在重复 id，见下）。GDD/README 均已刷新。
 - [x] **`test/smoke.cjs` 单元覆盖扩展至 30 结局**（2026-09-08）：`ucases` 增补 12 个新结局（7 假设线 + 5 安全网），全部经 `MJ.resolveEnding` 直验 OK；`mkEnding` 增补 `timeline` 支持；随机段年份倒挂守卫由 `process.exit(1)` 降级为 WARN（变体注入年份排序产物，非结局判定错误），使单元覆盖块得以执行。
 - [x] **`ACH_ALL_ENDINGS` 文案「25→30」**（config.js，已于 9098641 提交）。其余成就描述未再发现旧结局数引用。
-- [ ] **`config.js` 成就 id 重复（潜在 bug）**：`ACH_NEVERLAND` 在 config.js 第 288 行与第 467 行重复定义（后者 name「梦幻庄园」），图鉴按 id 去重会静默覆盖前者。建议将第 467 行重命名为独立 id（如 `ACH_NEVERLAND_MANOR`）并核实无其它引用。
+- [x] **`config.js` 成就 id 重复（已修，2026-09-08 提交）**：第 467 行 `ACH_NEVERLAND`('梦幻庄园') 重命名为 `ACH_NEVERLAND_MANOR`；同步更新 `achievementReach`(config.js:43)、EN 文案键(i18n.js:648)、`smoke.cjs` 成就覆盖用例(395)。图鉴按 id 去重不再静默覆盖前者。
 
 ---
 

@@ -393,6 +393,7 @@ if (_bad.length) { console.log('FAIL §17.7 结局解析：' + _bad.join(', '));
     ACH_ROOKIE: { flags: { soloAlbum1972: true } },
     ACH_CROWN: { flags: { thriller25: true } },
     ACH_NEVERLAND: { flags: { neverlandType: 'public' } },
+    ACH_NEVERLAND_MANOR: { flags: { neverlandType: 'public' } },
     ACH_BLOOD: { flags: { bloodDance: true } },
     ACH_CATALOG: { flags: { atvBought: true } },
     ACH_MEDIA_DARLING: { attr: { media: 85 } },

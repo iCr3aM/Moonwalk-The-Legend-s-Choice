@@ -40,7 +40,7 @@ window.MJ = window.MJ || {};
   // 用于成就图鉴按真实可达性排序（而非手写稀有度档位）。重算：node test/compute_ach_reach.cjs 5000
   C.achievementReach = {
     ACH_ROOKIE: 0.1094, ACH_BROTHERLY: 0, ACH_IDOL: 0.1634, ACH_CROWN: 0.2424,
-    ACH_NEVERLAND: 0.4446, ACH_BLOOD: 0.2246, ACH_CATALOG: 0.089, ACH_DIGITAL: 0.0228,
+    ACH_NEVERLAND: 0.4446, ACH_NEVERLAND_MANOR: 0.4446, ACH_BLOOD: 0.2246, ACH_CATALOG: 0.089, ACH_DIGITAL: 0.0228,
     ACH_PEACEMAKER: 0.23, ACH_SAGE: 0.4468, ACH_RECLUSE: 0.4468, ACH_LEGAL: 0.1344,
     ACH_PHIL: 0.6134, ACH_FAMILYMAN: 0.7246, ACH_SURVIVOR: 0.1578, ACH_BALANCED: 0.0146,
     ACH_MEDIA_DARLING: 0.0192, ACH_LONELY: 0.198, ACH_HOLOGRAM: 0.1984, ACH_MUSICAL: 0.1984,
@@ -464,7 +464,7 @@ window.MJ = window.MJ || {};
       check: function (s) { return s.flags.diamond === true; } },
     { id: 'ACH_GRAMMYLEGEND', name: '格莱美传奇', icon: '🏆', rarity: 'epic', desc: '你成为少数获“格莱美传奇奖”的音乐人，由妹妹珍妮亲手颁授。',
       check: function (s) { return s.flags.grammyLegend === true; } },
-    { id: 'ACH_NEVERLAND', name: '梦幻庄园', icon: '🎠', rarity: 'rare', desc: '那座庄园里有动物园、摩天轮与无数孩子的笑声。',
+    { id: 'ACH_NEVERLAND_MANOR', name: '梦幻庄园', icon: '🎠', rarity: 'rare', desc: '那座庄园里有动物园、摩天轮与无数孩子的笑声。',
       check: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; } },
     { id: 'ACH_PHIL_LEGEND', name: '慈善传奇', icon: '🌍', rarity: 'legendary', desc: '你以一代歌者的能量，把善意送往世界各地。',
       check: function (s) { return (s.meta.phil || 0) >= 4; } },
