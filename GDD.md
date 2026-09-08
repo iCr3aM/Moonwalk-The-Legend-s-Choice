@@ -23,7 +23,7 @@
 > - **v1.11（结局 UI 收尾：年份对应 / 分享移除 / 海报矢量 / 结局页精简，2026-09-05）**：① 给 `config.endings` 全部 18 个结局新增 `year` 字段，`showEnding` 状态栏右上角显示对应结局年份（平凡人生/家庭幸福=1969、商业巨擘=1985、慈善圣人=1992、争议缠身=1994、财务崩溃=2005、文化大使=2001、音乐技术先驱=1995、提携后辈/平和隐士=2000、其余 2009、在场的不朽=2019）；海报"1958—2009"寿命语义不变。② 删除主菜单"分享给朋友"按钮及 `openShare`/`buildGameShareText`/`escapeText` 死代码，测试放行项去除 `shareFriend`。③ 海报图标 emoji 改为 Canvas 矢量星形徽标（按 `endingRarity` 着色 common/rare/epic/legendary，legendary 用金色渐变），彻底消除 emoji 变体选择符 U+FE0F / ZWJ 组合 / 各平台垂直度量差异导致的叠层与错位；属性溢出 `⭐+N` 改为文本星 `★+N`。④ 结局页精简：删除"放大海报"/"复制文案"按钮（保留缩略图点击仍弹海报）与"本局战绩"框；四图鉴按钮改主菜单同款 `.menu-grid`（3 列→3+1 两行，对齐主菜单）；专项造诣 `.panel.subdim` 跨满 `review-grid` 整行；清理 `copyText`/`flashBtn`/`legacyCopy` 死代码。⑤ 文案/计数对齐：README 结局数 18、变体 75、成就 60，移除虚构彩蛋"东方之约"；`i18n.js` 注释计数同步（18 结局 / 60 成就）；`showEnding` 的 `onEnding` 加幂等守卫 `state._onEndingDone` 防未来语言切换重入重复累加周目。⑥ `npm test` 全绿（18 结局定向可达、EN 残留 0、平衡校准 PASS）、lints 0。
 > - **v1.12（结局 UI 收尾：跨文件质量审计 + 历史 BUG 回归 + 死代码清理，2026-09-05）**：① 用 code-explorer 子代理做跨文件审计（文案不一致 / 交互 BUG / 历史 5 项修复回归：变体冷却 / `rel` 内嵌 / `opt` 索引 / Economy 双轨 / 压力→健康联动），结论无崩溃级 BUG。修复 M1：事件 `8_3.opt0` 冗余 `effects:{wealth:50}` 与 `moneyEffect` 重复折算致净资产 +8.25 亿，移除后净变动回归提示「净资产 +7.5 亿」；"身家"→"净资产"统一术语。② 死代码清理：i18n 删除 7 个悬空键（`ui.runStats/lifeStat/savePoster/copyText/shareImg/zoomPoster/shareFriend`）；CSS 删除 `.snapshot`/`.stat-card`/`.life-stat-line` 死样式及 stale 注释，并同步移除 `test/check_responsive.cjs` 对 `.snapshot` 的过时断言。③ 海报年份单一来源固定 `endYear=2009`（1958—2009 寿命语义，续章不再漂移），移除 `engine.js` 对 `state.stats.endYear` 的隐式赋值（消除未序列化死角）。④ 结局页体验增强：新增「语言切换」按钮（`btn-lang-end`，EN 模式可切回中文）；`openPosterModal` 接受预生成画布，结局页仅绘制一次海报（缩略图与弹窗同源复用）。⑤ `node --check` 全过；`npm test` 全绿（EXIT=0），类名守卫 126 全匹配。
 
-> - **v1.13（架空历史扩展 + 内容饱和态，2026-09-07）**：① 结局 18→**30**（23 主线 + 7 假设线 alt-history；新增 5 安全网结局 BURNT_OUT/OVERWORKED/HOMEBODY/LONELY_KING/QUIET_LIFE + 7 枚 `END_ALT_*` 假设线），"假设线"徽标见于图鉴/详情/结局页；BP 分叉写入 `timeline`/`flag`（motown/epic/solo_prod/safe/empire/survive/altPeace/altQuietRetiree）。② 变体 **114**、彩蛋 **36**（含 3 密蛋）、趣事 **61**、成就 **88**（含 7 `ACH_ALT_*` + 元成就 `ACH_ALT_FORK`）。③ P1 BP4/BP5 中性法律应对分支、P3 图鉴 F7–F11 年份校准、P4 Ch6 里程碑变体提权（`V_CHILD_PRINCE`/`V_CHILD_PARIS`/`V_MJFRIENDS` `force:true`）落地。④ `npm test` 门禁扩至 **22 项**全绿 + `node test/_audit_playthrough.cjs 5000` 回归（矛盾局/悬空链接/粘性 debt 均为 0）。以 `GDD.md` 为准，文档与实现冲突处均已刷新。
+> - **v1.13（架空历史扩展 + 内容饱和态，2026-09-07）**：① 结局 18→**30**（23 主线 + 7 假设线 alt-history；新增 5 安全网结局 BURNT_OUT/OVERWORKED/HOMEBODY/LONELY_KING/QUIET_LIFE + 7 枚 `END_ALT_*` 假设线），"假设线"徽标见于图鉴/详情/结局页；BP 分叉写入 `timeline`/`flag`（motown/epic/solo_prod/safe/empire/survive/altPeace/altQuietRetiree）。② 变体 **114**、彩蛋 **43**（含 3 密蛋）、趣事 **61**、成就 **88**（含 7 `ACH_ALT_*` + 元成就 `ACH_ALT_FORK`）。③ P1 BP4/BP5 中性法律应对分支、P3 图鉴 F7–F11 年份校准、P4 Ch6 里程碑变体提权（`V_CHILD_PRINCE`/`V_CHILD_PARIS`/`V_MJFRIENDS` `force:true`）落地。④ `npm test` 门禁扩至 **22 项**全绿 + `node test/_audit_playthrough.cjs 5000` 回归（矛盾局/悬空链接/粘性 debt 均为 0）。以 `GDD.md` 为准，文档与实现冲突处均已刷新。
 > - **v1.13（再次代码审核 + 续章存档健壮性修复，2026-09-05）**：① 二次跨文件代码审核（code-explorer）确认 v1.12 六项修复无回归；新发现 1 高 + 3 中 + 4 低。② 修 HIGH-1：变体事件存档恢复后静默重启（进度丢失）——`state.serialize()` 新增 `returnId` 持久化 `_return`，`engine.resume()` 恢复 `this._return`，使 `__RETURN__` 在续局后正确跳回父事件。③ 修 MED-1：结局详情弹窗独白改走 `T('ending.*.monologue')`，消除 EN 模式中文残留（测试漏检项）。④ 修 MED-2：6 个结局「如何达成」hint 阈值对齐 `resolveEnding` 真实数值（ETERNAL 66/56/46、TRUE_ETERNAL 健康 75、STATESMAN 声誉 58/家庭 45，zh+en 同步）。⑤ 修 MED-3：彻底清理 v1.11 遗留的分享死代码——`buildEndingShareText`/`sharePosterImage` 函数、`.share-card`/`.sc-*` CSS、`i18n.js` 全部 `share.*` 键（均零调用）。⑥ 清 LOW-1：`END_INNOVATOR` 移除从未写入的 `f.techVenture` 死分支。⑦ `npm test` 全绿（EXIT=0）、lints 0、无悬挂引用。
 
 ---
@@ -41,7 +41,7 @@
 - **创作企划器 + 格莱美涌现**：`planner.resolveGrammy` 六 era 全链路 + `ACH_GRAMMY_SWEEP/ACH_GRAMMY_LEGEND`。【§17.14 ✅ g6】
 - **体验深化 M1–M9**：关系/NPC 好感、内心手记、时代卡片、命运回响、孤独维度、主题色、隐藏终极结局等。【§17.1 ✅】
 - **其他**：成就（以 `config.js` 为准，88 项，图鉴可重置）、关键选择回顾、社交分享（传奇海报 Canvas 保存/复制/分享）、**变体事件 114 个**（window+weight 年份窗口概率插入）、媒体/孤独属性、单文件构建与成就双发修复；**四图鉴统一**（结局/彩蛋/趣事/成就 共用 `.gallery/.g-cell` 卡片组件；语录图鉴已移除）、**章节主题配色**（ch0–ch5 各设主色）、**响应式多断点**（600/640/900/1080）、**Toast 串行队列**。【§16.1 ✅】
-- **本地化（EN 全量）**：114 变体 + 88 成就 + 36 彩蛋 + 61 趣事，EN 字段全量覆盖（find_missing_en=0，i18n_coverage 测试通过；语录图鉴已移除，原 12 语录不再计入）。【§13 P1 ✅】
+- **本地化（EN 全量）**：114 变体 + 88 成就 + 43 彩蛋 + 61 趣事，EN 字段全量覆盖（find_missing_en=0，i18n_coverage 测试通过；语录图鉴已移除，原 12 语录不再计入）。【§13 P1 ✅】
 
 ### 规划 / 待办（尚未实现）
 - **多语言扩展（更多语种）**：在 EN 全量基础上扩展日/西等语种；数字/货币格式化、字体字距回退。【§13 P2/P3】
@@ -60,7 +60,7 @@
 
 | 项目 | 内容 |
 | --- | --- |
-| 文档版本 | 1.13（续章 + 30 结局 + 114 变体 + 88 成就 + 36 彩蛋 + 61 趣事；实现态见 §17） |
+| 文档版本 | 1.13（续章 + 30 结局 + 114 变体 + 88 成就 + 43 彩蛋 + 61 趣事；实现态见 §17） |
 | 游戏名称 | 《月球漫步：传奇的抉择》 |
 | 英文名称 | Moonwalk: The Legend's Choice |
 | 别名 | 《迈克尔·杰克逊：人生选择》（旧称）/ Michael Jackson: Life Choices（former） |

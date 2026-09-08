@@ -1186,7 +1186,7 @@ window.MJ = window.MJ || {};
         '<h1>' + T('ui.title', null, '月球漫步：传奇的抉择') + '</h1>' +
         (MJ.i18n.lang === 'zh' ? '<p class="sub">Moonwalk: The Legend\'s Choice</p>' : '') +
         '<div class="how">' +
-          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 25 种不同的人生结局。') + '</p>' +
+          '<p><b>' + T('ui.howtoLabel', null, '玩法') + '</b>：' + T('ui.introHowto', null, '你扮演迈克尔·杰克逊，在真实历史的关键节点做选择。每一个决定都会改变你的健康、声誉、财富、家庭、艺术与压力，并导向 30 种不同的人生结局。') + '</p>' +
         '</div>' +
         '<div class="btn-row">' +
           (hasSave ? '<button class="btn primary" id="btn-continue">' + T('ui.continue', null, '继续游戏') + '</button>' : '') +

@@ -39,7 +39,7 @@
 - **Bilingual (Simplified Chinese / English)**: one-click language switch, fully localized event text.
 - **Sequel "what if MJ didn't pass" (2010–2026)**: This Is It residency, digital singles plan, Sony's 2016 acquisition of half of Sony/ATV, the 2026 biopic *Michael*, and other historical anchors.
 - **Legendary poster**: the ending screen auto-generates a saveable (long-press) Canvas poster (six stats, dominant route, node / variant / choice stats, achievement progress).
-- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (36, incl. 3 secret).
+- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (43, incl. 3 secret).
 - **Auto-continue**: `localStorage` auto-save (including current node id); refresh to resume.
 - **Neutral, procedural narration**: sensitive legal events use factual phrasing—no presumption of guilt/innocence, no naming of minors.
 - **Responsive dark-gold retro UI**: CSS Grid four-zone layout, two columns on mobile and three on desktop.
