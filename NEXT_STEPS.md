@@ -42,7 +42,7 @@
 
 ## 三、玩法 / 内容扩展待办（中，整合自 GDD §17 + 架空历史 spec）
 
-- [ ] **P2 §6/§7 候选成就/彩蛋核对（报告已出，待拍板实现，2026-09-08）**：§6 成就 9/11 候选已落地，缺失 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO`；§7 彩蛋多数候选已以不同 id 存在（BUBBLES/HALFTIME/BOTDF_REMIX/CAPTAINEO），缺失 `EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`；审计「孤儿 flag」已过时（captainEO/moonwalker/ghosts 已接入）。实现内容见对话报告。
+- [x] **P2 §6/§7 候选成就/彩蛋（已落地，2026-09-08 核实）**：§6 缺失的 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO` 与 §7 缺失的 7 枚彩蛋（`EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`）均已在 `config.js`/`engine.js`/`events.js`/`i18n.js` 实现并接好触发（flag 命名遵守 `egg_<flag>` 含下划线的铁律）。彩蛋经 `_audit_egg_trivia_reach` 5000 局审计「43 中仅 3 密蛋未落地、其余全可达」；两成就分别经 `neverlandType='public'`（`4_1`）/`encino` flag（`V_ENCINO`）可达。原「待拍板」清单已失效，无需再补。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
 - [ ] **深度游玩（C：创作企划器扩展 / 关系网深化）**：mjwiki 缺口已核查（缺 Lisa Presley / Diana Ross / Quincy Jones / Frank DiLeo / John Branca / Elizabeth Taylor 独立页 + `collaborators/` 索引）；**待你补 wiki 后实现**（详见对话报告）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
