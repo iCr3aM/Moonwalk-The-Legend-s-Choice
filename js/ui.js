@@ -657,9 +657,11 @@ window.MJ = window.MJ || {};
     return html;
   }
 
-  // M1 关系/羁绊面板：具名 NPC 好感（-100..100）
+  // M1 关系/羁绊面板：具名 NPC 好感（-100..100）；未结识者不显示（MJ.relChipVisible 单一事实来源）
   function relationsPanel(state) {
-    var defs = MJ.config.relationsDefs || [];
+    var defs = (MJ.config.relationsDefs || []).filter(function (d) {
+      return !MJ.relChipVisible || MJ.relChipVisible(state, d.key);
+    });
     var rel = state.relations || {};
     var html = '<div class="rel-panel"><div class="rel-head">' + T('ui.relHead', null, '羁绊') + '</div><div class="rel-grid">';
     defs.forEach(function (d) {

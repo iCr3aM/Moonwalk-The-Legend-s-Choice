@@ -46,6 +46,16 @@
     return true;
   };
 
+  // 状态栏羁绊 chip 可见性（单一事实来源，relationsPanel 使用）：
+  // 家人与歌迷出生即认识 → 常显；黛比/孩子们在婚姻/生育事件（rel 首次变动）后显示；六位具名合作者按 metCond
+  var ALWAYS_REL = { brothers: 1, fans: 1, janet: 1, joe: 1, katherine: 1, jermaine: 1, latoya: 1 };
+  MJ.relChipVisible = function (state, relKey) {
+    if (!state) return false;
+    if (ALWAYS_REL[relKey]) return true;
+    if (relKey === 'debbie' || relKey === 'kids') return !!(state.relMet && state.relMet[relKey]);
+    return MJ.isCollaboratorMet(state, relKey);
+  };
+
   // 渲染关系总览卡片网格（state.relations 提供实时好感值；未结识者渲染锁定态，不泄露身份信息）
   MJ.renderCollaboratorsOverview = function (state) {
     var defs = (MJ.config && MJ.config.relationsDefs) || [];
