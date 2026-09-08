@@ -215,7 +215,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.1_3.opt0.label', null, 'A：跟着 Diana 奔赴洛杉矶'), hint: T('event.1_3.opt0.hint', null, '声名鹊起、进账可观，但乡愁与疏离渐生（声誉+15，财富+10，家庭-5，压力+15）'), effects: { reputation: 15, wealth: 10, family: -5, stress: 15 }, next: '1_4' },
+      { label: T('event.1_3.opt0.label', null, 'A：跟着 Diana 奔赴洛杉矶'), hint: T('event.1_3.opt0.hint', null, '声名鹊起、进账可观，但乡愁与疏离渐生（声誉+15，财富+10，家庭-5，压力+15）'), effects: { reputation: 15, wealth: 10, family: -5, stress: 15, rel: { diana: 10 } }, next: '1_4' },
       { label: T('event.1_3.opt1.label', null, 'B：留在盖瑞，过平凡一生'), hint: T('event.1_3.opt1.hint', null, '放下巨星梦，走向「平凡人生」结局'), effects: {}, next: 'END_PLAIN' },
       { label: T('event.1_3.opt2.label', null, 'C：留在盖瑞，但守着本地的舞台'), hint: T('event.1_3.opt2.hint', null, '亲情安稳，前程另谋（家庭+5，艺术+5）'), effects: { family: 5, art: 5 }, next: '1_4' }
     ]
@@ -426,13 +426,14 @@ window.MJ = window.MJ || {};
     keyNote: T('event.2_7.keyNote', null, '戴安娜递来的不仅是引路，还有一段被全世界注视的婚姻；这一步会改写你的私人叙事与公众形象。'),
     text: function (s) {
       return narr(T('event.2_7.text', null, '单飞后的第一次低谷，戴安娜·罗斯递来一双温暖的手。她记得你还是盖瑞那个追着她跑的小男孩，如今却先于她站上了独唱的塔尖。'), s, [
-        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.2_7.branch0.text', null, '你忽然懂了：所谓引路，是把后来者托到自己所不及的高度。') }
+        { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.2_7.branch0.text', null, '你忽然懂了：所谓引路，是把后来者托到自己所不及的高度。') },
+        { cond: function (s) { return (s.relations.diana || 0) >= 10; }, text: T('event.2_7.branch1.text', null, 'Motown 门口她牵你手的那一幕，仿佛就发生在昨天——原来引路的人，一直都在。') }
       ]);
     },
     options: [
-      { label: T('event.2_7.opt0.label', null, 'A：与她同台合唱'), hint: T('event.2_7.opt0.hint', null, '两代巨星的回声（艺术+10，声誉+5，家庭+3）'), effects: { art: 10, reputation: 5, family: 3 }, flags: { dianaBond: true }, next: '3_1' },
-      { label: T('event.2_7.opt1.label', null, 'B：把她当作引路人深交'), hint: T('event.2_7.opt1.hint', null, '把这份情谊收进心底（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3 }, flags: { dianaBond: true }, next: '3_1' },
-      { label: T('event.2_7.opt2.label', null, 'C：专注 solo，不依赖任何人'), hint: T('event.2_7.opt2.hint', null, '孤身登顶（艺术+8，隐士+1）'), effects: { art: 8, recluse: 1 }, next: '3_1' }
+      { label: T('event.2_7.opt0.label', null, 'A：与她同台合唱'), hint: T('event.2_7.opt0.hint', null, '两代巨星的回声（艺术+10，声誉+5，家庭+3）'), effects: { art: 10, reputation: 5, family: 3, rel: { diana: 12 } }, flags: { dianaBond: true }, next: '3_1' },
+      { label: T('event.2_7.opt1.label', null, 'B：把她当作引路人深交'), hint: T('event.2_7.opt1.hint', null, '把这份情谊收进心底（家庭+5，声誉+3）'), effects: { family: 5, reputation: 3, rel: { diana: 12 } }, flags: { dianaBond: true }, next: '3_1' },
+      { label: T('event.2_7.opt2.label', null, 'C：专注 solo，不依赖任何人'), hint: T('event.2_7.opt2.hint', null, '孤身登顶（艺术+8，隐士+1）'), effects: { art: 8, recluse: 1, rel: { diana: 3 } }, next: '3_1' }
     ]
   };
 
@@ -576,9 +577,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.3_6.opt0.label', null, 'A：全资收购'), hint: T('event.3_6.opt0.hint', null, '落下商业帝国的基石（商业+1）（声誉+10，资金 -2250 万）'), effects: { wealth: -15, reputation: 10, mogul: 1 }, flags: { atvBought: true }, next: '4_0' },
-      { label: T('event.3_6.opt1.label', null, 'B：暂不收购'), hint: T('event.3_6.opt1.hint', null, '按兵不动，现金充裕（财富+5）'), effects: { wealth: 5 }, flags: { atvBought: false }, next: '4_0' },
-      { label: T('event.3_6.opt2.label', null, 'C：联合财团分期吃下'), hint: T('event.3_6.opt2.hint', null, '以小博大，商业嗅觉+1（商业+1）（财富-5，声誉+5）'), effects: { wealth: -5, reputation: 5, mogul: 1 }, next: '4_0' }
+      { label: T('event.3_6.opt0.label', null, 'A：全资收购'), hint: T('event.3_6.opt0.hint', null, '落下商业帝国的基石（商业+1）（声誉+10，资金 -2250 万）'), effects: { wealth: -15, reputation: 10, mogul: 1, rel: { john: 10 } }, flags: { atvBought: true }, next: '4_0' },
+      { label: T('event.3_6.opt1.label', null, 'B：暂不收购'), hint: T('event.3_6.opt1.hint', null, '按兵不动，现金充裕（财富+5）'), effects: { wealth: 5, rel: { john: 6 } }, flags: { atvBought: false }, next: '4_0' },
+      { label: T('event.3_6.opt2.label', null, 'C：联合财团分期吃下'), hint: T('event.3_6.opt2.hint', null, '以小博大，商业嗅觉+1（商业+1）（财富-5，声誉+5）'), effects: { wealth: -5, reputation: 5, mogul: 1, rel: { john: 8 } }, next: '4_0' }
     ]
   };
 
@@ -691,13 +692,14 @@ window.MJ = window.MJ || {};
     text: function (s) {
       return narr(T('event.4_3b.text', null, '1989 年，Soul Train 传承奖的舞台上，伊丽莎白·泰勒当众称你为“流行、摇滚与灵魂真正的王者”——“流行天王”之名由此广传。而在聚光灯外，你持续把《Man in the Mirror》的收益、以及对联合黑人学院的捐助，悄悄放进善意里。'), s, [
         { cond: function (s) { return (s.attributes.reputation || 0) >= 80; }, text: T('event.4_3b.branch0.text', null, '称号是糖也是枷，你更在意歌里那句“改变自己”是否真的有人听进去。') },
-        { cond: function (s) { return (s.attributes.phil || 0) >= 1; }, text: T('event.4_3b.branch1.text', null, '善意不必喧哗，你早学会在掌声之外偷偷行善。') }
+        { cond: function (s) { return (s.attributes.phil || 0) >= 1; }, text: T('event.4_3b.branch1.text', null, '善意不必喧哗，你早学会在掌声之外偷偷行善。') },
+        { cond: function (s) { return (s.relations.diana || 0) >= 10; }, text: T('event.4_3b.branch2.text', null, '就像当年戴安娜在 Motown 为你引路，如今伊丽莎白在舞台上为你加冕——两代女神，先后把你托上塔尖。') }
       ]);
     },
     options: [
-      { label: T('event.4_3b.opt0.label', null, 'A：把“流行天王”当作责任而非光环'), hint: T('event.4_3b.opt0.hint', null, '盛名之下更清醒（声誉+8，压力+3）'), effects: { reputation: 8, stress: 3 }, next: '4_4' },
-      { label: T('event.4_3b.opt1.label', null, 'B：把慈善做成长期的承诺'), hint: T('event.4_3b.opt1.hint', null, '善意落地（慈善+2，声誉+3）'), effects: { phil: 2, reputation: 3 }, next: '4_4' },
-      { label: T('event.4_3b.opt2.label', null, 'C：对名号保持距离'), hint: T('event.4_3b.opt2.hint', null, '不曾被头衔定义（艺术+5，压力-3）'), effects: { art: 5, stress: -3 }, next: '4_4' }
+      { label: T('event.4_3b.opt0.label', null, 'A：把“流行天王”当作责任而非光环'), hint: T('event.4_3b.opt0.hint', null, '盛名之下更清醒（声誉+8，压力+3）'), effects: { reputation: 8, stress: 3, rel: { elizabeth: 12 } }, next: '4_4' },
+      { label: T('event.4_3b.opt1.label', null, 'B：把慈善做成长期的承诺'), hint: T('event.4_3b.opt1.hint', null, '善意落地（慈善+2，声誉+3）'), effects: { phil: 2, reputation: 3, rel: { elizabeth: 12 } }, next: '4_4' },
+      { label: T('event.4_3b.opt2.label', null, 'C：对名号保持距离'), hint: T('event.4_3b.opt2.hint', null, '不曾被头衔定义（艺术+5，压力-3）'), effects: { art: 5, stress: -3, rel: { elizabeth: 12 } }, next: '4_4' }
     ]
   };
 
@@ -887,9 +889,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_1b.opt0.label', null, 'A：合并 Sony/ATV'), hint: T('event.6_1b.opt0.hint', null, '版权帝国落成，商业+1（财富+50，声誉+10）'), effects: { wealth: 50, reputation: 10, mogul: 1 }, flags: { sonyMerge: true }, next: '6_1c' },
-      { label: T('event.6_1b.opt1.label', null, 'B：暂不合并'), hint: T('event.6_1b.opt1.hint', null, '留一丝自由，家更暖（财富-10，家庭+5）'), effects: { wealth: -10, family: 5 }, flags: { sonyMerge: false }, next: '6_1c' },
-      { label: T('event.6_1b.opt2.label', null, 'C：反手收购更多目录'), hint: T('event.6_1b.opt2.hint', null, '版图再扩，商业+2（财富-20，声誉+5）'), effects: { wealth: -20, reputation: 5, mogul: 2 }, next: '6_1c' }
+      { label: T('event.6_1b.opt0.label', null, 'A：合并 Sony/ATV'), hint: T('event.6_1b.opt0.hint', null, '版权帝国落成，商业+1（财富+50，声誉+10）'), effects: { wealth: 50, reputation: 10, mogul: 1, rel: { john: 10 } }, flags: { sonyMerge: true }, next: '6_1c' },
+      { label: T('event.6_1b.opt1.label', null, 'B：暂不合并'), hint: T('event.6_1b.opt1.hint', null, '留一丝自由，家更暖（财富-10，家庭+5）'), effects: { wealth: -10, family: 5, rel: { john: 8 } }, flags: { sonyMerge: false }, next: '6_1c' },
+      { label: T('event.6_1b.opt2.label', null, 'C：反手收购更多目录'), hint: T('event.6_1b.opt2.hint', null, '版图再扩，商业+2（财富-20，声誉+5）'), effects: { wealth: -20, reputation: 5, mogul: 2, rel: { john: 10 } }, next: '6_1c' }
     ]
   };
 
@@ -1304,8 +1306,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，净资产暴涨（净资产 +7.5 亿）'), moneyEffect: 75000, flags: { sonySold: true }, next: '8_3b' },
-      { label: T('event.8_3.opt1.label', null, 'B：保留部分权益'), hint: T('event.8_3.opt1.hint', null, '留得青山（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3 }, next: '8_3b' }
+      { label: T('event.8_3.opt0.label', null, 'A：套现离场'), hint: T('event.8_3.opt0.hint', null, '落袋为安，净资产暴涨（净资产 +7.5 亿）'), moneyEffect: 75000, effects: { rel: { john: 8 } }, flags: { sonySold: true }, next: '8_3b' },
+      { label: T('event.8_3.opt1.label', null, 'B：保留部分权益'), hint: T('event.8_3.opt1.hint', null, '留得青山（财富+15，声誉+3）'), effects: { wealth: 15, reputation: 3, rel: { john: 8 } }, next: '8_3b' }
     ]
   };
   E['8_4'] = {
@@ -2765,6 +2767,74 @@ window.MJ = window.MJ || {};
       { label: T('event.V_REL_QUINCY.opt2.label', null, 'C：保持距离'), hint: T('event.V_REL_QUINCY.opt2.hint', null, '各自安好（昆西 -10，压力 -3）'), effects: { stress: -3, rel: { quincy: -10 } }, next: '__RETURN__' }
     ]
   };
+
+  // —— §17.4 关系网深化：戴安娜·罗斯 引路人回望 flavor 变体（cond 门控 rel.diana）——
+  E.V_REL_DIANA = {
+    id: 'V_REL_DIANA', variant: true, window: [1982, 1991], weight: 18,
+    cond: function (s) { return (s.relations.diana || 0) >= 10; },
+    title: T('event.V_REL_DIANA.title', null, '与戴安娜的重逢'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_DIANA.text', null, '那个在 Motown 门口牵你手的女人，如今已是各自领域的传奇。灯光暗下来的刹那，你们交换了一个只有彼此懂的眼神。'), s, [
+        { cond: function (s) { return (s.relations.diana || 0) >= 30; }, text: T('event.V_REL_DIANA.branch0.text', null, '她仍是你记忆里那道引路的微光。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_DIANA.opt0.label', null, 'A：邀她同台致敬'), hint: T('event.V_REL_DIANA.opt0.hint', null, '两代巨星的回声（戴安娜 +15，艺术 +5）'), effects: { art: 5, rel: { diana: 15 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_DIANA.opt1.label', null, 'B：私下叙旧'), hint: T('event.V_REL_DIANA.opt1.hint', null, '把情谊收进心底（戴安娜 +10，家庭 +3）'), effects: { family: 3, rel: { diana: 10 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_DIANA.opt2.label', null, 'C：保持距离'), hint: T('event.V_REL_DIANA.opt2.hint', null, '各自安好（戴安娜 -5）'), effects: { rel: { diana: -5 } }, next: '__RETURN__' }
+    ]
+  };
+
+  // —— §17.4 关系网深化：弗兰克·迪莱奥 守护 flavor 变体（cond 门控 rel.frank）——
+  E.V_REL_FRANK = {
+    id: 'V_REL_FRANK', variant: true, window: [1987, 1991], weight: 16,
+    cond: function (s) { return (s.relations.frank || 0) >= 10; },
+    title: T('event.V_REL_FRANK.title', null, '经纪人的守候'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_FRANK.text', null, '弗兰克·迪莱奥替你挡下过无数通纠缠的电话与算计的合约。喧闹的巡演后台，他递来一杯水，也递来一份踏实。'), s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 50; }, text: T('event.V_REL_FRANK.branch0.text', null, '你忽然觉得，有人替你扛住世界的感觉，并不坏。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_FRANK.opt0.label', null, 'A：倚仗他挡下烂摊子'), hint: T('event.V_REL_FRANK.opt0.hint', null, '卸下重负（弗兰克 +15，压力 -5）'), effects: { stress: -5, rel: { frank: 15 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_FRANK.opt1.label', null, 'B：给他更多信任'), hint: T('event.V_REL_FRANK.opt1.hint', null, '把版图交托（弗兰克 +10，商业 +1）'), effects: { mogul: 1, rel: { frank: 10 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_FRANK.opt2.label', null, 'C：渐生隔阂'), hint: T('event.V_REL_FRANK.opt2.hint', null, '各自盘算（弗兰克 -10）'), effects: { rel: { frank: -10 } }, next: '__RETURN__' }
+    ]
+  };
+
+  // —— §17.4 关系网深化：约翰·布兰卡 法务护航 flavor 变体（cond 门控 rel.john）——
+  E.V_REL_JOHN = {
+    id: 'V_REL_JOHN', variant: true, window: [1985, 2009], weight: 16,
+    cond: function (s) { return (s.relations.john || 0) >= 10; },
+    title: T('event.V_REL_JOHN.title', null, '布兰卡的辩护'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_JOHN.text', null, '约翰·布兰卡替你把版权与合约的迷宫理成了一条直路。每一次风暴将至，他总在你耳边说：交给我。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_REL_JOHN.branch0.text', null, '商人本能与法律嗅觉，在你们之间成了双剑合璧。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_JOHN.opt0.label', null, 'A：让他代理版权博弈'), hint: T('event.V_REL_JOHN.opt0.hint', null, '版图稳固（布兰卡 +15，商业 +1）'), effects: { mogul: 1, rel: { john: 15 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_JOHN.opt1.label', null, 'B：危机时托付法务'), hint: T('event.V_REL_JOHN.opt1.hint', null, '声誉有靠（布兰卡 +12，声誉 +3）'), effects: { reputation: 3, rel: { john: 12 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_JOHN.opt2.label', null, 'C：自行其是'), hint: T('event.V_REL_JOHN.opt2.hint', null, '把缰绳收回自己手里（布兰卡 -8）'), effects: { rel: { john: -8 } }, next: '__RETURN__' }
+    ]
+  };
+
+  // —— §17.4 关系网深化：伊丽莎白·泰勒 庇护 flavor 变体（cond 门控 rel.elizabeth）——
+  E.V_REL_ELIZABETH = {
+    id: 'V_REL_ELIZABETH', variant: true, window: [1989, 2009], weight: 16,
+    cond: function (s) { return (s.relations.elizabeth || 0) >= 10; },
+    title: T('event.V_REL_ELIZABETH.title', null, '泰勒的庇护'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_REL_ELIZABETH.text', null, '当流言像潮水涌来，伊丽莎白·泰勒站在你身前，用那双看尽世态的眼睛替你挡下一半锋芒。“真正的王，不必向闲言低头。”她说。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 40; }, text: T('event.V_REL_ELIZABETH.branch0.text', null, '在她身边，你难得地不那么孤独。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_REL_ELIZABETH.opt0.label', null, 'A：让她替你挡下流言'), hint: T('event.V_REL_ELIZABETH.opt0.hint', null, '声誉有靠（泰勒 +15，声誉 +5）'), effects: { reputation: 5, rel: { elizabeth: 15 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_ELIZABETH.opt1.label', null, 'B：病床前的探望'), hint: T('event.V_REL_ELIZABETH.opt1.hint', null, '挚友情深（泰勒 +10，家庭 +3）'), effects: { family: 3, rel: { elizabeth: 10 } }, next: '__RETURN__' },
+      { label: T('event.V_REL_ELIZABETH.opt2.label', null, 'C：各自安好'), hint: T('event.V_REL_ELIZABETH.opt2.hint', null, '不牵连彼此（泰勒 -5）'), effects: { rel: { elizabeth: -5 } }, next: '__RETURN__' }
+    ]
+  };
   // —— §17.4 关系网深化：与子女和解 flavor 变体 ——
   E.V_REL_KIDS = {
     id: 'V_REL_KIDS', variant: true, window: [2002, 2009], weight: 16,
@@ -3117,8 +3187,8 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_BAD_TOUR.opt0.label', null, 'A：启程全球巡演'), hint: T('event.V_BAD_TOUR.opt0.hint', null, '巅峰舞台（声誉+10，财富+15，压力+6）'), effects: { reputation: 10, wealth: 15, stress: 6 }, flags: { egg_bad_tour: true }, next: '__RETURN__' },
-      { label: T('event.V_BAD_TOUR.opt1.label', null, 'B：精简几站，保重身体'), hint: T('event.V_BAD_TOUR.opt1.hint', null, '留白养身（压力-4，艺术+3）'), effects: { stress: -4, art: 3 }, next: '__RETURN__' }
+      { label: T('event.V_BAD_TOUR.opt0.label', null, 'A：启程全球巡演'), hint: T('event.V_BAD_TOUR.opt0.hint', null, '巅峰舞台（声誉+10，财富+15，压力+6）'), effects: { reputation: 10, wealth: 15, stress: 6, rel: { frank: 10 } }, flags: { egg_bad_tour: true }, next: '__RETURN__' },
+      { label: T('event.V_BAD_TOUR.opt1.label', null, 'B：精简几站，保重身体'), hint: T('event.V_BAD_TOUR.opt1.hint', null, '留白养身（压力-4，艺术+3）'), effects: { stress: -4, art: 3, rel: { frank: 8 } }, next: '__RETURN__' }
     ]
   };
   E.V_DANGEROUS_PREM = {

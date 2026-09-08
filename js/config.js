@@ -496,7 +496,11 @@ window.MJ = window.MJ || {};
     { key: 'joe', name: '父亲乔·杰克逊', icon: '👨' },
     { key: 'katherine', name: '母亲凯瑟琳', icon: '🙏' },
     { key: 'jermaine', name: '哥哥杰梅因', icon: '🎸' },
-    { key: 'latoya', name: '姐姐拉托亚', icon: '👩' }
+    { key: 'latoya', name: '姐姐拉托亚', icon: '👩' },
+    { key: 'diana', name: '戴安娜·罗斯', icon: '💃' },
+    { key: 'frank', name: '弗兰克·迪莱奥', icon: '🤵' },
+    { key: 'john', name: '约翰·布兰卡', icon: '⚖️' },
+    { key: 'elizabeth', name: '伊丽莎白·泰勒', icon: '💜' }
   ];
   C.initialRelations = {};
   C.relationsDefs.forEach(function (r) { C.initialRelations[r.key] = 0; });

@@ -44,7 +44,7 @@
 
 - [x] **P2 §6/§7 候选成就/彩蛋（已落地，2026-09-08 核实）**：§6 缺失的 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO` 与 §7 缺失的 7 枚彩蛋（`EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`）均已在 `config.js`/`engine.js`/`events.js`/`i18n.js` 实现并接好触发（flag 命名遵守 `egg_<flag>` 含下划线的铁律）。彩蛋经 `_audit_egg_trivia_reach` 5000 局审计「43 中仅 3 密蛋未落地、其余全可达」；两成就分别经 `neverlandType='public'`（`4_1`）/`encino` flag（`V_ENCINO`）可达。原「待拍板」清单已失效，无需再补。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
-- [ ] **深度游玩（C：创作企划器扩展 / 关系网深化）**：mjwiki 缺口已核查（缺 Lisa Presley / Diana Ross / Quincy Jones / Frank DiLeo / John Branca / Elizabeth Taylor 独立页 + `collaborators/` 索引）；**待你补 wiki 后实现**（详见对话报告）。
+- [x] **深度游玩（C：关系网深化 ✅ / 创作企划器扩展）**：关系网深化已实现——4 新 rel key（diana/frank/john/elizabeth）+ 4 关系隐藏变体（V_REL_DIANA/FRANK/JOHN/ELIZABETH，cond 门控 + __RETURN__）+ 2_7/4_3b tipping 文案 + 新建 `collaborators/` 索引模块（关系总览弹窗，含实时好感值与史料出处）+ 结局页「命运回响」面板（复用现有结局，叠加关系注解）。mjwiki 6 合作者页已补（双源保留，按 §15.1 多源考证）。创作企划器扩展仍待。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **剧情文案**：独白尾声扩写、舆论轴/心理轴深化、时代切片。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。

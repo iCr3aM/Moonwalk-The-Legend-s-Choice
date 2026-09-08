@@ -243,6 +243,7 @@ window.MJ = window.MJ || {};
       metaHints(state) +
       metaTendency(state) +
       relationsPanel(state) +
+      '<button class="btn ghost collab-open" id="btn-collab">💞 ' + T('ui.collabOpen', null, '关系总览') + '</button>' +
       '</div>';
   }
 
@@ -516,6 +517,22 @@ window.MJ = window.MJ || {};
   function archiveCount() {
     try { return MJ.saveSystem.getArchives().length; } catch (e) { return 0; }
   }
+  function collaboratorsModal(state) {
+    closeOverlay('collab-overlay');
+    var overlay = document.createElement('div');
+    overlay.id = 'collab-overlay';
+    overlay.className = 'overlay modal-overlay';
+    overlay.innerHTML = '<div class="modal">' +
+      '<div class="modal-head"><span>💞 ' + T('ui.collabTitle', null, '合作者') + '</span><span class="spacer"></span>' +
+      '<button class="btn ghost small" id="collab-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
+      '<div class="modal-body"><div class="collab-sub">' + T('ui.collabSub', null, '那些与你并肩或交错的人') + '</div>' +
+      (MJ.renderCollaboratorsOverview ? MJ.renderCollaboratorsOverview(state) : '') + '</div></div>';
+    document.body.appendChild(overlay);
+    ui._activeModal = { id: 'collab-overlay', open: function () { collaboratorsModal(state); } };
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('collab-overlay'); });
+    document.getElementById('collab-close').addEventListener('click', function () { closeOverlay('collab-overlay'); });
+  }
+
   function archiveModal() {
     closeOverlay('archive-overlay');
     var arr = MJ.saveSystem.getArchives();
@@ -1307,6 +1324,7 @@ window.MJ = window.MJ || {};
       });
     }
     bindEventKeys(ev);
+    var bc = $('#btn-collab'); if (bc) bc.addEventListener('click', function () { collaboratorsModal(state); });
     // 续局（resume）首屏静默消化已解锁成就，不重弹；正常推进时照常弹窗
     var _newAch = MJ.achievementSystem.evaluate(state, {});
     if (MJ.engine._suppressAchToast === true) { MJ.engine._suppressAchToast = false; }
@@ -1334,6 +1352,7 @@ window.MJ = window.MJ || {};
     try { app.setAttribute('data-chapter', chapter.id); } catch (e) {}
     var btn = document.getElementById('btn-era');
     if (btn) btn.addEventListener('click', function () { onContinue(); });
+    var bc2 = $('#btn-collab'); if (bc2) bc2.addEventListener('click', function () { collaboratorsModal(state); });
     _view = function () { ui.showEraCard(chapter, state, onContinue); };
     window.scrollTo(0, 0);
   };
@@ -1393,6 +1412,7 @@ window.MJ = window.MJ || {};
       diaryPanel(state) +
       vignettePanel(state) +
       echoesPanel(state) +
+      fateEchoPanel(state) +
       historyPanel(state) +
       '</div>' +
       '<div class="foot">' + T('ui.foot', null, '你的每一个选择，写就了独一无二的传奇。') + '</div>';
@@ -1420,12 +1440,42 @@ window.MJ = window.MJ || {};
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
     var bte = $('#btn-trivia-end'); if (bte) bte.addEventListener('click', triviaModal);
     var ble = $('#btn-lang-end'); if (ble) ble.addEventListener('click', openLangModal);
+    var bc = $('#btn-collab'); if (bc) bc.addEventListener('click', function () { collaboratorsModal(state); });
     _view = function () { ui.showEnding(id, state); };
     setKeyHandler(function (e) {
       if (e.key === 'Enter') { e.preventDefault(); var r = $('#btn-restart'); if (r) r.click(); }
     });
     window.scrollTo(0, 0);
   };
+
+  function fateEchoPanel(state) {
+    var rel = (state && state.relations) || {};
+    var items = Object.keys(rel).map(function (k) { return { k: k, v: rel[k] }; })
+      .filter(function (o) { return Math.abs(o.v) >= 15; })
+      .sort(function (a, b) { return Math.abs(b.v) - Math.abs(a.v); });
+    var defs = (MJ.config && MJ.config.relationsDefs) || [];
+    var byKey = {}; defs.forEach(function (d) { byKey[d.key] = d; });
+    var inner = '<details class="panel history fate-echo" open><summary>' + T('ui.fateEchoTitle', null, '命运回响') + ' <span class="cnt">(' + items.length + ')</span></summary><div class="fate-list">';
+    if (!items.length) {
+      inner += '<div class="empty">' + T('ui.fateEchoEmpty', null, '这一程，你更多独自走过。') + '</div>';
+    } else {
+      items.forEach(function (o) {
+        var def = byKey[o.k] || {};
+        var name = def.name || o.k;
+        var sign = o.v > 0 ? '+' : '';
+        var cls = o.v >= 20 ? 'warm' : (o.v <= -10 ? 'cold' : 'neutral');
+        var note = T('fate.' + o.k + '.note', null,
+          o.v >= 40 ? T('ui.fateHigh', null, '你们情谊深厚，是你最坚实的臂膀之一。') :
+          (o.v >= 20 ? T('ui.fateMid', null, '你们彼此信任，在关键时刻总能互相托底。') :
+          (o.v <= -15 ? T('ui.fateLow', null, '你们之间有过裂痕，但那段交集仍留在故事里。') : '')));
+        inner += '<div class="fate-item ' + cls + '"><span class="fate-ico">' + (def.icon || '🔗') + '</span>' +
+          '<div class="fate-body"><b>' + escapeHtml(name) + '</b> <span class="fate-val">' + sign + o.v + '</span>' +
+          '<p>' + escapeHtml(note) + '</p></div></div>';
+      });
+    }
+    inner += '</div></details>';
+    return inner;
+  }
 
   function escapeHtml(s) {
     return String(s)
