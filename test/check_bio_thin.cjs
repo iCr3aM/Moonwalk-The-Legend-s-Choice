@@ -36,7 +36,15 @@ function check(name, cond) { if (cond) { pass++; console.log('✅', name); } els
 
 // §17.3：2_7 在单飞线 2_6→2_7→3_1 上可达
 check('2_7 节点存在且各选项 next=3_1', MJ.EVENTS['2_7'] && MJ.EVENTS['2_7'].options && MJ.EVENTS['2_7'].options.every(function (o) { return o.next === '3_1'; }));
-check('2_6 三选项均指向 2_7', MJ.EVENTS['2_6'].options.every(function (o) { return o.next === '2_7'; }));
+check('2_6 三选项均指向 2_7（含独立制作线分支）', (function () {
+  var st0 = new MJ.GameState(MJ.config);
+  var opts = typeof MJ.EVENTS['2_6'].options === 'function' ? MJ.EVENTS['2_6'].options(st0) : MJ.EVENTS['2_6'].options;
+  var okNormal = opts && opts.length === 3 && opts.every(function (o) { return o.next === '2_7'; });
+  var optsP = MJ.EVENTS['2_6'].options(Object.assign({}, st0, { timeline: { '1979': 'solo_prod' } }));
+  var okSoloProd = optsP && optsP.length === 3 && optsP.every(function (o) { return o.next === '2_7'; }) &&
+    !(optsP[0].effects && optsP[0].effects.rel && optsP[0].effects.rel.quincy); // 独立线首选项不得再加昆西好感
+  return okNormal && okSoloProd;
+})());
 walkFrom('2_4');
 check('单飞线途经 2_7（Diana Ross 合作深化）', !!_visited['2_7']);
 

@@ -1665,7 +1665,7 @@ window.MJ = window.MJ || {};
   function fateEchoPanel(state) {
     var rel = (state && state.relations) || {};
     var items = Object.keys(rel).map(function (k) { return { k: k, v: rel[k] }; })
-      .filter(function (o) { return Math.abs(o.v) >= 15; })
+      .filter(function (o) { return Math.abs(o.v) >= 15 && (!MJ.isCollaboratorMet || MJ.isCollaboratorMet(state, o.k)); })
       .sort(function (a, b) { return Math.abs(b.v) - Math.abs(a.v); });
     var defs = (MJ.config && MJ.config.relationsDefs) || [];
     var byKey = {}; defs.forEach(function (d) { byKey[d.key] = d; });

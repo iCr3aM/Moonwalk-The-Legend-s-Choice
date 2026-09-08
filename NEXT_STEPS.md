@@ -45,6 +45,7 @@
 - [x] **P2 §6/§7 候选成就/彩蛋（已落地，2026-09-08 核实）**：§6 缺失的 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO` 与 §7 缺失的 7 枚彩蛋（`EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`）均已在 `config.js`/`engine.js`/`events.js`/`i18n.js` 实现并接好触发（flag 命名遵守 `egg_<flag>` 含下划线的铁律）。彩蛋经 `_audit_egg_trivia_reach` 5000 局审计「43 中仅 3 密蛋未落地、其余全可达」；两成就分别经 `neverlandType='public'`（`4_1`）/`encino` flag（`V_ENCINO`）可达。原「待拍板」清单已失效，无需再补。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
 - [x] **深度游玩（C：关系网深化 ✅ / 创作企划器扩展）**：关系网深化已实现——4 新 rel key（diana/frank/john/elizabeth）+ 4 关系隐藏变体（V_REL_DIANA/FRANK/JOHN/ELIZABETH，cond 门控 + __RETURN__）+ 2_7/4_3b tipping 文案 + 新建 `collaborators/` 索引模块（关系总览弹窗，含实时好感值与史料出处）+ 结局页「命运回响」面板（复用现有结局，叠加关系注解）。mjwiki 6 合作者页已补（双源保留，按 §15.1 多源考证）。创作企划器扩展仍待。
+  - [x] **结识门控修复（2026-09-08）**：羁绊卡/命运回响按「已结识」显示（`state.relMet` 首次好感交互置位 + 各卡 `metCond`，未结识渲染锁定态不泄露身份）；修复组合线昆西泄漏（2_1b 文本分支、V_BIO_WIZ/V_REL_QUINCY 补 cond）与独立制作线（solo_prod）昆西残留（2_4 opt0/2_6 文本+选项分支、V_COLLAB_OTW 排除）；新建 `test/_audit_rel_met.cjs` 门禁（组合线/独立线/合作线定向 + 2000 随机局断言）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [x] **剧情文案深化**（spec: docs/superpowers/specs/2026-09-08-narrative-deepening-design.md；批次1-4 全部落地：两页海报+独白扩写、时代切片、心理轴、舆论链；npm test 全绿）
   - [x] 批次1：两页海报(正面主视觉+独白 / 背面属性+关键抉择+尾声) + 16 尾声模板 + 6 独白扩写尾段（按元路线/属性/flag 出不同文案，MJ 风格）；npm test 全绿

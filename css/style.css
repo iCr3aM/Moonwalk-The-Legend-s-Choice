@@ -484,6 +484,9 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .collab-card { background: rgba(0,0,0,0.28); border: 1px solid var(--line); border-left: 3px solid var(--ink-dim); border-radius: var(--radius-sm); padding: 14px 16px; transition: transform .2s, box-shadow .2s; }
 .collab-card.warm { border-left-color: var(--good); }
 .collab-card.cold { border-left-color: var(--danger); }
+.collab-card.locked { border: 1px dashed var(--line); border-left: 3px dashed var(--line); opacity: .55; }
+.collab-card.locked .collab-ico { filter: grayscale(1); }
+.collab-card.locked:hover { transform: none; box-shadow: none; }
 .collab-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
 .collab-head { display: flex; align-items: center; gap: 8px; }
 .collab-ico { font-size: var(--fs-lg); }

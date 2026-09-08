@@ -21,6 +21,8 @@ window.MJ = window.MJ || {};
     this.attributes.wealth = Math.max(0, Math.min(100, Math.round(cfg.initialNetWorth / _scale0)));
     // M1 具名 NPC 好感（-100..100，初值 0）
     this.relations = Object.assign({}, cfg.initialRelations);
+    // 关系网「已结识」标记：首次实际好感交互置位（羁绊卡/回响面板按此门控显示）
+    this.relMet = {};
     // M2 人生手记 / M4 命运回响 / M3 当前章节（持久化以避免续玩时重复生成）
     this.diary = [];     // [{ chapter, title, text }]
     this.echoes = [];    // [text]
@@ -71,6 +73,7 @@ window.MJ = window.MJ || {};
     if (!delta) return;
     var cur = this.relations[name] || 0;
     this.relations[name] = Math.max(-100, Math.min(100, cur + delta));
+    this.relMet[name] = true; // 任何实际好感交互即视为「已结识」
   };
 
   GameState.prototype.pushHistory = function (entry) {
@@ -88,6 +91,7 @@ window.MJ = window.MJ || {};
       netWorth: this.netWorth,
       debt: this.debt,
       relations: this.relations,
+      relMet: this.relMet,
       diary: this.diary,
       echoes: this.echoes,
       era: this.era,
@@ -108,6 +112,14 @@ window.MJ = window.MJ || {};
     this.debt = this.netWorth < 0; // 由净资产派生，存档不存债务快照
     this.timeline = data.timeline || {};
     this.relations = data.relations || Object.assign({}, MJ.config.initialRelations);
+    if (data.relMet) { this.relMet = data.relMet; }
+    else {
+      // 旧存档兼容：无 relMet 时由非零好感回推「已结识」
+      this.relMet = {};
+      for (var rk in this.relations) {
+        if (this.relations.hasOwnProperty(rk) && this.relations[rk]) this.relMet[rk] = true;
+      }
+    }
     this.diary = data.diary || [];
     this.echoes = data.echoes || [];
     this.era = (data.era != null) ? data.era : -1;

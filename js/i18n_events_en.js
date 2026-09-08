@@ -1184,6 +1184,7 @@ window.MJ.i18n.dict.eventEn = {
   // ---------- g5 主线偏薄章节拓展（GDD §17.3） ----------
   "event.2_6.title": "Grammy Coronation Night",
   "event.2_6.text": "The Grammy envelope opened, and your name was read out as a 'winner' for the first time. Quincy laughed and applauded from the audience — this golden partnership began to be remembered by the world.",
+  "event.2_6.text1": "The Grammy envelope opened, and your name was read out as a 'winner' for the first time. This time, the applause belonged to you alone — and to the course you steered yourself.",
   "event.2_6.branch0.text": "Holding the trophy, you suddenly understood: beyond the stage, there was someone who grasped your ambition.",
   "event.2_6.opt0.label": "A: Raise a glass with Quincy",
   "event.2_6.opt0.hint": "Friendship and fame brewed together (Art +10, Reputation +5, Quincy +10)",
@@ -1450,6 +1451,8 @@ window.MJ.i18n.dict.eventEn = {
   "event.2_5.opt2.hint": "Politely decline the solo slot (Reputation -3, Family +3)",
   "event.2_6.opt0.label": "A: Raise a glass with Quincy",
   "event.2_6.opt0.hint": "Friendship and fame brew together (Art +10, Reputation +5, Quincy +10)",
+  "event.2_6.opt3.label": "A: Raise a glass with your own team",
+  "event.2_6.opt3.hint": "A coronation for the independent route (Art +10, Reputation +5)",
   "event.V_EGG_MOTOWN.title": "Old Friends Reunited",
   "event.V_EGG_DISCO.title": "Disco Tribute",
   "event.V_EGG_WATW.title": "The Same Chord",
@@ -2128,6 +2131,7 @@ window.MJ.i18n.dict.eventEn = {
 
   "event.2_1b.title": "Premiere of 'The Wiz'",
   "event.2_1b.text": "The Wiz hit the big screen; your Scarecrow made audiences remember the sequined glove and the first hints of the moonwalk. Quincy Jones, in the back row of the theater, quietly wrote your name into his next plan.",
+  "event.2_1b.text1": "The Wiz hit the big screen; the brothers' harmonies reached a fairy-tale audience for the first time, and the family business glowed one shade brighter.",
   "event.2_1b.branch0.text": "The camera was more honest than you expected; you began to love the language of film.",
   "event.2_1b.branch1.text": "For the first time, the premiere's flashbulbs lit up you alone, not the whole group.",
   "event.2_1b.opt0.label": "A: Bring the film experience into the music",

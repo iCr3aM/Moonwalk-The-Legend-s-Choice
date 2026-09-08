@@ -309,8 +309,8 @@ window.MJ = window.MJ || {};
       if (s.flags.isSolo) {
         return [
           { label: T('event.2_1.opt0.label', null, 'A：倾尽所有去演'), hint: T('event.2_1.opt0.hint', null, '舞台感与口碑双收（艺术+15，声誉+10）'), effects: { art: 15, reputation: 10, rel: { quincy: 10 } }, next: '2_1b' },
-          { label: T('event.2_1.opt1.label', null, 'B：把重心留给家人'), hint: T('event.2_1.opt1.hint', null, '温暖的角落自有分量（家庭+10）'), effects: { family: 10 }, next: '2_1b' },
-          { label: T('event.2_1.opt2.label', null, 'C：临时退演护隐私'), hint: T('event.2_1.opt2.hint', null, '避开窥探，留住宁静（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, next: '2_1b' }
+          { label: T('event.2_1.opt1.label', null, 'B：把重心留给家人'), hint: T('event.2_1.opt1.hint', null, '温暖的角落自有分量（家庭+10）'), effects: { family: 10 }, flags: { metQuincy: true }, next: '2_1b' },
+          { label: T('event.2_1.opt2.label', null, 'C：临时退演护隐私'), hint: T('event.2_1.opt2.hint', null, '避开窥探，留住宁静（家庭+5，压力-5）'), effects: { family: 5, stress: -5 }, flags: { metQuincy: true }, next: '2_1b' }
         ];
       }
       return [
@@ -324,7 +324,10 @@ window.MJ = window.MJ || {};
   E['2_1b'] = {
     id: '2_1b', year: 1978, title: T('event.2_1b.title', null, '《新绿野仙踪》首映'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.2_1b.text', null, '《新绿野仙踪》登上大银幕，你饰演的稻草人让观众记住了亮片手套与太空步的雏形。昆西·琼斯在影院后排，默默把你的名字写进了下一个计划。'), s, [
+      var base = s.flags.isSolo
+        ? T('event.2_1b.text', null, '《新绿野仙踪》登上大银幕，你饰演的稻草人让观众记住了亮片手套与太空步的雏形。昆西·琼斯在影院后排，默默把你的名字写进了下一个计划。')
+        : T('event.2_1b.text1', null, '《新绿野仙踪》登上大银幕，兄弟们的合唱第一次被搬上童话银幕，家族事业的版图又亮了一格。');
+      return narr(base, s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.2_1b.branch0.text', null, '镜头比你想象中更诚实，你开始迷上电影的语言。') },
         { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.2_1b.branch1.text', null, '首映礼的闪光灯第一次为你个人而亮，而非整个组合。') }
       ]);
@@ -382,7 +385,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.2_4.opt0.label', null, 'A：深度绑定 Epic'), hint: T('event.2_4.opt0.hint', null, '话语权与收益齐涨（声誉+10，财富+15）'), effects: { reputation: 10, wealth: 15, rel: { quincy: 12 } }, flags: { epicDeep: true }, next: '2_5' },
+      { label: T('event.2_4.opt0.label', null, 'A：深度绑定 Epic'), hint: T('event.2_4.opt0.hint', null, '话语权与收益齐涨（声誉+10，财富+15）'), effects: function (s) { if (s.timeline && s.timeline['1979'] === 'solo_prod') return { reputation: 10, wealth: 15 }; return { reputation: 10, wealth: 15, rel: { quincy: 12 } }; }, flags: { epicDeep: true }, next: '2_5' },
       { label: T('event.2_4.opt1.label', null, 'B：保持安全距离'), hint: T('event.2_4.opt1.hint', null, '留白给生活，压力随之退潮（家庭+5，压力-10）'), effects: { family: 5, stress: -10 }, flags: { epicDeep: false }, next: '2_5' },
       { label: T('event.2_4.opt2.label', null, 'C：自创厂牌单干'), hint: T('event.2_4.opt2.hint', null, '野心勃勃，却也烧钱劳神（艺术+10，财富-10，压力+5）'), effects: { art: 10, wealth: -10, stress: 5 }, next: '2_5' }
     ]
@@ -409,15 +412,25 @@ window.MJ = window.MJ || {};
     id: '2_6', year: 1981, title: T('event.2_6.title', null, '格莱美加冕之夜'), kind: 'choice', key: true, grammyReveal: 'otw',
     onEnter: function (s) { if (MJ.planner) MJ.planner.resolveGrammy(s, 'otw'); },
     text: function (s) {
-      return narr(T('event.2_6.text', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。台下的昆西笑着鼓掌——这段黄金搭档，开始被世人记住。'), s, [
+      var base = (s.timeline && s.timeline['1979'] === 'solo_prod')
+        ? T('event.2_6.text1', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。这一次，掌声只属于你，和你亲手掌舵的路线。')
+        : T('event.2_6.text', null, '格莱美的信封被拆开，你的名字第一次以“最佳”的身份被念出。台下的昆西笑着鼓掌——这段黄金搭档，开始被世人记住。');
+      return narr(base, s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 80; }, text: T('event.2_6.branch0.text', null, '你握着奖杯，忽然明白，舞台之外还有人懂你的野心。') }
       ]);
     },
-    options: [
-      { label: T('event.2_6.opt0.label', null, 'A：与昆西举杯共庆'), hint: T('event.2_6.opt0.hint', null, '情谊与声名同酿（艺术+10，声誉+5，昆西好感+10）'), effects: { art: 10, reputation: 5, rel: { quincy: 10 }, collab: 1 }, next: '2_7' },
-      { label: T('event.2_6.opt1.label', null, 'B：把奖杯献给家人'), hint: T('event.2_6.opt1.hint', null, '荣耀归家（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '2_7' },
-      { label: T('event.2_6.opt2.label', null, 'C：趁热规划下一张专辑'), hint: T('event.2_6.opt2.hint', null, '趁热打铁（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '2_7' }
-    ]
+    options: function (s) {
+      var opt1 = { label: T('event.2_6.opt1.label', null, 'B：把奖杯献给家人'), hint: T('event.2_6.opt1.hint', null, '荣耀归家（家庭+8，声誉+3）'), effects: { family: 8, reputation: 3 }, next: '2_7' };
+      var opt2 = { label: T('event.2_6.opt2.label', null, 'C：趁热规划下一张专辑'), hint: T('event.2_6.opt2.hint', null, '趁热打铁（艺术+12，压力+5）'), effects: { art: 12, stress: 5 }, next: '2_7' };
+      if (s.timeline && s.timeline['1979'] === 'solo_prod') {
+        var opt0p = { label: T('event.2_6.opt3.label', null, 'A：与自己的团队举杯'), hint: T('event.2_6.opt3.hint', null, '独立路线的加冕（艺术+10，声誉+5）'), effects: { art: 10, reputation: 5, collab: 1 }, next: '2_7' };
+        return [opt0p, opt1, opt2];
+      }
+      return [
+        { label: T('event.2_6.opt0.label', null, 'A：与昆西举杯共庆'), hint: T('event.2_6.opt0.hint', null, '情谊与声名同酿（艺术+10，声誉+5，昆西好感+10）'), effects: { art: 10, reputation: 5, rel: { quincy: 10 }, collab: 1 }, next: '2_7' },
+        opt1, opt2
+      ];
+    }
   };
 
   // —— §17.3 主线偏薄章节拓展（Diana Ross 合作深化；单飞线 2_6→2_7→3_1）——
@@ -2313,7 +2326,7 @@ window.MJ = window.MJ || {};
   // —— P2：创作企划器「具名合作」子结构（solo 专辑企划期注入，提升 cp_collab 并留下合作者印记）——
   E.V_COLLAB_OTW = {
     id: 'V_COLLAB_OTW', variant: true, kind: 'choice', key: 'V_COLLAB_OTW', type: 'flavor',
-    window: [1979, 1980], weight: 26, cond: function (s) { return s.flags.isSolo === true; },
+    window: [1979, 1980], weight: 26, cond: function (s) { return s.flags.isSolo === true && !(s.timeline && s.timeline['1979'] === 'solo_prod'); },
     title: T('event.V_COLLAB_OTW.title', null, '《Off the Wall》的搭档们'),
     text: T('event.V_COLLAB_OTW.text', null, '首张 solo 专辑需要对的耳朵与对的笔。你身边站着几位关键搭档。'),
     options: [
@@ -2599,6 +2612,7 @@ window.MJ = window.MJ || {};
   // ----- 生平补全事件（GDD §17.8 A：忠于 MJ 真实年表，窗口化变体自然插入主线） -----
   E.V_BIO_WIZ = {
     id: 'V_BIO_WIZ', variant: true, window: [1977, 1979], weight: 45,
+    cond: function (s) { return s.flags.isSolo === true; }, // 《新绿野仙踪》幕后（遇昆西）仅单飞线注入
     title: T('event.V_BIO_WIZ.title', null, '《新绿野仙踪》幕后'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BIO_WIZ.text', null, '一部童话音乐电影，让你与昆西·琼斯并肩工作。镜头外的他，正悄悄打量这个安静到发光的孩子。'), s, [
@@ -2978,6 +2992,10 @@ window.MJ = window.MJ || {};
   // —— §17.4 关系网深化：昆西·琼斯 决裂/和解 flavor 变体（写入 rel + 关系标志）——
   E.V_REL_QUINCY = {
     id: 'V_REL_QUINCY', variant: true, window: [1983, 1991], weight: 16,
+    cond: function (s) {
+      if (s.timeline && s.timeline['1979'] === 'solo_prod') return false; // 独立制作线：与昆西早已分道，不再出现
+      return (s.relations.quincy || 0) !== 0 || !!s.flags.metQuincy;      // 须已结识（组合线永不触发）
+    },
     title: T('event.V_REL_QUINCY.title', null, '与昆西的分歧'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_REL_QUINCY.text', null, '你和昆西·琼斯，这对缔造了无数金曲的搭档，也走到了分岔口。版税与方向的分歧，像一根看不见的刺。'), s, [
@@ -3124,7 +3142,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_OFFWALL_QJ.opt0.label', null, 'A：延续与昆西·琼斯的合作'), hint: T('event.V_OFFWALL_QJ.opt0.hint', null, '稳坐黄金搭档，延续 Thriller/Bad 路线（声誉+4，艺术+3）'), effects: { reputation: 4, art: 3 }, next: '__RETURN__' },
+      { label: T('event.V_OFFWALL_QJ.opt0.label', null, 'A：延续与昆西·琼斯的合作'), hint: T('event.V_OFFWALL_QJ.opt0.hint', null, '稳坐黄金搭档，延续 Thriller/Bad 路线（声誉+4，艺术+3）'), effects: { reputation: 4, art: 3 }, flags: { metQuincy: true }, next: '__RETURN__' },
       { label: T('event.V_OFFWALL_QJ.opt1.label', null, 'B：独立制作，自掌创作'), hint: T('event.V_OFFWALL_QJ.opt1.hint', null, '收回主导权，走出异色商业路线（艺术+5，财富+4）'), effects: { art: 5, wealth: 4, timeline: { '1979': 'solo_prod' } }, next: '__RETURN__' }
     ]
   };
