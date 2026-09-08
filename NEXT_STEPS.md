@@ -2,56 +2,59 @@
 
 > 维护说明：本文件是项目**唯一**的「当前状态 + 待办」汇总入口，替代散落在 GDD.md / README / 记忆中的过期条目。
 > 任何事实性计数（结局 / 变体 / 成就 / 彩蛋）一律以源码为准：`js/config.js`（结局、成就、属性）、`js/events.js`（变体、彩蛋、趣事）。文档若与源码冲突，以源码为准，并回头更新对应文档。
-> 上一版全文快照：`archive/NEXT_STEPS_2026-09-08.md`（已完成的里程碑明细与历史归档均见该文件）。
-> 最近更新：2026-09-09。
+> 历史版本快照：`archive/NEXT_STEPS_2026-09-08.md`、`archive/NEXT_STEPS_2026-09-09.md`。
+> 最近更新：2026-09-09（审计环节收官）。
 
 ---
 
-## 一、当前权威状态（v1.13）
+## 一、当前权威状态（v1.14）
 
 - **游戏形态**：H5 文字人生模拟，原生 JS 模块化、**无框架、无构建**，双击 `index.html` 即运行；`build_singlefile.cjs` 可产出单文件 `dist/index.html`。
 - **结局**：**30 种 = 23 主线 + 7 假设线（架空历史 `END_ALT_*`）**，含 1 隐藏终极 `END_TRUE_ETERNAL`。
 - **六维属性 + Economy 双轨**：健康/声誉/财富/家庭/艺术/压力（0–100）；`netWorth`/`debt`（万元）。
 - **四条元路线**：艺术家/慈善家/商业巨擘/隐士。
-- **变体（可能性系统）**：**141 个**（`check_dup_events` 实测；含时代切片 8、心理闪回 5+1、舆论链 3 批次新增），按「概率 + 年份窗口 + cond」注入。
-- **关系网**：10 个 rel key + 6 位具名合作者羁绊卡（`collaborators.js`），**结识门控**：`state.relMet`（首次好感交互置位）+ 各卡 `metCond`，未结识渲染锁定态；结局页「命运回响」按已结识过滤。
+- **变体（可能性系统）**：**141 个**（`check_dup_events` 实测），按「概率 + 年份窗口 + cond」注入。
+- **关系网**：10 个 rel key + 6 位具名合作者羁绊卡（`collaborators.js`），结识门控 `state.relMet` + `metCond`，未结识渲染锁定态。
 - **成就 / 彩蛋 / 趣事**：成就 **88**、彩蛋 **43**（含 3 密蛋）、趣事 **61**（全部审计可达）。
-- **测试门禁**：`npm test` **25 个** `test/*.cjs` 全绿（并行矩阵，EXIT=0 为真绿）。
-- **健康度（2026-09-09 实测）**：`npm test` EXIT=0；30 结局全可达；人物一致性全遍历 3600 局 0 违规；彩蛋除 3 密蛋外全可达；趣事 61 全可达。
+- **测试门禁**：`npm test` **28 个** `test/*.cjs` 全绿（并行矩阵，EXIT=0 为真绿）。
+- **健康度（2026-09-09 实测）**：`npm test` EXIT=0；人物一致性 3600 局 0 违规；flag 闭合 0 死门控；结局文案一致性 0 违规；硬约束矩阵 45/45。
 
 ---
 
-## 二、当前环节：逻辑一致性审计（2026-09-09 启动）
+## 二、✅ 已收官：逻辑一致性审计环节（2026-09-09）
 
-> 目标：以「未结识不出现 / 选了什么线就见什么内容」为准绳，对全部事件与变体做系统性遍历审计，把偶发式排查转为常驻门禁。
+> 以「未结识不出现 / 选了什么线就见什么内容 / 写入必有来源」为准绳的系统性遍历审计，已全部转为常驻门禁并接入 `npm test`。
 
-- [x] **A. 关系网结识门控（已落地，2026-09-08/09）**：`state.relMet` + `MJ.isCollaboratorMet`；羁绊卡锁定态；昆西组合线/独立制作线（solo_prod）泄漏修复（2_1b 文本分支、V_BIO_WIZ/V_REL_QUINCY cond、2_4 opt0 effects、2_6 文本+选项分支、V_COLLAB_OTW 排除）；`test/_audit_rel_met.cjs` 门禁（三路线定向 + 2000 随机局）。
-- [x] **B. 具名人物一致性全遍历（已落地，2026-09-09）**：`test/_audit_person_consistency.cjs`——每局逐事件扫描 title/text/选项/keyNote，七位具名人物（昆西/戴安娜/弗兰克/布兰卡/泰勒/Lisa/黛比）在「未结识」状态被提及即违规；3600 局（随机 3000 + 组合线/独立线/合作线定向各 200）**0 违规**；遍历揪出并修复真 bug：`2_7「戴安娜的引路」无 cond`（未跟 Diana 赴 LA 的单飞线也会见她）→ 补 `cond relMet.diana` + fallback 3_1。初遇白名单：1_3(diana)/2_1·2_1b·V_OFFWALL_QJ·V_BIO_WIZ(quincy)/4_3b(elizabeth)/5_5(lisa)/6_2(debbie)。
-- [ ] **C. flag / 时间线一致性遍历**：扩展遍历审计——① 变体写入的 `flags`/`timeline` 与下游 cond 的引用闭合（写入-读取矩阵）；② 变体文本引用的路线状态（isSolo/事业线）与注入窗口是否自洽；③ `epilogue`/`branch` 文案与所属事件年表一致性。
-- [ ] **D. 结局/尾声文案与路线一致性**：结局 monologue、`epilogueTailTemplates`、独白扩写尾段按「该结局路线下可能成立的状态」遍历断言（如 no-QJ 结局文案不与已结识昆西矛盾）。
-- [ ] **E. 经济/属性硬约束矩阵**：负债/成瘾/法律三条硬约束与结局判定的全组合遍历（现有 `_audit_endings_full` 已覆盖主路径，补边界构造态）。
+- [x] **A. 关系网结识门控**（`_audit_rel_met`）：`state.relMet` + `MJ.isCollaboratorMet`；羁绊卡锁定态；修复昆西在组合线/独立制作线（solo_prod）的泄漏（2_1b 文本分支、V_BIO_WIZ/V_REL_QUINCY cond、2_4 opt0 effects、2_6 文本+选项分支、V_COLLAB_OTW 排除）；三路线定向 + 2000 随机局断言。
+- [x] **B. 具名人物一致性全遍历**（`_audit_person_consistency`）：逐事件扫描文案，七位具名人物未结识被提及即违规；3600 局 0 违规；揪出并修复 `2_7 戴安娜未结识泄漏`。初遇白名单：1_3/2_1/2_1b/V_OFFWALL_QJ/V_BIO_WIZ/4_3b/5_5/6_2。
+- [x] **C. flag/timeline 写-读闭合**（`_audit_flag_closure`）：读侧扫描全部真实加载的 cond/text/options/onEnter/effects 函数源码（含 engine/config 别名 `f.`/`tl[`）；写侧 = 1500 局运行时 Proxy 记录 + events/engine/planner 源静态扫描 + planner 动态键白名单。揪出并修复 2 个死门控：`flags.thisItScale`（TRIVIA_THISISIT 遗留键 → thisItFull/thisItReduced）、`flags.legalTrouble`（ACH_PACIFIST 遗留键 → 移除）。反向「写而未读」仅 WARN。
+- [x] **D. 结局/尾声/独白扩写文案一致性**（`_audit_ending_texts`）：每局结局的 summary/monologue/扩写尾段/尾声模板按该局结识状态断言；3000 局 0 违规；白名单 END_ALT_NO_QJ×quincy（「没有昆西的人生」文案主旨）。
+- [x] **E. 硬约束矩阵**（`_audit_hard_constraints`）：构造边界态直调 resolveEnding，45 项断言全部通过——负债/烧伤压倒成功型与 ALT、TRUE_ETERNAL 九项边界、ALT 六级优先链、法律 END_CONTROVERSIAL 压倒 ALT、续章带永不悲剧、路线型/原型结局与 QUIET_LIFE 兜底。
 
 ---
 
-## 三、玩法 / 内容扩展待办（中）
+## 三、玩法 / 内容扩展待办（下一阶段）
 
 - [ ] **创作企划器扩展**（深度游玩 C 的剩余半项）。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。
 
+> 优先级建议：新内容（变体/结局/文案）落地时自动受 28 门禁约束，无需先补审计；扩展类（M10-12/重复游玩）按体验优先级拍板。
+
 ---
 
 ## 四、工程 / 验证
 
-- [x] **`npm test` 25 门禁并行矩阵全绿**（2026-09-09 实测 EXIT=0；新增 `_audit_narrative`/`_audit_rel_met`/`_audit_person_consistency`）。
+- [x] **`npm test` 28 门禁并行矩阵全绿**（2026-09-09 实测 EXIT=0）。
 - [ ] 发布前跑 `node test/_audit_playthrough.cjs 5000` 与 `npm run e2e`（真机 Playwright：随机 6/6、结局 30/30、彩蛋 43/43）。
-- [ ] 审计环节新增门禁一律遵守「信息型门禁=虚假通过」铁律：必须 `process.exit(1)` 才算 FAIL，结论须来自真实引擎调用。
+- [ ] 新增门禁一律遵守「信息型门禁=虚假通过」铁律：必须 `process.exit(1)` 才算 FAIL，结论须来自真实引擎调用（`choose/proceed/resolveEnding/checkFlags` 等），存在性断言不冒充可达性。
+- [ ] 维护提醒：改 spine 事件年份须复跑 `check_balance_reach`；新增人物文案须过 `_audit_person_consistency`（未结识提及直接 FAIL，初遇事件加 INTRO_WHITELIST）。
 
 ---
 
 ## 五、归档指针
 
-- 上一版 NEXT_STEPS 全文（含 2026-09-08 里程碑明细、脚本归档清单、历史成果 A/B/C 节）：**`archive/NEXT_STEPS_2026-09-08.md`**。
+- 历史版本快照：`archive/NEXT_STEPS_2026-09-08.md`（里程碑明细/脚本归档/历史成果）、`archive/NEXT_STEPS_2026-09-09.md`（审计环节启动版）。
 - 早期一次性脚本与原型：`archive/legacy-scripts/`、`archive/迈克尔·杰克逊：人生选择_原型归档.html`。
 - 剧情文案深化 spec（已完成，本地不入库）：`docs/superpowers/specs/2026-09-08-narrative-deepening-design.md`。

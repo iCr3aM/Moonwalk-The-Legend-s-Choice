@@ -394,7 +394,7 @@ window.MJ = window.MJ || {};
     { id: 'ACH_SPEEDRUN', name: '速通人生', icon: '⚡', rarity: 'rare', desc: '以极简路径（极少节点）抵达任一结局。',
       check: function (s) { return (s.stats.events || 99) <= 24; } },
     { id: 'ACH_PACIFIST', name: '清白之躯', icon: '⚖️', rarity: 'rare', desc: '整局未卷入任何法律争议。',
-      check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict && !s.flags.legalTrouble; } },
+      check: function (s) { return !s.flags.settlement1993 && !s.flags.secondCharge && !s.flags.secondVerdict; } }, // legalTrouble 为遗留死键已移除（V_LEGAL 仅为风声，非正式争议）
 
     // —— §17.x 架空历史（alt 结局）专属成就 ——
     { id: 'ACH_ALT_FORK', name: '岔路微光', icon: '🌀', rarity: 'uncommon', desc: '在真实历史的岔口，做出了一个改变人生走向的假设抉择。',
