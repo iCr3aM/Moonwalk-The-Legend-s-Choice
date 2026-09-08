@@ -51,6 +51,7 @@
 ## 四、工程 / 验证
 
 - [x] **`npm test` 28 门禁并行矩阵全绿**（2026-09-09 实测 EXIT=0）。
+- [x] **状态栏 UI 去重与人物志改造（2026-09-09）**：财富条去掉「($X 万)」附注（净资产以右上角 header 为唯一权威显示，含负债红字）；「关系总览」大按钮移除，入口改到羁绊面板标题行「👤 人物志」，弹窗副标题加「已结识 X / 6」收集进度——定位为人物图鉴（身份/年代/史料出处 + 未结识 ??? 预告），与 chip 行的好感数值互补。
 - [ ] 发布前跑 `node test/_audit_playthrough.cjs 5000` 与 `npm run e2e`（真机 Playwright：随机 6/6、结局 30/30、彩蛋 43/43）。
 - [ ] 新增门禁一律遵守「信息型门禁=虚假通过」铁律：必须 `process.exit(1)` 才算 FAIL，结论须来自真实引擎调用（`choose/proceed/resolveEnding/checkFlags` 等），存在性断言不冒充可达性。
 - [ ] 维护提醒：改 spine 事件年份须复跑 `check_balance_reach`；新增人物文案须过 `_audit_person_consistency`（未结识提及直接 FAIL，初遇事件加 INTRO_WHITELIST）。

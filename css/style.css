@@ -468,7 +468,7 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 
 /* ---------- M1 关系/羁绊面板 ---------- */
 .rel-panel { margin-top: 10px; }
-.rel-head { color: var(--gold); letter-spacing: 1px; }
+.rel-head { color: var(--gold); letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .panel-h { color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
 .rel-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
 .rel-cell.warm { border-color: var(--good); color: var(--good); }

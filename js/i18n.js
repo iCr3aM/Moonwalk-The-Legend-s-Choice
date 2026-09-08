@@ -220,6 +220,7 @@ window.MJ = window.MJ || {};
         'ui.collabOpen': 'Relations',
         'ui.collabTitle': 'Collaborators',
         'ui.collabSub': 'Those who stood beside you — or crossed your path',
+        'ui.collabProgress': 'Met {n} / 6',
         'ui.collabLockedName': '？？？',
         'ui.collabLocked': 'Not met yet',
         'ui.collabLockedHint': 'Your paths have not crossed in this life.',

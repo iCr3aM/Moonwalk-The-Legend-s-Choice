@@ -114,9 +114,8 @@ window.MJ = window.MJ || {};
       if (k === 'reputation' || k === 'art') {
         var ov = (state.overflow && state.overflow[k]) || 0;
         if (ov > 0) right += ' <span class="od">⭐+' + ov + '</span>';
-      } else if (k === 'wealth') {
-        right += ' <span class="nw">(' + formatMoney(state.netWorth) + ')</span>';
       }
+      // 财富条不再附注净资产（与右上角 header 重复）；净资产以 header 为唯一权威显示（含负债红字状态）
       html += '<div class="bar">' +
         '<div class="lab"><span>' + T('attr.' + k, null, names[k]) + '</span>' + right + '</div>' +
         '<div class="track"><div class="fill ' + k + '" style="width:' + val + '%"></div></div>' +
@@ -243,7 +242,6 @@ window.MJ = window.MJ || {};
       metaHints(state) +
       metaTendency(state) +
       relationsPanel(state) +
-      '<button class="btn ghost collab-open" id="btn-collab">💞 ' + T('ui.collabOpen', null, '关系总览') + '</button>' +
       '</div>';
   }
 
@@ -519,13 +517,18 @@ window.MJ = window.MJ || {};
   }
   function collaboratorsModal(state) {
     closeOverlay('collab-overlay');
+    var metN = 0;
+    if (MJ.COLLABORATORS && MJ.isCollaboratorMet) {
+      MJ.COLLABORATORS.forEach(function (c) { if (MJ.isCollaboratorMet(state, c.relKey)) metN++; });
+    }
     var overlay = document.createElement('div');
     overlay.id = 'collab-overlay';
     overlay.className = 'overlay modal-overlay';
     overlay.innerHTML = '<div class="modal">' +
       '<div class="modal-head"><span>💞 ' + T('ui.collabTitle', null, '合作者') + '</span><span class="spacer"></span>' +
       '<button class="btn ghost small" id="collab-close">' + T('ui.close', null, '关闭 ✕') + '</button></div>' +
-      '<div class="modal-body"><div class="collab-sub">' + T('ui.collabSub', null, '那些与你并肩或交错的人') + '</div>' +
+      '<div class="modal-body"><div class="collab-sub">' + T('ui.collabSub', null, '那些与你并肩或交错的人') +
+      ' <span class="pill pill-gold">' + T('ui.collabProgress', { n: metN }, '已结识 ' + metN + ' / 6') + '</span></div>' +
       (MJ.renderCollaboratorsOverview ? MJ.renderCollaboratorsOverview(state) : '') + '</div></div>';
     document.body.appendChild(overlay);
     ui._activeModal = { id: 'collab-overlay', open: function () { collaboratorsModal(state); } };
@@ -663,7 +666,8 @@ window.MJ = window.MJ || {};
       return !MJ.relChipVisible || MJ.relChipVisible(state, d.key);
     });
     var rel = state.relations || {};
-    var html = '<div class="rel-panel"><div class="rel-head">' + T('ui.relHead', null, '羁绊') + '</div><div class="rel-grid">';
+    var html = '<div class="rel-panel"><div class="rel-head"><span>' + T('ui.relHead', null, '羁绊') + '</span>' +
+      '<button class="btn ghost small" id="btn-collab" title="' + T('ui.collabTitle', null, '合作者') + '">👤 ' + T('ui.collabTitle', null, '人物志') + '</button></div><div class="rel-grid">';
     defs.forEach(function (d) {
       var v = rel[d.key] || 0;
       var cls = v >= 20 ? 'warm' : (v <= -10 ? 'cold' : 'neutral');
