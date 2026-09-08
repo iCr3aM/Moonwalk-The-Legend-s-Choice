@@ -91,3 +91,15 @@ objKeys.forEach(function (k) {
 console.log('[防回归·grammy] 变体 id 含 V_GRAMMY: ' + (grammyIdHit.length ? grammyIdHit.join(', ') + ' ⚠ 禁止' : '无（✅）'));
 console.log('[防回归·grammy] 选项写入 grammy_* 标志: ' + (grammyFlagHit.length ? '\n  ' + grammyFlagHit.join('\n  ') + ' ⚠ 禁止' : '无（✅）'));
 console.log('\n检查结束。');
+var problems = [];
+if (srcAssignTotal > objKeys.length) problems.push('静默覆盖 ' + (srcAssignTotal - objKeys.length) + ' 个键被覆盖');
+if (dupKeys.length) problems.push('重复赋值键 ' + dupKeys.join('/'));
+if (mismatch.length) problems.push('键/id 不一致 ' + mismatch.length + ' 处');
+if (dupIds.length) problems.push('id 值重复 ' + dupIds.join(' / '));
+if (dupV.length) problems.push('变体 id 重复 ' + dupV.join('/'));
+if (dangling.length) problems.push('next 悬空引用 ' + dangling.length + ' 处');
+if (grammyIdHit.length) problems.push('变体 id 含 V_GRAMMY 前缀(禁止)');
+if (grammyFlagHit.length) problems.push('变体选项写入 grammy_* 标志(禁止)');
+if (problems.length) { console.error('FAIL 重复/一致性审计：\n  ' + problems.join('\n  ')); process.exit(1); }
+console.log('✅ 无重复键/悬空引用/grammy 违规');
+process.exit(0);

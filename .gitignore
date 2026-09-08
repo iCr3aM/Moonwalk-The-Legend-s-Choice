@@ -36,3 +36,11 @@ coverage/
 # 临时文件
 *.tmp
 tmp/
+
+# 真机 E2E 产物（每次运行重新生成，不提交）
+test/_e2e_shots/
+test/_e2e_report.json
+
+# 调试脚手架（不提交）
+audit/
+test/_dbg.cjs

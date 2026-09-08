@@ -90,7 +90,7 @@ for (var eid in MJ.config.endings) {
   if (!MJ.config.endings.hasOwnProperty(eid) || eid.indexOf('END_ALT_') !== 0) continue;
   if ((endings[eid] || 0) === 0) { console.log('FAIL 架空(alt)结局在真实游玩中 0 现身：' + eid); fail = 1; }
 }
-if (interiorEmpty.length) console.log('WARN 存在变体荒漠年份：' + interiorEmpty.join(','));
+if (interiorEmpty.length) { console.log('FAIL 存在变体荒漠年份(主线区间内 0 覆盖)：' + interiorEmpty.join(',')); fail = 1; }
 
 console.log('\n概率平衡/可达性校准：' + (fail ? 'FAIL' : 'PASS（信息型报告，详见上）'));
 process.exit(fail ? 1 : 0);

@@ -52,8 +52,13 @@ else console.log('[同flag窗口重叠] 无（✅）');
 
 // (3) 永不触发：window 不覆盖任何主线事件年份
 var never = variants.filter(function (v) { if (!v.win) return false; for (var y = v.win[0]; y <= v.win[1]; y++) { if (mainlineYears[y]) return false; } return true; });
-if (never.length) { warns++; console.log('[告警·可能永不触发·window 无主线年] ' + never.map(function (v) { return v.id + '[' + (v.win ? v.win.join('-') : '-') + ']'; }).join('  ')); }
+if (never.length) { errs += never.length; console.log('[错误·可能永不触发·window 无主线年] ' + never.map(function (v) { return v.id + '[' + (v.win ? v.win.join('-') : '-') + ']'; }).join('  ')); }
 else console.log('[window覆盖主线年] 全部可达（✅）');
+
+// (4) 单年窄窗（window 跨度 ≤0 年，即仅覆盖一个年份）：可达但脆弱，作告警
+var narrow = variants.filter(function (v) { return v.win && (v.win[1] - v.win[0] <= 0); });
+if (narrow.length) { warns++; console.log('[告警·单年窄窗·脆弱] ' + narrow.map(function (v) { return v.id + '[' + v.win.join('-') + ']'; }).join('  ')); }
+else console.log('[单年窄窗] 无（✅）');
 
 console.log('\n审计结束（告警 ' + warns + ' / 错误 ' + errs + '）');
 process.exit(errs ? 1 : 0);
