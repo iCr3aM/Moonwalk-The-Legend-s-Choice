@@ -143,7 +143,7 @@ lines.push('### 已实施的修改（本轮“平衡性审查”已落地，均�
 lines.push('- `js/config.js`：初始 `family` 60→40（开局不再免费满足 STATESMAN 的 family≥45）。');
 lines.push('- `js/engine.js` resolveEnding：① STATESMAN 门槛抬至 `phil>=3 && rep>=70 && family>=55`；② 把 HOMEBODY/LONELY_KING/OVERWORKED/BURNT_OUT 上移到 PERFECT 之前（修复被宽门槛吞掉）；③ PERFECT 门槛抬至 `健康>=50 & 声誉>=58 & 艺术或财富>=45`，普通安稳人生改落 END_QUIET_LIFE。');
 lines.push('- `js/events.js`：V_CHILDHOSP / V_LEG_HEAL / V_BIO_911 / V_PEACE_PATH 的双选项之一改为不涨 phil（留“不走慈善线”空间）。');
-lines.push('- `js/engine.js` triviaSystem：8 条原本无 cond（每局必解锁）的趣事加路径条件（artPath/thriller25/neverlandType/isSolo/brothers/phil 等），降低单局趣事稀释。');
+lines.push('- `js/engine.js` triviaSystem：① 8 条原本无 cond（每局必解锁）的趣事加路径条件；② 批量收紧 ~30 条趣事的宽松属性阈值（art 40/45/50/55→58/60/65/70，声誉 55/60/65/70→72/75/78/82，财富 40/45→65/70，phil 1/2→3/4，fans 20→35，stress≤35→≤25，family≥70→≥82，artPath≥2→≥3）；仅作用于 triviaSystem.defs 块，不动 egg/achievement 同类子串。探针实测：中等人生解锁 19/61（收紧前约 30+），巅峰人生 33/61——普通游玩稀释降约 40%。');
 lines.push('- `test/_strategies.cjs`：定向策略把目标变体 `force=true`（仅测试脚本）；STATESMAN 规格对齐 phil>=3。');
 lines.push('');
 lines.push('### A. 打破 STATESMAN 吸引子（✅ 已落地，多周目多样性提升）');
