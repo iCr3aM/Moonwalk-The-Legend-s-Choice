@@ -1187,6 +1187,15 @@ window.MJ = window.MJ || {};
     if (_ext) _narr += '\n' + _ext;
     ctx.fillStyle = G.cream; ctx.font = '15px "PingFang SC",sans-serif';
     var y = wrapParagraph(ctx, _narr, 60, 422, W - 120, 28, H - 158);
+    // 尾声：紧跟独白（第二页只承载文案）
+    var _tail = epilogueTailFor(state, endingId);
+    if (_tail) {
+      y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
+      ctx.fillText(T('ui.posterEpilogue', null, '尾声'), 60, y); y += 14;
+      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
+      ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
+      y = wrapParagraph(ctx, _tail, 60, y, W - 120, 24, H - 158);
+    }
     ctx.textAlign = 'center';
 
     function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
@@ -1196,7 +1205,7 @@ window.MJ = window.MJ || {};
     var _pq = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _ql = wrapCenter(ctx, _pq, W - 120); if (_ql.length > 2) _ql = _ql.slice(0, 2);
-    var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
+    var tagY = Math.min(H - 112, Math.max(y + 56, 620));
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
     for (var _i = 0; _i < _ql.length; _i++) ctx.fillText(_ql[_i], W / 2, tagY + _i * 22);
     var _sy = tagY + _ql.length * 22 + 14;
@@ -1313,14 +1322,12 @@ window.MJ = window.MJ || {};
       }
       y = _gy + Math.ceil(_picks.length / 2) * _rowH;
     }
-    var _tail = epilogueTailFor(state, endingId);
-    if (_tail) {
-      y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
-      ctx.fillText(T('ui.posterEpilogue', null, '尾声'), 60, y); y += 14;
-      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
-      ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
-      y = wrapParagraph(ctx, _tail, 60, y, W - 120, 24, H - 158);
-    }
+    // 数据页足迹行：结识 X/6 · 关键抉择 · 命运分岔
+    var _metN = 0;
+    if (MJ.COLLABORATORS && MJ.isCollaboratorMet) { MJ.COLLABORATORS.forEach(function (c) { if (MJ.isCollaboratorMet(state, c.relKey)) _metN++; }); }
+    var _st = state.stats || {};
+    ctx.textAlign = 'center'; ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif';
+    ctx.fillText(T('ui.posterFootprint', { met: _metN, keys: _st.keyChoices || 0, vars: _st.variants || 0 }, '人生足迹：结识 {met} / 6 · 关键抉择 {keys} 次 · 命运分岔 {vars} 段'), W / 2, y + 40);
     ctx.textAlign = 'center';
     function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
     var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
@@ -1374,8 +1381,8 @@ window.MJ = window.MJ || {};
   function openPosterModal(state, id, archiveIdx, prebuilt) {
     var old = document.getElementById('poster-overlay');
     if (old) old.parentNode.removeChild(old);
-    var cv1 = prebuilt || createPosterFace1(state, id);
-    var cv2 = createPosterFace2(state, id);
+    var cv1 = prebuilt || createPosterFace2(state, id);
+    var cv2 = createPosterFace1(state, id);
     var cur = 1, curCv = cv1;
     var hasDelete = (typeof archiveIdx === 'number');
     var overlay = document.createElement('div');
@@ -1389,7 +1396,7 @@ window.MJ = window.MJ || {};
         '<button class="btn ghost" id="pm-next">' + T('ui.posterNext', null, '下一页 ▶') + '</button>' +
       '</div>' +
       '<div class="poster-foot">' +
-        '<p class="poster-hint">' + T('ui.posterFlipHint', null, '提示：点「下一页」翻看属性与尾声；长按图片可保存') + '</p>' +
+        '<p class="poster-hint">' + T('ui.posterFlipHint', null, '提示：点「下一页」翻看传奇独白与尾声；长按图片可保存') + '</p>' +
         '<div class="poster-foot-actions' + (hasDelete ? ' has-delete' : '') + '">' +
           (hasDelete ? '<button class="btn danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
           '<button class="btn primary" id="pm-save">' + T('ui.posterSave', null, '保存图片') + '</button>' +
@@ -1658,7 +1665,7 @@ window.MJ = window.MJ || {};
       MJ.saveSystem.clear();
       ui.showIntro(false);
     });
-    var posterCanvas = createPosterFace1(state, id);
+    var posterCanvas = createPosterFace2(state, id);
     var pbox = document.getElementById('poster-box');
     if (pbox) {
       var thumb = document.createElement('img');
