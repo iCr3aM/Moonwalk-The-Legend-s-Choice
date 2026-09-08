@@ -105,6 +105,7 @@ console.log('UI字面量键扫描：' + Object.keys(foundKeys).length + ' 个键
 var tplKeys = [];
 (MJ.config.epilogueTailTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
 (MJ.config.monologueExtTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+Object.keys(MJ.config.achievementNarr || {}).forEach(function (k) { tplKeys.push('achNarr.' + k); });
 (MJ.config.echoTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
 Object.keys(MJ.config.diaryTemplates || {}).forEach(function (ch) {
   (MJ.config.diaryTemplates[ch] || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });

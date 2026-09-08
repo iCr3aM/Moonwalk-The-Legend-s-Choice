@@ -570,6 +570,50 @@ window.MJ = window.MJ || {};
 
   // M1 关系相关成就（ACH_BROTHERLY / ACH_IDOL）已并入上方 C.achievements 数组。
 
+  // M11 成就叙事化模板（§17.4 深度游玩）：id → 第一人称回望短句（无模板的成就不进海报叙事段，保文案通顺）
+  C.achievementNarr = {
+    ACH_ETERNAL: '我的名字成了符号，白手套比金唱片更接近永恒。',
+    ACH_TRUE_ETERNAL: '这一次，我把「永恒」两个字亲手写进了历史。',
+    ACH_BIOPIC: '别人在银幕上演绎了我的一生。',
+    ACH_BIOPIC_SELF: '这一次，我自己演自己——银幕内外都是真我。',
+    ACH_BEYOND: '我证明了：有些存在，时间带不走。',
+    ACH_ALL_ENDINGS: '每一种人生我都活过一遍，百态阅尽，仍是我。',
+    ACH_ALT_SURVIVE_LEGACY: '2009 年之后的日子，都是我多唱的返场。',
+    ACH_STAGE_LEGEND: '舞台记得我，像记得一个传说。',
+    ACH_PHIL_LEGEND: '我用歌声和善意，同时温暖了两个世界。',
+    ACH_MOGUL: '版权版图上，每一格都盖着我的印章。',
+    ACH_ARTIST: '艺术这条路上，我把自己走成了宗师。',
+    ACH_TOUR: '体育场的灯海，都是我的王座。',
+    ACH_RICH: '数字证明：梦想也可以是一门好生意。',
+    ACH_COMEBACK: '从火里走出来的那一步，比任何舞步都难。',
+    ACH_TIMELESS_KING: '聚光灯换了一代又一代，站着的还是我。',
+    ACH_DIGITAL_PIONEER: '我把单曲先交给了未来。',
+    ACH_END_INNOVATOR: '我用技术重新定义了音乐的边界。',
+    ACH_GRAMMY_SWEEP: '六张专辑的奖杯上，都刻着我的名字。',
+    ACH_HIGH_STAKES: '那场豪赌，我赢回了整个奖台。',
+    ACH_GRAMMY_LEGEND: '格莱美的纪录册里，有一页只属于我。',
+    ACH_DREAMER: '我把童年的梦，建成了真的乐园。',
+    ACH_THISISIT: '那场没跳完的演出，是我留给舞台的遗言。',
+    ACH_CATALOG_KING: '披头士的歌，也曾在我名下安睡。',
+    ACH_COMEBACK_2: '我说过我会回来——我做到了。',
+    ACH_EGG_HUNTER: '我找齐了这个时代藏起来的所有秘密。',
+    ACH_VARIANT_20: '命运的分岔口，我全都去看过。',
+    ACH_ALT_MEDIA_MOGUL: '在那条岔路上，我成了传媒的王。',
+    ACH_ALT_PEACE_LAUREATE: '和平的桂冠，也曾戴在我头上。',
+    ACH_WHOLE_LIFE: '家庭与梦想，我一样都没放手。',
+    ACH_DIAMOND: '钻石认证：我的歌声真的价值连城。',
+    ACH_GRAMMYLEGEND: '奖杯排成一排，像一支为我演奏的乐队。',
+    ACH_PEACE_AMBASSADOR: '我把舞台变成了和平的讲台。',
+    ACH_CROWN: '伊丽莎白·泰勒亲口为我加冕：你就是流行之王。',
+    ACH_NEVERLAND: '我为自己重建了一个永不长大的乐园。',
+    ACH_SMOOTH: '那个滑步，滑进了一个时代的记忆。',
+    ACH_GREATWALL: '我在长城上唱过歌，把山谷唱成了和声。',
+    ACH_DANCE_GOD: '人们叫我舞王，我没有反驳。',
+    ACH_VMA: 'MV 在我手里，第一次变成了电影。',
+    ACH_END_MENTOR: '我把自己的光，分给了后来的人。',
+    ACH_PACIFIST: '我从未让官司沾污过我的名字。'
+  };
+
   MJ.config = C;
 
   // 尾声文案模板：按主导元路线 / 属性阈值 / 特殊 flag 取首个命中（epilogueTailFor 在 ui.js）

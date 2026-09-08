@@ -1196,6 +1196,17 @@ window.MJ = window.MJ || {};
       ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
       y = wrapParagraph(ctx, _tail, 60, y, W - 120, 24, H - 158);
     }
+    // 高光时刻：成就叙事化（M11）——尾声后、语录前；空间不足整段跳过
+    var _hl = achievementNarrLines(state, endingId);
+    if (_hl.length && y + 150 < H - 130) {
+      y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
+      ctx.fillText(T('ui.posterHighlight', null, '高光时刻'), 60, y); y += 14;
+      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
+      var _lead = T('ui.achNarrLead', null, '回望这一程，有几枚瞬间格外滚烫——');
+      var _tailS = T('ui.achNarrTail', null, '它们不是奖赏，是路标。');
+      ctx.fillStyle = G.cream; ctx.font = '15px "PingFang SC",sans-serif';
+      y = wrapParagraph(ctx, _lead + '\n' + _hl.join('；') + '。\n' + _tailS, 60, y, W - 120, 26, H - 130);
+    }
     ctx.textAlign = 'center';
 
     function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
@@ -1352,6 +1363,22 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy2);
     ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy2 + 20);
     return cv;
+  }
+  // M11 成就叙事化：本局高光成就 → 第一人称叙事句（无模板的成就不进叙事；稀有度+固定序，无随机保恒定）
+  var NARR_RARITY_ORDER = { legendary: 0, epic: 1, rare: 2, uncommon: 3, common: 4 };
+  function achievementNarrLines(state, endingId) {
+    var narr = (MJ.config && MJ.config.achievementNarr) || {};
+    var reach = MJ.config.achievementReach || {};
+    var list = (MJ.config.achievements || []).filter(function (ac) {
+      try { return narr[ac.id] && ac.check(state, { ending: endingId }); } catch (e) { return false; }
+    });
+    list.sort(function (x, y) {
+      var rx = NARR_RARITY_ORDER[x.rarity] != null ? NARR_RARITY_ORDER[x.rarity] : 5;
+      var ry = NARR_RARITY_ORDER[y.rarity] != null ? NARR_RARITY_ORDER[y.rarity] : 5;
+      if (rx !== ry) return rx - ry;
+      return ((reach[x.id] != null ? reach[x.id] : 1) - (reach[y.id] != null ? reach[y.id] : 1));
+    });
+    return list.slice(0, 4).map(function (ac) { return T('achNarr.' + ac.id, null, narr[ac.id]); });
   }
   // 尾声文案：按结局 tone + 可选 flag 取首个命中（epilogueTailTemplates 由 config.js 提供）
   function epilogueTailFor(state, endingId) {
