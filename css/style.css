@@ -443,6 +443,8 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .poster-foot-actions { display: flex; gap: 16px; justify-content: center; align-items: center; }
 .poster-foot-actions.has-delete { justify-content: space-between; width: 100%; }
 .poster-hint { margin: 0; font-size: var(--fs-sm); color: var(--ink-dim); opacity: .85; letter-spacing: .5px; }
+.poster-flip { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 2px 0; }
+.poster-flip .poster-page { color: var(--gold); font-size: var(--fs-sm); letter-spacing: 1px; min-width: 72px; text-align: center; }
 
 /* 语言切换：仅主页菜单网格内（档案库右侧），正常文档流，不悬浮覆盖内容 */
 

@@ -103,6 +103,38 @@ window.MJ = window.MJ || {};
         'ui.zoomHint': 'Click to enlarge poster',
         'ui.posterSaveHint': 'Tip: long-press the poster image to save it to your device',
         'ui.posterSave': 'Save Image',
+        'ui.posterPrev': 'Previous',
+        'ui.posterNext': 'Next Page',
+        'ui.posterFlipHint': 'Tip: tap “Next Page” to flip and view your attributes & epilogue; long-press to save',
+        'ui.posterBackHeader': 'ECHOES OF A LIFE',
+        'ui.posterEpilogue': 'Epilogue',
+        'ui.posterPage': 'Page {n} / 2',
+        tail: {
+          artist: "When the curtain falls you think of the light that never went out in the studio—you never sang songs, you let them pass through you. Neon fades, beats age, but the melodies you kissed still pulse in the world's eardrum.",
+          phil: "You remember the children you lifted, heavier than any trophy. They called you too soft; it was that softness that gave 'King of Pop' its warmth.",
+          mogul: "You signed not just rights, but a map of an era. They laughed at your love of numbers; you knew—true immortality must first be written into contracts.",
+          recluse: "The estate gates close, the world clamors outside. At last you hear your own heartbeat—imperfect, yet yours alone. Solitude was no punishment, but a gift you chose.",
+          weary: "The mirror shows hollowed eyes. You gave the stage too much, kept too little for yourself. If you could, you'd tell yourself sooner: it's okay to stop.",
+          revered: "A girl on the corner hums your song, not knowing who you are, yet remembering every line. That was the title you truly wanted—forgotten by name, remembered by melody.",
+          family: "No matter how bright the spotlight, you search for that childhood family photo. Home is the one asset you'd never sell, and the true place you return to at each bow.",
+          vital: "You kept the hardest note—breath. Many win the world yet lose themselves; you proved a legend can simply stay alive.",
+          ruin: "The ledger ran red, the palace emptied. Numbers comfort no one, yet they teach: a stage can be rebuilt, if you'll only rise once more.",
+          rumorReversed: "Rumors once nailed you to headlines; with one dance, one live vocal, you pulled the nails. Public opinion is the fastest blade and the ficklest audience.",
+          father: "Father's belt is long gone, yet the rigor it taught became your obsession with perfection. You hated that ruler, and became it.",
+          peace: "You won no every war, yet earned a quiet night's sleep. Peace isn't the absence of storms, but a light left on for you within them.",
+          survived: "2009 didn't finish the story. The extra years you walked became the stubbornest footnote for those who came after: the curtain may fall later, and later still.",
+          icon: "You are no longer someone, but a symbol. The white glove left at your grave comes closer to eternity than all your gold records.",
+          lone: "You stand atop the mountain; the wind is loud, the side quiet. The heights are cold, yet only here do you hear the song you truly meant to sing.",
+          generic: "Lights dim, the echo remains. However this life is written, you lived it once yourself—and that is enough."
+        },
+        ext: {
+          artist: "You always said genius is just someone willing to fall for a melody again and again. The studio light went out and on; your greed for perfection never meant to quit.",
+          phil: "You believed music could speak for those who can't. Later you learned the hard part isn't singing to millions, but bending down for one, alone.",
+          mogul: "Others saw trademarks and maps; you saw the safety of writing childhood into contracts—no one could decide which song was yours.",
+          recluse: "The noise you rented; the quiet was your own. You learned to dance in empty halls, for an invisible audience of one.",
+          weary: "You gave the stage too much, kept too little. If you could, you'd tell yourself sooner: it's okay to stop.",
+          generic: "If life is a record, you've sung this side through. Flip it, and there may still be a refrain no one heard."
+        },
 
         // ---------- 引擎合成文案（后果回响） ----------
         'engine.experienced': 'Experienced',

@@ -569,4 +569,34 @@ window.MJ = window.MJ || {};
   // M1 关系相关成就（ACH_BROTHERLY / ACH_IDOL）已并入上方 C.achievements 数组。
 
   MJ.config = C;
+
+  // 尾声文案模板：按主导元路线 / 属性阈值 / 特殊 flag 取首个命中（epilogueTailFor 在 ui.js）
+  MJ.config.epilogueTailTemplates = [
+    { key: 'tail.artist', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'artist'; }, text: '幕落时你想起录音棚里那盏不灭的灯——你从不演唱歌曲，你让歌曲穿过你。霓虹会熄，节拍会旧，可被你吻过的旋律仍在世界的耳膜上跳动。' },
+    { key: 'tail.phil', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'philanthropist'; }, text: '你记得那些被你抱起的孩子，比任何奖杯都重。他们说你心太软，可正是这份软，让“流行天王”四个字有了温度。' },
+    { key: 'tail.mogul', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'mogul'; }, text: '你签下的不只是版权，是一个时代的版图。有人笑你痴迷数字，你笑他们不懂——真正的不朽，要先被写进合同里。' },
+    { key: 'tail.recluse', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'recluse'; }, text: '庄园的门合上，世界在门外喧哗。你终于听见自己的心跳——它不完美，却只属于你。孤独不是惩罚，是你挑的礼物。' },
+    { key: 'tail.weary', cond: function (s) { return (s.attributes.stress || 0) >= 70; }, text: '镜子里的你眼窝深了。你给了舞台太多，留给自己的太少。如果重来，你也许会早点对自己说：停下，也很好。' },
+    { key: 'tail.revered', cond: function (s) { return (s.attributes.reputation || 0) >= 82; }, text: '街角的女孩哼着你的歌，她不知道你是谁，却记得每一句。这才是你真正想要的称号——被忘记名字，却被记住旋律。' },
+    { key: 'tail.family', cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '无论聚光灯多亮，你总在找那张童年的全家福。家是你唯一不肯卖掉的资产，也是你每次谢幕时，真正的归处。' },
+    { key: 'tail.vital', cond: function (s) { return (s.attributes.health || 0) >= 80; }, text: '你保住了最难的那个音符——呼吸。很多人赢下世界却赔上自己，而你证明，传奇也可以好好活着。' },
+    { key: 'tail.ruin', cond: function (s) { return (s.netWorth || 0) < 0; }, text: '账本红了，宫殿空了。数字不会安慰人，却它在教你一课：舞台可以重建，只要你还愿意再站上去一次。' },
+    { key: 'tail.rumorReversed', cond: function (s) { return !!s.flags.rumorReversed; }, text: '谣言曾把你钉在头条，而你用一支舞、一段真唱，把钉子拔了出来。舆论是最快的刀，也是最善变的观众。' },
+    { key: 'tail.father', cond: function (s) { return !!s.flags.flashbackFather; }, text: '父亲的皮带声早已远去，可它教会你的严苛，成了你对待完美的执念。你恨过那把尺，也活成了那把尺。' },
+    { key: 'tail.peace', cond: function (s) { return !!s.flags.altPeace; }, text: '你没赢下每一场战争，却赢下了一夜安睡。和平不是没有风暴，是风暴里仍有人为你留灯。' },
+    { key: 'tail.survived', cond: function (s) { return !!s.flags.survived2009; }, text: '2009 没有把故事写完。你多走的那些年，成了给后来者最倔强的注脚：谢幕可以晚一点，再晚一点。' },
+    { key: 'tail.icon', cond: function (s) { return (s.attributes.art || 0) >= 85 && (s.attributes.reputation || 0) >= 85; }, text: '你不再是某人，而是一种符号。孩子们在你墓前放下的白手套，比你所有的金唱片都更接近永恒。' },
+    { key: 'tail.lone', cond: function (s) { return (s.attributes.family || 0) < 40 && (s.attributes.health || 0) >= 60; }, text: '你站在山顶，风很大，身边很静。高处不胜寒，可也只有在这里，你听得清自己真正想唱的那首。' },
+    { key: 'tail.generic', text: '灯光暗下，余音未了。这一生不论被怎样书写，都先由你亲自活过一遍——这已足够。' }
+  ];
+
+  // 独白扩写尾段：按主导元路线 / 特殊 flag 追加到海报正面独白之后（monologueExtFor 在 ui.js）
+  MJ.config.monologueExtTemplates = [
+    { key: 'ext.artist', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'artist'; }, text: '你总说，天才不过是肯为一段旋律反复跌倒的人。录音室的灯熄了又亮，你对完美的贪心，从没打算认输。' },
+    { key: 'ext.phil', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'philanthropist'; }, text: '你信音乐能替不会说话的人开口。后来才懂，最难的不是唱给千万人，是在无人处仍愿为一个人弯腰。' },
+    { key: 'ext.mogul', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'mogul'; }, text: '别人看见商标与版图，你看见的是把童年写进合同的安全感——再没人能替你决定，哪首歌属于你。' },
+    { key: 'ext.recluse', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'recluse'; }, text: '热闹是你租来的，安静才是你自己的。你学会在空荡的厅堂里跳舞，只为自己那一双看不见的观众。' },
+    { key: 'ext.weary', cond: function (s) { return (s.attributes.stress || 0) >= 70; }, text: '你给了舞台太多，留给自己的太少。如果重来，你会早点对自己说：停下，也很好。' },
+    { key: 'ext.generic', text: '如果人生是一张唱片，这一面你已唱完。翻转过来，或许还有一段未被听见的副歌。' }
+  ];
 })();

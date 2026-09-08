@@ -1139,6 +1139,206 @@ window.MJ = window.MJ || {};
 
     return cv;
   }
+  // 两页海报 · 正面（主视觉 + 独白 + 语录签名）
+  function createPosterFace1(state, endingId) {
+    var G = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
+    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', monologue: '' };
+    var eName = T('ending.' + endingId + '.name', null, e.name);
+    var eTone = T('ending.' + endingId + '.tone', null, e.tone);
+    var eSum = T('ending.' + endingId + '.summary', null, e.summary);
+    var eMon = T('ending.' + endingId + '.monologue', null, e.monologue);
+    var W = 720, H = 1280, S = 2;
+    var cv = document.createElement('canvas'); cv.width = W * S; cv.height = H * S;
+    var ctx = cv.getContext('2d'); ctx.scale(S, S); ctx.textBaseline = 'alphabetic';
+    var bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
+    var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
+    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
+    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
+    ctx.fillText('1958 — 2009', W / 2, 102);
+    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (_rar === 'epic' || _rar === 'legendary') { ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2); ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
+    function starPath(cx, cy, sp, oR, iR) { var rot = -Math.PI / 2, step = Math.PI / sp; ctx.beginPath(); for (var si = 0; si < sp; si++) { ctx.lineTo(cx + Math.cos(rot) * oR, cy + Math.sin(rot) * oR); rot += step; ctx.lineTo(cx + Math.cos(rot) * iR, cy + Math.sin(rot) * iR); rot += step; } ctx.closePath(); }
+    starPath(W / 2, 178, 5, 40, 17);
+    if (_rar === 'legendary') { var _sg = ctx.createLinearGradient(W / 2 - 40, 138, W / 2 + 40, 218); _sg.addColorStop(0, G.legendHi); _sg.addColorStop(1, G.deep); ctx.fillStyle = _sg; } else { ctx.fillStyle = _rc; }
+    ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = G.bright; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText(eName, W / 2, 286);
+    ctx.fillStyle = G.deep; ctx.font = 'italic 19px "PingFang SC",sans-serif'; ctx.fillText(eTone, W / 2, 320);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = G.base; ctx.font = '600 17px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterEndingLabel', null, '结局 · 你的传奇'), 60, 384);
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, 398); ctx.lineTo(W - 60, 398); ctx.stroke();
+    var _narr = (eSum ? eSum + '\n' : '') + (eMon || '');
+    var _ext = monologueExtFor(state, endingId);
+    if (_ext) _narr += '\n' + _ext;
+    ctx.fillStyle = G.cream; ctx.font = '15px "PingFang SC",sans-serif';
+    var y = wrapParagraph(ctx, _narr, 60, 422, W - 120, 28, H - 158);
+    ctx.textAlign = 'center';
+    function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
+    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
+    if (MJ_POSTER_QUOTES.length > 1) { var _g = 0; while (_qObj === _lastPosterQuote && _g++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)]; }
+    _lastPosterQuote = _qObj;
+    var _pq = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
+    ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
+    var _ql = wrapCenter(ctx, _pq, W - 120); if (_ql.length > 2) _ql = _ql.slice(0, 2);
+    var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
+    for (var _i = 0; _i < _ql.length; _i++) ctx.fillText(_ql[_i], W / 2, tagY + _i * 22);
+    var _sy = tagY + _ql.length * 22 + 14;
+    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy);
+    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy + 20);
+    return cv;
+  }
+  // 两页海报 · 背面（属性快照 + 关键抉择 + 尾声 + 语录签名）
+  function createPosterFace2(state, endingId) {
+    var G = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
+    var a = state.attributes;
+    var _gw = (state.meta && state.meta.grammyWins) || 0;
+    var dm = MJ.dominantMeta(state.meta);
+    var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
+    var legend = MJ.legendScore(state);
+    var thisRun = (MJ.config.achievements || []).filter(function (ac) { try { return ac.check(state, { ending: endingId }); } catch (err) { return false; } });
+    var _reach = MJ.config.achievementReach || {};
+    thisRun = thisRun.slice().sort(function (x, y) { return ((_reach[y.id] != null ? _reach[y.id] : 0) - (_reach[x.id] != null ? _reach[x.id] : 0)); });
+    var W = 720, H = 1280, S = 2;
+    var cv = document.createElement('canvas'); cv.width = W * S; cv.height = H * S;
+    var ctx = cv.getContext('2d'); ctx.scale(S, S); ctx.textBaseline = 'alphabetic';
+    var bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(T('ui.posterBackHeader', null, '人 生 回 响'), W / 2, 78);
+    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
+    ctx.fillText(T('ending.' + endingId + '.name', null, (MJ.config.endings[endingId] || {}).name || endingId), W / 2, 102);
+    var dims = [['健康', 'health', a.health], ['声誉', 'reputation', a.reputation], ['艺术', 'art', a.art], ['财富', 'wealth', a.wealth], ['家庭', 'family', a.family], ['压力', 'stress', a.stress]].map(function (d) { return [T('attr.' + d[1], null, d[0]), d[1], d[2]]; });
+    var bx0 = 70, colW = (W - 140) / 2, top = 140, rowH = 44, labelW = 82, gutter = 96;
+    var barXoff = labelW, barW = colW - labelW - gutter - 10;
+    for (var i = 0; i < dims.length; i++) {
+      var col = i % 2, row = (i / 2) | 0, x = bx0 + col * colW, y = top + row * rowH, bgx = x + barXoff;
+      ctx.textAlign = 'left'; ctx.fillStyle = G.dim; ctx.font = '15px "PingFang SC",sans-serif'; ctx.fillText(dims[i][0], x, y + 15);
+      var numStr = String(dims[i][2]);
+      if (dims[i][1] === 'reputation' || dims[i][1] === 'art') { var ov = (state.overflow && state.overflow[dims[i][1]]) || 0; if (ov > 0) numStr += ' ★+' + ov; }
+      ctx.textAlign = 'right'; ctx.fillStyle = G.bright; ctx.font = '600 15px sans-serif'; ctx.fillText(numStr, x + colW - 10, y + 15);
+      var v = Math.max(0, Math.min(100, dims[i][2])) / 100;
+      ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
+      var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0); grad.addColorStop(0, G.deep); grad.addColorStop(1, G.bright);
+      ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 9, 4); ctx.fill();
+    }
+    var y = top + 3 * rowH + 14;
+    ctx.textAlign = 'center';
+    var _route = T('ui.metaRoutePrefix', null, '主导路线：') + metaName;
+    ctx.textAlign = 'left'; ctx.fillStyle = G.bright; ctx.font = '600 18px "PingFang SC",sans-serif'; ctx.fillText(_route, 60, y);
+    var _rw = ctx.measureText(_route).width;
+    var _kwTags = []; if (dm) _kwTags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
+    var _kwSorted = dims.slice().sort(function (p, q) { return q[2] - p[2]; }); _kwTags.push(_kwSorted[0][0], _kwSorted[1][0]);
+    var _kwStr = T('ui.posterKeywords', null, '人生关键词') + '：' + _kwTags.join(' · ');
+    ctx.font = '600 14px "PingFang SC",sans-serif'; var _kwW = ctx.measureText(_kwStr).width;
+    var _overlap = (_rw + 40 + _kwW > (W - 120)); ctx.textAlign = _overlap ? 'center' : 'right'; ctx.fillStyle = G.base;
+    ctx.fillText(_kwStr, _overlap ? (W / 2) : (W - 60), y); ctx.textAlign = 'center';
+    ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
+    y += 54;
+    ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth) + '　　🏆 ' + T('ui.posterGrammy', { n: _gw }, '格莱美 {n} 座'), W / 2, y);
+    y += 40;
+    ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterAch', { n: thisRun.length }, '本局点亮 {n} 枚成就'), W / 2, y);
+    y += 16;
+    var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
+    ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif'; ctx.textBaseline = 'middle';
+    var _cap = Math.min(thisRun.length, 33);
+    if (thisRun.length) {
+      for (var k = 0; k < _cap; k++) { var c = k % perRow, r = (k / perRow) | 0; ctx.fillStyle = G.bright; try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {} }
+      y += (((_cap / perRow) | 0) + (_cap % perRow ? 1 : 0)) * 42 + 18;
+      if (thisRun.length > 33) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillText(T('ui.posterAchMore', { n: thisRun.length - 33 }, '＋{n} 枚未显示'), W / 2, y); y += 20; }
+    } else { ctx.fillStyle = G.dim2; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40; }
+    ctx.textBaseline = 'alphabetic';
+    y += 6; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
+    ctx.fillText(T('ui.posterKeyChoices', null, '关键抉择'), 60, y); y += 12;
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 20;
+    var _keys = (state.history || []).filter(function (h) { return h && h.key; });
+    if (!_keys.length) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22; }
+    else {
+      _keys.sort(function (p, q) { var wa = p.keyWeight || 1, wb = q.keyWeight || 1; if (wa !== wb) return wb - wa; return (p.year || 0) - (q.year || 0); });
+      var _picks = _keys.slice(0, 4), _colGap = 20, _colW = (W - 120 - _colGap) / 2, _rowH = 46, _gy = y;
+      for (var _ki = 0; _ki < _picks.length; _ki++) {
+        var _kk = _picks[_ki], _kt = _kk.title || '', _kc = _kk.choice || '', _rid = _kk.id || null;
+        if (!_rid) { var _rm = buildPosterRevMap(); if (_kt && _rm.title[_kt]) _rid = _rm.title[_kt]; }
+        if (_rid) {
+          _kt = T('event.' + _rid + '.title', null, _kt); var _ropt = _kk.opt;
+          if ((_ropt == null || _ropt < 0) && !_kk.id) { var _rc2 = buildPosterRevMap().choice[_kc]; if (_rc2 && _rc2.id === _rid) _ropt = _rc2.opt; }
+          if (_ropt != null && _ropt >= 0) _kc = T('event.' + _rid + '.opt' + _ropt + '.label', null, _kc);
+        }
+        if (MJ.i18n.lang === 'en') { if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = ''; if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—'; }
+        var _c = _ki % 2, _ro = (_ki / 2) | 0, _cx = 60 + _c * (_colW + _colGap), _cy = _gy + _ro * _rowH;
+        ctx.font = '600 13px "PingFang SC",sans-serif'; var _head = (_kk.year || '') + ' · ' + _kt;
+        if (ctx.measureText(_head).width > _colW) { while (_head.length > 1 && ctx.measureText(_head + '…').width > _colW) _head = _head.slice(0, -1); _head += '…'; }
+        ctx.fillStyle = G.bright; ctx.fillText(_head, _cx, _cy);
+        ctx.font = '13px "PingFang SC",sans-serif'; var _cc = _kc;
+        if (ctx.measureText(_cc).width > _colW) { while (_cc.length > 1 && ctx.measureText(_cc + '…').width > _colW) _cc = _cc.slice(0, -1); _cc += '…'; }
+        ctx.fillStyle = G.deep; ctx.fillText(_cc, _cx, _cy + 18);
+      }
+      y = _gy + 2 * _rowH;
+    }
+    var _tail = epilogueTailFor(state, endingId);
+    if (_tail) {
+      y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
+      ctx.fillText(T('ui.posterEpilogue', null, '尾声'), 60, y); y += 14;
+      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
+      ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
+      y = wrapParagraph(ctx, _tail, 60, y, W - 120, 24, H - 158);
+    }
+    ctx.textAlign = 'center';
+    function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
+    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
+    if (MJ_POSTER_QUOTES.length > 1) { var _g2 = 0; while (_qObj === _lastPosterQuote && _g2++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)]; }
+    _lastPosterQuote = _qObj;
+    var _pq = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
+    ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
+    var _qln = wrapCenter(ctx, _pq, W - 120); if (_qln.length > 2) _qln = _qln.slice(0, 2);
+    var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
+    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
+    for (var _j = 0; _j < _qln.length; _j++) ctx.fillText(_qln[_j], W / 2, tagY + _j * 22);
+    var _sy2 = tagY + _qln.length * 22 + 14;
+    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy2);
+    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy2 + 20);
+    return cv;
+  }
+  // 尾声文案：按结局 tone + 可选 flag 取首个命中（epilogueTailTemplates 由 config.js 提供）
+  function epilogueTailFor(state, endingId) {
+    var tpl = (MJ.config && MJ.config.epilogueTailTemplates) || [];
+    var e = MJ.config.endings[endingId] || {};
+    var tone = e.tone || '';
+    for (var i = 0; i < tpl.length; i++) {
+      var t = tpl[i];
+      if (t.tone && t.tone !== tone) continue;
+      if (t.toneIn && t.toneIn.indexOf(tone) < 0) continue;
+      if (t.cond && !t.cond(state)) continue;
+      return T(t.key, null, t.text);
+    }
+    return '';
+  }
+  function monologueExtFor(state, endingId) {
+    var tpl = (MJ.config && MJ.config.monologueExtTemplates) || [];
+    for (var i = 0; i < tpl.length; i++) {
+      var t = tpl[i];
+      if (t.cond && !t.cond(state)) continue;
+      return T(t.key, null, t.text);
+    }
+    return '';
+  }
   function downloadPoster(cv, base) {
     var name = base + '.png';
     // 同步 data: URI 锚点下载，跨平台（含 Android WebView）可靠；
@@ -1149,20 +1349,26 @@ window.MJ = window.MJ || {};
   }
 
 
-  // 传奇海报弹窗：结局默认弹出，可关闭；关闭后点击缩略图再次打开（放大查看）
+  // 传奇海报弹窗：两页可翻（正面=主视觉+独白，背面=属性+关键抉择+尾声）；点击翻页切换
   function openPosterModal(state, id, archiveIdx, prebuilt) {
     var old = document.getElementById('poster-overlay');
     if (old) old.parentNode.removeChild(old);
-    var e = MJ.config.endings[id] || { name: id };
-    var cv = prebuilt || createPoster(state, id);
+    var cv1 = prebuilt || createPosterFace1(state, id);
+    var cv2 = createPosterFace2(state, id);
+    var cur = 1, curCv = cv1;
     var hasDelete = (typeof archiveIdx === 'number');
     var overlay = document.createElement('div');
     overlay.id = 'poster-overlay';
     overlay.className = 'overlay poster-modal';
     overlay.innerHTML = '<div class="poster-frame">' +
       '<div class="poster-canvas-wrap"></div>' +
+      '<div class="poster-flip">' +
+        '<button class="btn ghost" id="pm-prev">◀ ' + T('ui.posterPrev', null, '上一页') + '</button>' +
+        '<span class="poster-page" id="pm-page">' + T('ui.posterPage', { n: 1 }, '第 {n} 页 / 2') + '</span>' +
+        '<button class="btn ghost" id="pm-next">' + T('ui.posterNext', null, '下一页 ▶') + '</button>' +
+      '</div>' +
       '<div class="poster-foot">' +
-        '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
+        '<p class="poster-hint">' + T('ui.posterFlipHint', null, '提示：点「下一页」翻看属性与尾声；长按图片可保存') + '</p>' +
         '<div class="poster-foot-actions' + (hasDelete ? ' has-delete' : '') + '">' +
           (hasDelete ? '<button class="btn danger" id="pm-delete">' + T('ui.archiveDelete', null, '删除档案') + '</button>' : '') +
           '<button class="btn primary" id="pm-save">' + T('ui.posterSave', null, '保存图片') + '</button>' +
@@ -1170,19 +1376,27 @@ window.MJ = window.MJ || {};
         '</div>' +
       '</div>' +
     '</div>';
-    // 移动端长按「保存图片」原生菜单只对 <img> 生效，<canvas> 无效；故将画布转为 <img> 再插入
-    var _posterImg = document.createElement('img');
-    _posterImg.src = cv.toDataURL('image/png');
-    _posterImg.alt = T('ui.posterOfTag', null, '传奇海报');
-    _posterImg.className = 'poster-img';
-    _posterImg.title = T('ui.zoomHint', null, '点击放大海报');
-    overlay.querySelector('.poster-canvas-wrap').appendChild(_posterImg);
+    var _img = document.createElement('img');
+    function showFace(f) {
+      cur = f; curCv = (f === 2) ? cv2 : cv1;
+      _img.src = curCv.toDataURL('image/png');
+      var pv = document.getElementById('pm-prev'), nx = document.getElementById('pm-next'), pg = document.getElementById('pm-page');
+      if (pv) pv.style.visibility = (f === 1) ? 'hidden' : 'visible';
+      if (nx) nx.style.visibility = (f === 2) ? 'hidden' : 'visible';
+      if (pg) pg.textContent = T('ui.posterPage', { n: f }, '第 {n} 页 / 2');
+    }
+    _img.alt = T('ui.posterOfTag', null, '传奇海报');
+    _img.className = 'poster-img';
+    _img.title = T('ui.zoomHint', null, '点击放大海报');
+    overlay.querySelector('.poster-canvas-wrap').appendChild(_img);
     document.body.appendChild(overlay);
-    ui._activeModal = { id: 'poster-overlay', open: function () { openPosterModal(state, id, archiveIdx, prebuilt); } };
+    ui._activeModal = { id: 'poster-overlay', open: function () { openPosterModal(state, id, archiveIdx); } };
     overlay.addEventListener('click', function (evt) { if (evt.target === overlay) closePosterModal(); });
     document.getElementById('pm-close').addEventListener('click', closePosterModal);
+    var pv = document.getElementById('pm-prev'); if (pv) pv.addEventListener('click', function () { showFace(1); });
+    var nx = document.getElementById('pm-next'); if (nx) nx.addEventListener('click', function () { showFace(2); });
     var _saveBtn = document.getElementById('pm-save');
-    if (_saveBtn) _saveBtn.addEventListener('click', function () { downloadPoster(cv, 'MJ-' + id); });
+    if (_saveBtn) _saveBtn.addEventListener('click', function () { downloadPoster(curCv, 'MJ-' + id + '-p' + cur); });
     if (hasDelete) {
       // 二次确认（再次点击确认 + 3 秒超时复位），删除后回到档案库列表
       wireReset('pm-delete', function () {
@@ -1190,6 +1404,7 @@ window.MJ = window.MJ || {};
         closePosterModal();
       }, function () { archiveModal(); });
     }
+    showFace(1);
   }
   function closePosterModal() {
     var o = document.getElementById('poster-overlay');
@@ -1392,7 +1607,6 @@ window.MJ = window.MJ || {};
           (e.tone ? '<span class="pill pill-gold">' + escapeHtml(T('ending.' + id + '.tone', null, e.tone)) + '</span>' : '') +
         '</div>' : '') +
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
-        (e.monologue ? '<div class="mono">' + escapeHtml(T('ending.' + id + '.monologue', null, e.monologue)) + '</div>' : '') +
         '<div class="poster-section">' +
           '<div class="poster-box" id="poster-box"></div>' +
 '<p class="poster-hint">' + T('ui.posterSaveHint', null, '提示：长按海报图片即可保存到本地') + '</p>' +
@@ -1423,7 +1637,7 @@ window.MJ = window.MJ || {};
       MJ.saveSystem.clear();
       ui.showIntro(false);
     });
-    var posterCanvas = createPoster(state, id);
+    var posterCanvas = createPosterFace1(state, id);
     var pbox = document.getElementById('poster-box');
     if (pbox) {
       var thumb = document.createElement('img');
@@ -1434,7 +1648,7 @@ window.MJ = window.MJ || {};
       thumb.addEventListener('click', function () { openPosterModal(state, id); });
       pbox.appendChild(thumb);
     }
-    openPosterModal(state, id, undefined, posterCanvas); // 结局默认弹出海报（复用缩略图同一张画布），可关闭后点击缩略图放大
+    // 不再自动弹海报；用户点缩略图自行打开（两页可翻）
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
     var bae = $('#btn-ach-end'); if (bae) bae.addEventListener('click', achievementsModal);
     var bee = $('#btn-egg-end'); if (bee) bee.addEventListener('click', eggModal);
