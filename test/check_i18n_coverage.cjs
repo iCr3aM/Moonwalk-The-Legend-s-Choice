@@ -100,6 +100,29 @@ Object.keys(foundKeys).forEach(function (key) {
 });
 console.log('UI字面量键扫描：' + Object.keys(foundKeys).length + ' 个键；EN缺失 ' + uiScanFail + '；EN含中文 ' + uiScanCjk);
 
-var allFail = fail + emptyFail + sameFail + uiScanFail + uiScanCjk + rarityFail;
+// ---------- 第四阶段：config 模板键 EN 覆盖（尾声/独白扩写/手记/命运回响/假如微片段） ----------
+// 这些键不在 dict 字面量与 ui.js 扫描范围内，曾因嵌套对象 vs 平键错位而整批漏翻（tail.*/ext.* 事故）。
+var tplKeys = [];
+(MJ.config.epilogueTailTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+(MJ.config.monologueExtTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+(MJ.config.echoTemplates || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+Object.keys(MJ.config.diaryTemplates || {}).forEach(function (ch) {
+  (MJ.config.diaryTemplates[ch] || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+});
+Object.keys(MJ.config.vignetteTemplates || {}).forEach(function (g) {
+  (MJ.config.vignetteTemplates[g] || []).forEach(function (t) { if (t.key) tplKeys.push(t.key); });
+});
+MJ.i18n.setLang('en');
+var tplFail = 0;
+tplKeys.forEach(function (key) {
+  var v = MJ.t(key, null, SENTINEL);
+  if (v === SENTINEL || zh(v)) {
+    tplFail++;
+    console.log('FAIL 模板键 EN 缺失/回退中文: ' + key);
+  }
+});
+console.log('模板键扫描：' + tplKeys.length + ' 个键；EN缺失 ' + tplFail);
+
+var allFail = fail + emptyFail + sameFail + uiScanFail + uiScanCjk + rarityFail + tplFail;
 console.log('\n=== 合计 FAIL: ' + allFail + ' ===');
 process.exit(allFail ? 1 : 0);
