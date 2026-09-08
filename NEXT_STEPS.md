@@ -48,7 +48,7 @@
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [~] **剧情文案深化**（spec: docs/superpowers/specs/2026-09-08-narrative-deepening-design.md；分批实现）
   - [x] 批次1：两页海报(正面主视觉+独白 / 背面属性+关键抉择+尾声) + 16 尾声模板 + 6 独白扩写尾段（按元路线/属性/flag 出不同文案，MJ 风格）；npm test 全绿
-  - [ ] 批次2：时代切片（5 章增厚 + 6-8 文化节点变体 V_ERA_*）
+  - [x] 批次2：时代切片（6 章 flavor 增厚 + 8 个 V_ERA_* 变体：Motown/MTV/CD/WeAreTheWorld/互联网/9·11/Thriller25/流媒体）；npm test 全绿
   - [ ] 批次3：心理轴（5-6 童年闪回变体 + END_RECLUSE/TRAGIC 尾声联动）
   - [ ] 批次4：舆论链（V_RUMOR 扩展 + 5-6 新变体 + END_CONTROVERSIAL 尾声联动 + _audit_narrative 门禁）
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。

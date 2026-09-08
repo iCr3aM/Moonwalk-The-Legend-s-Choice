@@ -1971,6 +1971,113 @@ window.MJ = window.MJ || {};
       { label: T('event.V_HISTORY_MOMENT.opt2.label', null, 'C：低调收束锋芒'), hint: T('event.V_HISTORY_MOMENT.opt2.hint', null, '退后半步，留一份清静（隐士+1，压力-3）'), effects: { recluse: 1, stress: -3 }, next: '__RETURN__' }
     ]
   };
+  E.V_ERA_MOTOWN = {
+    id: 'V_ERA_MOTOWN', variant: true, window: [1968, 1969], weight: 20,
+    title: T('event.V_ERA_MOTOWN.title', null, 'Motown 的流水线'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_MOTOWN.text', null, '1968 年，你们挤进底特律 Hitsville U.S.A. 的那间小录音棚。贝里·戈迪的流水线把黑人音乐打磨成流行爆款——你在这里学会了：旋律要像糖，节奏要像锤。少年的嗓音，第一次被工业重新包装。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_ERA_MOTOWN.branch0.text', null, '你隐约懂得，厂牌背后是一盘生意，远比一首歌值钱。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_MOTOWN.opt0.label', null, 'A：把训练当养分'), hint: T('event.V_ERA_MOTOWN.opt0.hint', null, '少年淬炼成器（艺术+6，声誉+4）'), effects: { art: 6, reputation: 4 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_MOTOWN.opt1.label', null, 'B：守住本真嗓音'), hint: T('event.V_ERA_MOTOWN.opt1.hint', null, '不忘为何而唱（艺术+5，家庭+3）'), effects: { art: 5, family: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_MTV = {
+    id: 'V_ERA_MTV', variant: true, window: [1981, 1983], weight: 22,
+    cond: function (s) { return (s.attributes.art || 0) >= 60; },
+    title: T('event.V_ERA_MTV.title', null, 'MTV 与视觉时代'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_MTV.text', null, '1981 年 8 月，MTV 开播，镜头成了新的舞台。你的《Billie Jean》在电视上循环，全球第一次意识到：流行歌不止要听，还要看。你开始相信，一支舞步能抵过千言万语。'), s, [
+        { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.V_ERA_MTV.branch0.text', null, '镜头越亮，你越想在散场后躲回那道缝。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_MTV.opt0.label', null, 'A：拥抱影像叙事'), hint: T('event.V_ERA_MTV.opt0.hint', null, '把 MV 当电影拍（艺术+6，声誉+5）'), effects: { art: 6, reputation: 5 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_MTV.opt1.label', null, 'B：保留神秘感'), hint: T('event.V_ERA_MTV.opt1.hint', null, '留白也是功力（声誉+3，隐士+1）'), effects: { reputation: 3, recluse: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_CD = {
+    id: 'V_ERA_CD', variant: true, window: [1985, 1988], weight: 20,
+    cond: function (s) { return (s.attributes.wealth || 0) >= 40; },
+    title: T('event.V_ERA_CD.title', null, 'CD 盛世'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_CD.text', null, '1980 年代中期，CD 把黑胶挤下货架。一张碟能装下的不只是歌，还有整张概念专辑的野心。《Bad》世界巡演的票房，第一次让你看见：音乐可以是全球化的硬通货。'), s, [
+        { cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: T('event.V_ERA_CD.branch0.text', null, '你盘算着版权与再版，唱片公司的账本比乐谱更厚。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_CD.opt0.label', null, 'A：押注专辑概念'), hint: T('event.V_ERA_CD.opt0.hint', null, '概念先行（艺术+5，声誉+5）'), effects: { art: 5, reputation: 5 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_CD.opt1.label', null, 'B：扩张巡演版图'), hint: T('event.V_ERA_CD.opt1.hint', null, '把舞台铺向世界（财富+6，声誉+3）'), effects: { wealth: 6, reputation: 3 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_WEARETHEWORLD = {
+    id: 'V_ERA_WEARETHEWORLD', variant: true, window: [1985, 1986], weight: 18,
+    title: T('event.V_ERA_WEARETHEWORLD.title', null, 'We Are The World'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_WEARETHEWORLD.text', null, '1985 年，你与一众巨星挤进录音棚，为一夜之间饥荒的非洲录下《We Are The World》。你写下那句 "We are the world"，相信歌声能替不会说话的人开口。'), s, [
+        { cond: function (s) { return (s.meta.philanthropist || 0) >= 1; }, text: T('event.V_ERA_WEARETHEWORLD.branch0.text', null, '你早把慈善写进本能，这一夜只是把它唱给了全世界。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_WEARETHEWORLD.opt0.label', null, 'A：全力投入义唱'), hint: T('event.V_ERA_WEARETHEWORLD.opt0.hint', null, '为非洲发声（声誉+6，慈善+1）'), effects: { reputation: 6, philanthropist: 1 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_WEARETHEWORLD.opt1.label', null, 'B：低调不留名'), hint: T('event.V_ERA_WEARETHEWORLD.opt1.hint', null, '善行不必喧哗（慈善+1，隐士+1）'), effects: { philanthropist: 1, recluse: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_INTERNET = {
+    id: 'V_ERA_INTERNET', variant: true, window: [1994, 1997], weight: 18,
+    title: T('event.V_ERA_INTERNET.title', null, '互联网兴起'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_INTERNET.text', null, '1990 年代中期，网页与聊天室冒头。你的名字第一次不再经由报纸，而是由无数陌生人在屏幕上转发、拼接、审判。世界变小了，谣言却变快了。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 70; }, text: T('event.V_ERA_INTERNET.branch0.text', null, '你早已习惯被围观，可这片新大陆把围观变成了二十四小时的开庭。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_INTERNET.opt0.label', null, 'A：建官网自己发声'), hint: T('event.V_ERA_INTERNET.opt0.hint', null, '把话筒握回手里（声誉+4，艺术+2）'), effects: { reputation: 4, art: 2 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_INTERNET.opt1.label', null, 'B：冷眼旁观浪潮'), hint: T('event.V_ERA_INTERNET.opt1.hint', null, '退后半步留清静（隐士+1，压力-2）'), effects: { recluse: 1, stress: -2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_911 = {
+    id: 'V_ERA_911', variant: true, window: [2001, 2002], weight: 20,
+    title: T('event.V_ERA_911.title', null, '9·11 之后'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_911.text', null, '2001 年秋，双塔倾塌。你原定的三十周年庆典让位于义演，你站上万众一心的舞台，把个人的加冕唱成众人的疗愈。那一年，音乐第一次轻于悲伤，却重过一切。'), s, [
+        { cond: function (s) { return (s.meta.philanthropist || 0) >= 1; }, text: T('event.V_ERA_911.branch0.text', null, '你想起那些被你抱起的孩子——此刻整座城市都是需要被抱起的孩子。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_911.opt0.label', null, 'A：全身心投入义演'), hint: T('event.V_ERA_911.opt0.hint', null, '为众人疗愈（声誉+6，慈善+1，压力-2）'), effects: { reputation: 6, philanthropist: 1, stress: -2 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_911.opt1.label', null, 'B：在静默中悼念'), hint: T('event.V_ERA_911.opt1.hint', null, '把悲伤留给舞步（艺术+3，隐士+1）'), effects: { art: 3, recluse: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_THRILLER25 = {
+    id: 'V_ERA_THRILLER25', variant: true, window: [2007, 2008], weight: 18,
+    cond: function (s) { return (s.attributes.art || 0) >= 60; },
+    title: T('event.V_ERA_THRILLER25.title', null, 'Thriller 25'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_THRILLER25.text', null, '2007 年，《Thriller》迎来二十五岁生日。当年那张封面重新被摆上货架，新一代乐迷跟着僵尸舞步学起月球漫步。你忽然明白，经典不是终点，是会自己长出年轮的树。'), s, [
+        { cond: function (s) { return !!s.flags.thriller25; }, text: T('event.V_ERA_THRILLER25.branch0.text', null, '你亲手为它续过一程，如今它又替你开了新的花。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_THRILLER25.opt0.label', null, 'A：盛大纪念巡礼'), hint: T('event.V_ERA_THRILLER25.opt0.hint', null, '与一代人重逢（声誉+5，艺术+3）'), effects: { reputation: 5, art: 3 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_THRILLER25.opt1.label', null, 'B：把舞台交给新人'), hint: T('event.V_ERA_THRILLER25.opt1.hint', null, '薪火相传（艺术+4，声誉+2）'), effects: { art: 4, reputation: 2 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_ERA_STREAMING = {
+    id: 'V_ERA_STREAMING', variant: true, window: [2008, 2009], weight: 16,
+    title: T('event.V_ERA_STREAMING.title', null, '流媒体与前夜'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_ERA_STREAMING.text', null, '2000 年代末，歌曲开始被拆成单曲、被算法推送。你筹备的《This Is It》本是一场谢幕预演，却成了命运写错的注脚——聚光灯之外，时代已经换了一种方式听你。'), s, [
+        { cond: function (s) { return (s.attributes.health || 0) >= 75; }, text: T('event.V_ERA_STREAMING.branch0.text', null, '若身体还撑得住，这股浪潮或许会载着你走得更远。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_ERA_STREAMING.opt0.label', null, 'A：拥抱新发行方式'), hint: T('event.V_ERA_STREAMING.opt0.hint', null, '顺势而为（艺术+3，财富+4）'), effects: { art: 3, wealth: 4 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_STREAMING.opt1.label', null, 'B：守住专辑的庄重'), hint: T('event.V_ERA_STREAMING.opt1.hint', null, '不随波逐流（艺术+4，声誉+2）'), effects: { art: 4, reputation: 2 }, next: '__RETURN__' }
+    ]
+  };
   E.V_SECRET_WEDDING = {
     id: 'V_SECRET_WEDDING', variant: true, window: [1994, 1996], weight: 22,
     cond: function (s) { return s.flags.marriedLisa === true; },
