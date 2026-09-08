@@ -2311,7 +2311,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: T('event.V_LEG_HEAL.opt0.label', null, 'A：大幅扩张慈善版图'), hint: T('event.V_LEG_HEAL.opt0.hint', null, '善意铺开（慈善+3，声誉+8，财富-10）'), effects: { phil: 3, reputation: 8, wealth: -10 }, flags: { healWorld2: true }, next: '__RETURN__' },
-      { label: T('event.V_LEG_HEAL.opt1.label', null, 'B：低调行善'), hint: T('event.V_LEG_HEAL.opt1.hint', null, '把温暖留给具体的孩子（慈善+2，家庭+3）'), effects: { phil: 2, family: 3 }, next: '__RETURN__' }
+      { label: T('event.V_LEG_HEAL.opt1.label', null, 'B：低调行善'), hint: T('event.V_LEG_HEAL.opt1.hint', null, '把温暖留给具体的孩子（家庭+3）'), effects: { family: 3 }, next: '__RETURN__' }
     ]
   };
   E.V_LEG_REUNION = {
@@ -2447,7 +2447,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: T('event.V_BIO_911.opt0.label', null, 'A：为陌生人唱一首'), hint: T('event.V_BIO_911.opt0.hint', null, '把善意唱出去（慈善+2，声誉+6，家庭+3）'), effects: { phil: 2, reputation: 6, family: 3 }, next: '__RETURN__' },
-      { label: T('event.V_BIO_911.opt1.label', null, 'B：默默捐款，不露面'), hint: T('event.V_BIO_911.opt1.hint', null, '安静行善（慈善+1，财富-10）'), effects: { phil: 1, wealth: -10 }, next: '__RETURN__' }
+      { label: T('event.V_BIO_911.opt1.label', null, 'B：默默捐款，不露面'), hint: T('event.V_BIO_911.opt1.hint', null, '安静行善（财富-10）'), effects: { wealth: -10 }, next: '__RETURN__' }
     ]
   };
   E.V_BIO_FREDDIE = {
@@ -2529,7 +2529,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: T('event.V_CHILDHOSP.opt0.label', null, 'A：斥资筹建'), hint: T('event.V_CHILDHOSP.opt0.hint', null, '把善意落成建筑（慈善+1，家庭+5，声誉+5）'), effects: { family: 5, reputation: 5, phil: 1 }, flags: { dream_childhosp: true }, next: '__RETURN__' },
-      { label: T('event.V_CHILDHOSP.opt1.label', null, 'B：只做定期探访'), hint: T('event.V_CHILDHOSP.opt1.hint', null, '量力而行（慈善+1）'), effects: { phil: 1 }, next: '__RETURN__' }
+      { label: T('event.V_CHILDHOSP.opt1.label', null, 'B：只做定期探访'), hint: T('event.V_CHILDHOSP.opt1.hint', null, '量力而行（家庭+3）'), effects: { family: 3 }, next: '__RETURN__' }
     ]
   };
   E.V_THISISIT_DONE = {
@@ -2916,7 +2916,7 @@ window.MJ = window.MJ || {};
     },
     options: [
       { label: T('event.V_PEACE_PATH.opt0.label', null, 'A：把慈善当作一生的事业重心'), hint: T('event.V_PEACE_PATH.opt0.hint', null, '以公益为人生主轴（慈善+8）'), effects: { phil: 8 }, flags: { altPeace: true }, next: '__RETURN__' },
-      { label: T('event.V_PEACE_PATH.opt1.label', null, 'B：平衡公益与舞台'), hint: T('event.V_PEACE_PATH.opt1.hint', null, '兼顾慈善与事业（慈善+4）'), effects: { phil: 4 }, next: '__RETURN__' }
+      { label: T('event.V_PEACE_PATH.opt1.label', null, 'B：平衡公益与舞台'), hint: T('event.V_PEACE_PATH.opt1.hint', null, '兼顾慈善与事业（艺术+3，声誉+2）'), effects: { art: 3, reputation: 2 }, next: '__RETURN__' }
     ]
   };
   E.V_QUIET_PATH = {

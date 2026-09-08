@@ -12,7 +12,7 @@ window.MJ = window.MJ || {};
     health: 70,
     reputation: 50,
     wealth: 13,
-    family: 60,
+    family: 40,
     art: 30,
     stress: 20,
     media: 60,

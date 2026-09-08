@@ -36,7 +36,7 @@ var ucases = [
   ['END_RECLUSE_SERENE', { meta: { recluse: 3 }, attr: { health: 60, loneliness: 10 } }],
   ['END_INNOVATOR', { meta: { mogul: 1 }, attr: { art: 85 }, flags: { cp_innovation: 85 } }],
   ['END_MENTOR', { meta: { collab: 2 }, attr: { family: 55, art: 65 } }],
-  ['END_STATESMAN', { meta: { phil: 2 }, attr: { reputation: 75, family: 60 } }],
+  ['END_STATESMAN', { meta: { phil: 3 }, attr: { reputation: 75, family: 60 } }],
   ['END_ALT_STAY_MOTOWN', { timeline: { '1975': 'motown' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
   ['END_ALT_NO_QJ', { timeline: { '1979': 'solo_prod' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
   ['END_ALT_HEALED', { timeline: { '1984': 'safe' }, attr: { health: 10, reputation: 10, art: 10, family: 10, wealth: 10 } }],
