@@ -181,9 +181,8 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 .ending h2 { color: var(--gold); margin: 8px 0 4px; letter-spacing: 2px; font-size: var(--fs-display); }
 .ending .desc { color: var(--ink); line-height: 1.9; white-space: pre-line; text-align: left; max-width: 720px; margin: 0 auto; background: rgba(0,0,0,0.25); border:1px solid var(--line); border-radius: var(--radius-sm); padding:16px; }
 .ending .mono { color: var(--ink); line-height: 2.0; white-space: pre-line; text-align: left; max-width: 720px; margin: 14px auto 0; padding: 18px 20px; background: linear-gradient(180deg, rgba(255,215,0,0.07), rgba(0,0,0,0.28)); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius-sm); font-style: italic; letter-spacing: 0.3px; }
-.epilogue { margin: 0 0 14px; padding: 14px 18px; background: rgba(255,215,0,0.06); border: 1px dashed var(--gold); border-radius: var(--radius-sm); color: var(--ink); font-size: var(--fs-md); }
-.epilogue .ep-tag-row { margin-bottom: 8px; }
-.epilogue .ep-text { line-height: 1.9; letter-spacing: .3px; }
+.epilogue { margin: 0 0 14px; padding: 14px 18px; background: rgba(255,215,0,0.06); border: 1px dashed var(--gold); border-radius: var(--radius-sm); color: var(--ink); line-height: 1.9; font-size: var(--fs-md); }
+.epilogue .e-tag, .era-block .e-tag { margin-right: 8px; }
 
 .poster-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
 

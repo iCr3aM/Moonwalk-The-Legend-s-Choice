@@ -1498,7 +1498,7 @@ window.MJ = window.MJ || {};
     var opts = loc ? loc.options : MJ.engine.optionsOf(ev);
     var epilogueHtml = '';
     if (MJ.engine.pendingEpilogue) {
-      epilogueHtml = '<div class="epilogue"><div class="ep-tag-row"><span class="e-tag">' + T('ui.epilogueTag', null, '抉择的回响') + '</span></div><div class="ep-text">' + escapeHtml(MJ.engine.pendingEpilogue) + '</div></div>';
+      epilogueHtml = '<div class="epilogue"><span class="e-tag">' + T('ui.epilogueTag', null, '抉择的回响') + '</span>' + escapeHtml(MJ.engine.pendingEpilogue) + '</div>';
       MJ.engine.pendingEpilogue = null;
     }
     var body =
