@@ -173,10 +173,13 @@ window.MJ = window.MJ || {};
           co = f.cp_collab || 0, st = f.cp_stagecraft || 0;
       var momentum = ((a.reputation || 0) + (a.art || 0)) / 2;
       var q = 0.22 * v + 0.18 * c + 0.20 * i + 0.12 * co + 0.18 * st + 0.10 * momentum;
-      q = clamp(q + (BIAS[key] || 0), 0, 100);
+      // §17.4 预算方差：激进预算 +8（高风险高回报）/ 保守预算 -8（落袋为安）
+      var budAdj = f.cp_budget === 'aggressive' ? 8 : (f.cp_budget === 'safe' ? -8 : 0);
+      q = clamp(q + (BIAS[key] || 0) + budAdj, 0, 100);
       var eq = grammyEmergent(q);
       var floor = GRAMMY_FLOOR[key] || 0;
       var wins = Math.min(GRAMMY_CAP, floor + eq); // 现实保底 + 选择加成，钳顶 20
+      if (f.cp_budget === 'aggressive' && wins >= 5) state.flags.highStakesWin = true; // ACH_HIGH_STAKES 豪赌成真
       var fk = 'grammy_' + key;
       var done = '_gresolved_' + key;
       if (state.flags[done]) return state.flags[fk]; // 幂等：重载后续玩不重复累加

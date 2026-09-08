@@ -356,6 +356,8 @@ window.MJ = window.MJ || {};
     // —— §17.14 格莱美涌现联动验证成就（对齐 GDD §17.14.7）——
     { id: 'ACH_GRAMMY_SWEEP', name: '格莱美大满贯', icon: '🏆', rarity: 'epic', desc: '从《Off The Wall》到《Invincible》，你让每一座奖杯都写上了自己的名字。',
       check: function (s) { return ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].every(function (k) { return (s.flags['grammy_' + k] || 0) >= 1; }); } },
+    { id: 'ACH_HIGH_STAKES', name: '豪赌成真', icon: '🎲', rarity: 'epic', desc: '以激进预算企划专辑，仍单届横扫 5 座以上格莱美。',
+      check: function (s) { return s.flags.highStakesWin === true; } },
     { id: 'ACH_GRAMMY_LEGEND', name: '格莱美传奇', icon: '🎖️', rarity: 'legendary', desc: '格莱美史上的奇观：你把自己活成了纪录本身。',
       check: function (s) { return (s.meta.grammyWins || 0) >= 18 || ['otw', 'thriller', 'bad', 'dangerous', 'history', 'invincible'].some(function (k) { return (s.flags['grammy_' + k] || 0) >= 6; }); } },
     // —— §17.13.3 未竟梦想成就（对齐 GDD §17.13.3）——

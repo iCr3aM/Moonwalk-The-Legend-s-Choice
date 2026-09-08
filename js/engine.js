@@ -287,6 +287,7 @@ window.MJ = window.MJ || {};
     // 修复旧版 break 首个命中导致的「迭代序挤占」：使 weight 真正决定各变体触发率，而非被排在前面的候选霸占。
     pickVariant: function (year) {
       var evs = MJ.EVENTS, pool = [];
+      var _style = (MJ.decisionStyle && this.state) ? MJ.decisionStyle(this.state).s : 'explorer';
       for (var id in evs) {
         if (!evs.hasOwnProperty(id)) continue;
         var v = evs[id];
@@ -294,7 +295,7 @@ window.MJ = window.MJ || {};
         if (year < v.window[0] || year > v.window[1]) continue;
         if (v.cond && !v.cond(this.state)) continue; // 变体亦可带条件门控
         var w = (typeof v.weight === 'number' ? v.weight : 1);
-        if (Math.random() * 100 < w) pool.push({ id: id, weight: w }); // 独立掷骰：weight 决定单节点触发率
+        if (Math.random() * 100 < w) pool.push({ id: id, weight: w * styleVariantWeight(_style, id) }); // 独立掷骰保持原触发率；风格加权仅作用于命中后的选择偏好（不挤占他类变体）
       }
       if (!pool.length) return null;
       // 在愿意触发的候选中按 weight 加权随机选 1 个
@@ -851,6 +852,22 @@ window.MJ = window.MJ || {};
     for (var i = 0; i < map.length; i++) { try { if (map[i].t()) return map[i]; } catch (e) {} }
     return { s: 'explorer', zh: '随性探索', en: 'Free Explorer' };
   };
+  // §17.4 决策风格 → 变体权重修正（批次2：接入 pickVariant，让长期倾向改变游玩纹理）
+  var STYLE_VARIANT_WEIGHTS = {
+    innovator: { 'V_ERA_': 1.3, 'V_BIO_': 1.3, 'V_FLASHBACK_': 0.8 },
+    recluse:   { 'V_FLASHBACK_': 1.3, 'V_SCARE': 1.3, 'V_COLLAB_': 0.8 },
+    mogul:     { 'V_COLLAB_': 1.25, 'V_OFFER': 1.25 },
+    phil:      { 'V_FAMILY': 1.3, 'V_REL_KIDS': 1.3 },
+    craftsman: { 'V_TIDBIT_': 1.2 }
+  };
+  function styleVariantWeight(style, vid) {
+    var m = STYLE_VARIANT_WEIGHTS[style];
+    if (!m) return 1;
+    var w = 1;
+    for (var pre in m) { if (m.hasOwnProperty(pre) && vid.indexOf(pre) === 0) w = m[pre]; }
+    return w;
+  }
+  MJ.styleVariantWeight = styleVariantWeight;
 
 
 })();

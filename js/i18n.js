@@ -517,7 +517,9 @@ window.MJ = window.MJ || {};
         // ---------- §17.13 / §17.14 新增成就（格莱美涌现 + 未竟梦想） ----------
         'ach.ACH_GRAMMY_SWEEP.name': 'Grammy Sweep',
         'ach.ACH_GRAMMY_SWEEP.desc': 'From Off The Wall to Invincible, you wrote your own name on every trophy.',
+        'ach.ACH_HIGH_STAKES.name': 'High Stakes Paid Off',
         'ach.ACH_GRAMMY_LEGEND.name': 'Grammy Legend',
+        'ach.ACH_HIGH_STAKES.desc': 'You planned an album on an aggressive budget - and swept five or more Grammys in a single night.',
         'ach.ACH_GRAMMY_LEGEND.desc': 'A marvel in Grammy history: you wrote yourself into the record.',
         // ---------- §17.14 格莱美揭晓面板（具体奖项 + 现实对照） ----------
         'ui.grammyAwards': 'Grammy Awards This Year',

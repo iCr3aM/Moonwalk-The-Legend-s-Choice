@@ -368,9 +368,9 @@ window.MJ = window.MJ || {};
       return T('event.2_3.ret0.text', null, '组合专辑反响不俗，你在团体的和声里稳步成长，掌声虽不独属于你，却也踏实。');
     },
     options: [
-      { label: T('event.2_3.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.2_3.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '2_4' },
-      { label: T('event.2_3.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.2_3.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '2_4' },
-      { label: T('event.2_3.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.2_3.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '2_4' }
+      { label: T('event.2_3.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.2_3.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+15，声誉+25，压力+18；企划·视野/创新极高；预算·激进）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 15, reputation: 25, stress: 18 } : { art: 10, wealth: -5, reputation: 5, stress: 8 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, cp_budget: 'aggressive' }, next: '2_4' },
+      { label: T('event.2_3.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.2_3.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高；预算·稳健）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, cp_budget: 'steady' }, next: '2_4' },
+      { label: T('event.2_3.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.2_3.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+35，声誉+25，压力+7；企划·创新极高/制作偏低；预算·保守）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 35, reputation: 25, stress: 7 } : { art: 10, wealth: 15, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, cp_budget: 'safe' }, next: '2_4' }
     ]
   };
 
@@ -464,9 +464,9 @@ window.MJ = window.MJ || {};
       return T('event.3_1.ret0.text', null, '你在团体中参与了这张里程碑专辑的创作，历史的页码里，有你写下的一行。');
     },
     options: [
-      { label: T('event.3_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.3_1.opt0.hint', null, '艺术与野心拉满，预算承压（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '3_1b' },
-      { label: T('event.3_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.3_1.opt1.hint', null, '制作精良、人脉加成，野心稍收（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '3_1b' },
-      { label: T('event.3_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.3_1.opt2.hint', null, '创新拉满、制作克制，赌一把（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '3_1b' }
+      { label: T('event.3_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.3_1.opt0.hint', null, '艺术与野心拉满，预算承压（艺术+30，财富+15，声誉+25，压力+18；企划·视野/创新极高；预算·激进）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 15, reputation: 25, stress: 18 } : { art: 10, wealth: -5, reputation: 5, stress: 8 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, cp_budget: 'aggressive' }, next: '3_1b' },
+      { label: T('event.3_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.3_1.opt1.hint', null, '制作精良、人脉加成，野心稍收（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高；预算·稳健）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, cp_budget: 'steady' }, next: '3_1b' },
+      { label: T('event.3_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.3_1.opt2.hint', null, '创新拉满、制作克制，赌一把（艺术+30，财富+35，声誉+25，压力+7；企划·创新极高/制作偏低；预算·保守）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 35, reputation: 25, stress: 7 } : { art: 10, wealth: 15, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, cp_budget: 'safe' }, next: '3_1b' }
     ]
   };
 
@@ -655,9 +655,9 @@ window.MJ = window.MJ || {};
       return T('event.4_2.ret0.text', null, '组合新专辑延续热度，和声里的你，仍在稳步向前。');
     },
     options: [
-      { label: T('event.4_2.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.4_2.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '4_2a' },
-      { label: T('event.4_2.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.4_2.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '4_2a' },
-      { label: T('event.4_2.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.4_2.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '4_2a' }
+      { label: T('event.4_2.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.4_2.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+15，声誉+25，压力+18；企划·视野/创新极高；预算·激进）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 15, reputation: 25, stress: 18 } : { art: 10, wealth: -5, reputation: 5, stress: 8 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, cp_budget: 'aggressive' }, next: '4_2a' },
+      { label: T('event.4_2.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.4_2.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高；预算·稳健）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, cp_budget: 'steady' }, next: '4_2a' },
+      { label: T('event.4_2.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.4_2.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+35，声誉+25，压力+7；企划·创新极高/制作偏低；预算·保守）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 35, reputation: 25, stress: 7 } : { art: 10, wealth: 15, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, cp_budget: 'safe' }, next: '4_2a' }
     ]
   };
 
@@ -744,9 +744,9 @@ window.MJ = window.MJ || {};
       return T('event.5_1.ret0.text', null, '组合新专辑稳步前行，和声依旧稳当。');
     },
     options: [
-      { label: T('event.5_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.5_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '5_1b' },
-      { label: T('event.5_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.5_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '5_1b' },
-      { label: T('event.5_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.5_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '5_1b' }
+      { label: T('event.5_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.5_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+15，声誉+25，压力+18；企划·视野/创新极高；预算·激进）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 15, reputation: 25, stress: 18 } : { art: 10, wealth: -5, reputation: 5, stress: 8 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, cp_budget: 'aggressive' }, next: '5_1b' },
+      { label: T('event.5_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.5_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高；预算·稳健）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, cp_budget: 'steady' }, next: '5_1b' },
+      { label: T('event.5_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.5_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+35，声誉+25，压力+7；企划·创新极高/制作偏低；预算·保守）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 35, reputation: 25, stress: 7 } : { art: 10, wealth: 15, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, cp_budget: 'safe' }, next: '5_1b' }
     ]
   };
 
@@ -886,9 +886,9 @@ window.MJ = window.MJ || {};
       return T('event.6_1.ret0.text', null, '组合新作延续旅程，和声里依旧有你。');
     },
     options: [
-      { label: T('event.6_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.6_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+30，声誉+25，压力+10；企划·视野/创新极高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70 }, next: '6_1b' },
-      { label: T('event.6_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.6_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65 }, next: '6_1b' },
-      { label: T('event.6_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.6_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+30，声誉+25，压力+10；企划·创新极高/制作偏低）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75 }, next: '6_1b' }
+      { label: T('event.6_1.opt0.label', null, 'A：概念史诗化，孤注一掷'), hint: T('event.6_1.opt0.hint', null, '艺术与野心拉满（艺术+30，财富+15，声誉+25，压力+18；企划·视野/创新极高；预算·激进）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 15, reputation: 25, stress: 18 } : { art: 10, wealth: -5, reputation: 5, stress: 8 }; }, flags: { cp_vision: 90, cp_innovation: 85, cp_craft: 70, cp_budget: 'aggressive' }, next: '6_1b' },
+      { label: T('event.6_1.opt1.label', null, 'B：商业稳赢，精准定位'), hint: T('event.6_1.opt1.hint', null, '制作精良、人脉加成（艺术+30，财富+30，声誉+25，压力+10；企划·制作/合作偏高；预算·稳健）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 30, reputation: 25, stress: 10 } : { art: 10, wealth: 10, reputation: 5 }; }, flags: { cp_craft: 85, cp_collab: 80, cp_vision: 65, cp_budget: 'steady' }, next: '6_1b' },
+      { label: T('event.6_1.opt2.label', null, 'C：极简实验，以小搏大'), hint: T('event.6_1.opt2.hint', null, '创新拉满、制作克制（艺术+30，财富+35，声誉+25，压力+7；企划·创新极高/制作偏低；预算·保守）'), effects: function (s) { return s.flags.isSolo ? { art: 30, wealth: 35, reputation: 25, stress: 7 } : { art: 10, wealth: 15, reputation: 5 }; }, flags: { cp_innovation: 95, cp_craft: 45, cp_vision: 75, cp_budget: 'safe' }, next: '6_1b' }
     ]
   };
 
@@ -1078,9 +1078,9 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，压力+10；企划·视野/创新极高）'), effects: { art: 12, reputation: 10, stress: 10 }, flags: { anniv2001: true, cp_vision: 90, cp_innovation: 75, cp_craft: 70 }, next: '6_3b_g' },
-      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3；企划·制作/合作偏低）'), effects: { reputation: 3 }, flags: { cp_craft: 60, cp_collab: 55 }, next: '6_3b_g' },
-      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5；企划·合作极高）'), effects: { art: 8, family: 5 }, flags: { collab: true, cp_collab: 85, cp_craft: 65 }, next: '6_3b_g' }
+      { label: T('event.6_3b.opt0.label', null, 'A：办一场盛大纪念'), hint: T('event.6_3b.opt0.hint', null, '荣耀加身，劳顿难免（艺术+12，声誉+10，财富-15，压力+18；企划·视野/创新极高；预算·激进）'), effects: { art: 12, reputation: 10, wealth: -15, stress: 18 }, flags: { anniv2001: true, cp_vision: 90, cp_innovation: 75, cp_craft: 70, cp_budget: 'aggressive' }, next: '6_3b_g' },
+      { label: T('event.6_3b.opt1.label', null, 'B：低调处理'), hint: T('event.6_3b.opt1.hint', null, '不张扬地过（声誉+3，财富+5，压力-3；企划·制作/合作偏低；预算·保守）'), effects: { reputation: 3, wealth: 5, stress: -3 }, flags: { cp_craft: 60, cp_collab: 55, cp_budget: 'safe' }, next: '6_3b_g' },
+      { label: T('event.6_3b.opt2.label', null, 'C：提携后辈'), hint: T('event.6_3b.opt2.hint', null, '薪火相传，暖意融融（艺术+8，家庭+5；企划·合作极高；预算·稳健）'), effects: { art: 8, family: 5 }, flags: { collab: true, cp_collab: 85, cp_craft: 65, cp_budget: 'steady' }, next: '6_3b_g' }
     ]
   };
 
