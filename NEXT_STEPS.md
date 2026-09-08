@@ -46,11 +46,11 @@
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
 - [x] **深度游玩（C：关系网深化 ✅ / 创作企划器扩展）**：关系网深化已实现——4 新 rel key（diana/frank/john/elizabeth）+ 4 关系隐藏变体（V_REL_DIANA/FRANK/JOHN/ELIZABETH，cond 门控 + __RETURN__）+ 2_7/4_3b tipping 文案 + 新建 `collaborators/` 索引模块（关系总览弹窗，含实时好感值与史料出处）+ 结局页「命运回响」面板（复用现有结局，叠加关系注解）。mjwiki 6 合作者页已补（双源保留，按 §15.1 多源考证）。创作企划器扩展仍待。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
-- [~] **剧情文案深化**（spec: docs/superpowers/specs/2026-09-08-narrative-deepening-design.md；分批实现）
+- [x] **剧情文案深化**（spec: docs/superpowers/specs/2026-09-08-narrative-deepening-design.md；批次1-4 全部落地：两页海报+独白扩写、时代切片、心理轴、舆论链；npm test 全绿）
   - [x] 批次1：两页海报(正面主视觉+独白 / 背面属性+关键抉择+尾声) + 16 尾声模板 + 6 独白扩写尾段（按元路线/属性/flag 出不同文案，MJ 风格）；npm test 全绿
   - [x] 批次2：时代切片（6 章 flavor 增厚 + 8 个 V_ERA_* 变体：Motown/MTV/CD/WeAreTheWorld/互联网/9·11/Thriller25/流媒体）；npm test 全绿
   - [x] 批次3：心理轴（5 个童年闪回变体 V_FLASHBACK_* + END_RECLUSE/END_TRAGIC 尾声联动）；npm test 全绿
-  - [ ] 批次4：舆论链（V_RUMOR 扩展 + 5-6 新变体 + END_CONTROVERSIAL 尾声联动 + _audit_narrative 门禁）
+  - [x] 批次4：舆论链（V_RUMOR 两选项置 rumorStarted + V_RUMOR_V2/V3 强制连锁升级 + V_RUMOR_PERSIST 余波 + END_CONTROVERSIAL 联动尾声 controversialRumor/controversialClean + 新建 _audit_narrative 门禁断言独白/尾声/无死循环/END_CONTROVERSIAL 可达）；npm test 全绿
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。
 
 ---

@@ -127,7 +127,9 @@ window.MJ = window.MJ || {};
           lone: "You stand atop the mountain; the wind is loud, the side quiet. The heights are cold, yet only here do you hear the song you truly meant to sing.",
           generic: "Lights dim, the echo remains. However this life is written, you lived it once yourself—and that is enough.",
           recluseFlashback: "You built the heaviest wall for the child in yourself. The fears and longings no one caught, you finally moved into the silence of the estate—a recluse does not flee the crowd, but stays to finish, alone, the cry no one heard.",
-          tragicFlashback: "The curtain came early, yet the trembling boy from Gary never left the stage. Father's metronome, the smile that pleaded in the mirror, the forgotten birthday—you sang your childhood to the whole world all your life, yet never in time for yourself."
+          tragicFlashback: "The curtain came early, yet the trembling boy from Gary never left the stage. Father's metronome, the smile that pleaded in the mirror, the forgotten birthday—you sang your childhood to the whole world all your life, yet never in time for yourself.",
+          controversialRumor: "Public opinion was a blade you both wielded and were struck by. When rumor drowned the work, you saw the other face of fame—the same hand that lifted you to the clouds could press you into the mud.",
+          controversialClean: "The reversal came late, but it came whole. When the truth surfaced, the once-noisy headlines fell quiet—with one unedited tape you gently snapped the pen that had written you wrong."
         },
         ext: {
           artist: "You always said genius is just someone willing to fall for a melody again and again. The studio light went out and on; your greed for perfection never meant to quit.",

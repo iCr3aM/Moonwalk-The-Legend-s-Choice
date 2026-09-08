@@ -574,6 +574,8 @@ window.MJ = window.MJ || {};
   MJ.config.epilogueTailTemplates = [
     { key: 'tail.recluseFlashback', cond: function (s, id) { return id === 'END_RECLUSE' && ((s.flags.flashbackFather || s.flags.flashbackStage || s.flags.flashbackMirror || s.flags.flashbackBirthday) || (s.attributes.loneliness || 0) >= 40); }, text: '你把最厚的那堵墙，砌给了童年的自己。那些没人接住的恐惧与渴望，最终都被你搬进了庄园的静默里——隐士不是逃离人群，是把小时候无人听见的哭，留给自己慢慢听完。' },
     { key: 'tail.tragicFlashback', cond: function (s, id) { return id === 'END_TRAGIC' && ((s.flags.flashbackFather || s.flags.flashbackStage) || (s.attributes.loneliness || 0) >= 45); }, text: '谢幕来得早，可盖瑞那个发抖的小孩一直没下台。父亲的节拍器、镜中讨好的笑、被遗忘的生日——你用一生把童年唱给全世界，却始终没来得及唱给自己听。' },
+    { key: 'tail.controversialRumor', cond: function (s, id) { return id === 'END_CONTROVERSIAL' && (!!s.flags.rumorStarted || !!s.flags.rumorReversed); }, text: '舆论这把刀，你握过也挨过。当传闻盖过作品，你看清了名气的另一副面孔——它把你捧上云端的同一只手，也能把你按进泥里。' },
+    { key: 'tail.controversialClean', cond: function (s, id) { return id === 'END_CONTROVERSIAL' && !!s.flags.rumorReversed; }, text: '那场反转来得很迟，却很彻底。当真相浮出水面，曾经喧嚣的版面安静下来——你用一支未剪的录像，把写坏你的笔，轻轻折断了。' },
     { key: 'tail.artist', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'artist'; }, text: '幕落时你想起录音棚里那盏不灭的灯——你从不演唱歌曲，你让歌曲穿过你。霓虹会熄，节拍会旧，可被你吻过的旋律仍在世界的耳膜上跳动。' },
     { key: 'tail.phil', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'philanthropist'; }, text: '你记得那些被你抱起的孩子，比任何奖杯都重。他们说你心太软，可正是这份软，让“流行天王”四个字有了温度。' },
     { key: 'tail.mogul', cond: function (s) { return MJ.dominantMeta((s.meta || {})) === 'mogul'; }, text: '你签下的不只是版权，是一个时代的版图。有人笑你痴迷数字，你笑他们不懂——真正的不朽，要先被写进合同里。' },

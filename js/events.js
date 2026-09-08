@@ -1538,10 +1538,54 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_RUMOR.opt0.label', null, 'A：冷处理不理会'), hint: T('event.V_RUMOR.opt0.hint', null, '任其自生自灭，口碑微损（声誉-3）'), effects: { reputation: -3, media: -4 }, next: '__RETURN__' },
-      { label: T('event.V_RUMOR.opt1.label', null, 'B：主动出面澄清'), hint: T('event.V_RUMOR.opt1.hint', null, '以正视听，徒增疲惫（声誉+3，压力+5）'), effects: { reputation: 3, stress: 5, media: 4 }, next: '__RETURN__' }
+      { label: T('event.V_RUMOR.opt0.label', null, 'A：冷处理不理会'), hint: T('event.V_RUMOR.opt0.hint', null, '任其自生自灭，口碑微损（声誉-3）'), effects: { reputation: -3, media: -4 }, flags: { rumorStarted: true }, next: '__RETURN__' },
+      { label: T('event.V_RUMOR.opt1.label', null, 'B：主动出面澄清'), hint: T('event.V_RUMOR.opt1.hint', null, '以正视听，徒增疲惫（声誉+3，压力+5）'), effects: { reputation: 3, stress: 5, media: 4 }, flags: { rumorStarted: true }, next: '__RETURN__' }
     ]
   };
+  E.V_RUMOR_V2 = {
+    id: 'V_RUMOR_V2', variant: true, force: true, window: [1994, 2004], weight: 40,
+    cond: function (s) { return !!s.flags.rumorStarted; },
+    title: T('event.V_RUMOR_V2.title', null, '谣言升级'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_RUMOR_V2.text', null, '那则旧闻被翻出重炒，添油加醋成了“独家”。你站在镜子前，认不出版面上那个自己。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) <= 45; }, text: T('event.V_RUMOR_V2.branch0.text', null, '本就勉强站稳的口碑，被这一波又推远了一步。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_RUMOR_V2.opt0.label', null, 'A：强硬回击'), hint: T('event.V_RUMOR_V2.opt0.hint', null, '怒怼媒体，火上浇油（声誉-5，压力+8，媒体-6）'), effects: { reputation: -5, stress: 8, media: -6 }, next: '__RETURN__' },
+      { label: T('event.V_RUMOR_V2.opt1.label', null, 'B：沉默以对'), hint: T('event.V_RUMOR_V2.opt1.hint', null, '任其发酵，暗自消化（声誉-2，压力+5，隐士+1）'), effects: { reputation: -2, stress: 5, recluse: 1 }, next: '__RETURN__' }
+    ]
+  };
+  E.V_RUMOR_V3 = {
+    id: 'V_RUMOR_V3', variant: true, force: true, window: [1995, 2005], weight: 40,
+    cond: function (s) { return !!s.flags.rumorStarted; },
+    title: T('event.V_RUMOR_V3.title', null, '反转时刻'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_RUMOR_V3.text', null, '一封长文、一段未剪的录像，让真相浮出水面。舆论的风，第一次开始倒转。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 60; }, text: T('event.V_RUMOR_V3.branch0.text', null, '你积攒的善名，成了此刻最硬的盾。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_RUMOR_V3.opt0.label', null, 'A：趁势清算'), hint: T('event.V_RUMOR_V3.opt0.hint', null, '把旧账算清（声誉+5，压力-4）'), effects: { reputation: 5, stress: -4 }, next: '__RETURN__' },
+      { label: T('event.V_RUMOR_V3.opt1.label', null, 'B：淡然翻篇'), hint: T('event.V_RUMOR_V3.opt1.hint', null, '不争不辩（声誉+1，隐士+1）'), effects: { reputation: 1, recluse: 1 }, next: '__RETURN__' },
+      { label: T('event.V_RUMOR_V3.opt2.label', null, 'C：反转叙事'), hint: T('event.V_RUMOR_V3.opt2.hint', null, '亲手翻案（声誉+8，媒体+5，压力-6）'), effects: { reputation: 8, media: 5, stress: -6 }, flags: { rumorReversed: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_RUMOR_PERSIST = {
+    id: 'V_RUMOR_PERSIST', variant: true, window: [1994, 2005], weight: 14,
+    cond: function (s) { return !!s.flags.rumorStarted && !s.flags.rumorReversed; },
+    title: T('event.V_RUMOR_PERSIST.title', null, '余波未平'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_RUMOR_PERSIST.text', null, '谣言的余波像潮水，退了又涨。偶尔仍有小报翻旧账，提醒你这场仗没真正打完。'), s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: T('event.V_RUMOR_PERSIST.branch0.text', null, '你学会把杂音关在门外，可它总在某个深夜溜进来。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_RUMOR_PERSIST.opt0.label', null, 'A：公关团队出面'), hint: T('event.V_RUMOR_PERSIST.opt0.hint', null, '花钱消灾（财富-6，媒体+3，声誉+2）'), effects: { wealth: -6, media: 3, reputation: 2 }, next: '__RETURN__' },
+      { label: T('event.V_RUMOR_PERSIST.opt1.label', null, 'B：不予置评'), hint: T('event.V_RUMOR_PERSIST.opt1.hint', null, '冷处理（媒体-2，压力+3）'), effects: { media: -2, stress: 3 }, next: '__RETURN__' }
+    ]
+  };
+
   E.V_COLLAB = {
     id: 'V_COLLAB', variant: true, window: [1995, 2005], weight: 35,
     title: T('event.V_COLLAB.title', null, '后辈求合作'), kind: 'choice',
