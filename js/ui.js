@@ -1236,12 +1236,22 @@ window.MJ = window.MJ || {};
     ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — 2009', W / 2, 102);
-    ctx.fillStyle = G.base; ctx.font = '600 20px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(T('ui.posterBackHeader', null, '人 生 回 响'), W / 2, 142);
-    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '13px sans-serif';
-    ctx.fillText(T('ending.' + endingId + '.name', null, (MJ.config.endings[endingId] || {}).name || endingId), W / 2, 166);
+    // 主视觉与文案页完全同款（大号星徽 + 结局名 + 气质标签），保持两页视觉统一
+    var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
+    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
+    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    if (_rar === 'epic' || _rar === 'legendary') { ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2); ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
+    function starPath(cx, cy, sp, oR, iR) { var rot = -Math.PI / 2, step = Math.PI / sp; ctx.beginPath(); for (var si = 0; si < sp; si++) { ctx.lineTo(cx + Math.cos(rot) * oR, cy + Math.sin(rot) * oR); rot += step; ctx.lineTo(cx + Math.cos(rot) * iR, cy + Math.sin(rot) * iR); rot += step; } ctx.closePath(); }
+    starPath(W / 2, 178, 5, 40, 17);
+    if (_rar === 'legendary') { var _sg = ctx.createLinearGradient(W / 2 - 40, 138, W / 2 + 40, 218); _sg.addColorStop(0, G.legendHi); _sg.addColorStop(1, G.deep); ctx.fillStyle = _sg; } else { ctx.fillStyle = _rc; }
+    ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1; ctx.stroke();
+    var eName = T('ending.' + endingId + '.name', null, (MJ.config.endings[endingId] || {}).name || endingId);
+    var eTone = T('ending.' + endingId + '.tone', null, (MJ.config.endings[endingId] || {}).tone || '');
+    ctx.fillStyle = G.bright; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif'; ctx.fillText(eName, W / 2, 286);
+    ctx.fillStyle = G.deep; ctx.font = 'italic 19px "PingFang SC",sans-serif'; ctx.fillText(eTone, W / 2, 320);
     var dims = [['健康', 'health', a.health], ['声誉', 'reputation', a.reputation], ['艺术', 'art', a.art], ['财富', 'wealth', a.wealth], ['家庭', 'family', a.family], ['压力', 'stress', a.stress]].map(function (d) { return [T('attr.' + d[1], null, d[0]), d[1], d[2]]; });
-    var bx0 = 70, colW = (W - 140) / 2, top = 185, rowH = 44, labelW = 82, gutter = 96;
+    var bx0 = 70, colW = (W - 140) / 2, top = 352, rowH = 44, labelW = 82, gutter = 96;
     var barXoff = labelW, barW = colW - labelW - gutter - 10;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0, x = bx0 + col * colW, y = top + row * rowH, bgx = x + barXoff;
@@ -1274,13 +1284,13 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterAch', { n: thisRun.length }, '本局点亮 {n} 枚成就'), W / 2, y);
     y += 16;
-    var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
-    ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif'; ctx.textBaseline = 'middle';
-    var _cap = Math.min(thisRun.length, 33);
+    var perRow = 15, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
+    ctx.font = '26px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif'; ctx.textBaseline = 'middle';
+    var _cap = Math.min(thisRun.length, 30);
     if (thisRun.length) {
       for (var k = 0; k < _cap; k++) { var c = k % perRow, r = (k / perRow) | 0; ctx.fillStyle = G.bright; try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {} }
       y += (((_cap / perRow) | 0) + (_cap % perRow ? 1 : 0)) * 42 + 18;
-      if (thisRun.length > 33) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillText(T('ui.posterAchMore', { n: thisRun.length - 33 }, '＋{n} 枚未显示'), W / 2, y); y += 20; }
+      if (thisRun.length > 30) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillText(T('ui.posterAchMore', { n: thisRun.length - 30 }, '＋{n} 枚未显示'), W / 2, y); y += 20; }
     } else { ctx.fillStyle = G.dim2; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic'; ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40; }
     ctx.textBaseline = 'alphabetic';
     y += 6; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
