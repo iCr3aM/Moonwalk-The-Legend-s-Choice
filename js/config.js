@@ -487,9 +487,9 @@ window.MJ = window.MJ || {};
   // M1 关系/羁绊系统：具名 NPC 好感（-100..100，初值 0）
   C.relationsDefs = [
     { key: 'brothers', name: '兄长与兄弟', icon: '👬' },
-    { key: 'quincy', name: '昆西·琼斯', icon: '🎼' },
+    { key: 'quincy', name: 'Quincy Jones', icon: '🎼' },
     { key: 'lisa', name: 'Lisa Marie', icon: '💍' },
-    { key: 'debbie', name: '黛比·罗', icon: '💑' },
+    { key: 'debbie', name: 'Debbie Rowe', icon: '💑' },
     { key: 'kids', name: '孩子们', icon: '🧒' },
     { key: 'fans', name: '歌迷', icon: '🌟' },
     { key: 'janet', name: '珍妮·杰克逊', icon: '👧' },
@@ -497,10 +497,10 @@ window.MJ = window.MJ || {};
     { key: 'katherine', name: '母亲凯瑟琳', icon: '🙏' },
     { key: 'jermaine', name: '哥哥杰梅因', icon: '🎸' },
     { key: 'latoya', name: '姐姐拉托亚', icon: '👩' },
-    { key: 'diana', name: '戴安娜·罗斯', icon: '💃' },
-    { key: 'frank', name: '弗兰克·迪莱奥', icon: '🤵' },
-    { key: 'john', name: '约翰·布兰卡', icon: '⚖️' },
-    { key: 'elizabeth', name: '伊丽莎白·泰勒', icon: '💜' }
+    { key: 'diana', name: 'Diana Ross', icon: '💃' },
+    { key: 'frank', name: 'Frank DiLeo', icon: '🤵' },
+    { key: 'john', name: 'John Branca', icon: '⚖️' },
+    { key: 'elizabeth', name: 'Elizabeth Taylor', icon: '💜' }
   ];
   C.initialRelations = {};
   C.relationsDefs.forEach(function (r) { C.initialRelations[r.key] = 0; });

@@ -17,6 +17,7 @@ const jsFiles = [
   'js/state.js',
   'js/engine.js',
   'js/ui.js',
+  'js/collaborators.js',
 ];
 
 let js = '';

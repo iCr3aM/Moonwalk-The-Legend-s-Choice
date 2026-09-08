@@ -112,7 +112,7 @@ for (var i = 0; i < 400; i++) {
   check('组合线 quincy 未结识', !MJ.isCollaboratorMet(r.state, 'quincy'));
   var html = MJ.renderCollaboratorsOverview(r.state);
   check('组合线羁绊卡锁定态存在', html.indexOf('collab-card locked') >= 0);
-  check('组合线羁绊卡不泄露昆西姓名', html.indexOf('昆西·琼斯') < 0);
+  check('组合线羁绊卡不泄露昆西姓名', html.indexOf('Quincy Jones') < 0 && html.indexOf('昆西') < 0);
   if (r.problems.length) check('组合线运行时断言', false, r.problems[0]);
 }
 
@@ -130,7 +130,7 @@ for (var j = 0; j < 400; j++) {
   check('独立制作线 V_REL_QUINCY 零触发', !r2.seen['V_REL_QUINCY']);
   check('独立制作线 V_COLLAB_OTW 零触发', !r2.seen['V_COLLAB_OTW']);
   check('独立制作线 quincy 未结识（羁绊卡锁定）', !MJ.isCollaboratorMet(r2.state, 'quincy'));
-  check('独立制作线羁绊卡不泄露昆西姓名', MJ.renderCollaboratorsOverview(r2.state).indexOf('昆西·琼斯') < 0);
+  check('独立制作线羁绊卡不泄露昆西姓名', MJ.renderCollaboratorsOverview(r2.state).indexOf('Quincy Jones') < 0 && MJ.renderCollaboratorsOverview(r2.state).indexOf('昆西') < 0);
   if (r2.twoSixChecked) prodTwoSix++;
   if (r2.problems.length) check('独立线运行时断言', false, r2.problems[0]);
 }
