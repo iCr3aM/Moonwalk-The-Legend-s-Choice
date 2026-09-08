@@ -86,6 +86,7 @@ window.MJ = window.MJ || {};
         'ui.posterGrammy': 'Grammy Awards: {n}',
         'ui.posterAchMore': '+{n} more',
         'ui.posterKeywords': 'Life Keywords',
+        'ui.posterFootprint': 'Footprints: met {met} / 6 · {keys} key choices · {vars} twists',
         'ui.posterKeyChoices': 'Key Choices',
         'ui.posterNoKey': '— No earth-shattering forks this run —',
         'ui.posterOf': '{n} · Legend Poster',
