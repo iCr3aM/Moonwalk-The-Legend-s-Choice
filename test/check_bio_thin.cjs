@@ -15,6 +15,8 @@ function walkFrom(id) {
     _visited = {};
     MJ.engine.start();
     MJ.engine.state.flags.isSolo = true;
+    MJ.engine.state.relMet = MJ.engine.state.relMet || {};
+    MJ.engine.state.relMet.diana = true; // 2_7 需已结识戴安娜（模拟跟 Diana 赴 LA 的单飞线）
     MJ.engine.go(id);
     var guard = 0;
     while (guard++ < 400) {

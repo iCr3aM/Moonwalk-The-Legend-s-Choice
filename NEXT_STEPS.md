@@ -2,83 +2,56 @@
 
 > 维护说明：本文件是项目**唯一**的「当前状态 + 待办」汇总入口，替代散落在 GDD.md / README / 记忆中的过期条目。
 > 任何事实性计数（结局 / 变体 / 成就 / 彩蛋）一律以源码为准：`js/config.js`（结局、成就、属性）、`js/events.js`（变体、彩蛋、趣事）。文档若与源码冲突，以源码为准，并回头更新对应文档。
-> 最近更新：2026-09-08。
+> 上一版全文快照：`archive/NEXT_STEPS_2026-09-08.md`（已完成的里程碑明细与历史归档均见该文件）。
+> 最近更新：2026-09-09。
 
 ---
 
 ## 一、当前权威状态（v1.13）
 
 - **游戏形态**：H5 文字人生模拟，原生 JS 模块化、**无框架、无构建**，双击 `index.html` 即运行；`build_singlefile.cjs` 可产出单文件 `dist/index.html`。
-- **结局**：**30 种 = 23 主线 + 7 假设线（架空历史 `END_ALT_*`）**。含 1 隐藏终极 `END_TRUE_ETERNAL` + 7 假设线（徽标 `ui.assumptionLine`）。（来源 `config.endingRarity`，已核对 30 项）
+- **结局**：**30 种 = 23 主线 + 7 假设线（架空历史 `END_ALT_*`）**，含 1 隐藏终极 `END_TRUE_ETERNAL`。
 - **六维属性 + Economy 双轨**：健康/声誉/财富/家庭/艺术/压力（0–100）；`netWorth`/`debt`（万元）。
 - **四条元路线**：艺术家/慈善家/商业巨擘/隐士。
-- **变体（可能性系统）**：**114 个**（以 `events.js` 为准），按「概率 + 年份窗口」注入。
-- **成就**：**88 项**（config.js 实测），图鉴式 `localStorage` 持久化，含 7 枚 `ACH_ALT_*`（假设线）+ 元成就 `ACH_ALT_FORK`。
-- **彩蛋 / 趣事**：彩蛋 **43**（含 3 枚密蛋）；趣事 **61**（均已审计可达）。
-- **图鉴**：四图鉴统一（结局/彩蛋/趣事/成就）共用 `.gallery/.g-cell`；语录图鉴已移除。
-- **设计系统**：`.pill` 标签体系、`.toast` 提示体系、字号只用 `--fs-*`、弹窗仅 `.modal-body` 单一滚动区（`check_responsive` 契约断言）。
-- **测试门禁**：`npm test` **22 个** `test/*.cjs` 全绿（并行矩阵）；`node test/_audit_playthrough.cjs 5000` 回归。
-- **调试场**：`test/playground.html`（复用真实 `js/*`，动态 `Object.keys(MJ.config.endings)`，已与 30 结局/7 假设线一致）。
-- **健康度（2026-09-08 实测）**：`npm test` EXIT=0（合计 FAIL: 0）；`_audit_playthrough 5000` 矛盾局=0 / 悬空链接=0 / 粘性 debt=0；30 结局全可达、彩蛋除 3 密蛋外全可达、趣事 61 全可达。
+- **变体（可能性系统）**：**141 个**（`check_dup_events` 实测；含时代切片 8、心理闪回 5+1、舆论链 3 批次新增），按「概率 + 年份窗口 + cond」注入。
+- **关系网**：10 个 rel key + 6 位具名合作者羁绊卡（`collaborators.js`），**结识门控**：`state.relMet`（首次好感交互置位）+ 各卡 `metCond`，未结识渲染锁定态；结局页「命运回响」按已结识过滤。
+- **成就 / 彩蛋 / 趣事**：成就 **88**、彩蛋 **43**（含 3 密蛋）、趣事 **61**（全部审计可达）。
+- **测试门禁**：`npm test` **25 个** `test/*.cjs` 全绿（并行矩阵，EXIT=0 为真绿）。
+- **健康度（2026-09-09 实测）**：`npm test` EXIT=0；30 结局全可达；人物一致性全遍历 3600 局 0 违规；彩蛋除 3 密蛋外全可达；趣事 61 全可达。
 
 ---
 
-## 二、本次归档（2026-09-08）
+## 二、当前环节：逻辑一致性审计（2026-09-09 启动）
 
-将一次性/早期脚本与生成产物移入 `archive/legacy-scripts/`，保持根目录与 `js/` 整洁：
+> 目标：以「未结识不出现 / 选了什么线就见什么内容」为准绳，对全部事件与变体做系统性遍历审计，把偶发式排查转为常驻门禁。
 
-| 文件 | 原因 |
-|---|---|
-| `_smoke.js`（根） | 早期 12 结局冒烟 harness，用 `eval`、仅加载旧模块集，已被 `test/` 套件取代 |
-| `debug_events.cjs` / `extract_events.cjs` / `wrap_events.cjs`（根） | i18n 抽取+包裹管道的一次性工具，`events.js` 已完成 `T()` 包裹，不再需要 |
-| `check_keys.cjs`（根） | 早期 i18n key 校验，已被 `test/check_i18n_coverage` + `find_missing_en` 取代 |
-| `event_keys.txt` / `extract.log`（根） | 上述脚本的生成产物 |
-| `js/events.wrapped.js`（142KB） | `wrap_events.cjs` 的中间产物，游戏加载的是 `js/events.js`，未被引用 |
-| `test/t2.cjs` | scratch 试探脚本（仅验证 `autoHint` 正则） |
-
-> 注：上述根脚本原本被 `.gitignore` 忽略（本地产物），故仅本地移动、不入库；`extract_events.cjs` 与 `t2.cjs` 为已跟踪文件，用 `git mv` 保留历史。
+- [x] **A. 关系网结识门控（已落地，2026-09-08/09）**：`state.relMet` + `MJ.isCollaboratorMet`；羁绊卡锁定态；昆西组合线/独立制作线（solo_prod）泄漏修复（2_1b 文本分支、V_BIO_WIZ/V_REL_QUINCY cond、2_4 opt0 effects、2_6 文本+选项分支、V_COLLAB_OTW 排除）；`test/_audit_rel_met.cjs` 门禁（三路线定向 + 2000 随机局）。
+- [x] **B. 具名人物一致性全遍历（已落地，2026-09-09）**：`test/_audit_person_consistency.cjs`——每局逐事件扫描 title/text/选项/keyNote，七位具名人物（昆西/戴安娜/弗兰克/布兰卡/泰勒/Lisa/黛比）在「未结识」状态被提及即违规；3600 局（随机 3000 + 组合线/独立线/合作线定向各 200）**0 违规**；遍历揪出并修复真 bug：`2_7「戴安娜的引路」无 cond`（未跟 Diana 赴 LA 的单飞线也会见她）→ 补 `cond relMet.diana` + fallback 3_1。初遇白名单：1_3(diana)/2_1·2_1b·V_OFFWALL_QJ·V_BIO_WIZ(quincy)/4_3b(elizabeth)/5_5(lisa)/6_2(debbie)。
+- [ ] **C. flag / 时间线一致性遍历**：扩展遍历审计——① 变体写入的 `flags`/`timeline` 与下游 cond 的引用闭合（写入-读取矩阵）；② 变体文本引用的路线状态（isSolo/事业线）与注入窗口是否自洽；③ `epilogue`/`branch` 文案与所属事件年表一致性。
+- [ ] **D. 结局/尾声文案与路线一致性**：结局 monologue、`epilogueTailTemplates`、独白扩写尾段按「该结局路线下可能成立的状态」遍历断言（如 no-QJ 结局文案不与已结识昆西矛盾）。
+- [ ] **E. 经济/属性硬约束矩阵**：负债/成瘾/法律三条硬约束与结局判定的全组合遍历（现有 `_audit_endings_full` 已覆盖主路径，补边界构造态）。
 
 ---
 
-## 三、玩法 / 内容扩展待办（中，整合自 GDD §17 + 架空历史 spec）
+## 三、玩法 / 内容扩展待办（中）
 
-- [x] **P2 §6/§7 候选成就/彩蛋（已落地，2026-09-08 核实）**：§6 缺失的 `ACH_NEVERLAND_ZOO`/`ACH_ENCINO` 与 §7 缺失的 7 枚彩蛋（`EGG_APOLLO_LAST`/`EGG_LLAMA`/`EGG_THRILLER_70M`/`EGG_HISTSTATUE`/`EGG_HEALWORLD`/`EGG_VICTORY_CHARITY`/`EGG_GHOSTS_GUINNESS`）均已在 `config.js`/`engine.js`/`events.js`/`i18n.js` 实现并接好触发（flag 命名遵守 `egg_<flag>` 含下划线的铁律）。彩蛋经 `_audit_egg_trivia_reach` 5000 局审计「43 中仅 3 密蛋未落地、其余全可达」；两成就分别经 `neverlandType='public'`（`4_1`）/`encino` flag（`V_ENCINO`）可达。原「待拍板」清单已失效，无需再补。
+- [ ] **创作企划器扩展**（深度游玩 C 的剩余半项）。
 - [ ] **多周目传承 M10 / 成就叙事化 M11 / 关键抉择回放 M12**（g6 可视化增强）。
-- [x] **深度游玩（C：关系网深化 ✅ / 创作企划器扩展）**：关系网深化已实现——4 新 rel key（diana/frank/john/elizabeth）+ 4 关系隐藏变体（V_REL_DIANA/FRANK/JOHN/ELIZABETH，cond 门控 + __RETURN__）+ 2_7/4_3b tipping 文案 + 新建 `collaborators/` 索引模块（关系总览弹窗，含实时好感值与史料出处）+ 结局页「命运回响」面板（复用现有结局，叠加关系注解）。mjwiki 6 合作者页已补（双源保留，按 §15.1 多源考证）。创作企划器扩展仍待。
-  - [x] **结识门控修复（2026-09-08）**：羁绊卡/命运回响按「已结识」显示（`state.relMet` 首次好感交互置位 + 各卡 `metCond`，未结识渲染锁定态不泄露身份）；修复组合线昆西泄漏（2_1b 文本分支、V_BIO_WIZ/V_REL_QUINCY 补 cond）与独立制作线（solo_prod）昆西残留（2_4 opt0/2_6 文本+选项分支、V_COLLAB_OTW 排除）；新建 `test/_audit_rel_met.cjs` 门禁（组合线/独立线/合作线定向 + 2000 随机局断言）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
-- [x] **剧情文案深化**（spec: docs/superpowers/specs/2026-09-08-narrative-deepening-design.md；批次1-4 全部落地：两页海报+独白扩写、时代切片、心理轴、舆论链；npm test 全绿）
-  - [x] 批次1：两页海报(正面主视觉+独白 / 背面属性+关键抉择+尾声) + 16 尾声模板 + 6 独白扩写尾段（按元路线/属性/flag 出不同文案，MJ 风格）；npm test 全绿
-  - [x] 批次2：时代切片（6 章 flavor 增厚 + 8 个 V_ERA_* 变体：Motown/MTV/CD/WeAreTheWorld/互联网/9·11/Thriller25/流媒体）；npm test 全绿
-  - [x] 批次3：心理轴（5 个童年闪回变体 V_FLASHBACK_* + END_RECLUSE/END_TRAGIC 尾声联动）；npm test 全绿
-  - [x] 批次4：舆论链（V_RUMOR 两选项置 rumorStarted + V_RUMOR_V2/V3 强制连锁升级 + V_RUMOR_PERSIST 余波 + END_CONTROVERSIAL 联动尾声 controversialRumor/controversialClean + 新建 _audit_narrative 门禁断言独白/尾声/无死循环/END_CONTROVERSIAL 可达）；npm test 全绿
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍（移动端、轻量可视化、社交增强）。
 
 ---
 
 ## 四、工程 / 验证
 
-- [ ] 保持 `npm test` 并行矩阵全绿；发布前跑 `node test/_audit_playthrough.cjs 5000`。
-- [ ] `dist` 验证工具 `test/dist_check.cjs` / `test/dist_run.cjs` / `test/repro_combined.cjs` 保留作为回归辅助。
+- [x] **`npm test` 25 门禁并行矩阵全绿**（2026-09-09 实测 EXIT=0；新增 `_audit_narrative`/`_audit_rel_met`/`_audit_person_consistency`）。
+- [ ] 发布前跑 `node test/_audit_playthrough.cjs 5000` 与 `npm run e2e`（真机 Playwright：随机 6/6、结局 30/30、彩蛋 43/43）。
+- [ ] 审计环节新增门禁一律遵守「信息型门禁=虚假通过」铁律：必须 `process.exit(1)` 才算 FAIL，结论须来自真实引擎调用。
 
 ---
 
-## 五、历史归档（已完成项）
+## 五、归档指针
 
-> 以下内容为已取得成果，折叠归档以便聚焦待办。
-
-### A. 文档 / 一致性（全部 ✅，2026-09-08）
-- **GDD 正文「18 结局」旧引用全量刷新**：状态块/§5.4/§7.1/§8.2 标题/§17 骨架/埋点表等当前态计数全部改为 30 结局 / 114 变体 / 43 彩蛋 / 61 趣事 / 成就 88；§8.2 矩阵正文补全 12 个新结局行（7 假设线 + 5 安全网）。历史 changelog 行的「18」按原意保留。
-- **彩蛋/趣事/变体计数统一**：以源码/审计为准 — 变体 **114**、彩蛋 **43**（含 3 枚密蛋）、趣事 **61**、结局 **30**、成就 **88 项**（重复 id 已清除）。GDD/README 均已刷新。
-- **`test/smoke.cjs` 单元覆盖扩展至 30 结局**：`ucases` 增补 12 个新结局（7 假设线 + 5 安全网），全部经 `MJ.resolveEnding` 直验 OK；`mkEnding` 增补 `timeline` 支持；随机段年份倒挂守卫由 `process.exit(1)` 降级为 WARN（变体注入年份排序产物，非结局判定错误），使单元覆盖块得以执行。
-- **`ACH_ALL_ENDINGS` 文案「25→30」**（config.js，已于 9098641 提交）。其余成就描述未再发现旧结局数引用。
-- **`config.js` 成就 id 重复修复**：`ACH_NEVERLAND` 重命名/去重处理，`achievementReach`(config.js:43)、EN 文案键(i18n.js:648)、`smoke.cjs` 成就覆盖用例同步；图鉴按 id 去重不再静默覆盖前者。
-- **变体年份修正回归护栏**：`5_2g` 年 1992→1993 曾致 `V_DANGEROUS_PREM` 0 触发（pre 3.12%→post 0%），已通过扩其窗口 [1991,1993] 修复并复跑 `check_balance_reach` 确认恢复 5.26%。教训：改 spine 事件年须复跑平衡门禁。
-
-### B. 内容扩展（原第四节 ✅）
-- [x] **P1 BP4/BP5 法律应对分支（已落地，2026-09-08 核实）**：`V_1993_RESPONSE`(events.js:2792) / `V_2005_RESPONSE`(events.js:2808) 已实现为中性应对变体（window 1993–94 / 2005–06，三选项 低调回避/主动发声/投身公益，仅影响声誉/家庭/慈善轨迹），遵守 §17.15 红线、MJ 恒无罪。归档 spec §17.3 标注「未实现」已过时。
-- [x] **P3 §8 图鉴 F7–F11 年份/口径校准（2026-09-08 提交）**：F7 Ghosts 摄制年 1997→1996；F8 Dangerous 格莱美之夜 1992→1993、HIStory 1996→1997；F9 V_BUBBLES 窗口 [1985,1990]→[1986,1990]；F10 Thriller 40 年 2023→2022；F11 6_3a 注明三十周年(2001-09) 与 9·11 义演为独立事件。审计 F1/F2/F3/F4/法律年等经核实代码已合规，无需改。
-
-### C. 工程 / 验证（原第五节 ✅）
-- [x] 单文件构建兼容 `?v=` 版本串（`build_singlefile.cjs`，提交 `44b545d`）。
-- [x] `dist/` 已被 `.gitignore` 忽略，产物不入库。
+- 上一版 NEXT_STEPS 全文（含 2026-09-08 里程碑明细、脚本归档清单、历史成果 A/B/C 节）：**`archive/NEXT_STEPS_2026-09-08.md`**。
+- 早期一次性脚本与原型：`archive/legacy-scripts/`、`archive/迈克尔·杰克逊：人生选择_原型归档.html`。
+- 剧情文案深化 spec（已完成，本地不入库）：`docs/superpowers/specs/2026-09-08-narrative-deepening-design.md`。

@@ -436,6 +436,7 @@ window.MJ = window.MJ || {};
   // —— §17.3 主线偏薄章节拓展（Diana Ross 合作深化；单飞线 2_6→2_7→3_1）——
   E['2_7'] = {
     id: '2_7', year: 1981, title: T('event.2_7.title', null, '戴安娜的引路'), kind: 'choice', key: true, keyWeight: 2,
+    cond: function (s) { return !!(s.relMet && s.relMet.diana); }, fallback: '3_1', // 未结识戴安娜（1_3 未跟 Diana 走）不得出现
     keyNote: T('event.2_7.keyNote', null, '戴安娜递来的不仅是引路，还有一段被全世界注视的婚姻；这一步会改写你的私人叙事与公众形象。'),
     text: function (s) {
       return narr(T('event.2_7.text', null, '单飞后的第一次低谷，戴安娜·罗斯递来一双温暖的手。她记得你还是盖瑞那个追着她跑的小男孩，如今却先于她站上了独唱的塔尖。'), s, [
