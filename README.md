@@ -35,7 +35,7 @@
 - **30 种结局（23 主线 + 7 假设线）**：含 1 个隐藏终极结局（真·永恒）与 7 个假设线（架空历史）结局，由优先级规则表 + 元路线破平次序解析。
 - **四条隐藏元路线**：艺术家 / 慈善家 / 商业巨擘 / 隐士，由选择累积、实时提示「正在走向 X 之路」。
 - **变体事件系统（可能性系统）**：114 变体按「概率 + 年份窗口」在章节间插入，含稀有门控的隐藏 / 条件变体。
-- **成就约 80 项（以 config.js 为准）**：复用图鉴式 `localStorage` 持久化，游戏中实时弹窗解锁。
+- **成就 88 项（以 config.js 为准）**：复用图鉴式 `localStorage` 持久化，游戏中实时弹窗解锁。
 - **双语支持（简体中文 / English）**：可一键切换语言，事件文案全量本地化。
 - **续章「假设 MJ 未离世」（2010–2026）**：This Is It 驻演、数字单曲计划、2016 索尼收购 Sony/ATV 半数股权、2026 传记片《Michael》等史实锚点。
 - **传奇海报**：结局页自动用 Canvas 生成可保存（长按）的图片海报（六维数值、主导路线、节点 / 变体 / 抉择统计、成就进度）。
@@ -98,7 +98,7 @@ test/smoke.cjs            Node 无 DOM 冒烟 + 平衡测试（随机 400 局 + 
 test/en_smoke.cjs         英文文案 / 续章链路 / 新事件覆盖测试
 ```
 
-> ⚠️ 根目录下的 `check_keys.cjs`、`debug_events.cjs`、`event_keys.txt`、`js/events.wrapped.js`、`wrap_events.cjs` 为开发 / 调试脚手架，**已加入 `.gitignore`，不纳入版本管理**。
+> ⚠️ 根目录下的 `check_keys.cjs`、`debug_events.cjs`、`event_keys.txt`、`js/events.wrapped.js`、`wrap_events.cjs` 为开发 / 调试脚手架，**已归档至 `archive/legacy-scripts/`，不纳入版本管理**。
 
 ---
 
@@ -107,7 +107,7 @@ test/en_smoke.cjs         英文文案 / 续章链路 / 新事件覆盖测试
 项目以 **Node 无 DOM 冒烟测试** 驱动引擎，验证「随机多局 0 异常且必到结局」以及「时间线显示年份单调非递减（无倒挂）」：
 
 ```bash
-npm test                  # 运行全部 13 项回归门禁（推荐）
+npm test                  # 运行全部 22 项回归门禁（推荐）
 node test/smoke.cjs        # 随机 400 局 + 时间倒挂回归断言（倒挂将非零退出）
 node test/en_smoke.cjs     # 英文文案 / 续章链路 / 第二章 solo 链路 / 新事件覆盖
 ```

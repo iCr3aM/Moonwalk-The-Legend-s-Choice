@@ -32,14 +32,14 @@
 
 - **Strictly aligned with the design doc**: all mechanics, branches, values, and endings follow [`GDD.md`](./GDD.md) (v1.13).
 - **Six attributes + dual-track Economy**: Health / Reputation / Wealth / Family / Art / Stress (all 0–100); large sums go through `netWorth` / `debt` (in 10k units), fixing the early "wealth clamped to 0" unreachable-ending bug.
-- **18 endings**: including 1 hidden ultimate (True Eternal) and 1 sequel ending, resolved by a priority rule table plus meta-route tie-breaking.
+- **30 endings (23 mainline + 7 alt-history)**: including 1 hidden ultimate (True Eternal) and 7 alt-history ("what-if") endings, resolved by a priority rule table plus meta-route tie-breaking.
 - **Four hidden meta-routes**: Artist / Philanthropist / Mogul / Recluse, accumulated from choices with a live "you are on the path to X" hint.
-- **Variant event system ("what-if" system)**: 81 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
-- **70 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
+- **Variant event system ("what-if" system)**: 114 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
+- **88 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
 - **Bilingual (Simplified Chinese / English)**: one-click language switch, fully localized event text.
 - **Sequel "what if MJ didn't pass" (2010–2026)**: This Is It residency, digital singles plan, Sony's 2016 acquisition of half of Sony/ATV, the 2026 biopic *Michael*, and other historical anchors.
 - **Legendary poster**: the ending screen auto-generates a saveable (long-press) Canvas poster (six stats, dominant route, node / variant / choice stats, achievement progress).
-- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (15).
+- **Key-choice review + hidden easter eggs**: an ending-screen recap panel plus low-probability hidden eggs (36, incl. 3 secret).
 - **Auto-continue**: `localStorage` auto-save (including current node id); refresh to resume.
 - **Neutral, procedural narration**: sensitive legal events use factual phrasing—no presumption of guilt/innocence, no naming of minors.
 - **Responsive dark-gold retro UI**: CSS Grid four-zone layout, two columns on mobile and three on desktop.
@@ -76,7 +76,7 @@ node build_singlefile.cjs   # same as npm run build; outputs dist/index.html as 
 2. **Status bar**: live six attributes, net worth, dominant meta-route, and "current year / life track".
 3. **Event cards**: 2–3 options per historical node, each with a `hint` previewing its impact (attributes / money / flags).
 4. **Variant events**: "what-if" events inserted by probability and era windows, enriching the period texture.
-5. **Ending**: one of 18 endings resolved from attributes, flags, and meta-routes by a rule table; the sequel line never resolves to a death ending.
+5. **Ending**: one of 30 endings resolved from attributes, flags, and meta-routes by a rule table; the sequel line never resolves to a death ending.
 6. **Ending screen**: shows the legendary poster, key-choice recap, career stats, and achievement unlocks.
 
 ---
@@ -98,7 +98,7 @@ test/smoke.cjs            Node DOM-free smoke + balance test (400 random runs + 
 test/en_smoke.cjs         EN text / sequel chain / new-event coverage tests
 ```
 
-> ⚠️ The root-level `check_keys.cjs`, `debug_events.cjs`, `event_keys.txt`, `js/events.wrapped.js`, `wrap_events.cjs` are dev/debug scaffolding, **added to `.gitignore` and excluded from version control**.
+> ⚠️ The root-level `check_keys.cjs`, `debug_events.cjs`, `event_keys.txt`, `js/events.wrapped.js`, `wrap_events.cjs` are dev/debug scaffolding, **archived under `archive/legacy-scripts/` and excluded from version control**.
 
 ---
 
@@ -107,7 +107,7 @@ test/en_smoke.cjs         EN text / sequel chain / new-event coverage tests
 The project is driven by **Node DOM-free smoke tests** that verify "many random runs with 0 errors and always reaching an ending" and "timeline years are monotonically non-decreasing (no backwards jumps)":
 
 ```bash
-npm test                  # run all 13 regression gates (recommended)
+npm test                  # run all 22 regression gates (recommended)
 node test/smoke.cjs        # 400 random runs + timeline-jump regression (non-zero exit on jump)
 node test/en_smoke.cjs     # EN text / sequel chain / Ch.2 solo link / new-event coverage
 ```
