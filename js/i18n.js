@@ -356,8 +356,6 @@ window.MJ = window.MJ || {};
         'ach.ACH_DIGITAL.desc': 'In the tide of the internet, you were both a wave-rider and a helmsman.',
         'ach.ACH_PEACEMAKER.name': 'Peacemaker',
         'ach.ACH_PEACEMAKER.desc': 'You made “Heal the World” not just a song, but a promise.',
-        'ach.ACH_SAGE.name': 'Sage in Seclusion',
-        'ach.ACH_SAGE.desc': 'Thrice into silence, you finally heard yourself.',
         'ach.ACH_RECLUSE.name': 'The Recluse',
         'ach.ACH_RECLUSE.desc': 'Again and again you retreated into silence, shutting the noise outside.',
         'ach.ACH_LEGAL.name': 'Legal Fighter',
@@ -619,11 +617,10 @@ window.MJ = window.MJ || {};
 
         // ---------- §17.12 更多成就（EN） ----------
         'ach.ACH_DANCE_GOD.name': 'King of Dance', 'ach.ACH_DANCE_GOD.desc': 'Trigger ≥3 moonwalk/perfect-performance choices in one run.',
-        'ach.ACH_PHIL_3.name': 'Charity Trio', 'ach.ACH_PHIL_3.desc': 'Accumulate ≥3 Charity in one run.',
         'ach.ACH_CHARITY_CONCERT.name': 'Benefit Troubadour', 'ach.ACH_CHARITY_CONCERT.desc': 'Trigger ≥2 charity/benefit events in one run.',
         'ach.ACH_CATALOG_KING.name': 'Catalog King', 'ach.ACH_CATALOG_KING.desc': 'Hold ATV + Sony/ATV half + your own label at once.',
         'ach.ACH_SMOOTH.name': 'Perfect Moonwalk', 'ach.ACH_SMOOTH.desc': 'Pick “Perfect Performance” at 3_1b ≥2 times across runs.',
-        'ach.ACH_PEACE_3.name': 'Peacemaker', 'ach.ACH_PEACE_3.desc': 'Charity ≥3 and Reputation ≥70.',
+        'ach.ACH_PEACE_3.name': 'Peacemaker', 'ach.ACH_PEACE_3.desc': 'Charity ≥4 and Reputation ≥70.',
         'ach.ACH_LONELY_KING.name': 'Lonely King', 'ach.ACH_LONELY_KING.desc': 'Loneliness ≥50 and Reputation ≥80.',
         'ach.ACH_FAMILY_WARM.name': 'Warm Parent', 'ach.ACH_FAMILY_WARM.desc': 'Family ≥80 and reconciled with your children.',
         'ach.ACH_COMEBACK_2.name': 'The Comeback', 'ach.ACH_COMEBACK_2.desc': 'Art ≥85 after a health crisis.',
@@ -662,7 +659,6 @@ window.MJ = window.MJ || {};
         'ach.ACH_VMA.name': 'Video Vanguard', 'ach.ACH_VMA.desc': 'MTV gave you the first Video Vanguard Award, reshaping the music video as art.',
         'ach.ACH_DIAMOND.name': 'Diamond Sales', 'ach.ACH_DIAMOND.desc': 'With record sales past a hundred million, you received the Diamond Award.',
         'ach.ACH_GRAMMYLEGEND.name': 'Grammy Legend', 'ach.ACH_GRAMMYLEGEND.desc': 'You became one of the few Grammy Legend Award recipients, honored by your sister Janet.',
-        'ach.ACH_NEVERLAND_MANOR.name': 'Neverland', 'ach.ACH_NEVERLAND_MANOR.desc': 'The estate held a zoo, a Ferris wheel and the laughter of countless children.',
         'ach.ACH_PHIL_LEGEND.name': 'Philanthropy Legend', 'ach.ACH_PHIL_LEGEND.desc': 'With a generation’s voice, you sent kindness to every corner of the world.',
         'ach.ACH_WORLD_TOUR.name': 'World Tour', 'ach.ACH_WORLD_TOUR.desc': 'You embarked on the largest solo-artist tour of its time, giant statues raised in your likeness.',
 
