@@ -1199,13 +1199,10 @@ window.MJ = window.MJ || {};
     ctx.textAlign = 'center';
 
     function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
-    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
-    if (MJ_POSTER_QUOTES.length > 1) { var _g = 0; while (_qObj === _lastPosterQuote && _g++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)]; }
-    _lastPosterQuote = _qObj;
-    var _pq = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
+    var _pq = posterQuoteText(state, endingId); // 固定种子：同一海报语录恒定
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _ql = wrapCenter(ctx, _pq, W - 120); if (_ql.length > 2) _ql = _ql.slice(0, 2);
-    var tagY = Math.min(H - 112, Math.max(y + 56, 620));
+    var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
     ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
     for (var _i = 0; _i < _ql.length; _i++) ctx.fillText(_ql[_i], W / 2, tagY + _i * 22);
     var _sy = tagY + _ql.length * 22 + 14;
@@ -1234,12 +1231,17 @@ window.MJ = window.MJ || {};
     ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
     ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
     ctx.textAlign = 'center';
+    // 顶部 header 与文案页统一（两页一致）
     ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(T('ui.posterBackHeader', null, '人 生 回 响'), W / 2, 78);
+    ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
     ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
-    ctx.fillText(T('ending.' + endingId + '.name', null, (MJ.config.endings[endingId] || {}).name || endingId), W / 2, 102);
+    ctx.fillText('1958 — 2009', W / 2, 102);
+    ctx.fillStyle = G.base; ctx.font = '600 20px "PingFang SC","Microsoft YaHei",sans-serif';
+    ctx.fillText(T('ui.posterBackHeader', null, '人 生 回 响'), W / 2, 142);
+    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '13px sans-serif';
+    ctx.fillText(T('ending.' + endingId + '.name', null, (MJ.config.endings[endingId] || {}).name || endingId), W / 2, 166);
     var dims = [['健康', 'health', a.health], ['声誉', 'reputation', a.reputation], ['艺术', 'art', a.art], ['财富', 'wealth', a.wealth], ['家庭', 'family', a.family], ['压力', 'stress', a.stress]].map(function (d) { return [T('attr.' + d[1], null, d[0]), d[1], d[2]]; });
-    var bx0 = 70, colW = (W - 140) / 2, top = 140, rowH = 44, labelW = 82, gutter = 96;
+    var bx0 = 70, colW = (W - 140) / 2, top = 185, rowH = 44, labelW = 82, gutter = 96;
     var barXoff = labelW, barW = colW - labelW - gutter - 10;
     for (var i = 0; i < dims.length; i++) {
       var col = i % 2, row = (i / 2) | 0, x = bx0 + col * colW, y = top + row * rowH, bgx = x + barXoff;
@@ -1330,10 +1332,7 @@ window.MJ = window.MJ || {};
     ctx.fillText(T('ui.posterFootprint', { met: _metN, keys: _st.keyChoices || 0, vars: _st.variants || 0 }, '人生足迹：结识 {met} / 6 · 关键抉择 {keys} 次 · 命运分岔 {vars} 段'), W / 2, y + 40);
     ctx.textAlign = 'center';
     function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
-    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
-    if (MJ_POSTER_QUOTES.length > 1) { var _g2 = 0; while (_qObj === _lastPosterQuote && _g2++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)]; }
-    _lastPosterQuote = _qObj;
-    var _pq = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
+    var _pq = posterQuoteText(state, endingId); // 固定种子：同一海报语录恒定（与另一页一致）
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qln = wrapCenter(ctx, _pq, W - 120); if (_qln.length > 2) _qln = _qln.slice(0, 2);
     var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
@@ -1357,6 +1356,15 @@ window.MJ = window.MJ || {};
       return T(t.key, null, t.text);
     }
     return '';
+  }
+  // 海报语录：按「结局+本局规模」固定种子选取——同一海报每次绘制（含翻页/重开弹窗/档案回看）语录恒定
+  function posterQuoteText(state, endingId) {
+    var st = state.stats || {};
+    var seedStr = endingId + '|' + (st.events || 0) + '|' + (state.history || []).length + '|' + (st.variants || 0);
+    var h = 0;
+    for (var i = 0; i < seedStr.length; i++) h = ((h * 31) + seedStr.charCodeAt(i)) | 0;
+    var q = MJ_POSTER_QUOTES[Math.abs(h) % MJ_POSTER_QUOTES.length];
+    return (MJ.i18n && MJ.i18n.lang === 'en') ? q.en : q.zh;
   }
   function monologueExtFor(state, endingId) {
     var tpl = (MJ.config && MJ.config.monologueExtTemplates) || [];
