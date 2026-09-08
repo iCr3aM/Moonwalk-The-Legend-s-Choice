@@ -3023,7 +3023,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_VICTORY_CHARITY.opt0.label', null, 'A：把善款落到实处'), hint: T('event.V_VICTORY_CHARITY.opt0.hint', null, '慈善+3，声誉+2'), effects: { phil: 3, reputation: 2 }, flags: { egg_victorycharity: true }, epilogue: T('event.V_VICTORY_CHARITY.opt0.epilogue', null, '你签下那张支票时想着孩子们，台下的欢呼仿佛也暖了几分。'), next: '__RETURN__' },
+      { label: T('event.V_VICTORY_CHARITY.opt0.label', null, 'A：把善款落到实处'), hint: T('event.V_VICTORY_CHARITY.opt0.hint', null, '慈善+3，声誉+2'), effects: { phil: 3, reputation: 2 }, flags: { egg_victory_charity: true }, epilogue: T('event.V_VICTORY_CHARITY.opt0.epilogue', null, '你签下那张支票时想着孩子们，台下的欢呼仿佛也暖了几分。'), next: '__RETURN__' },
       { label: T('event.V_VICTORY_CHARITY.opt1.label', null, 'B：先壮大事业'), hint: T('event.V_VICTORY_CHARITY.opt1.hint', null, '财富+5'), effects: { wealth: 5 }, next: '__RETURN__' }
     ]
   };
@@ -3063,7 +3063,7 @@ window.MJ = window.MJ || {};
       ]);
     },
     options: [
-      { label: T('event.V_APOLLO_LAST.opt0.label', null, 'A：把回忆唱给故地'), hint: T('event.V_APOLLO_LAST.opt0.hint', null, '家庭+4，艺术+3'), effects: { family: 4, art: 3 }, flags: { egg_apollolast: true }, epilogue: T('event.V_APOLLO_LAST.opt0.epilogue', null, '在那束熟悉的聚光灯下，岁月折回了盖瑞巷口。'), next: '__RETURN__' },
+      { label: T('event.V_APOLLO_LAST.opt0.label', null, 'A：把回忆唱给故地'), hint: T('event.V_APOLLO_LAST.opt0.hint', null, '家庭+4，艺术+3'), effects: { family: 4, art: 3 }, flags: { egg_apollo_last: true }, epilogue: T('event.V_APOLLO_LAST.opt0.epilogue', null, '在那束熟悉的聚光灯下，岁月折回了盖瑞巷口。'), next: '__RETURN__' },
       { label: T('event.V_APOLLO_LAST.opt1.label', null, 'B：安静致意'), hint: T('event.V_APOLLO_LAST.opt1.hint', null, '家庭+2，压力-2'), effects: { family: 2, stress: -2 }, next: '__RETURN__' }
     ]
   };

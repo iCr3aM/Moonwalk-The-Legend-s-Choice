@@ -89,9 +89,19 @@ if (process.argv.includes('--low')) {
 
 console.log('\n=== 审计完成：彩蛋未落地 ' + eggMiss.length + ' / 趣事未落地 ' + triviaMiss.length + ' ===');
 
-// ---------- 回归门禁：趣事须全部可达；彩蛋含故意隐藏的密蛋，仅作信息提示 ----------
+// ---------- 回归门禁 ----------
+// 趣事须全部可达（硬性）。
+// 彩蛋：除「刻意隐藏的元进度密蛋」外，flag/cond 驱动的彩蛋必须能在真实游玩中落地，
+// 否则属接线 bug（如 EGG_APOLLO_LAST/EGG_VICTORY_CHARITY 曾因 flag 名映射丢失下划线而永不解锁）。
+// 历史不严的门禁会把所有未落地彩蛋当成「已知密蛋」而静默通过 —— 这是虚假通过，故此处显式设白名单。
+var KNOWN_SECRET_EGGS = ['EGG_MOONWALK', 'EGG_DEV', 'EGG_FOURTH']; // 跨周目/集齐成就/周目计数解锁，单局随机本就不该出现
+var eggBroken = eggMiss.filter(function (k) { return KNOWN_SECRET_EGGS.indexOf(k) < 0; });
 if (triviaMiss.length > 0) {
   console.error('FAIL 趣事可达性：' + triviaMiss.length + ' 条从未在 ' + N + ' 局真实游玩中发现 → ' + triviaMiss.join(', '));
   process.exit(1);
 }
-console.error('PASS 趣事可达性：全部 ' + triviaDefs.length + ' 条均在随机真实游玩中可达（彩蛋未落地 ' + eggMiss.length + ' 条为已知密蛋，信息提示）');
+if (eggBroken.length > 0) {
+  console.error('FAIL 彩蛋可达性(非密蛋)：' + eggBroken.length + ' 条 flag/cond 驱动彩蛋从未落地（疑似接线 bug）→ ' + eggBroken.join(', '));
+  process.exit(1);
+}
+console.error('PASS 可达性：趣事 ' + triviaDefs.length + ' 条全可达；彩蛋未落地 ' + eggMiss.length + ' 条均为已知元进度密蛋（' + KNOWN_SECRET_EGGS.join('/') + '），其余均已可达');
