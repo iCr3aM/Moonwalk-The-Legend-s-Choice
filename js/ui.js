@@ -1279,10 +1279,10 @@ window.MJ = window.MJ || {};
     if (!_keys.length) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22; }
     else {
       _keys.sort(function (p, q) { var wa = p.keyWeight || 1, wb = q.keyWeight || 1; if (wa !== wb) return wb - wa; return (p.year || 0) - (q.year || 0); });
-      // 时间线遍历：1958-2026 分段均匀采样（每段取 keyWeight 最高者），按年份升序单列呈现
+      // 时间线遍历：1958-2026 分段均匀采样（每段取 keyWeight 最高者），两列矩阵呈现
       var _keysAll = _keys.slice().sort(function (p, q) { return (p.year || 0) - (q.year || 0); });
       var _picks = _keysAll;
-      var _maxShow = 9;
+      var _maxShow = 12;
       if (_keysAll.length > _maxShow) {
         _picks = [];
         for (var s = 0; s < _maxShow; s++) {
@@ -1293,7 +1293,7 @@ window.MJ = window.MJ || {};
         }
         _picks.sort(function (p, q) { return (p.year || 0) - (q.year || 0); });
       }
-      var _tlY = y;
+      var _colGap = 20, _colW = (W - 120 - _colGap) / 2, _rowH = 46, _gy = y;
       for (var _ki = 0; _ki < _picks.length; _ki++) {
         var _kk = _picks[_ki], _kt = _kk.title || '', _kc = _kk.choice || '', _rid = _kk.id || null;
         if (!_rid) { var _rm = buildPosterRevMap(); if (_kt && _rm.title[_kt]) _rid = _rm.title[_kt]; }
@@ -1303,15 +1303,15 @@ window.MJ = window.MJ || {};
           if (_ropt != null && _ropt >= 0) _kc = T('event.' + _rid + '.opt' + _ropt + '.label', null, _kc);
         }
         if (MJ.i18n.lang === 'en') { if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = ''; if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—'; }
-        var _ty = _tlY + _ki * 34;
+        var _c = _ki % 2, _ro = (_ki / 2) | 0, _cx = 60 + _c * (_colW + _colGap), _cy = _gy + _ro * _rowH;
         ctx.font = '600 13px "PingFang SC",sans-serif'; var _head = (_kk.year || '') + ' · ' + _kt;
-        if (ctx.measureText(_head).width > (W - 120)) { while (_head.length > 1 && ctx.measureText(_head + '…').width > (W - 120)) _head = _head.slice(0, -1); _head += '…'; }
-        ctx.fillStyle = G.bright; ctx.fillText(_head, 60, _ty);
+        if (ctx.measureText(_head).width > _colW) { while (_head.length > 1 && ctx.measureText(_head + '…').width > _colW) _head = _head.slice(0, -1); _head += '…'; }
+        ctx.fillStyle = G.bright; ctx.fillText(_head, _cx, _cy);
         ctx.font = '13px "PingFang SC",sans-serif'; var _cc = _kc;
-        if (ctx.measureText(_cc).width > (W - 120)) { while (_cc.length > 1 && ctx.measureText(_cc + '…').width > (W - 120)) _cc = _cc.slice(0, -1); _cc += '…'; }
-        ctx.fillStyle = G.deep; ctx.fillText(_cc, 60, _ty + 16);
+        if (ctx.measureText(_cc).width > _colW) { while (_cc.length > 1 && ctx.measureText(_cc + '…').width > _colW) _cc = _cc.slice(0, -1); _cc += '…'; }
+        ctx.fillStyle = G.deep; ctx.fillText(_cc, _cx, _cy + 18);
       }
-      y = _tlY + _picks.length * 34;
+      y = _gy + Math.ceil(_picks.length / 2) * _rowH;
     }
     var _tail = epilogueTailFor(state, endingId);
     if (_tail) {
