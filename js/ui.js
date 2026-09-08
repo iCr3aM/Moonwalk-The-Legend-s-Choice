@@ -1325,7 +1325,7 @@ window.MJ = window.MJ || {};
       var t = tpl[i];
       if (t.tone && t.tone !== tone) continue;
       if (t.toneIn && t.toneIn.indexOf(tone) < 0) continue;
-      if (t.cond && !t.cond(state)) continue;
+      if (t.cond && !t.cond(state, endingId)) continue;
       return T(t.key, null, t.text);
     }
     return '';

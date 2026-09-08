@@ -125,7 +125,9 @@ window.MJ = window.MJ || {};
           survived: "2009 didn't finish the story. The extra years you walked became the stubbornest footnote for those who came after: the curtain may fall later, and later still.",
           icon: "You are no longer someone, but a symbol. The white glove left at your grave comes closer to eternity than all your gold records.",
           lone: "You stand atop the mountain; the wind is loud, the side quiet. The heights are cold, yet only here do you hear the song you truly meant to sing.",
-          generic: "Lights dim, the echo remains. However this life is written, you lived it once yourself—and that is enough."
+          generic: "Lights dim, the echo remains. However this life is written, you lived it once yourself—and that is enough.",
+          recluseFlashback: "You built the heaviest wall for the child in yourself. The fears and longings no one caught, you finally moved into the silence of the estate—a recluse does not flee the crowd, but stays to finish, alone, the cry no one heard.",
+          tragicFlashback: "The curtain came early, yet the trembling boy from Gary never left the stage. Father's metronome, the smile that pleaded in the mirror, the forgotten birthday—you sang your childhood to the whole world all your life, yet never in time for yourself."
         },
         ext: {
           artist: "You always said genius is just someone willing to fall for a melody again and again. The studio light went out and on; your greed for perfection never meant to quit.",

@@ -2097,6 +2097,7 @@ window.MJ = window.MJ || {};
   E.V_FLASHBACK = {
     id: 'V_FLASHBACK', variant: true, window: [1987, 1994], weight: 28,
     cond: function (s) { return (s.attributes.loneliness || 0) >= 35; },
+
     title: T('event.V_FLASHBACK.title', null, '盖瑞的回声'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_FLASHBACK.text', null, '深夜，盖瑞旧屋的煤油灯在梦里晃。父亲的节拍器、哥哥们的笑声，和那双再也回不去的小鞋，忽然全涌上来。'), s, [
@@ -2151,6 +2152,77 @@ window.MJ = window.MJ || {};
     options: [
       { label: T('event.V_SISTER_LATOYA.opt0.label', null, 'A：认真教她一段和声'), hint: T('event.V_SISTER_LATOYA.opt0.hint', null, '手足更亲（家庭+5，拉托亚+5）'), effects: { family: 5, rel: { latoya: 5 } }, flags: { egg_sisterduet: true }, next: '__RETURN__' },
       { label: T('event.V_SISTER_LATOYA.opt1.label', null, 'B：笑闹着糊弄过去'), hint: T('event.V_SISTER_LATOYA.opt1.hint', null, '轻松但潦草（家庭+2）'), effects: { family: 2 }, next: '__RETURN__' }
+    ]
+  };
+
+  E.V_FLASHBACK_FATHER = {
+    id: 'V_FLASHBACK_FATHER', variant: true, window: [1985, 1992], weight: 18,
+
+    title: T('event.V_FLASHBACK_FATHER.title', null, '父亲的节拍器'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FLASHBACK_FATHER.text', null, '父亲乔的节拍器摆在排练厅角落，咔嗒咔嗒，像一把量尺寸的尺。他相信天才靠抽打成形——你后来才懂，那把尺也量过他自己的童年。'), s, [
+        { cond: function (s) { return (s.attributes.stress || 0) >= 40; }, text: T('event.V_FLASHBACK_FATHER.branch0.text', null, '你至今记得皮带落下的声音，和在它之后，更响的掌声。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FLASHBACK_FATHER.opt0.label', null, 'A：在严苛中淬炼'), hint: T('event.V_FLASHBACK_FATHER.opt0.hint', null, '把抽打化成节拍（艺术+6，孤独+5）'), effects: { art: 6, loneliness: 5 }, flags: { flashbackFather: true }, next: '__RETURN__' },
+      { label: T('event.V_FLASHBACK_FATHER.opt1.label', null, 'B：试着理解父亲'), hint: T('event.V_FLASHBACK_FATHER.opt1.hint', null, '与过往和解（家庭+5，孤独-6）'), effects: { family: 5, loneliness: -6 }, flags: { flashbackFather: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_FLASHBACK_STAGE = {
+    id: 'V_FLASHBACK_STAGE', variant: true, window: [1978, 1985], weight: 18,
+
+    title: T('event.V_FLASHBACK_STAGE.title', null, '第一次登台前夜'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FLASHBACK_STAGE.text', null, '首次登台的前夜，你对着镜子把舞步数了百遍。聚光灯还没亮，恐惧先亮了——你怕一开口，全世界会听见那个还在发抖的小孩。'), s, [
+        { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.V_FLASHBACK_STAGE.branch0.text', null, '可一旦音乐响起，恐惧就被踩成了节拍的一部分。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FLASHBACK_STAGE.opt0.label', null, 'A：让恐惧推自己上场'), hint: T('event.V_FLASHBACK_STAGE.opt0.hint', null, '怯场也要亮相（艺术+5，声誉+4）'), effects: { art: 5, reputation: 4 }, flags: { flashbackStage: true }, next: '__RETURN__' },
+      { label: T('event.V_FLASHBACK_STAGE.opt1.label', null, 'B：在后台深呼吸'), hint: T('event.V_FLASHBACK_STAGE.opt1.hint', null, '稳住心神（压力-4，孤独+3）'), effects: { stress: -4, loneliness: 3 }, flags: { flashbackStage: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_FLASHBACK_GRANDMA = {
+    id: 'V_FLASHBACK_GRANDMA', variant: true, window: [1983, 1990], weight: 16,
+
+    title: T('event.V_FLASHBACK_GRANDMA.title', null, '祖母的祈祷'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FLASHBACK_GRANDMA.text', null, '祖母凯瑟琳总在深夜跪在床边祈祷。她不懂你的唱片卖了多高，却懂你眼睛里的空。她说：“主看得见你，孩子。”那一刻，孤独有了名字，也有了去处。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 60; }, text: T('event.V_FLASHBACK_GRANDMA.branch0.text', null, '你后来把这份安宁，分给了每一个在演唱会尖叫的孩子。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FLASHBACK_GRANDMA.opt0.label', null, 'A：把信仰写成歌'), hint: T('event.V_FLASHBACK_GRANDMA.opt0.hint', null, '安宁入旋律（艺术+5，家庭+3）'), effects: { art: 5, family: 3 }, flags: { flashbackGrandma: true }, next: '__RETURN__' },
+      { label: T('event.V_FLASHBACK_GRANDMA.opt1.label', null, 'B：把祈祷藏在心底'), hint: T('event.V_FLASHBACK_GRANDMA.opt1.hint', null, '留一份静默（孤独-5，压力-3）'), effects: { loneliness: -5, stress: -3 }, flags: { flashbackGrandma: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_FLASHBACK_MIRROR = {
+    id: 'V_FLASHBACK_MIRROR', variant: true, window: [1977, 1984], weight: 16,
+
+    title: T('event.V_FLASHBACK_MIRROR.title', null, '镜子里的男孩'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FLASHBACK_MIRROR.text', null, '你常对着镜子练舞，镜中的男孩比你先学会微笑。你开始分不清：台下要的是迈克尔，还是镜子里那个永远在讨好的孩子。'), s, [
+        { cond: function (s) { return (s.attributes.reputation || 0) >= 75; }, text: T('event.V_FLASHBACK_MIRROR.branch0.text', null, '名声越大，镜中的男孩越用力微笑，越不像你自己。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FLASHBACK_MIRROR.opt0.label', null, 'A：与镜中的自己和解'), hint: T('event.V_FLASHBACK_MIRROR.opt0.hint', null, '接纳本我（孤独-6，艺术+4）'), effects: { loneliness: -6, art: 4 }, flags: { flashbackMirror: true }, next: '__RETURN__' },
+      { label: T('event.V_FLASHBACK_MIRROR.opt1.label', null, 'B：继续扮演完美'), hint: T('event.V_FLASHBACK_MIRROR.opt1.hint', null, '完美是牢笼（声誉+3，孤独+4）'), effects: { reputation: 3, loneliness: 4 }, flags: { flashbackMirror: true }, next: '__RETURN__' }
+    ]
+  };
+  E.V_FLASHBACK_BIRTHDAY = {
+    id: 'V_FLASHBACK_BIRTHDAY', variant: true, window: [1985, 1992], weight: 16,
+
+    title: T('event.V_FLASHBACK_BIRTHDAY.title', null, '被遗忘的生日'), kind: 'choice',
+    text: function (s) {
+      return narr(T('event.V_FLASHBACK_BIRTHDAY.text', null, '成名后的某个生日，满世界在庆贺你的新专辑，却没人记得这天也是你的降生。你吹灭一根没人递来的蜡烛，忽然很想念盖瑞那支走调的生日歌。'), s, [
+        { cond: function (s) { return (s.attributes.family || 0) >= 65; }, text: T('event.V_FLASHBACK_BIRTHDAY.branch0.text', null, '你拨通了家里的电话，听母亲哼起那支老歌，眼眶先红了。') }
+      ]);
+    },
+    options: [
+      { label: T('event.V_FLASHBACK_BIRTHDAY.opt0.label', null, 'A：给童年的自己打电话'), hint: T('event.V_FLASHBACK_BIRTHDAY.opt0.hint', null, '找回来处（家庭+5，孤独-5）'), effects: { family: 5, loneliness: -5 }, flags: { flashbackBirthday: true }, next: '__RETURN__' },
+      { label: T('event.V_FLASHBACK_BIRTHDAY.opt1.label', null, 'B：把思念写进旋律'), hint: T('event.V_FLASHBACK_BIRTHDAY.opt1.hint', null, '将思念谱曲（艺术+5，孤独+3）'), effects: { art: 5, loneliness: 3 }, flags: { flashbackBirthday: true }, next: '__RETURN__' }
     ]
   };
   // —— P2：关系网深化（新增具名家庭成员关系键的结合事件）——
