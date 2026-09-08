@@ -125,6 +125,20 @@ check('过劳的匠人（压力≥85 健康<50）→ END_OVERWORKED', R({ flags:
 check('燃尽的天才（声誉≥80 健康<42）→ END_BURNT_OUT', R({ flags: { isSolo: true }, attributes: { reputation: 85, health: 40, loneliness: 0 } }) === 'END_BURNT_OUT');
 check('普通安稳人生兜底 → END_QUIET_LIFE', R({ flags: { isSolo: true } }) === 'END_QUIET_LIFE');
 check('END_PLAIN 直通（entryId 硬分支）', MJ.resolveEnding(mk({}), 'END_PLAIN') === 'END_PLAIN');
+// §17.4 批次3：END_ETERNAL 制作造诣豁免（cp_craft≥70 补足 art 门槛）
+check('ETERNAL 豁免生效（art=55+craft=75+加冕 → ETERNAL）', (function () {
+  var st = mk({ flags: { isSolo: true, thriller25: true, cp_craft: 75 }, attributes: { art: 55, reputation: 60, health: 50 } });
+  return MJ.resolveEnding(st) === 'END_ETERNAL';
+})());
+check('ETERNAL 豁免需加冕标志（craft=75 无标志 → 非 ETERNAL）', (function () {
+  var st = mk({ flags: { isSolo: true, cp_craft: 75 }, attributes: { art: 55, reputation: 60, health: 50 } });
+  return MJ.resolveEnding(st) !== 'END_ETERNAL';
+})());
+check('ETERNAL 豁免边界（art=54+craft=65 未达豁免线 → 非 ETERNAL）', (function () {
+  var st = mk({ flags: { isSolo: true, thriller25: true, cp_craft: 65 }, attributes: { art: 54, reputation: 60, health: 50 } });
+  return MJ.resolveEnding(st) !== 'END_ETERNAL';
+})());
+check('ETERNAL needs crown flag even with craft', MJ.resolveEnding(mk({ flags: { isSolo: true, cp_craft: 75 }, attributes: { art: 55, reputation: 60, health: 50 } })) !== 'END_ETERNAL');
 
 console.log('\n硬约束矩阵审计：通过 ' + pass + '，失败 ' + fail);
 if (fail) { console.error('FAIL 硬约束矩阵存在破坏优先级规则的用例'); process.exit(1); }

@@ -234,7 +234,7 @@ window.MJ = window.MJ || {};
     if ((m.phil || 0) >= 3 && dom === 'phil' && !debt && (a.reputation || 0) >= 70 && (a.family || 0) >= 55) return 'END_STATESMAN'; // 6b 文化大使（须慈善主导；门槛 phil≥3/rep≥70/family≥55）
     if ((m.phil || 0) >= 3 && dom === 'phil' && !debt) return 'END_PHILANTHROPIST';   // 6 须慈善主导
     if ((m.collab || 0) >= 1 && (a.family || 0) >= 40 && (a.art || 0) >= 44) return 'END_MENTOR'; // 6a 提携后辈
-    if (a.art >= 60 && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
+    if ((a.art >= 60 || ((f.cp_craft || 0) >= 70 && a.art >= 55)) && a.reputation >= 56 && a.health >= 42 && (f.thriller25 || f.anniv2001)) return 'END_ETERNAL'; // 7 巅峰需加冕标志
     // —— 专属状态原型结局（2026-09-07 缺口审计补；2026-09-08 上移到 PERFECT 兜底之前，避免被宽门槛吞掉）——
     // 归家的人：单飞后仍把家庭经营到极致
     if (f.isSolo === true && (a.family || 0) >= 70 && !debt && !burned) return 'END_HOMEBODY';
