@@ -2083,12 +2083,12 @@ window.MJ = window.MJ || {};
     title: T('event.V_ERA_WEARETHEWORLD.title', null, 'We Are The World'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_ERA_WEARETHEWORLD.text', null, '1985 年，你与一众巨星挤进录音棚，为一夜之间饥荒的非洲录下《We Are The World》。你写下那句 "We are the world"，相信歌声能替不会说话的人开口。'), s, [
-        { cond: function (s) { return (s.meta.philanthropist || 0) >= 1; }, text: T('event.V_ERA_WEARETHEWORLD.branch0.text', null, '你早把慈善写进本能，这一夜只是把它唱给了全世界。') }
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.V_ERA_WEARETHEWORLD.branch0.text', null, '你早把慈善写进本能，这一夜只是把它唱给了全世界。') }
       ]);
     },
     options: [
-      { label: T('event.V_ERA_WEARETHEWORLD.opt0.label', null, 'A：全力投入义唱'), hint: T('event.V_ERA_WEARETHEWORLD.opt0.hint', null, '为非洲发声（声誉+6，慈善+1）'), effects: { reputation: 6, philanthropist: 1 }, next: '__RETURN__' },
-      { label: T('event.V_ERA_WEARETHEWORLD.opt1.label', null, 'B：低调不留名'), hint: T('event.V_ERA_WEARETHEWORLD.opt1.hint', null, '善行不必喧哗（慈善+1，隐士+1）'), effects: { philanthropist: 1, recluse: 1 }, next: '__RETURN__' }
+      { label: T('event.V_ERA_WEARETHEWORLD.opt0.label', null, 'A：全力投入义唱'), hint: T('event.V_ERA_WEARETHEWORLD.opt0.hint', null, '为非洲发声（声誉+6，慈善+1）'), effects: { reputation: 6, phil: 1 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_WEARETHEWORLD.opt1.label', null, 'B：低调不留名'), hint: T('event.V_ERA_WEARETHEWORLD.opt1.hint', null, '善行不必喧哗（慈善+1，隐士+1）'), effects: { phil: 1, recluse: 1 }, next: '__RETURN__' }
     ]
   };
   E.V_ERA_INTERNET = {
@@ -2109,11 +2109,11 @@ window.MJ = window.MJ || {};
     title: T('event.V_ERA_911.title', null, '9·11 之后'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_ERA_911.text', null, '2001 年秋，双塔倾塌。你原定的三十周年庆典让位于义演，你站上万众一心的舞台，把个人的加冕唱成众人的疗愈。那一年，音乐第一次轻于悲伤，却重过一切。'), s, [
-        { cond: function (s) { return (s.meta.philanthropist || 0) >= 1; }, text: T('event.V_ERA_911.branch0.text', null, '你想起那些被你抱起的孩子——此刻整座城市都是需要被抱起的孩子。') }
+        { cond: function (s) { return (s.meta.phil || 0) >= 1; }, text: T('event.V_ERA_911.branch0.text', null, '你想起那些被你抱起的孩子——此刻整座城市都是需要被抱起的孩子。') }
       ]);
     },
     options: [
-      { label: T('event.V_ERA_911.opt0.label', null, 'A：全身心投入义演'), hint: T('event.V_ERA_911.opt0.hint', null, '为众人疗愈（声誉+6，慈善+1，压力-2）'), effects: { reputation: 6, philanthropist: 1, stress: -2 }, next: '__RETURN__' },
+      { label: T('event.V_ERA_911.opt0.label', null, 'A：全身心投入义演'), hint: T('event.V_ERA_911.opt0.hint', null, '为众人疗愈（声誉+6，慈善+1，压力-2）'), effects: { reputation: 6, phil: 1, stress: -2 }, next: '__RETURN__' },
       { label: T('event.V_ERA_911.opt1.label', null, 'B：在静默中悼念'), hint: T('event.V_ERA_911.opt1.hint', null, '把悲伤留给舞步（艺术+3，隐士+1）'), effects: { art: 3, recluse: 1 }, next: '__RETURN__' }
     ]
   };
@@ -2339,9 +2339,9 @@ window.MJ = window.MJ || {};
     title: T('event.V_COLLAB_OTW.title', null, '《Off the Wall》的搭档们'),
     text: T('event.V_COLLAB_OTW.text', null, '首张 solo 专辑需要对的耳朵与对的笔。你身边站着几位关键搭档。'),
     options: [
-      { label: T('event.V_COLLAB_OTW.opt0.label', null, 'A：请昆西掌舵'), hint: T('event.V_COLLAB_OTW.opt0.hint', null, '合作+80，昆西+5'), effects: { cp_collab: 80, rel: { quincy: 5 } }, epilogue: T('event.V_COLLAB_OTW.opt0.epilogue', null, '昆西的点头，让整张专辑有了呼吸的节奏。'), next: '__RETURN__' },
-      { label: T('event.V_COLLAB_OTW.opt1.label', null, 'B：邀 Paul McCartney 对唱《Say Say Say》'), hint: T('event.V_COLLAB_OTW.opt1.hint', null, '合作+75'), effects: { cp_collab: 75 }, flags: { collab_mccartney: true }, epilogue: T('event.V_COLLAB_OTW.opt1.epilogue', null, '两位流行天王同框，电台里全是玩笑与和声。'), next: '__RETURN__' },
-      { label: T('event.V_COLLAB_OTW.opt2.label', null, 'C：让 Rod Temperton 写曲'), hint: T('event.V_COLLAB_OTW.opt2.hint', null, '合作+70'), effects: { cp_collab: 70 }, flags: { collab_temperton: true }, epilogue: T('event.V_COLLAB_OTW.opt2.epilogue', null, '《Rock with You》的律动，出自这位幕后笔锋。'), next: '__RETURN__' }
+      { label: T('event.V_COLLAB_OTW.opt0.label', null, 'A：请昆西掌舵'), hint: T('event.V_COLLAB_OTW.opt0.hint', null, '合作+80，昆西+5'), effects: { rel: { quincy: 5 } }, flags: { cp_collab: 80 }, epilogue: T('event.V_COLLAB_OTW.opt0.epilogue', null, '昆西的点头，让整张专辑有了呼吸的节奏。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_OTW.opt1.label', null, 'B：邀 Paul McCartney 对唱《Say Say Say》'), hint: T('event.V_COLLAB_OTW.opt1.hint', null, '合作+75'), flags: { collab_mccartney: true, cp_collab: 75 }, epilogue: T('event.V_COLLAB_OTW.opt1.epilogue', null, '两位流行天王同框，电台里全是玩笑与和声。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_OTW.opt2.label', null, 'C：让 Rod Temperton 写曲'), hint: T('event.V_COLLAB_OTW.opt2.hint', null, '合作+70'), flags: { collab_temperton: true, cp_collab: 70 }, epilogue: T('event.V_COLLAB_OTW.opt2.epilogue', null, '《Rock with You》的律动，出自这位幕后笔锋。'), next: '__RETURN__' }
     ]
   };
   E.V_COLLAB_THRILLER = {
@@ -2350,8 +2350,8 @@ window.MJ = window.MJ || {};
     title: T('event.V_COLLAB_THRILLER.title', null, '《Thriller》的幕后'),
     text: T('event.V_COLLAB_THRILLER.text', null, '怪物要如何被听见？几位客座让这张专辑成了传说。'),
     options: [
-      { label: T('event.V_COLLAB_THRILLER.opt0.label', null, 'A：邀 Eddie Van Halen 弹《Beat It》'), hint: T('event.V_COLLAB_THRILLER.opt0.hint', null, '合作+82'), effects: { cp_collab: 82 }, flags: { collab_evh: true }, epilogue: T('event.V_COLLAB_THRILLER.opt0.epilogue', null, '那段吉他 solo 像闪电，硬摇滚与流行第一次握手。'), next: '__RETURN__' },
-      { label: T('event.V_COLLAB_THRILLER.opt1.label', null, 'B：请 Vincent Price 念白'), hint: T('event.V_COLLAB_THRILLER.opt1.hint', null, '合作+70'), effects: { cp_collab: 70 }, flags: { collab_price: true }, epilogue: T('event.V_COLLAB_THRILLER.opt1.epilogue', null, '低沉的旁白落下，恐怖成了一种时髦。'), next: '__RETURN__' }
+      { label: T('event.V_COLLAB_THRILLER.opt0.label', null, 'A：邀 Eddie Van Halen 弹《Beat It》'), hint: T('event.V_COLLAB_THRILLER.opt0.hint', null, '合作+82'), flags: { collab_evh: true, cp_collab: 82 }, epilogue: T('event.V_COLLAB_THRILLER.opt0.epilogue', null, '那段吉他 solo 像闪电，硬摇滚与流行第一次握手。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_THRILLER.opt1.label', null, 'B：请 Vincent Price 念白'), hint: T('event.V_COLLAB_THRILLER.opt1.hint', null, '合作+70'), flags: { collab_price: true, cp_collab: 70 }, epilogue: T('event.V_COLLAB_THRILLER.opt1.epilogue', null, '低沉的旁白落下，恐怖成了一种时髦。'), next: '__RETURN__' }
     ]
   };
   E.V_COLLAB_BAD = {
@@ -2360,8 +2360,8 @@ window.MJ = window.MJ || {};
     title: T('event.V_COLLAB_BAD.title', null, '《Bad》的吉他客座'),
     text: T('event.V_COLLAB_BAD.text', null, '《Bad》想要更硬的城市脉搏，一位吉他英雄可以点上狠劲。'),
     options: [
-      { label: T('event.V_COLLAB_BAD.opt0.label', null, 'A：邀 Slash 助阵《Give In to Me》'), hint: T('event.V_COLLAB_BAD.opt0.hint', null, '合作+80'), effects: { cp_collab: 80 }, flags: { collab_slash: true }, epilogue: T('event.V_COLLAB_BAD.opt0.epilogue', null, 'Slash 的 riff 把舞台烧得更烫，两个时代的吉他手隔空击掌。'), next: '__RETURN__' },
-      { label: T('event.V_COLLAB_BAD.opt1.label', null, 'B：靠自己扛下编曲'), hint: T('event.V_COLLAB_BAD.opt1.hint', null, '合作+60'), effects: { cp_collab: 60 }, epilogue: T('event.V_COLLAB_BAD.opt1.epilogue', null, '你亲自掌舵，证明不必借谁的光芒也能发光。'), next: '__RETURN__' }
+      { label: T('event.V_COLLAB_BAD.opt0.label', null, 'A：邀 Slash 助阵《Give In to Me》'), hint: T('event.V_COLLAB_BAD.opt0.hint', null, '合作+80'), flags: { collab_slash: true, cp_collab: 80 }, epilogue: T('event.V_COLLAB_BAD.opt0.epilogue', null, 'Slash 的 riff 把舞台烧得更烫，两个时代的吉他手隔空击掌。'), next: '__RETURN__' },
+      { label: T('event.V_COLLAB_BAD.opt1.label', null, 'B：靠自己扛下编曲'), hint: T('event.V_COLLAB_BAD.opt1.hint', null, '合作+60'), flags: { cp_collab: 60 }, epilogue: T('event.V_COLLAB_BAD.opt1.epilogue', null, '你亲自掌舵，证明不必借谁的光芒也能发光。'), next: '__RETURN__' }
     ]
   };
   E.V_TV_SPECIAL = {

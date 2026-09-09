@@ -145,7 +145,28 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 
 **连带暴露并修复**：`V_REL_FRANK`（cond `frank>=10`）链路唯一来源是 `V_BAD_TOUR` opt0（随机 1/3 选中），修复前就只有 **2 次触发（0.04%）** 踩在门禁线上；本次流程位移后变 0 触发触雷 → 阈值放宽 `>=8`（`V_BAD_TOUR` opt1 也满足），链路变稳。
 
+---
 
+## 三·八、✅ 已收官：引擎不变量 fuzz 审计（2026-09-09，矩阵 31→32）
+
+> 用户要求排查「不可预见」类 BUG。方法论：不预设 bug 形态，用断言网捞——静态 effects 键扫描 + 动态不变量 fuzz + 存档 round-trip + 极端状态矩阵 + UI 混乱操作 fuzz。
+
+**抓到并修复 2 类真静默失效**（`changeAttr` 对未知键**静默丢弃**是高发区）：
+1. **`philanthropist` 键双侧错位**（`V_ERA_WEARETHEWORLD` / `V_ERA_911`）：effects 写 `philanthropist: 1`（非法键被丢弃），branch0 cond 读 `s.meta.philanthropist`（也不是合法键）→ **两个事件的慈善分支从未显示过**。修复：写 `meta.phil`、读 `meta.phil`（hint「慈善+1」即 phil 计数）。
+2. **`V_COLLAB_OTW/THRILLER/BAD` 的 `cp_collab` 放在 effects**（会被丢弃）→ **合作企划画像从未加分**，decisionStyle 的 collab 维度只靠 4_2。修复：`cp_collab` 移入 flags（4_2 先例）。
+
+**新门禁 `test/_audit_invariants.cjs`**（登记两处清单，矩阵 31→32）：
+- 静态：全事件 effects 键合法性（attributes 8 键 ∪ meta 6 键 ∪ money/rel/timeline；rel 子键 ∈ relationsDefs）
+- 动态：fuzz 局每步断言——attributes 0..100 非NaN、meta 非负整数、relations ±100、era∈[-1,5]、netWorth 有限、debt 与 netWorth 派生一致、flags JSON 可安全序列化（函数/undefined/NaN/循环引用会静默破坏存档；`grammyCats_*` 结构化数组是 planner 有意设计，允许）
+- 存档 round-trip：serialize→hydrate→serialize 深比较（抓丢字段）
+- 极端状态矩阵：全0/全100/巨额负债/财富峰值/孤独满值/flags风暴/era边界 ×8，直调 resolveEnding/evaluate/checkFlags/revealAll/resolveGrammy 不抛异常且结局合法
+- **新增 e2e 第六模式 `npm run e2e:fuzz`**：UI 混乱操作 monkey testing——不看语义随机点击页面所有可点元素 600 次 ×3 局，断言 0 pageerror/0 console.error 且 reload 后可恢复。实测 3/3。
+
+**回归**：npm test 32/32、随机 6/6、endings 30/30、eggs 43/43、reset 16/16、counts 9/9、fuzz 3/3。
+
+---
+
+## 四、暂缓（用户指示，恢复时间待定）
 
 - **海报留白内容方案 A–E —— 无限期暂缓（用户拍板 2026-09-09）**（A 人生年轮 / B 六维星环 / C 同行者剪影 / D 本程之最 / E 元路线四相，方案存 git 历史）。
 - [ ] **多周目传承 M10 / 关键抉择回放 M12**（M11 成就叙事化已落地）。
@@ -158,7 +179,7 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 
 ## 五、工程 / 验证（维护铁律）
 
-- [x] `npm test` **30 门禁**并行矩阵全绿（2026-09-09 实测 EXIT=0；`check_syntax`、`check_gitignore` 已入矩阵）。
+- [x] `npm test` **32 门禁**并行矩阵全绿（2026-09-09 实测 EXIT=0；`check_syntax`、`check_gitignore`、`_audit_neverland`、`_audit_invariants` 已入矩阵）。
 - 新增门禁一律遵守「信息型门禁=虚假通过」铁律：必须 `process.exit(1)` 才算 FAIL，结论须来自真实引擎调用。
 - 新增门禁须同时登记 `run_parallel.cjs` GATES 数组与 `package.json test:serial`（两处）。
 - 改 spine 事件年份须复跑 `check_balance_reach`；新增人物文案须过 `_audit_person_consistency`（初遇加 INTRO_WHITELIST）。

@@ -344,6 +344,40 @@ async function countsRun(browser, { viewport, name }) {
   return checks.map((c) => ({ name: 'counts', ...c }));
 }
 
+// ——— 模式 6：UI 混乱操作 fuzz（monkey testing）———
+// 不看语义随机点击页面上所有可点元素（按钮/选项/摘要/图鉴卡片），抓空引用、竞态、
+// 未捕获异常等「不可预见」类故障。断言：0 pageerror / 0 console.error，且页面仍可恢复。
+async function fuzzRun(browser, viewport) {
+  const out = [];
+  for (const [runId, clicks] of [['fuzz-1', 220], ['fuzz-2', 220], ['fuzz-3', 160]]) {
+    const ctx = await browser.newContext({ viewport });
+    const page = await ctx.newPage();
+    page.on('dialog', (d) => { try { d.accept(); } catch (e) {} });
+    await page.goto('http://127.0.0.1:8123/index.html', { waitUntil: 'load' });
+    await page.waitForTimeout(400);
+    let clicksDone = 0, skipped = 0;
+    for (let i = 0; i < clicks; i++) {
+      try {
+        const handles = await page.$$('button:not([disabled]), .option, .g-cell, summary, .poster-thumb-btn');
+        if (!handles.length) { skipped++; continue; }
+        const h = handles[Math.floor(Math.random() * handles.length)];
+        await h.click({ timeout: 800, force: true }).catch(() => { skipped++; });
+        clicksDone++;
+        if (i % 25 === 0) await page.waitForTimeout(120);
+      } catch (e) { skipped++; }
+    }
+    await page.waitForTimeout(500);
+    // 页面仍可恢复：重新加载后 MJ 与主菜单可用
+    await page.reload({ waitUntil: 'load' });
+    await page.waitForTimeout(400);
+    const alive = await page.evaluate(() => !!(window.MJ && window.MJ.ui && document.getElementById('btn-new')));
+    if (!alive) errors.push(`[${runId}] reload 后主菜单未恢复`);
+    out.push({ id: runId, ok: alive, clicksDone, skipped });
+    await ctx.close();
+  }
+  return out;
+}
+
 // ——— 模式 5：图鉴重置语义（冻结到新局）———
 // 背景：重置成就/彩蛋/趣事后继续旧存档，会被当前 state 静默复活（成就 7→0→9），
 // 且 resume 的 _suppressAchToast 只在首屏恰为事件页时静默，否则连弹解锁 toast。
@@ -456,8 +490,9 @@ async function resetRun(browser, { viewport, name }) {
   const argv = process.argv.slice(2);
   const mode = argv.includes('--counts') ? 'counts'
     : argv.includes('--reset') ? 'reset'
-      : argv.includes('--endings') ? 'endings'
-        : argv.includes('--eggs') ? 'eggs' : 'random';
+      : argv.includes('--fuzz') ? 'fuzz'
+        : argv.includes('--endings') ? 'endings'
+          : argv.includes('--eggs') ? 'eggs' : 'random';
   let target = null;
   const ti = argv.indexOf('--target');
   if (ti >= 0) target = { kind: argv[ti + 1], id: argv[ti + 2] };
@@ -482,6 +517,9 @@ async function resetRun(browser, { viewport, name }) {
     } else if (mode === 'reset') {
       const rs = await resetRun(browser, { viewport: { width: 1366, height: 768 }, name: 'reset' });
       rs.forEach((c) => report.results.push(c));
+    } else if (mode === 'fuzz') {
+      const fs2 = await fuzzRun(browser, { width: 1366, height: 768 });
+      fs2.forEach((c) => report.results.push(c));
     } else {
       const runs = [
         { viewport: { width: 1366, height: 768 }, name: 'desktop-1', maxSteps: 320 },
@@ -509,6 +547,7 @@ async function resetRun(browser, { viewport, name }) {
     else if (mode === 'eggs') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'}${r.method ? ' (' + r.method + ')' : ''}${r.reason ? ' ' + r.reason : ''}`);
     else if (mode === 'counts') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 真值=${r.expected} 页面=${r.actual}`);
     else if (mode === 'reset') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 期望=${r.expected} 实际=${r.actual}`);
+    else if (mode === 'fuzz') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} clicks=${r.clicksDone} skipped=${r.skipped}`);
   }
   console.log(`\n结果：${pass}/${report.results.length} 通过`);
   console.log(`控制台 ERROR / 未捕获异常：${errors.length}`);
