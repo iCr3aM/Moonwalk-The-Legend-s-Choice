@@ -1,6 +1,6 @@
 {
   "name": "mj-life-choices",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "description": "月球漫步：传奇的抉择 — 文字人生模拟游戏（原生 JS，模块化，可选 Vite 单文件构建）",

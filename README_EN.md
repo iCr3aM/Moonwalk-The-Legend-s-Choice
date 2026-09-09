@@ -10,6 +10,7 @@
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://www.ecma-international.org/)
 [![Vanilla JS](https://img.shields.io/badge/UI-Vanilla%20JS-2ea44f?style=flat-square)](https://developer.mozilla.org/)
+[![Status](https://img.shields.io/badge/status-released·iterable-brightgreen?style=flat-square)](./NEXT_STEPS.md)
 [![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
 [![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#license)
@@ -34,8 +35,8 @@
 - **Six attributes + dual-track Economy**: Health / Reputation / Wealth / Family / Art / Stress (all 0–100); large sums go through `netWorth` / `debt` (in 10k units), fixing the early "wealth clamped to 0" unreachable-ending bug.
 - **30 endings (23 mainline + 7 alt-history)**: including 1 hidden ultimate (True Eternal) and 7 alt-history ("what-if") endings, resolved by a priority rule table plus meta-route tie-breaking.
 - **Four hidden meta-routes**: Artist / Philanthropist / Mogul / Recluse, accumulated from choices with a live "you are on the path to X" hint.
-- **Variant event system ("what-if" system)**: 114 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
-- **88 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
+- **Variant event system ("what-if" system)**: 141 variants inserted between chapters by probability + year window, including rare gated hidden / conditional variants.
+- **89 achievements**: gallery-style `localStorage` persistence with real-time unlock toasts.
 - **Bilingual (Simplified Chinese / English)**: one-click language switch, fully localized event text.
 - **Sequel "what if MJ didn't pass" (2010–2026)**: This Is It residency, digital singles plan, Sony's 2016 acquisition of half of Sony/ATV, the 2026 biopic *Michael*, and other historical anchors.
 - **Legendary poster**: the ending screen auto-generates a saveable (long-press) Canvas poster (six stats, dominant route, node / variant / choice stats, achievement progress).

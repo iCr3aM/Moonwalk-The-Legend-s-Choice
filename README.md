@@ -10,6 +10,7 @@
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://www.ecma-international.org/)
 [![Vanilla JS](https://img.shields.io/badge/UI-Vanilla%20JS-2ea44f?style=flat-square)](https://developer.mozilla.org/)
+[![Status](https://img.shields.io/badge/status-%E5%B7%B2%E5%8F%91%E5%B8%83·%E5%8F%AF%E8%BF%AD%E4%BB%A3-brightgreen?style=flat-square)](./NEXT_STEPS.md)
 [![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
 [![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#许可证)
@@ -34,8 +35,8 @@
 - **六维属性 + Economy 双轨**：健康 / 声誉 / 财富 / 家庭 / 艺术 / 压力（均 0–100）；大额金钱走 `netWorth` / `debt`（万元），修复早期「财富被 clamp 到 0」导致结局不可达的 bug。
 - **30 种结局（23 主线 + 7 假设线）**：含 1 个隐藏终极结局（真·永恒）与 7 个假设线（架空历史）结局，由优先级规则表 + 元路线破平次序解析。
 - **四条隐藏元路线**：艺术家 / 慈善家 / 商业巨擘 / 隐士，由选择累积、实时提示「正在走向 X 之路」。
-- **变体事件系统（可能性系统）**：114 变体按「概率 + 年份窗口」在章节间插入，含稀有门控的隐藏 / 条件变体。
-- **成就 88 项（以 config.js 为准）**：复用图鉴式 `localStorage` 持久化，游戏中实时弹窗解锁。
+- **变体事件系统（可能性系统）**：141 变体按「概率 + 年份窗口」在章节间插入，含稀有门控的隐藏 / 条件变体。
+- **成就 89 项（以 config.js 为准）**：复用图鉴式 `localStorage` 持久化，游戏中实时弹窗解锁。
 - **双语支持（简体中文 / English）**：可一键切换语言，事件文案全量本地化。
 - **续章「假设 MJ 未离世」（2010–2026）**：This Is It 驻演、数字单曲计划、2016 索尼收购 Sony/ATV 半数股权、2026 传记片《Michael》等史实锚点。
 - **传奇海报**：结局页自动用 Canvas 生成可保存（长按）的图片海报（六维数值、主导路线、节点 / 变体 / 抉择统计、成就进度）。
