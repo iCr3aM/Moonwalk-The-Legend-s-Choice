@@ -3,6 +3,8 @@
 //   1) 随机回归（默认）：真实加载 index.html，桌面+移动随机真机游玩，捕获 console.error/pageerror/warning，断言皆抵达结局。
 //   2) 定向结局（--endings / --target ending END_XXX）：用 resolveEnding 反推的"人设"套到真实 GameState，调真实 showEnding 渲染海报并断言落到的就是目标结局、#poster-box 已渲染。
 //   3) 定向彩蛋（--eggs / --target egg EGG_XXX）：按 cond(checkFlags/revealAll) / 孤儿 flag(checkFlags) / 特殊(onEnding/incPlaythroughs) 三类真实解锁路径逐枚验证。
+//   4) 计数自愈（--counts）：真实游玩产生档案/解锁后，删除档案与重置四类图鉴，
+//      断言页面上的 data-cnt 显示值与 localStorage/系统真值一致（抓「数量滞后、刷新才对」回归）。
 // 退出码：全部通过 0，否则 1。
 const http = require('http');
 const fs = require('fs');
@@ -215,9 +217,138 @@ async function targetedEgg(browser, eggId) {
   return { id: eggId, ...res };
 }
 
+// ——— 模式 4：计数自愈（data-cnt 与真值必须一致）———
+// 背景：菜单/结局页的 .m-cnt 在建 HTML 时一次性求值，删档案或重置图鉴后若不回写 DOM，
+// 就会「数量停在旧值，刷新才对」。本模式用真实点击走一遍会改变这些数字的操作，
+// 每次操作后断言 DOM 值 === localStorage/系统真值（修复前必然不等）。
+async function countsRun(browser, { viewport, name }) {
+  const { ctx, page } = await newPage(browser, viewport);
+  const checks = [];
+  const sleep = (ms) => page.waitForTimeout(ms);
+
+  async function readCnt(key) {
+    return page.evaluate((k) => {
+      const el = document.querySelector('[data-cnt="' + k + '"]');
+      return el ? el.textContent.trim() : null;
+    }, key);
+  }
+  async function truthOf(key) {
+    return page.evaluate((k) => {
+      const MJ = window.MJ;
+      if (k === 'archive') { try { return JSON.parse(localStorage.getItem(MJ.saveSystem.archiveKey) || '[]').length; } catch (e) { return -1; } }
+      if (k === 'gallery') return Object.keys(MJ.saveSystem.getGallery()).length + ' / ' + Object.keys(MJ.config.endings).length;
+      if (k === 'ach') { const all = MJ.achievementSystem.all(); return all.filter((a) => a.unlocked).length + ' / ' + all.length; }
+      if (k === 'egg') return MJ.eggSystem.count() + ' / ' + MJ.eggSystem.total();
+      if (k === 'trivia') return MJ.triviaSystem.count() + ' / ' + MJ.triviaSystem.total();
+      return null;
+    }, key);
+  }
+  async function check(id, key) {
+    const truth = await truthOf(key);
+    const actual = await readCnt(key);
+    if (actual === null) return; // 当前视图不渲染该计数（如结局页无档案库入口）→ 不适用
+    const ok = String(actual) === String(truth);
+    if (!ok) errors.push(`[counts ${id}] data-cnt=${key} 期望真值 ${truth}，页面显示 ${actual}`);
+    checks.push({ id, ok, expected: truth, actual });
+  }
+  async function playOnce(max = 320) {
+    const nb = await page.$('#btn-new');
+    if (nb) await nb.click();
+    await sleep(400);
+    for (let i = 0; i < max; i++) {
+      if (await page.$('#poster-box')) break;
+      const opts = await page.$$('.option');
+      if (opts.length) await opts[Math.floor(Math.random() * opts.length)].click();
+      else if (await page.$('#btn-era')) await (await page.$('#btn-era')).click();
+      else if (await page.$('#btn-next')) await (await page.$('#btn-next')).click();
+      else if (await page.$('#btn-end')) await (await page.$('#btn-end')).click();
+      else break;
+      await sleep(140);
+    }
+    await sleep(400);
+  }
+  async function backToMenu() {
+    const rb = await page.$('#btn-restart');
+    if (rb) { await rb.click(); await sleep(400); }
+  }
+  // wireReset 是「再点一次确认」，每次都重新取按钮（重绘后节点会换）
+  async function confirmReset(btnId) {
+    let b = await page.$('#' + btnId);
+    if (!b) return false;
+    await b.click(); await sleep(150);
+    b = await page.$('#' + btnId);
+    if (!b) return false;
+    await b.click(); await sleep(400);
+    return true;
+  }
+  async function deleteOneArchive() {
+    await page.click('#btn-archive'); await sleep(400);
+    const card = await page.$('.arc-card');
+    if (!card) { await page.click('#arc-close'); await sleep(300); return false; }
+    await card.click(); await sleep(900); // 海报 modal
+    let ok = true;
+    let b = await page.$('#pm-delete');
+    if (!b) return false;
+    await b.click(); await sleep(150);
+    b = await page.$('#pm-delete');
+    if (!b) return false;
+    await b.click(); await sleep(600); // 回到档案库
+    const cl = await page.$('#arc-close');
+    if (cl) { await cl.click(); await sleep(300); }
+    return ok;
+  }
+  async function resetCodex(btnId, closeId) {
+    await sleep(200);
+    await confirmReset(btnId);
+    const cl = await page.$('#' + closeId);
+    if (cl) { await cl.click(); await sleep(300); }
+  }
+
+  // 两局真实游玩 → 2 条档案 + 若干解锁
+  await playOnce();
+  await check('ending-page-gallery', 'gallery'); // 结局页也挂了 data-cnt（除档案库）
+  await backToMenu();
+  // 主菜单必须五个计数节点齐全，否则后续 check 会因选择器缺失而虚假通过
+  const cntKeys = await page.evaluate(() => Array.prototype.map.call(document.querySelectorAll('[data-cnt]'), (el) => el.getAttribute('data-cnt')));
+  const missing = ['gallery', 'ach', 'egg', 'trivia', 'archive'].filter((k) => cntKeys.indexOf(k) < 0);
+  if (missing.length) errors.push('[counts] 主菜单缺少 data-cnt 节点：' + missing.join(','));
+  checks.push({ id: 'menu-has-all-cnt', ok: !missing.length, expected: 5, actual: cntKeys.length });
+  await playOnce();
+  await backToMenu();
+  await check('after-2-runs', 'archive');
+
+  // 删除单条档案 → 计数必须立刻回落
+  await deleteOneArchive();
+  await check('delete-archive-1', 'archive');
+  await deleteOneArchive();
+  await check('delete-archive-all', 'archive');
+
+  // 四类图鉴重置 → 计数必须立刻归零
+  await page.click('#btn-gallery'); await sleep(400);
+  await resetCodex('gallery-reset', 'gallery-close');
+  await check('reset-gallery', 'gallery');
+
+  await page.click('#btn-ach'); await sleep(400);
+  await resetCodex('ach-reset', 'ach-close');
+  await check('reset-achievements', 'ach');
+
+  await page.click('#btn-egg'); await sleep(400);
+  await resetCodex('egg-reset', 'egg-close');
+  await check('reset-eggs', 'egg');
+
+  await page.click('#btn-trivia'); await sleep(400);
+  await resetCodex('trivia-reset', 'trivia-close');
+  await check('reset-trivia', 'trivia');
+
+  await ctx.close();
+  return checks.map((c) => ({ name: 'counts', ...c }));
+}
+
 (async () => {
   const argv = process.argv.slice(2);
-  const mode = argv.includes('--endings') ? 'endings' : argv.includes('--eggs') ? 'eggs' : 'random';
+  const mode = argv.includes('--counts') ? 'counts'
+    : argv.includes('--endings') ? 'endings'
+      : argv.includes('--eggs') ? 'eggs' : 'random';
   let target = null;
   const ti = argv.indexOf('--target');
   if (ti >= 0) target = { kind: argv[ti + 1], id: argv[ti + 2] };
@@ -236,6 +367,9 @@ async function targetedEgg(browser, eggId) {
     } else if (mode === 'eggs') {
       const ids = await (await newPage(browser, { width: 1366, height: 768 })).page.evaluate(() => Object.keys(MJ.eggSystem.defs));
       for (const id of ids) report.results.push(await targetedEgg(browser, id));
+    } else if (mode === 'counts') {
+      const cs = await countsRun(browser, { viewport: { width: 1366, height: 768 }, name: 'counts' });
+      cs.forEach((c) => report.results.push(c));
     } else {
       const runs = [
         { viewport: { width: 1366, height: 768 }, name: 'desktop-1', maxSteps: 320 },
@@ -261,6 +395,7 @@ async function targetedEgg(browser, eggId) {
     if (mode === 'random') console.log(`- ${r.name}: steps=${r.steps} reachedEnding=${r.reachedEnding} ending=${r.ending || '?'}` + (r.attrs ? ` | H${r.attrs.health} R${r.attrs.reputation} W${r.attrs.wealth} F${r.attrs.family} A${r.attrs.art} S${r.attrs.stress}` : ''));
     else if (mode === 'endings') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 解析=${r.expected} 渲染=${r.resolved} poster=${r.hasPoster} 目标匹配=${r.match}`);
     else if (mode === 'eggs') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'}${r.method ? ' (' + r.method + ')' : ''}${r.reason ? ' ' + r.reason : ''}`);
+    else if (mode === 'counts') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 真值=${r.expected} 页面=${r.actual}`);
   }
   console.log(`\n结果：${pass}/${report.results.length} 通过`);
   console.log(`控制台 ERROR / 未捕获异常：${errors.length}`);

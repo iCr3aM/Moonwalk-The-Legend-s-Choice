@@ -12,7 +12,7 @@
 - **结局**：**30 种 = 23 主线 + 7 假设线**，含 1 隐藏终极 `END_TRUE_ETERNAL`。
 - **变体（可能性系统）**：**141 个**；**成就 89**、彩蛋 **43**（含 3 密蛋）、趣事 **61**。
 - **文案系统**：手记 6 章 × 多分支（含第六章）、命运回响 12 条、假如…微片段 7 组、尾声彩蛋 20 条、成就叙事 40 条——全部模板键 EN 全量（门禁第四阶段自动收集）。
-- **UI**：稀有度五档颜色体系（CSS `--r-*` = `RARITY_COLORS` = 海报 canvas 三方对齐）、violet/teal 语义色 token 化、可访问性（键盘可达/aria-live/viewport 缩放/对比度 AA）、多设备截图工具 `test/_ui_screenshots.cjs`；**手机自适应字体**：七档 `--fs-*` 改 clamp 流体排版（375px 基准 / 320px 缩 1.5–4px / ≥430px 复原）。
+- **UI**：稀有度五档颜色体系（CSS `--r-*` = `RARITY_COLORS` = 海报 canvas 三方对齐）、violet/teal 语义色 token 化、可访问性（键盘可达/aria-live/viewport 缩放/对比度 AA）、DOM 计数自愈（`data-cnt` + `refreshCounts()`，修「删档案/重置图鉴后数量滞后」）；多设备截图工具 `test/_ui_screenshots.cjs`；**手机自适应字体**：七档 `--fs-*` 改 clamp 流体排版（375px 基准 / 320px 缩 1.5–4px / ≥430px 复原）。
 - **测试门禁**：`npm test` **30 个** `test/*.cjs` 全绿（并行矩阵，EXIT=0 为真绿）；新增 `check_syntax`（js/ 全模块 node --check，堵住「无浏览器加载路径」盲区）、`check_gitignore`（禁止「已跟踪但被忽略」的文件进入远端）。
 - **文档**：根目录仅剩 `NEXT_STEPS.md` + `README.md/README_EN.md`（门面）；GDD/架构设计等已归档（§六）。
 
@@ -68,7 +68,25 @@
 px→rem 大改（style.css 700+ 行），收益不成比例。
 
 **拍板结果（2026-09-09）**：采用方案一，按上表七档 clamp 值落地（`css/style.css` `:root` 改 8 行 + `index.html` css 版本串 `?v=1.1.4→1.1.5`）。验证：`npm test` 29/29 绿；`node test/_ui_screenshots.cjs` 4 设备（320/360/375/768）× 双语「无水平溢出、无 pageerror」。`--fs-xs` 下限维持 10px（图鉴 desc 已 line-clamp，未放宽）；后续如需放大只调 clamp 的 min 值。
-**当前无进行中待办**：下一阶段从 §四 暂缓清单取项（建议先做发布前验证：5000 局回归 + Playwright e2e）。
+
+---
+
+## 三·五、下一项待拍板：violet / teal 主题化延伸（方案已出，2026-09-09）
+
+> 用户从暂缓清单挑出该项要求先出方案。完整 spec：`docs/superpowers/specs/2026-09-09-violet-teal-theme-extension.md`（docs 本地不入库）。
+
+**现状基线（实测 grep）**：U3#14 已建 12 个语义色 token，但**消费点只有 5 处**（toast×2 / pill×2 / vignette×1）；`.app[data-chapter=N]` 六章目前只覆写 `--gold/--gold-soft/--gold-dim/--line` —— 这正是零成本杠杆：violet/teal 走同一套「变量覆写」即可自动随章节变色，零 JS、零组件改动。
+
+**语义约定**：violet = 假设 / 虚构 / 未知 / 彩蛋；teal = 趣事 / 假如… / 平行想象；gold 保留给主线 / 成就 / 权威数值。验收口径：**不看文字只看颜色就能分辨「史实主线 / 假设虚构 / 趣味旁支」**。
+
+**分阶段**：
+
+- **A 语义色随章节走**（推荐先做，18–24 行 CSS，半小时级）：六章规则追加覆写 `--violet/--violet-border/--teal`；要点是必须与章色**拉开明度**——ch1 本就靛紫、ch3 本就青绿，否则假设线 pill 会「隐身」。
+- **B 补未覆盖场景**（1–2h，5 处→约 12 处）：`.g-prog` 按图鉴类型着色（彩蛋 violet / 趣事 teal）；`.era-block .e-tag` 按内容类型（手记 gold / 回响 violet / 假如 teal）；未解锁卡片按类型描边（**只换色相，不动「虚线 + opacity .55」这套未解锁语言**）；人物志未结识走 violet。
+- **C canvas 海报跟随**（半天）：canvas 不吃 CSS 变量，需把 `js/ui.js` 硬编码色表抽成 `MJ.THEME_COLORS`。
+- **D 玩家可选主题**（1 天+）：需新建设置面板 + i18n 键 + 持久化，建议等 A/B 反馈再定。
+
+> 拍板点：①做哪些阶段（建议 A+B，C/D 暂缓）；②是否接受语义色与章色同色相（推荐拉开明度）；③未解锁态是否允许按类型变色。
 
 ---
 
@@ -79,7 +97,7 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍深化（移动端、轻量可视化、社交增强）。
 - [x] **发布前验证（2026-09-09 已完成，全绿）**：`node test/_audit_playthrough.cjs 5000` → PASS（矛盾局=0 / 悬空链接=0 / 粘性 debt=0）；`npm run e2e` 随机 **6/6**、`npm run e2e:endings` **30/30**、`npm run e2e:eggs` **43/43**，三种模式均 **0 console ERROR、0 WARNING**。
-- [ ] **violet/teal 主题化延伸**（可选）：章节配色体系（`--gold` 六章色）是否扩展覆盖 violet/teal 语义色。
+
 
 ---
 
@@ -91,9 +109,10 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 - 改 spine 事件年份须复跑 `check_balance_reach`；新增人物文案须过 `_audit_person_consistency`（初遇加 INTRO_WHITELIST）。
 - 新增 js 模块同步三处清单：`index.html`、`build_singlefile.cjs`、test harness require。
 - UI 改动后跑 `node test/_ui_screenshots.cjs`（4 设备 × 双语实机截图 + 溢出检测）。
-- css/js 改动后 bump `index.html` 资源版本串（当前 css `?v=1.1.4`）。
+- css/js 改动后 bump `index.html` 资源版本串（当前 css `?v=1.1.5`、js `?v=1.1.3`）。
 - 批量改文件脚本：中文文件名/中文锚点必须用 UTF-8 临时 .cjs（PowerShell 内联必乱码）；删除代码块的结束锚必须选唯一地标行，禁用 `trim()==='}'`。
 - 命令行传中文给 node -e 会 GBK 乱码 → 一律临时脚本文件。
+- **写到 DOM 里的数量必须能自愈**（2026-09-09 修复「删档案/重置图鉴后计数滞后，刷新才对」）：凡是把 `xxxCount()` 求值拼进 HTML 的地方，同一节点必须挂 `data-cnt="gallery|ach|egg|trivia|archive"`，并在数据源变更后调 `refreshCounts()`（落点：`wireReset` 的 doReset 之后、`closeOverlay` 兜底、三类解锁 toast）。新增计数务必走这套，别再写一次性求值。回归验证：`npm run e2e:counts`（真机跑两局→删档→重置四类图鉴，断言 DOM 值 === localStorage/系统真值；**实测停用修复时 6 项 FAIL**，确能抓到回归）。
 - **`.gitignore` 不得忽略已入库内容**（2026-09-09 修正）：`test/`（52 个门禁脚本）与 `archive/`（归档文档）此前整目录被 ignore，但**早已被 git 跟踪并推到远端** → 属「远端出现已忽略文件」。已移除这两条 ignore 规则，只忽略真正的产物目录（`test/_ui_shots/`、`test/_e2e_shots/`、`test/_e2e_report.json`）。自检命令：`git ls-files -i -c --exclude-standard`（列出「已跟踪但被忽略」）必须为空。
 
 ---

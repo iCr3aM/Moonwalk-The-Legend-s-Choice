@@ -314,7 +314,12 @@ window.MJ = window.MJ || {};
     return T('rarity.' + r, null, zh);
   }
   function rarityClass(r) { return 'r-' + (RARITY_COLORS[r] ? r : 'common'); }
-  function closeOverlay(id) { var o = document.getElementById(id); if (o) o.parentNode.removeChild(o); }
+  function closeOverlay(id) {
+    var o = document.getElementById(id);
+    if (o) o.parentNode.removeChild(o);
+    // 兜底校正：任何弹层关闭都刷新背后页面的计数（覆盖「在弹层内重置/删档后返回」路径）
+    refreshCounts();
+  }
   function galleryCount() {
     var g = MJ.saveSystem.getGallery();
     return Object.keys(g).length + ' / ' + Object.keys(MJ.config.endings).length;
@@ -339,6 +344,8 @@ window.MJ = window.MJ || {};
       }
       clearTimeout(timer); armed = false; btn.textContent = btn._orig; btn.classList.remove('danger');
       doReset();
+      // 重置/删除落库后立刻校正计数，随后 reopen 的弹层内容自然也是最新
+      refreshCounts();
       if (reopen) reopen();
     });
   }
@@ -525,6 +532,36 @@ window.MJ = window.MJ || {};
   function archiveCount() {
     try { return MJ.saveSystem.getArchives().length; } catch (e) { return 0; }
   }
+  // 计数自愈（2026-09-09）：菜单/结局页的 m-cnt 与「继续游戏」按钮在建 HTML 时一次性求值，
+  // 之后 localStorage 变更（删档案、重置图鉴/成就/彩蛋/趣事、新解锁）都不会回写 DOM，
+  // 表现就是「数量滞后、刷新才对」。统一按 data-cnt 重算即可，无需重绘整页。
+  function refreshCounts() {
+    try {
+      Array.prototype.forEach.call(document.querySelectorAll('[data-cnt]'), function (el) {
+        var k = el.getAttribute('data-cnt');
+        var v = null;
+        if (k === 'gallery') v = galleryCount();
+        else if (k === 'ach') v = achCount();
+        else if (k === 'egg') v = eggCount();
+        else if (k === 'trivia') v = triviaCount();
+        else if (k === 'archive') v = archiveCount();
+        if (v != null && el.textContent !== String(v)) el.textContent = v;
+      });
+      syncContinueBtn();
+    } catch (e) {}
+  }
+  // 进行中存档消失（删档/开新局）后，「继续游戏」按钮与其主次样式同步
+  function syncContinueBtn() {
+    try {
+      var bc = document.getElementById('btn-continue');
+      if (!bc) return;
+      var live = false;
+      try { live = !!MJ.saveSystem.load(); } catch (e) { live = false; }
+      bc.style.display = live ? '' : 'none';
+      var bn = document.getElementById('btn-new');
+      if (bn) { bn.classList.remove('primary', 'ghost'); bn.classList.add(live ? 'ghost' : 'primary'); }
+    } catch (e) {}
+  }
   function collaboratorsModal(state) {
     closeOverlay('collab-overlay');
     var metN = 0;
@@ -597,6 +634,7 @@ window.MJ = window.MJ || {};
     t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.triviaToast', null, '趣事发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
+    refreshCounts(); // 趣事入账 → 可见计数即时 +1
     _enqueueToast(t, 3600);
   }
 
@@ -641,6 +679,7 @@ window.MJ = window.MJ || {};
       '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) +
       (a.rarity && a.rarity !== 'common' && a.rarity !== 'uncommon' ? '<span class="r-tag ' + rarityClass(a.rarity) + '">' + rarityLabel(a.rarity) + '</span>' : '') + '</div>' +
       '<div class="at-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div></div>';
+    refreshCounts(); // 成就解锁 → 可见计数即时 +1
     _enqueueToast(t, 3000);
   }
 
@@ -651,6 +690,7 @@ window.MJ = window.MJ || {};
     t.innerHTML = '<div class="at-icon">' + e.icon + '</div>' +
       '<div class="at-body"><div class="at-title">' + T('ui.eggToast', null, '彩蛋发现 · ') + escapeHtml(e.name) + '</div>' +
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
+    refreshCounts(); // 彩蛋入账 → 可见计数即时 +1
     _enqueueToast(t, 3600);
   }
 
@@ -1200,11 +1240,11 @@ window.MJ = window.MJ || {};
           '<button class="btn ' + (hasSave ? 'ghost' : 'primary') + '" id="btn-new">' + T('ui.newGame', null, '开始新人生') + '</button>' +
         '</div>' +
         '<div class="menu-grid">' +
-          '<button class="btn block" id="btn-gallery">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
-          '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
-          '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
-          '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
-          '<button class="btn block" id="btn-archive">🗂️ ' + T('ui.archive', null, '人生档案库') + ' <span class="m-cnt">' + archiveCount() + '</span></button>' +
+          '<button class="btn block" id="btn-gallery">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt" data-cnt="gallery">' + galleryCount() + '</span></button>' +
+          '<button class="btn block" id="btn-ach">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt" data-cnt="ach">' + achCount() + '</span></button>' +
+          '<button class="btn block" id="btn-egg">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt" data-cnt="egg">' + eggCount() + '</span></button>' +
+          '<button class="btn block" id="btn-trivia">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt" data-cnt="trivia">' + triviaCount() + '</span></button>' +
+          '<button class="btn block" id="btn-archive">🗂️ ' + T('ui.archive', null, '人生档案库') + ' <span class="m-cnt" data-cnt="archive">' + archiveCount() + '</span></button>' +
           '<button class="btn block" id="btn-lang">' + langLabel + '</button>' +
         '</div>' +
         '<div class="intro-foot">' +
@@ -1390,10 +1430,10 @@ window.MJ = window.MJ || {};
         '<div class="btn-row"><button class="btn primary" id="btn-restart">' + T('ui.restart', null, '重新开始') + '</button></div>' +
       '</div>' +
       '<div class="menu-grid">' +
-        '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt">' + galleryCount() + '</span></button>' +
-        '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt">' + achCount() + '</span></button>' +
-        '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt">' + eggCount() + '</span></button>' +
-        '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt">' + triviaCount() + '</span></button>' +
+        '<button class="btn block" id="btn-gallery-end">📖 ' + T('ui.gallery', null, '结局图鉴') + ' <span class="m-cnt" data-cnt="gallery">' + galleryCount() + '</span></button>' +
+        '<button class="btn block" id="btn-ach-end">🏆 ' + T('ui.achievements', null, '成就') + ' <span class="m-cnt" data-cnt="ach">' + achCount() + '</span></button>' +
+        '<button class="btn block" id="btn-egg-end">🥚 ' + T('ui.eggCodex', null, '彩蛋图鉴') + ' <span class="m-cnt" data-cnt="egg">' + eggCount() + '</span></button>' +
+        '<button class="btn block" id="btn-trivia-end">📝 ' + T('ui.triviaCodex', null, '趣事图鉴') + ' <span class="m-cnt" data-cnt="trivia">' + triviaCount() + '</span></button>' +
         '<button class="btn block" id="btn-lang-end">🌐 ' + T('ui.langBtn', null, '语言') + '</button>' +
       '</div>' +
       '<div class="review-grid">' +
