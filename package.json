@@ -15,6 +15,7 @@
     "e2e:endings": "node test/e2e.cjs --endings",
     "e2e:eggs": "node test/e2e.cjs --eggs",
     "e2e:counts": "node test/e2e.cjs --counts",
+    "e2e:reset": "node test/e2e.cjs --reset",
     "e2e:target": "node test/e2e.cjs --target"
   },
   "devDependencies": {

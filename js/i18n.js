@@ -48,6 +48,7 @@ window.MJ = window.MJ || {};
         'ui.resetTrivia': 'Reset Trivia',
         'ui.close': 'Close ✕',
         'ui.confirmReset': 'Click again to confirm (irreversible)',
+        'ui.resetFrozenHint': 'Codex reset: no new entries this run — collecting resumes when you start a New Life',
         'ui.continue': 'Continue',
         'ui.newGame': 'New Life',
         'ui.coverConfirm': 'Start a new life? This will overwrite your current save.',

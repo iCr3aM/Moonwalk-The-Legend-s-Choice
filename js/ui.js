@@ -439,7 +439,10 @@ window.MJ = window.MJ || {};
     ui._activeModal = { id: 'ach-overlay', open: achievementsModal };
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('ach-overlay'); });
     document.getElementById('ach-close').addEventListener('click', function () { closeOverlay('ach-overlay'); });
-    wireReset('ach-reset', function () { MJ.achievementSystem.clear(); }, function () {
+    wireReset('ach-reset', function () {
+      MJ.achievementSystem.clear(); MJ.achievementSystem.freeze();
+      toastInfo(T('ui.resetFrozenHint', null, '已重置：本局内不再记录，开始新人生后恢复收集'));
+    }, function () {
       closeOverlay('ach-overlay'); achievementsModal();
     });
   }
@@ -480,7 +483,10 @@ window.MJ = window.MJ || {};
     ui._activeModal = { id: 'egg-overlay', open: eggModal };
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('egg-overlay'); });
     document.getElementById('egg-close').addEventListener('click', function () { closeOverlay('egg-overlay'); });
-    wireReset('egg-reset', function () { MJ.eggSystem.clear(); }, function () {
+    wireReset('egg-reset', function () {
+      MJ.eggSystem.clear(); MJ.eggSystem.freeze();
+      toastInfo(T('ui.resetFrozenHint', null, '已重置：本局内不再记录，开始新人生后恢复收集'));
+    }, function () {
       closeOverlay('egg-overlay'); eggModal();
     });
   }
@@ -524,7 +530,10 @@ window.MJ = window.MJ || {};
     ui._activeModal = { id: 'trivia-overlay', open: triviaModal };
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay('trivia-overlay'); });
     document.getElementById('trivia-close').addEventListener('click', function () { closeOverlay('trivia-overlay'); });
-    wireReset('trivia-reset', function () { MJ.triviaSystem.clear(); }, function () {
+    wireReset('trivia-reset', function () {
+      MJ.triviaSystem.clear(); MJ.triviaSystem.freeze();
+      toastInfo(T('ui.resetFrozenHint', null, '已重置：本局内不再记录，开始新人生后恢复收集'));
+    }, function () {
       closeOverlay('trivia-overlay'); triviaModal();
     });
   }
@@ -636,6 +645,13 @@ window.MJ = window.MJ || {};
       '<div class="at-desc">' + escapeHtml(e.desc) + '</div></div>';
     refreshCounts(); // 趣事入账 → 可见计数即时 +1
     _enqueueToast(t, 3600);
+  }
+  // 中性提示（无图标）：用于「重置后冻结」等需要告知玩家但不属于解锁的时刻
+  function toastInfo(msg) {
+    var t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = '<div class="at-body"><div class="at-title">' + escapeHtml(msg) + '</div></div>';
+    _enqueueToast(t, 3400);
   }
 
   function vignettePanel(state) {
@@ -1518,5 +1534,8 @@ window.MJ = window.MJ || {};
       .replace(/\n/g, '<br>');
   }
 
+  // 供 engine 的彩蛋/趣事系统在解锁瞬间回调（此前从未导出 → 这两类解锁一直没有提示）
+  ui.toastEgg = toastEgg;
+  ui.toastTrivia = toastTrivia;
   MJ.ui = ui;
 })();

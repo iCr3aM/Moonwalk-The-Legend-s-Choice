@@ -267,6 +267,7 @@ window.MJ = window.MJ || {};
       this._return = null;
       this._chapterVariantCount = 0;
       this._sinceVariant = 0;
+      MJ.unfreezeCodexSystems(); // 开新人生：解冻被重置的图鉴，重新开始收集
       this.go('start');
     },
 
@@ -475,6 +476,13 @@ window.MJ = window.MJ || {};
   };
 
   MJ.engine = engine;
+  // 开新人生时解冻：重置后的图鉴（成就/彩蛋/趣事）在新一局重新开放收集，
+  // 续旧档期间保持冻结，避免被当前 state 静默复活。结局图鉴不参与（本就不会复活）。
+  MJ.unfreezeCodexSystems = function () {
+    if (MJ.achievementSystem) MJ.achievementSystem.unfreeze();
+    if (MJ.eggSystem) MJ.eggSystem.unfreeze();
+    if (MJ.triviaSystem) MJ.triviaSystem.unfreeze();
+  };
   var T = function (k, v, fb) { return (MJ.t ? MJ.t(k, v, fb) : (fb != null ? fb : k)); };
 
   // ---------- 存档系统（localStorage） ----------
@@ -535,8 +543,14 @@ window.MJ = window.MJ || {};
       try { return JSON.parse(localStorage.getItem(this.key)) || {}; } catch (e) { return {}; }
     },
     isUnlocked: function (id) { return !!this._store()[id]; },
+    // 返回 true 表示「本次新解锁」（冻结期间恒 false，既不写库也不提示）
     unlock: function (id) {
-      try { var s = this._store(); s[id] = true; localStorage.setItem(this.key, JSON.stringify(s)); } catch (e) {}
+      if (this._frozen) return false;
+      try {
+        var s = this._store();
+        if (s[id]) return false;
+        s[id] = true; localStorage.setItem(this.key, JSON.stringify(s)); return true;
+      } catch (e) { return false; }
     },
     // 评估全部成就，返回本次“新解锁”的成就定义数组（用于弹窗提示）
     evaluate: function (state, ctx) {
@@ -544,7 +558,7 @@ window.MJ = window.MJ || {};
       var self = this;
       (MJ.config.achievements || []).forEach(function (a) {
         if (self.isUnlocked(a.id)) return;
-        try { if (a.check(state, ctx || {})) { self.unlock(a.id); newly.push(a); } } catch (e) {}
+        try { if (a.check(state, ctx || {})) { if (self.unlock(a.id)) newly.push(a); } } catch (e) {}
       });
       return newly;
     },
@@ -556,9 +570,14 @@ window.MJ = window.MJ || {};
       });
     },
     // 重置全部已解锁成就（图鉴式 localStorage 清除）
+    // 冻结语义（2026-09-09）：UI 重置走 clear() + freeze() 组合——冻结期间该类不再解锁，
+    // 续旧档不会被当前 state 静默复活、也不弹提示；开新人生（engine.start）解冻。
+    // 单独调 clear()（测试/程序化清理）保持纯清除语义，不冻结。
     clear: function () {
       try { localStorage.removeItem(this.key); } catch (e) {}
-    }
+    },
+    freeze: function () { this._frozen = true; },
+    unfreeze: function () { this._frozen = false; }
   };
 
   // ---------- 彩蛋系统（GDD §17.9：系统化 Easter Eggs） ----------
@@ -630,6 +649,7 @@ window.MJ = window.MJ || {};
     // 解锁彩蛋；返回是否「新解锁」并弹窗
     unlock: function (id) {
       var def = this.defs[id]; if (!def) return false;
+      if (this._frozen) return false; // 重置后冻结到新局，续旧档不被旧 flag 复活
       var d = this._load();
       if (d.found[id]) return false;
       d.found[id] = true; this._save(d);
@@ -685,10 +705,12 @@ window.MJ = window.MJ || {};
       var d = this._load(); d.playthroughs = (d.playthroughs || 0) + 1; this._save(d);
       if (d.playthroughs >= 5) this.unlock('EGG_FOURTH');
     },
-    // 重置全部已发现彩蛋（图鉴式 localStorage 清除）
+    // 重置全部已发现彩蛋（图鉴式 localStorage 清除）；冻结语义同成就（UI 走 clear+freeze）
     clear: function () {
       try { localStorage.removeItem(this.key); } catch (e) {}
-    }
+    },
+    freeze: function () { this._frozen = true; },
+    unfreeze: function () { this._frozen = false; }
   };
 
   // ---------- 趣事与轶事系统（GDD §17.11：Trivia & Anecdotes） ----------
@@ -782,6 +804,7 @@ window.MJ = window.MJ || {};
     // 解锁趣事；返回「是否新解锁」并弹窗（与彩蛋同队列，避免重叠）
     unlock: function (id) {
       var def = this.defs[id]; if (!def) return false;
+      if (this._frozen) return false; // 重置后冻结到新局
       var d = this._load();
       if (d.found[id]) return false;
       d.found[id] = true; this._save(d);
@@ -808,10 +831,12 @@ window.MJ = window.MJ || {};
         if (def.cond) { try { if (def.cond(state)) self.unlock(k); } catch (e) {} }
       });
     },
-    // 重置全部已发现趣事（图鉴式 localStorage 清除）
+    // 重置全部已发现趣事（图鉴式 localStorage 清除）；冻结语义同成就（UI 走 clear+freeze）
     clear: function () {
       try { localStorage.removeItem(this.key); } catch (e) {}
-    }
+    },
+    freeze: function () { this._frozen = true; },
+    unfreeze: function () { this._frozen = false; }
   };
 
   // M2 扩展：假如…（想象）微片段（GDD §17.11 hypothetical vignettes），按主导元路线程序化生成

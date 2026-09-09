@@ -344,11 +344,120 @@ async function countsRun(browser, { viewport, name }) {
   return checks.map((c) => ({ name: 'counts', ...c }));
 }
 
+// ——— 模式 5：图鉴重置语义（冻结到新局）———
+// 背景：重置成就/彩蛋/趣事后继续旧存档，会被当前 state 静默复活（成就 7→0→9），
+// 且 resume 的 _suppressAchToast 只在首屏恰为事件页时静默，否则连弹解锁 toast。
+// 修复：clear() 后该类冻结，engine.start()（开新人生）才解冻。
+// 本模式断言：重置→计数归零且 _frozen=true；续旧档后计数仍为 0、无解锁 toast；
+// 开新人生后 _frozen=false 且能重新收集。
+const SYS = {
+  ach: { sys: 'achievementSystem', btn: 'btn-ach', reset: 'ach-reset', close: 'ach-close' },
+  egg: { sys: 'eggSystem', btn: 'btn-egg', reset: 'egg-reset', close: 'egg-close' },
+  trivia: { sys: 'triviaSystem', btn: 'btn-trivia', reset: 'trivia-reset', close: 'trivia-close' }
+};
+
+async function resetRun(browser, { viewport, name }) {
+  const { ctx, page } = await newPage(browser, viewport);
+  page.on('dialog', (d) => { try { d.accept(); } catch (e) {} });
+  await page.evaluate(() => {
+    window.__toasts = [];
+    new MutationObserver((ms) => ms.forEach((m) => m.addedNodes.forEach((n) => {
+      if (n.classList && n.classList.contains('toast')) {
+        window.__toasts.push({ type: n.className, title: (n.querySelector('.at-title') || {}).textContent || '' });
+      }
+    }))).observe(document.body, { childList: true });
+  });
+  const checks = [];
+  const sleep = (ms) => page.waitForTimeout(ms);
+  const push = (id, ok, expected, actual) => {
+    if (!ok) errors.push(`[reset ${id}] 期望 ${expected}，实际 ${actual}`);
+    checks.push({ id, ok, expected, actual });
+  };
+  async function step(n) {
+    for (let i = 0; i < n; i++) {
+      if (await page.$('#poster-box')) break;
+      const opts = await page.$$('.option');
+      if (opts.length) await opts[Math.floor(Math.random() * opts.length)].click();
+      else if (await page.$('#btn-era')) await (await page.$('#btn-era')).click();
+      else if (await page.$('#btn-next')) await (await page.$('#btn-next')).click();
+      else if (await page.$('#btn-end')) await (await page.$('#btn-end')).click();
+      else break;
+      await sleep(150);
+    }
+    await sleep(300);
+  }
+  const countOf = (k) => page.evaluate((key) => {
+    const MJ = window.MJ;
+    if (key === 'ach') return MJ.achievementSystem.all().filter((a) => a.unlocked).length;
+    if (key === 'egg') return MJ.eggSystem.count();
+    return MJ.triviaSystem.count();
+  }, k);
+  const frozenOf = (sys) => page.evaluate((s) => !!(window.MJ[s] && window.MJ[s]._frozen), sys);
+  const toastCount = () => page.evaluate(() => window.__toasts.length);
+  const clearToasts = () => page.evaluate(() => { window.__toasts.length = 0; });
+  async function confirmReset(btnId) {
+    let b = await page.$('#' + btnId);
+    if (!b) return false;
+    await b.click(); await sleep(150);
+    b = await page.$('#' + btnId);
+    if (!b) return false;
+    await b.click(); await sleep(400);
+    return true;
+  }
+
+  // 开局 12 步 → 注入彩蛋/趣事 flag → 存档 → 回主菜单（模拟玩家中途退出）
+  await page.click('#btn-new'); await sleep(400);
+  await step(12);
+  await page.evaluate(() => {
+    const st = MJ.engine.state;
+    st.flags.garyRoots = true; st.flags.bubbles = true;
+    st.flags.tidbit_cocoa = true; st.flags.tidbit_glove = true;
+    MJ.saveSystem.save(st);
+    MJ.ui.showIntro(!!MJ.saveSystem.load());
+  });
+  await sleep(400);
+
+  for (const k of ['ach', 'egg', 'trivia']) {
+    const cfg = SYS[k];
+    await page.click('#' + cfg.btn); await sleep(400);
+    await confirmReset(cfg.reset);
+    await page.click('#' + cfg.close); await sleep(300);
+    push(`${k}-reset-to-zero`, (await countOf(k)) === 0, 0, await countOf(k));
+    push(`${k}-frozen-flag`, (await frozenOf(cfg.sys)) === true, true, await frozenOf(cfg.sys));
+
+    await clearToasts();
+    const cont = await page.$('#btn-continue');
+    if (cont) { await cont.click(); await sleep(900); await step(3); }
+    const after = await countOf(k);
+    const tc = await toastCount();
+    push(`${k}-no-revive-on-resume`, after === 0, 0, after);
+    push(`${k}-no-toast-on-resume`, tc === 0, 0, tc);
+    // 回主菜单，为下一类做准备（仍在旧存档周期内，保持冻结）
+    await page.evaluate(() => { MJ.saveSystem.save(MJ.engine.state); MJ.ui.showIntro(true); });
+    await sleep(300);
+  }
+
+  // 开新人生 → 三类解冻，成就重新开始收集
+  await clearToasts();
+  const bn = await page.$('#btn-new');
+  if (bn) { await bn.click(); await sleep(700); await step(8); }
+  for (const k of ['ach', 'egg', 'trivia']) {
+    const fz = await frozenOf(SYS[k].sys);
+    push(`${k}-unfrozen-on-new-run`, fz === false, false, fz);
+  }
+  const achNew = await countOf('ach');
+  push('ach-collects-again-on-new-run', achNew > 0, '>0', achNew);
+
+  await ctx.close();
+  return checks.map((c) => ({ name: 'reset', ...c }));
+}
+
 (async () => {
   const argv = process.argv.slice(2);
   const mode = argv.includes('--counts') ? 'counts'
-    : argv.includes('--endings') ? 'endings'
-      : argv.includes('--eggs') ? 'eggs' : 'random';
+    : argv.includes('--reset') ? 'reset'
+      : argv.includes('--endings') ? 'endings'
+        : argv.includes('--eggs') ? 'eggs' : 'random';
   let target = null;
   const ti = argv.indexOf('--target');
   if (ti >= 0) target = { kind: argv[ti + 1], id: argv[ti + 2] };
@@ -370,6 +479,9 @@ async function countsRun(browser, { viewport, name }) {
     } else if (mode === 'counts') {
       const cs = await countsRun(browser, { viewport: { width: 1366, height: 768 }, name: 'counts' });
       cs.forEach((c) => report.results.push(c));
+    } else if (mode === 'reset') {
+      const rs = await resetRun(browser, { viewport: { width: 1366, height: 768 }, name: 'reset' });
+      rs.forEach((c) => report.results.push(c));
     } else {
       const runs = [
         { viewport: { width: 1366, height: 768 }, name: 'desktop-1', maxSteps: 320 },
@@ -396,6 +508,7 @@ async function countsRun(browser, { viewport, name }) {
     else if (mode === 'endings') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 解析=${r.expected} 渲染=${r.resolved} poster=${r.hasPoster} 目标匹配=${r.match}`);
     else if (mode === 'eggs') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'}${r.method ? ' (' + r.method + ')' : ''}${r.reason ? ' ' + r.reason : ''}`);
     else if (mode === 'counts') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 真值=${r.expected} 页面=${r.actual}`);
+    else if (mode === 'reset') console.log(`- ${r.id}: ${r.ok ? 'OK' : 'FAIL'} 期望=${r.expected} 实际=${r.actual}`);
   }
   console.log(`\n结果：${pass}/${report.results.length} 通过`);
   console.log(`控制台 ERROR / 未捕获异常：${errors.length}`);

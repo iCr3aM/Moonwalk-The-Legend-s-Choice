@@ -90,6 +90,32 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 
 ---
 
+## 三·六、✅ 已落地：图鉴重置语义（冻结到新局，2026-09-09）
+
+> 用户报告「重置图鉴后开始游戏会自动弹出成就解锁」。完整复现数据与方案：`docs/superpowers/specs/2026-09-09-codex-reset-semantics.md`（docs 本地不入库）。
+
+**实测结论**：
+- 「重置 → 开**新**局」**不会**多弹（新局 20 步 3 个成就 = 未重置基线，属正常收集；第二局 0 个，已解锁不重弹正确）→ **新档无此 bug**。
+- 「重置 → 继续**旧存档**」**必现复活**：成就 7→0→**9**、彩蛋 1→0→**2**、趣事 0→0→**2**（重置等于白做）。结局图鉴不复活，行为正确。
+- **弹窗从哪来**：`resume()` 的 `_suppressAchToast` 用 `try/finally` 立即释放，只在续档首屏**恰好是事件页**时静默；首屏若是章节过场卡（`showEraCard` 不 evaluate）则静默作废，`showEnding` 的 evaluate 更是完全不检查 → 那批复活的成就连弹（每个 3s 串行）。
+- **顺带查出**：`MJ.ui.toastEgg` / `toastTrivia` 从未挂载（实测 undefined）→ **彩蛋/趣事的解锁提示从来没出现过**。
+
+**分类矩阵（只重置一个时怎么算）**：结局图鉴不复活 ✅；成就每屏 `evaluate(state)` 复活 ❌；彩蛋走 `egg_*`+孤儿 flag 复活 ❌；趣事走 `tidbit_*`+`revealAll` 复活 ❌。建议规则：已解锁成就只增不减；重置某类只影响该类；重置=当前存档周期内该类不再解锁。
+
+**方案**：①**冻结到新局**（推荐，`clear()` 置 `_frozen`，`engine.start()` 解冻，约 15 行，重置才真归零）；②静默基线（重置后静默补齐本局已达成的，不归零，不推荐）；③只修 suppress 窗口（治标，但窗口错位本身是独立缺陷，建议与 ① 合并）。
+
+**拍板结果（用户定：方案一 + 只冻该类 + 修 toast）已落地**：
+- `achievementSystem / eggSystem / triviaSystem` 各加 `_frozen`：`unlock()` 冻结期间直接 return false（不写库、不提示）；`clear()` **不冻结**（测试与程序化清理仍走纯清除），冻结点在 UI：重置按钮走 `clear() + freeze()` 组合。
+- 解冻点唯一：`MJ.engine.start()` → `MJ.unfreezeCodexSystems()`（开新人生恢复收集）；续旧档保持冻结。
+- 成就 `evaluate` 改为按 `unlock()` 返回值入列（否则冻结时仍会 push → 照弹）。
+- 重置后弹中性提示 `ui.resetFrozenHint`（新 i18n 键，EN 已补）：「已重置：本局内不再记录，开始新人生后恢复收集」——冻结行为对玩家不可见，不提示会像 bug。
+- **顺手修**：`ui.toastEgg` / `ui.toastTrivia` 导出（此前从未挂载 → 彩蛋/趣事解锁一直无提示）。
+- 验证：新增 e2e 第五模式 `npm run e2e:reset`（16/16）——重置→归零且 `_frozen=true`；续旧档后计数仍 0、无解锁 toast；开新人生后三类解冻且成就重新收集。**反向验证**：临时停用成就冻结检查 → `ach-no-revive-on-resume` FAIL（期望 0 实际 6），确能抓回归。
+- 全量回归：npm test 30/30、随机 6/6、endings 30/30、eggs 43/43、counts 9/9、reset 16/16、多设备截图无溢出。index.html js `?v=1.1.2→1.1.3`。
+- **遗留（未做，方案③）**：`resume()` 的 `_suppressAchToast` 用 `try/finally` 立即释放，续档首屏若是章节过场卡/结局页则静默失效；`showEnding` 的 evaluate 完全不检查该开关。冻结已覆盖「重置」场景，正常续档无已解锁项可重弹，故未改——若日后出现非重置场景的续档弹窗，按方案③修。
+
+---
+
 ## 四、暂缓（用户指示，恢复时间待定）
 
 - [ ] **海报留白内容方案 A–E**：A 人生年轮（Face1 时间轴）/ B 六维星环（Face1 雷达）/ C 同行者剪影（Face2 合作者行）/ D 本程之最（Face2 三个最）/ E 元路线四相（Face2 meta 条）。成本 C/D/E 小，A/B 中。
