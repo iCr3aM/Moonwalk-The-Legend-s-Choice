@@ -629,7 +629,9 @@ window.MJ = window.MJ || {};
   };
 
   E['4_1b'] = {
-    id: '4_1b', year: 1988, title: T('event.4_1b.title', null, '梦幻庄园的日子'), kind: 'choice',
+    id: '4_1b', year: 1988,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; }, fallback: '4_2',
+    title: T('event.4_1b.title', null, '梦幻庄园的日子'), kind: 'choice',
     text: function (s) {
       return narr(T('event.4_1b.text', null, '搬进 Neverland 后，旋转木马、动物园与私人影院填满了日子。你在这里为自己造了一座童年没来得及拥有的游乐场——童话不必向外人解释。'), s, [
         { cond: function (s) { return (s.attributes.art || 0) >= 70; }, text: T('event.4_1b.branch0.text', null, '创作与玩心在这片园子里奇妙地和解了。') },
@@ -1432,7 +1434,9 @@ window.MJ = window.MJ || {};
     ]
   };
   E['8_5b'] = {
-    id: '8_5b', year: 2019, title: T('event.8_5b.title', null, '《逃离梦幻岛》风波'), kind: 'choice', key: true,
+    id: '8_5b', year: 2019,
+    cond: function (s) { return s.flags.neverlandType !== 'none'; }, fallback: '8_4',
+    title: T('event.8_5b.title', null, '《逃离梦幻岛》风波'), kind: 'choice', key: true,
     text: function (s) {
       return narr(T('event.8_5b.text', null, '一部回溯你人生的纪录片《逃离梦幻岛》（Leaving Neverland）上映，把多年前的旧指控再次推上公共讨论的中心。镜头之外，议论像潮水一样涨落。如何回应，又一次交到你手上。'), s, [
         { cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: T('event.8_5b.branch0.text', null, '你早已习惯退到镜头之外，这回的喧哗，更像隔着玻璃的雨。') }
@@ -1844,6 +1848,7 @@ window.MJ = window.MJ || {};
   };
   E.V_BUBBLES = {
     id: 'V_BUBBLES', variant: true, window: [1986, 1990], weight: 25,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; },
     title: T('event.V_BUBBLES.title', null, '童心宠物'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_BUBBLES.text', null, '庄园里多了一只会陪你玩耍的宠物猩猩，童真的笑第一次这么近。'), s, [
@@ -1940,6 +1945,7 @@ window.MJ = window.MJ || {};
   };
   E.V_SANCTUARY = {
     id: 'V_SANCTUARY', variant: true, window: [1990, 2009], weight: 30,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; },
     title: T('event.V_SANCTUARY.title', null, '世外桃源'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_SANCTUARY.text', null, '你越来越想躲开所有镜头，去一个连名字都没人认识的地方。庄园深处，安静得能听见自己的心跳。'), s, [
@@ -2722,6 +2728,7 @@ window.MJ = window.MJ || {};
   // ---------- §17.13.3 未竟梦想变体（皆标注"想象"，遵循 §15.1 中性化；落地 ACH_DREAMER/PETERPAN/GREATWALL/THISISIT） ----------
   E.V_PETERPAN = {
     id: 'V_PETERPAN', variant: true, window: [1988, 1994], weight: 26,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; },
     title: T('event.V_PETERPAN.title', null, '（想象）彼得潘之约'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_PETERPAN.text', null, '你买下了《彼得潘》的版权，也曾含泪恳求能亲自饰演那个不愿长大的男孩。Neverland 的名字，正由此而来。'), s, [
@@ -2761,6 +2768,7 @@ window.MJ = window.MJ || {};
   };
   E.V_CHILDHOSP = {
     id: 'V_CHILDHOSP', variant: true, window: [1988, 1994], weight: 26,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; },
     title: T('event.V_CHILDHOSP.title', null, '（想象）Neverland 儿童医院'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILDHOSP.text', null, '你设想在 Neverland 里建一座儿童医院，让生病的孩子也能在童话里奔跑。'), s, [
@@ -2914,6 +2922,7 @@ window.MJ = window.MJ || {};
   };
   E.V_TIDBIT_GARDEN = {
     id: 'V_TIDBIT_GARDEN', variant: true, window: [1988, 2003], weight: 14,
+    cond: function (s) { return !!s.flags.neverlandType && s.flags.neverlandType !== 'none'; },
     title: T('event.V_TIDBIT_GARDEN.title', null, 'Neverland 的生日会'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_TIDBIT_GARDEN.text', null, '梦幻庄园的草地上摆着蛋糕，几只动物和孩子们一起吹灭蜡烛。你蹲下来，和它们平视，像回到自己也想长大的年纪。'), s, []);
@@ -3030,7 +3039,7 @@ window.MJ = window.MJ || {};
   // —— §17.4 关系网深化：弗兰克·迪莱奥 守护 flavor 变体（cond 门控 rel.frank）——
   E.V_REL_FRANK = {
     id: 'V_REL_FRANK', variant: true, window: [1987, 1991], weight: 16,
-    cond: function (s) { return (s.relations.frank || 0) >= 10; },
+    cond: function (s) { return (s.relations.frank || 0) >= 8; },
     title: T('event.V_REL_FRANK.title', null, '经纪人的守候'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_REL_FRANK.text', null, '弗兰克·迪莱奥替你挡下过无数通纠缠的电话与算计的合约。喧闹的巡演后台，他递来一杯水，也递来一份踏实。'), s, [
@@ -3233,14 +3242,14 @@ window.MJ = window.MJ || {};
   };
   E.V_QUIET_PATH = {
     id: 'V_QUIET_PATH', variant: true, window: [1988, 1998], weight: 30,
-    title: T('event.V_QUIET_PATH.title', null, '1988：庄园与归处'), kind: 'choice',
+    title: T('event.V_QUIET_PATH.title', null, '1988：家宅与归处'), kind: 'choice',
     text: function (s) {
-      return narr(T('event.V_QUIET_PATH.text', null, '1988 年，你为家人置下了一座远离喧嚣的庄园。岁月推移，家庭在你心里的分量越来越重。你开始想象：功成名就之后，是否该主动把生活收拢回家人身边？'), s, [
+      return narr(T('event.V_QUIET_PATH.text', null, '1988 年，家人安顿的宅邸远离喧嚣，是聚光灯之外最踏实的角落。岁月推移，家庭在你心里的分量越来越重。你开始想象：功成名就之后，是否该主动把生活收拢回家人身边？'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 55; }, text: T('event.V_QUIET_PATH.branch0.text', null, '你发现，最踏实的掌声，原来来自家里那桌晚饭。') }
       ]);
     },
     options: [
-      { label: T('event.V_QUIET_PATH.opt0.label', null, 'A：以家庭为锚，主动归隐庄园'), hint: T('event.V_QUIET_PATH.opt0.hint', null, '把人生重心放回家人（家庭+8）'), effects: { family: 8 }, flags: { altQuietRetiree: true }, next: '__RETURN__' },
+      { label: T('event.V_QUIET_PATH.opt0.label', null, 'A：以家庭为锚，归隐家宅'), hint: T('event.V_QUIET_PATH.opt0.hint', null, '把人生重心放回家人（家庭+8）'), effects: { family: 8 }, flags: { altQuietRetiree: true }, next: '__RETURN__' },
       { label: T('event.V_QUIET_PATH.opt1.label', null, 'B：兼顾家庭与公众生活'), hint: T('event.V_QUIET_PATH.opt1.hint', null, '平衡二者（家庭+4）'), effects: { family: 4 }, next: '__RETURN__' }
     ]
   };

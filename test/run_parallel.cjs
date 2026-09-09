@@ -34,6 +34,7 @@ var GATES = [
   'node test/_audit_narrative.cjs',
   'node test/_audit_rel_met.cjs',
   'node test/_audit_person_consistency.cjs',
+  'node test/_audit_neverland.cjs',
   'node test/_audit_flag_closure.cjs',
   'node test/_audit_ending_texts.cjs',
   'node test/_audit_hard_constraints.cjs',
