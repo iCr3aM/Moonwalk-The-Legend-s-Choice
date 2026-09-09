@@ -532,12 +532,16 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
 
 /* ============ §18 章节 / 时代 差异化配色（M3 章节主题） ============ */
 /* 配色键：0 盖瑞(琥珀) / 1 单飞(靛紫) / 2 巅峰(经典金) / 3 风暴(青碧) / 4 谢幕(帝王紫) / 5 续章(冰蓝) */
-.app[data-chapter="0"] { --gold:#e0a85a; --gold-soft:#bd8438; --gold-dim:#6e4a22; --line:rgba(224,168,90,0.24); }
-.app[data-chapter="1"] { --gold:#9d8cff; --gold-soft:#7a6fd6; --gold-dim:#4a3f90; --line:rgba(157,140,255,0.24); }
-.app[data-chapter="2"] { --gold:#e6c24e; --gold-soft:#c79a2c; --gold-dim:#6e5a23; --line:rgba(212,175,55,0.24); }
-.app[data-chapter="3"] { --gold:#54c2b0; --gold-soft:#3a9b8c; --gold-dim:#236058; --line:rgba(84,194,176,0.24); }
-.app[data-chapter="4"] { --gold:#b48cff; --gold-soft:#8f6fd6; --gold-dim:#5a4690; --line:rgba(180,140,255,0.24); }
-.app[data-chapter="5"] { --gold:#7cc7e6; --gold-soft:#54a6c8; --gold-dim:#2f6e88; --line:rgba(124,199,230,0.24); }
+/* 章节配色 + 语义色同步：章节主色走 --gold 四兄弟；violet/teal 走同一套「变量覆写」，
+   因此 toast / pill / vignette / 图鉴进度等全部消费点自动随章节变色，零组件改动。
+   取值原则：语义色**必须与章色拉开明度**——章色承担大面积，语义色只做小面积高亮；
+   当章色本身偏紫（ch1/ch4）或偏青绿（ch3）时，语义色取近白的高明度，避免「隐身」。 */
+.app[data-chapter="0"] { --gold:#e0a85a; --gold-soft:#bd8438; --gold-dim:#6e4a22; --line:rgba(224,168,90,0.24); --violet:#d5c8ff; --violet-border:rgba(213,200,255,0.60); --teal:#a9ece0; --teal-border:rgba(169,236,224,0.50); }
+.app[data-chapter="1"] { --gold:#9d8cff; --gold-soft:#7a6fd6; --gold-dim:#4a3f90; --line:rgba(157,140,255,0.24); --violet:#e8dfff; --violet-border:rgba(232,223,255,0.60); --teal:#8fe6d6; --teal-border:rgba(143,230,214,0.50); }
+.app[data-chapter="2"] { --gold:#e6c24e; --gold-soft:#c79a2c; --gold-dim:#6e5a23; --line:rgba(212,175,55,0.24); --violet:#cdbcf7; --violet-border:rgba(205,188,247,0.60); --teal:#a2e6da; --teal-border:rgba(162,230,218,0.50); }
+.app[data-chapter="3"] { --gold:#54c2b0; --gold-soft:#3a9b8c; --gold-dim:#236058; --line:rgba(84,194,176,0.24); --violet:#d3c2fa; --violet-border:rgba(211,194,250,0.60); --teal:#ccf7ef; --teal-border:rgba(204,247,239,0.55); }
+.app[data-chapter="4"] { --gold:#b48cff; --gold-soft:#8f6fd6; --gold-dim:#5a4690; --line:rgba(180,140,255,0.24); --violet:#e9dcff; --violet-border:rgba(233,220,255,0.60); --teal:#a7efe3; --teal-border:rgba(167,239,227,0.50); }
+.app[data-chapter="5"] { --gold:#7cc7e6; --gold-soft:#54a6c8; --gold-dim:#2f6e88; --line:rgba(124,199,230,0.24); --violet:#d8c9fb; --violet-border:rgba(216,201,251,0.60); --teal:#c4f5ec; --teal-border:rgba(196,245,236,0.55); }
 /* 每章给事件卡一道顶部主题色描边，强化"时代感" */
 .app[data-chapter] .panel.event { box-shadow: var(--shadow), inset 0 3px 0 var(--gold); }
 /* 配色随章节平滑过渡（按钮/选项本就有过渡，这里补齐面板与进度条） */
@@ -752,3 +756,19 @@ body.lang-en .menu-grid .btn.block, body.lang-en .menu-row .btn.block { font-siz
   .lang-opt { flex-direction: row; gap: 14px; padding: 18px 16px; justify-content: flex-start; }
   .lang-opt .lang-flag { font-size: var(--ic-lg); }
 }
+
+/* ============ 语义色延伸（2026-09-09）============
+   语义约定：gold = 史实主线 / 成就 / 权威数值；violet = 假设 / 虚构 / 未知 / 彩蛋；
+   teal = 趣事 / 假如… / 平行想象。目标：不看文字只看颜色即可分辨三类内容。
+   约束：只换色相，不动既有结构语言（未解锁态仍为「虚线 + opacity .55 + 图标去色」）。 */
+/* 图鉴进度：结局与成就保留 gold，彩蛋 violet、趣事 teal */
+.modal .gallery.egg-gallery .g-head .g-prog { color: var(--violet); }
+.modal .gallery.trivia-gallery .g-head .g-prog { color: var(--teal); }
+/* 未解锁卡片按类型描边（仅换 border-color，dashed 与 opacity 保持原样） */
+.modal .gallery.egg-gallery .g-cell.off { border-color: var(--violet-border); }
+.modal .gallery.trivia-gallery .g-cell.off { border-color: var(--teal-border); }
+/* 内容类型着色：手记=史实主线（gold，沿用 pill-solid）；命运回响 / 抉择的回响 = violet */
+.era-diary .e-tag { color: #1a1408; border-color: var(--gold); background: var(--gold); }
+.era-echo .e-tag, .epilogue .e-tag { color: #150e28; border-color: var(--violet); background: var(--violet); }
+/* 人物志未结识：与彩蛋同属「未知」语义 */
+.collab-card.locked { border-color: var(--violet-border); border-left-color: var(--violet-border); }

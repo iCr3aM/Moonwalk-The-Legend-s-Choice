@@ -71,7 +71,7 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 
 ---
 
-## 三·五、下一项待拍板：violet / teal 主题化延伸（方案已出，2026-09-09）
+## 三·五、✅ 已落地（阶段 A+B）：violet / teal 主题化延伸（2026-09-09）
 
 > 用户从暂缓清单挑出该项要求先出方案。完整 spec：`docs/superpowers/specs/2026-09-09-violet-teal-theme-extension.md`（docs 本地不入库）。
 
@@ -86,7 +86,14 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 - **C canvas 海报跟随**（半天）：canvas 不吃 CSS 变量，需把 `js/ui.js` 硬编码色表抽成 `MJ.THEME_COLORS`。
 - **D 玩家可选主题**（1 天+）：需新建设置面板 + i18n 键 + 持久化，建议等 A/B 反馈再定。
 
-> 拍板点：①做哪些阶段（建议 A+B，C/D 暂缓）；②是否接受语义色与章色同色相（推荐拉开明度）；③未解锁态是否允许按类型变色。
+**拍板结果（用户：可以做，按建议做 A+B，C/D 暂缓）已落地（css `?v=1.1.6`）**：
+
+- **A 语义色随章节走**：六章 `.app[data-chapter=N]` 各追加 4 变量覆写（`--violet/--violet-border/--teal/--teal-border`）；取值原则 = 语义色比章色**更亮**——ch1/ch4 本就偏紫、ch3 偏青绿，语义色取近白高明度，避免小面积 pill「隐身」。全部消费点（toast/pill/vignette/图鉴进度）零改动自动跟随。
+- **B 补场景（5 → 约 11 处）**：①图鉴进度按类型着色：`.egg-gallery .g-prog`=violet、`.trivia-gallery .g-prog`=teal、结局/成就保持 gold；②未解锁卡片按类型描边：`.g-cell.off` 只换 border-color，**虚线 + opacity .55 语言不动**；③内容类型着色：手记 gold / 命运回响 violet / 抉择的回响 violet（ui.js era-block 加 `era-diary`/`era-echo` 类，均已在 CSS 定义，过 `check_ui_classes`）；④人物志未结识 `.collab-card.locked` 描边 violet（仍虚线 + opacity .55）。
+- **运行时验证（临时脚本实测后已删）**：default + 六章的 `--violet/--teal` computed 值全部符合新值；egg/trivia 进度与未解锁描边着色生效；ach 进度保持原色；`.era-diary .e-tag` 深字金底生效（era-echo 同构）。
+- 回归：npm test 30/30、随机 6/6、reset 16/16、截图 4 设备 × 双语无溢出无 pageerror。
+- **暂缓**：C canvas 海报跟随（需把硬编码色表抽成 `MJ.THEME_COLORS`）、D 玩家可选主题（需设置面板）。
+- **目检提醒**：色彩与对比度的最终确认需人眼看 `test/_ui_shots/` 截图（4 设备 × 双语 × 7 场景），模型无法读图；若某章下 pill 与章色仍觉得近，调对应章的 `--violet/--teal` 覆写值即可。
 
 ---
 

@@ -1389,8 +1389,8 @@ window.MJ = window.MJ || {};
       '<div class="panel era-card">' +
         '<div class="era-ch">' + T('chapter.' + chapter.id + '.title', null, chapter.title) + '</div>' +
         '<div class="era-sub">' + T('chapter.' + chapter.id + '.sub', null, chapter.sub) + '</div>' +
-        (diary ? '<div class="era-block"><span class="e-tag">' + T('ui.diaryTag', null, '手记') + '</span>' + escapeHtml(diary) + '</div>' : '') +
-        (echo ? '<div class="era-block"><span class="e-tag">' + T('ui.echoTag', null, '命运回响') + '</span>' + escapeHtml(echo) + '</div>' : '') +
+        (diary ? '<div class="era-block era-diary"><span class="e-tag">' + T('ui.diaryTag', null, '手记') + '</span>' + escapeHtml(diary) + '</div>' : '') +
+        (echo ? '<div class="era-block era-echo"><span class="e-tag">' + T('ui.echoTag', null, '命运回响') + '</span>' + escapeHtml(echo) + '</div>' : '') +
         (chapter.flavor ? '<div class="era-flavor">' + T('chapter.' + chapter.id + '.flavor', null, chapter.flavor) + '</div>' : '') +
         '<div class="continue-row"><button class="btn primary" id="btn-era">' + T('ui.eraEnter', null, '进入本章') + '</button></div>' +
       '</div>' + historyPanel(state);
