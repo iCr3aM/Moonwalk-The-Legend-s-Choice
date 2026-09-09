@@ -1107,7 +1107,9 @@ window.MJ = window.MJ || {};
   };
 
   E['6_4b'] = {
-    id: '6_4b', year: 2002, title: T('event.6_4b.title', null, '幼子出生'), kind: 'choice',
+    id: '6_4b', year: 2002,
+    cond: function (s) { return !!(s.flags.princeBorn || s.flags.parisBorn || s.flags.surrogacy); }, fallback: '6_4',
+    title: T('event.6_4b.title', null, '幼子出生'), kind: 'choice',
     text: function (s) {
       return narr(T('event.6_4b.text', null, '你的第三个孩子降生，襁褓里的呼吸，是这喧嚣人间里最安静的奇迹。'), s, [
         { cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: T('event.6_4b.branch0.text', null, '你把孩子抱在怀里，忽然觉得所有喧嚣都值得。') },
@@ -3307,7 +3309,7 @@ window.MJ = window.MJ || {};
   };
   E.V_CHILD_PRINCE = {
     id: 'V_CHILD_PRINCE', variant: true, force: true, window: [1997, 1999], weight: 30,
-    cond: function (s) { return (s.rel && (s.rel.lisa > 0 || s.rel.debbie > 0)) || (s.attributes.family || 0) >= 50; },
+    cond: function (s) { return (s.relations && (s.relations.lisa > 0 || s.relations.debbie > 0)) || (s.attributes.family || 0) >= 50; },
     title: T('event.V_CHILD_PRINCE.title', null, '长子降生'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILD_PRINCE.text', null, '你的第一个孩子降生了。新生命带来的安静，是这喧嚣人间里你最想守护的奇迹。'), s, [
@@ -3321,7 +3323,7 @@ window.MJ = window.MJ || {};
   };
   E.V_CHILD_PARIS = {
     id: 'V_CHILD_PARIS', variant: true, force: true, window: [1997, 1999], weight: 30,
-    cond: function (s) { return (s.rel && (s.rel.lisa > 0 || s.rel.debbie > 0)) || (s.attributes.family || 0) >= 50; },
+    cond: function (s) { return (s.relations && (s.relations.lisa > 0 || s.relations.debbie > 0)) || (s.attributes.family || 0) >= 50; },
     title: T('event.V_CHILD_PARIS.title', null, '女儿降生'), kind: 'choice',
     text: function (s) {
       return narr(T('event.V_CHILD_PARIS.text', null, '你的女儿降生了。襁褓里的呼吸，让这喧嚣的人间忽然有了柔软的落点。'), s, [
