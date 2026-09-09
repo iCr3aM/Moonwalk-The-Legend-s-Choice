@@ -74,8 +74,9 @@
         return;
       }
       var def = byKey[c.key] || {};
-      var name = def.name || c.key;
-      var en = T('rel.' + c.key, null, name);
+      // U3#12：主名走 i18n（EN 不再泄漏中文冻结名）；副名仅在与主名不同时渲染（EN 防同语重复）
+      var name = T('rel.' + c.key, null, def.name || c.key);
+      var en = def.name || c.key;
       var v = rel[c.relKey] || 0;
       var sign = v > 0 ? '+' : '';
       var cls = v >= 20 ? 'warm' : (v <= -10 ? 'cold' : 'neutral');
@@ -85,7 +86,7 @@
       var desc = T('collab.' + c.key + '.desc', null, c.descZh);
       html += '<div class="collab-card ' + cls + '">' +
         '<div class="collab-head"><span class="collab-ico">' + c.icon + '</span>' +
-          '<div class="collab-name"><b>' + esc(name) + '</b> <span class="collab-en">' + esc(en) + '</span></div>' +
+          '<div class="collab-name"><b>' + esc(name) + '</b>' + (en && en !== name ? ' <span class="collab-en">' + esc(en) + '</span>' : '') + '</div>' +
           '<span class="collab-val ' + cls + '">' + sign + v + ' <i>' + word + '</i></span></div>' +
         '<div class="collab-tags"><span class="pill pill-violet">' + esc(role) + '</span><span class="pill pill-teal">' + esc(era) + '</span></div>' +
         '<p class="collab-desc">' + esc(desc) + '</p>' +

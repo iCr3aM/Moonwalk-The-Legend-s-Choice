@@ -818,13 +818,16 @@ window.MJ = window.MJ || {};
   MJ.buildVignettes = function (state) {
     var tpls = (MJ.config.vignetteTemplates) || {};
     var dom = MJ.dominantMeta(state.meta);
+    var style = (MJ.decisionStyle && state) ? MJ.decisionStyle(state).s : null;
     var out = [];
-    (tpls[dom] || []).forEach(function (t) {
-      try { if (!t.cond || t.cond(state)) out.push(MJ.t(t.key, null, t.zh)); } catch (e) {}
-    });
-    (tpls.default || []).forEach(function (t) {
-      try { out.push(MJ.t(t.key, null, t.zh)); } catch (e) {}
-    });
+    function pushGroup(list) {
+      (list || []).forEach(function (t) {
+        try { if (!t.cond || t.cond(state)) out.push(MJ.t(t.key, null, t.zh)); } catch (e) {}
+      });
+    }
+    pushGroup(tpls[dom]);
+    if (style && style !== dom) pushGroup(tpls[style]);
+    pushGroup(tpls.default);
     return out;
   };
 

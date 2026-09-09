@@ -267,10 +267,10 @@ window.MJ = window.MJ || {};
     keys.forEach(function (k) {
       var e = defs[k];
       var on = !!g[k];
-      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" data-endkey="' + k + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
+      html += '<div class="g-cell ' + (on ? 'on' : 'off') + (e.hidden && !on ? ' locked-hidden' : '') + '" role="button" tabindex="0" data-endkey="' + k + '" title="' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? e.icon : '❓') + '</div>' +
         '<div class="g-name">' + (on ? T('ending.' + k + '.name', null, e.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        '<div class="g-rarity">' + (on ? rarityLabel(MJ.config.endingRarity[k]) : T('ui.locked', null, '未解锁')) + '</div>' +
+        '<div class="g-rarity ' + (on ? rarityClass(MJ.config.endingRarity[k]) : '') + '">' + (on ? rarityLabel(MJ.config.endingRarity[k]) : T('ui.locked', null, '未解锁')) + '</div>' +
       '</div>';
     });
     html += '</div></div>';
@@ -298,7 +298,7 @@ window.MJ = window.MJ || {};
       html += '<div class="g-cell ' + (on ? 'on' : 'off') + '" title="' + (on ? escapeHtml(T('ach.' + a.id + '.name', null, a.name) + '：' + T('ach.' + a.id + '.desc', null, a.desc)) : T('ui.locked', null, '未解锁')) + '">' +
         '<div class="g-icon">' + (on ? a.icon : '🏆') + '</div>' +
         '<div class="g-name">' + (on ? T('ach.' + a.id + '.name', null, a.name) : T('ui.unknown', null, '？？？')) + '</div>' +
-        (on ? '<div class="g-rarity">' + rarityLabel(a.rarity) + '</div>' : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
+        (on ? '<div class="g-rarity ' + rarityClass(a.rarity) + '">' + rarityLabel(a.rarity) + '</div>' : '<div class="g-rarity">' + T('ui.locked', null, '未解锁') + '</div>') +
         (on ? '<div class="g-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div>' : '') +
       '</div>';
     });
@@ -307,10 +307,13 @@ window.MJ = window.MJ || {};
   }
 
   // ---------- 图鉴 / 成就 弹窗（主菜单各收为一个按钮；含多次确认重置） ----------
+  // U1 稀有度颜色体系：色板与 css --r-* 变量、海报 canvas 对齐（uncommon 原 canvas 缺失，此处补全）
+  var RARITY_COLORS = { common: '#9c8a5a', uncommon: '#b9a06a', rare: '#c79a2c', epic: '#c9b3f0', legendary: '#f3e2b0' };
   function rarityLabel(r) {
     var zh = ({ common: '普通', uncommon: '平凡', rare: '稀有', epic: '史诗', legendary: '传奇' })[r] || '普通';
     return T('rarity.' + r, null, zh);
   }
+  function rarityClass(r) { return 'r-' + (RARITY_COLORS[r] ? r : 'common'); }
   function closeOverlay(id) { var o = document.getElementById(id); if (o) o.parentNode.removeChild(o); }
   function galleryCount() {
     var g = MJ.saveSystem.getGallery();
@@ -353,6 +356,13 @@ window.MJ = window.MJ || {};
     overlay.querySelector('.modal-body').addEventListener('click', function (ev) {
       var cell = ev.target.closest ? ev.target.closest('.g-cell') : null;
       if (cell && cell.getAttribute('data-endkey')) endingDetailModal(cell.getAttribute('data-endkey'));
+    });
+    // U3#8 键盘可达：Enter / Space 触发结局详情
+    overlay.querySelector('.modal-body').addEventListener('keydown', function (ev) {
+      var cell = ev.target.closest ? ev.target.closest('.g-cell') : null;
+      if (cell && cell.getAttribute('data-endkey') && (ev.key === 'Enter' || ev.key === ' ')) {
+        ev.preventDefault(); endingDetailModal(cell.getAttribute('data-endkey'));
+      }
     });
     document.body.appendChild(overlay);
     ui._activeModal = { id: 'gallery-overlay', open: galleryModal };
@@ -608,6 +618,9 @@ window.MJ = window.MJ || {};
     _toastActive = true;
     var item = _toastQueue.shift();
     var t = item.el;
+    // U3#17 读屏可感知：成就/彩蛋解锁信息对 assistive tech 播报
+    t.setAttribute('role', 'status');
+    t.setAttribute('aria-live', 'polite');
     document.body.appendChild(t);
     setTimeout(function () { t.classList.add('show'); }, 20);
     setTimeout(function () {
@@ -625,7 +638,8 @@ window.MJ = window.MJ || {};
     var t = document.createElement('div');
     t.className = 'toast toast-gold';
     t.innerHTML = '<div class="at-icon">' + a.icon + '</div>' +
-      '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) + '</div>' +
+      '<div class="at-body"><div class="at-title">' + T('ui.achToast', null, '成就解锁 · ') + escapeHtml(T('ach.' + a.id + '.name', null, a.name)) +
+      (a.rarity && a.rarity !== 'common' && a.rarity !== 'uncommon' ? '<span class="r-tag ' + rarityClass(a.rarity) + '">' + rarityLabel(a.rarity) + '</span>' : '') + '</div>' +
       '<div class="at-desc">' + escapeHtml(T('ach.' + a.id + '.desc', null, a.desc)) + '</div></div>';
     _enqueueToast(t, 3000);
   }
@@ -716,29 +730,19 @@ window.MJ = window.MJ || {};
     ctx.arcTo(x, y, x + w, y, r);
     ctx.closePath();
   }
-  function wrapText(ctx, text, cx, y, maxW, lh) {
-    var words = text.split(' '), line = '', lines = [];
-    for (var i = 0; i < words.length; i++) {
-      var test = line ? line + ' ' + words[i] : words[i];
-      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = words[i]; }
-      else line = test;
-    }
-    if (line) lines.push(line);
-    var startY = y - (lines.length - 1) * lh / 2;
-    for (var j = 0; j < lines.length; j++) ctx.fillText(lines[j], cx, startY + j * lh);
-  }
-  // 中文友好的段落换行（按字符量度，遇 \n 分段；返回绘制后的 y）
+  // 中文友好的段落换行（按字符量度，遇 \n 分段；EN 按空格分词避免单词腰斩；返回绘制后的 y）
   function wrapParagraph(ctx, text, x, y, maxW, lh, maxY) {
+    var isEn = MJ.i18n && MJ.i18n.lang === 'en';
     var paras = String(text).split('\n');
     ctx.textAlign = 'left';
     var done = false;
     for (var p = 0; p < paras.length && !done; p++) {
-      var line = '', chars = paras[p].split('');
-      for (var i = 0; i < chars.length; i++) {
-        var test = line + chars[i];
+      var line = '', units = isEn ? paras[p].split(' ') : paras[p].split('');
+      for (var i = 0; i < units.length; i++) {
+        var test = line ? (isEn ? line + ' ' + units[i] : line + units[i]) : units[i];
         if (ctx.measureText(test).width > maxW && line) {
           if (maxY && y >= maxY) { ctx.fillText(line + '…', x, y); done = true; break; }
-          ctx.fillText(line, x, y); y += lh; line = chars[i];
+          ctx.fillText(line, x, y); y += lh; line = units[i];
         } else line = test;
       }
       if (done) break;
@@ -801,7 +805,6 @@ window.MJ = window.MJ || {};
   }
 
   // 海报名言库：取自 docs/mjwiki/wiki/Michael Jackson - Wikiquote.html（逐条核对可考）
-  var _lastPosterQuote = null;
   // 海报名言库：名言逐条取自 docs/mjwiki/wiki/Michael Jackson - Wikiquote.html（含出处注释）；
   // 歌词为歌曲原句（注明出处）。均控制 ≤2 行以适配方案 B 排版。
   var MJ_POSTER_QUOTES = [
@@ -844,307 +847,6 @@ window.MJ = window.MJ || {};
     { zh: '持守信念。', en: 'Keep the faith.' } // 《Keep the Faith》
   ];
 
-  function createPoster(state, endingId) {
-    // 统一金色调色板（与 CSS --gold / --gold-bright / --gold-deep 同族，集中管理避免 Canvas 与 DOM 各一套金色）
-    var G = {
-      rgb: '212,175,55',
-      base: '#d4af37',    // = CSS --gold
-      bright: '#f3e2b0',  // 明亮金（Canvas 文字高亮）
-      deep: '#c79a2c',    // = CSS --gold-deep
-      dim: '#b9a06a',
-      dim2: '#8a7a4a',
-      cream: '#e8d6a6',
-      common: '#9c8a5a',
-      legendHi: '#fff4cf'
-    };
-    var e = MJ.config.endings[endingId] || { name: endingId, tone: '', icon: '🌟', summary: '', monologue: '' };
-    var eName = T('ending.' + endingId + '.name', null, e.name);
-    var eTone = T('ending.' + endingId + '.tone', null, e.tone);
-    var eSum = T('ending.' + endingId + '.summary', null, e.summary);
-    var eMon = T('ending.' + endingId + '.monologue', null, e.monologue);
-    var a = state.attributes;
-    var _gw = (state.meta && state.meta.grammyWins) || 0; // 格莱美总座数（planner 写入）
-    var dm = MJ.dominantMeta(state.meta);
-    var metaName = dm ? T('meta.' + dm, null, MJ.config.metaDefs[dm].name) : '—';
-    var legend = MJ.legendScore(state);
-    var endYear = 2009; // 海报寿命语义固定为 1958—2009，不随续章触发年份漂移（GDD v1.11）
-    // 本局达成成就：按最终状态判定条件，而非累计解锁（不展示历史已解锁总数）
-    var thisRun = (MJ.config.achievements || []).filter(function (ac) {
-      try { return ac.check(state, { ending: endingId }); } catch (err) { return false; }
-    });
-    // 海报上按实际可达性排序（与图鉴一致）
-    var _reach = MJ.config.achievementReach || {};
-    thisRun = thisRun.slice().sort(function (a, b) {
-      return ((_reach[b.id] != null ? _reach[b.id] : 0) - (_reach[a.id] != null ? _reach[a.id] : 0));
-    });
-    var W = 720, H = 1280, S = 2;
-    var cv = document.createElement('canvas');
-    cv.width = W * S; cv.height = H * S;
-    var ctx = cv.getContext('2d');
-    ctx.scale(S, S);
-    ctx.textBaseline = 'alphabetic';
-
-    var bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
-    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75);
-    vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2;
-    ctx.strokeRect(24, 24, W - 48, H - 48);
-    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1;
-    ctx.strokeRect(34, 34, W - 68, H - 68);
-
-    ctx.textAlign = 'center';
-    ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
-    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
-    ctx.fillText('1958 — ' + endYear, W / 2, 102);
-
-    // 矢量徽标（按稀有度着色，跨平台一致，不依赖 emoji 字体 —— 修复 emoji 变体选择符/ZWJ/垂直度量导致的叠层与错位）
-    function starPath(cx, cy, spikes, outerR, innerR) {
-      var rot = -Math.PI / 2, step = Math.PI / spikes;
-      ctx.beginPath();
-      for (var si = 0; si < spikes; si++) {
-        ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR); rot += step;
-        ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR); rot += step;
-      }
-      ctx.closePath();
-    }
-    var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
-    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
-    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-    if (_rar === 'epic' || _rar === 'legendary') {
-      ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2);
-      ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
-    }
-    starPath(W / 2, 178, 5, 40, 17);
-    if (_rar === 'legendary') {
-      var _sg = ctx.createLinearGradient(W / 2 - 40, 178 - 40, W / 2 + 40, 178 + 40);
-      _sg.addColorStop(0, G.legendHi); _sg.addColorStop(1, G.deep);
-      ctx.fillStyle = _sg;
-    } else {
-      ctx.fillStyle = _rc;
-    }
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1; ctx.stroke();
-
-    ctx.fillStyle = G.bright; ctx.font = '700 44px "PingFang SC","Microsoft YaHei",sans-serif';
-    ctx.fillText(eName, W / 2, 286);
-    ctx.fillStyle = G.deep; ctx.font = 'italic 19px "PingFang SC",sans-serif';
-    ctx.fillText(eTone, W / 2, 320);
-
-    var dims = [
-      [T('attr.health', null, '健康'), 'health', a.health],
-      [T('attr.reputation', null, '声誉'), 'reputation', a.reputation],
-      [T('attr.art', null, '艺术'), 'art', a.art],
-      [T('attr.wealth', null, '财富'), 'wealth', a.wealth],
-      [T('attr.family', null, '家庭'), 'family', a.family],
-      [T('attr.stress', null, '压力'), 'stress', a.stress]
-    ];
-    var bx0 = 70, colW = (W - 140) / 2, top = 360, rowH = 44, labelW = 82, gutter = 96;
-    var barXoff = labelW, barW = colW - labelW - gutter - 10;
-    for (var i = 0; i < dims.length; i++) {
-      var col = i % 2, row = (i / 2) | 0;
-      var x = bx0 + col * colW, y = top + row * rowH;
-      var bgx = x + barXoff;
-      ctx.textAlign = 'left';
-      ctx.fillStyle = G.dim; ctx.font = '15px "PingFang SC",sans-serif';
-      ctx.fillText(dims[i][0], x, y + 15);
-      var numStr = String(dims[i][2]);
-      if (dims[i][1] === 'reputation' || dims[i][1] === 'art') {
-        var ov = (state.overflow && state.overflow[dims[i][1]]) || 0;
-        if (ov > 0) numStr += ' ★+' + ov;
-      }
-      ctx.textAlign = 'right';
-      ctx.fillStyle = G.bright; ctx.font = '600 15px sans-serif';
-      ctx.fillText(numStr, x + colW - 10, y + 15);
-      var v = Math.max(0, Math.min(100, dims[i][2])) / 100;
-      ctx.fillStyle = 'rgba(255,255,255,0.08)'; roundRect(ctx, bgx, y + 4, barW, 9, 4); ctx.fill();
-      var grad = ctx.createLinearGradient(bgx, 0, bgx + barW, 0);
-      grad.addColorStop(0, G.deep); grad.addColorStop(1, G.bright);
-      ctx.fillStyle = grad; roundRect(ctx, bgx, y + 4, Math.max(2, barW * v), 9, 4); ctx.fill();
-    }
-
-    var y = top + 3 * rowH + 14;
-    ctx.textAlign = 'center';
-    // 主导路线（左） + 人生关键词（右，中间空开）同行展示
-    var _route = T('ui.metaRoutePrefix', null, '主导路线：') + metaName;
-    ctx.textAlign = 'left';
-    ctx.fillStyle = G.bright; ctx.font = '600 18px "PingFang SC",sans-serif';
-    ctx.fillText(_route, 60, y);
-    var _rw = ctx.measureText(_route).width;
-    var _kwTags = [];
-    if (dm) _kwTags.push(T('meta.' + dm, null, MJ.config.metaDefs[dm].name));
-    var _kwSorted = dims.slice().sort(function (a, b) { return b[2] - a[2]; });
-    _kwTags.push(_kwSorted[0][0], _kwSorted[1][0]);
-    var _kwStr = T('ui.posterKeywords', null, '人生关键词') + '：' + _kwTags.join(' · ');
-    ctx.font = '600 14px "PingFang SC",sans-serif';
-    var _kwW = ctx.measureText(_kwStr).width;
-    var _overlap = (_rw + 40 + _kwW > (W - 120));
-    ctx.textAlign = _overlap ? 'center' : 'right';
-    ctx.fillStyle = G.base;
-    ctx.fillText(_kwStr, _overlap ? (W / 2) : (W - 60), y);
-    ctx.textAlign = 'center';
-    // 传奇评分（居中，下一行）
-    ctx.fillStyle = G.deep; ctx.font = '15px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterLegend', { s: legend.score, g: legend.grade }, '传奇 {s}（{g}）'), W / 2, y + 26);
-
-    y += 54;
-    /* 净资产 + 格莱美合并为一行，节省纵向空间 */
-    ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.networth', null, '净资产') + '　' + formatMoney(state.netWorth) + '　　🏆 ' + T('ui.posterGrammy', { n: _gw }, '格莱美 {n} 座'), W / 2, y);
-
-    y += 40;
-    ctx.fillStyle = G.bright; ctx.font = '600 16px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterAch', { n: thisRun.length }, '本局点亮 {n} 枚成就'), W / 2, y);
-    y += 16;
-    var perRow = 11, cell = (W - 120) / perRow, ix0 = 60 + cell / 2;
-    ctx.font = '30px "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif';
-    ctx.textBaseline = 'middle';
-    var _cap = Math.min(thisRun.length, 33); // 封顶 3 行，超出以 ＋N 提示，避免挤压边缘
-    if (thisRun.length) {
-      for (var k = 0; k < _cap; k++) {
-        var c = k % perRow, r = (k / perRow) | 0;
-        ctx.fillStyle = G.bright;
-        try { ctx.fillText(thisRun[k].icon, ix0 + c * cell, y + r * 42 + 18); } catch (err) {}
-      }
-      y += (((_cap / perRow) | 0) + (_cap % perRow ? 1 : 0)) * 42 + 18;
-      if (thisRun.length > 33) {
-        ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.textBaseline = 'alphabetic';
-        ctx.fillText(T('ui.posterAchMore', { n: thisRun.length - 33 }, '＋{n} 枚未显示'), W / 2, y); y += 20;
-      }
-    } else {
-      ctx.fillStyle = G.dim2; ctx.font = '14px sans-serif'; ctx.textBaseline = 'alphabetic';
-      ctx.fillText(T('ui.posterNoAch', null, '— 本局暂未点亮成就 —'), W / 2, y + 18); y += 40;
-    }
-    ctx.textBaseline = 'alphabetic';
-
-    // 人生关键词已上移至主导路线右侧（同 band 展示），此处不再重复绘制
-
-    // §18.8 本局最关键 1–2 个抉择回看（取自 state.history 中 key 标记为真的节点）
-    y += 6;
-    ctx.textAlign = 'left';
-    ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterKeyChoices', null, '关键抉择'), 60, y);
-    y += 12;
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
-    y += 20;
-    var _keys = (state.history || []).filter(function (h) { return h && h.key; });
-    if (!_keys.length) {
-      ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif';
-      ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22;
-    } else {
-      _keys.sort(function (a, b) {
-        var wa = a.keyWeight || 1, wb = b.keyWeight || 1;
-        if (wa !== wb) return wb - wa;
-        return (a.year || 0) - (b.year || 0);
-      });
-      // §18.9 本局最关键抉择 2×2 网格呈现（取权重最高 4 条）；超宽截断加省略号，必要时可缩小字体
-      var _picks = _keys.slice(0, 4);
-      var _colGap = 20, _colW = (W - 120 - _colGap) / 2, _rowH = 46;
-      var _gy = y;
-      for (var _ki = 0; _ki < _picks.length; _ki++) {
-        var _kk = _picks[_ki];
-        var _kt = _kk.title || '';
-        var _kc = _kk.choice || '';
-        var _rid = _kk.id || null;
-        if (!_rid) {
-          // 旧存档兼容：用冻存标题反查事件 id
-          var _rm = buildPosterRevMap();
-          if (_kt && _rm.title[_kt]) _rid = _rm.title[_kt];
-        }
-        if (_rid) {
-          _kt = T('event.' + _rid + '.title', null, _kt);
-          var _ropt = _kk.opt;
-          if ((_ropt == null || _ropt < 0) && !_kk.id) {
-            // 旧存档无 opt：用冻存选项串反查序号
-            var _rc = buildPosterRevMap().choice[_kc];
-            if (_rc && _rc.id === _rid) _ropt = _rc.opt;
-          }
-          if (_ropt != null && _ropt >= 0) _kc = T('event.' + _rid + '.opt' + _ropt + '.label', null, _kc);
-        }
-        // 兜底：英文模式下若仍残留中文（极罕见，旧存档异常），不向外暴露中文
-        if (MJ.i18n.lang === 'en') {
-          if (/[一-鿿　-〿＀-￯]/.test(_kt)) _kt = '';
-          if (/[一-鿿　-〿＀-￯]/.test(_kc)) _kc = '—';
-        }
-        var _col = _ki % 2, _row = (_ki / 2) | 0;
-        var _cx = 60 + _col * (_colW + _colGap);
-        var _cy = _gy + _row * _rowH;
-        ctx.font = '600 13px "PingFang SC",sans-serif';
-        var _head = (_kk.year || '') + ' · ' + _kt;
-        if (ctx.measureText(_head).width > _colW) {
-          while (_head.length > 1 && ctx.measureText(_head + '…').width > _colW) _head = _head.slice(0, -1);
-          _head += '…';
-        }
-        ctx.fillStyle = G.bright;
-        ctx.fillText(_head, _cx, _cy);
-        ctx.font = '13px "PingFang SC",sans-serif';
-        var _cc = _kc;
-        if (ctx.measureText(_cc).width > _colW) {
-          while (_cc.length > 1 && ctx.measureText(_cc + '…').width > _colW) _cc = _cc.slice(0, -1);
-          _cc += '…';
-        }
-        ctx.fillStyle = G.deep;
-        ctx.fillText(_cc, _cx, _cy + 18);
-      }
-      y = _gy + 2 * _rowH;
-    }
-
-    y += 24;
-    ctx.textAlign = 'left';
-    ctx.fillStyle = G.base; ctx.font = '600 17px "PingFang SC",sans-serif';
-    ctx.fillText(T('ui.posterEndingLabel', null, '结局 · 你的传奇'), 60, y);
-    y += 14;
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
-    y += 24;
-    ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
-    var narr = (eSum ? eSum + '\n' : '') + (eMon || '');
-    // 底部"签名区"（名言 ≤2 行 + 署名 + 版权）约需 108px，独白在此提前截断让位，避免版权被画布裁切
-    y = wrapParagraph(ctx, narr, 60, y, W - 120, 26, H - 158);
-
-    ctx.textAlign = 'center';
-    // 名言（随机 + 去重上一条，居中多行；相对最后内容定位，避免被成就挤压覆盖）
-    function wrapCenter(c, text, maxW) {
-      var lines = [], cur = '';
-      for (var i = 0; i < text.length; i++) {
-        var ch = text[i];
-        if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; }
-        else cur += ch;
-      }
-      if (cur) lines.push(cur);
-      return lines;
-    }
-    var _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
-    if (MJ_POSTER_QUOTES.length > 1) {
-      var _guard = 0;
-      while (_qObj === _lastPosterQuote && _guard++ < 8) _qObj = MJ_POSTER_QUOTES[Math.floor(Math.random() * MJ_POSTER_QUOTES.length)];
-    }
-    _lastPosterQuote = _qObj;
-    var _posterQuote = (MJ.i18n && MJ.i18n.lang === 'en') ? _qObj.en : _qObj.zh;
-    // 方案 B：字号 15px、行距 22，支持至多 2 行（2 行时版权≈1238，仍在边框 1256 内）
-    ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
-    var _qLines = wrapCenter(ctx, _posterQuote, W - 120);
-    if (_qLines.length > 2) _qLines = _qLines.slice(0, 2); // 保险：名言最多 2 行，超出截断防溢出
-    // 双重钳制：既不与正文重叠（下界），也保证署名+版权不越过底部边框（上界）
-    var taglineY = Math.min(H - 112, Math.max(H - 130, y + 42));
-    // 名言上方居中的金色发丝线，让底部成为"签名区"而非被挤压的角落
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(W / 2 - 30, taglineY - 18); ctx.lineTo(W / 2 + 30, taglineY - 18); ctx.stroke();
-    for (var _ql = 0; _ql < _qLines.length; _ql++) ctx.fillText(_qLines[_ql], W / 2, taglineY + _ql * 22);
-    var _sigY = taglineY + _qLines.length * 22 + 14;
-    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif';
-    ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sigY);
-    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif';
-    ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sigY + 20);
-
-    return cv;
-  }
   // 两页海报 · 正面（主视觉 + 独白 + 语录签名）
   function createPosterFace1(state, endingId) {
     var G = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
@@ -1163,7 +865,7 @@ window.MJ = window.MJ || {};
     ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
     ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
     var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
-    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
+    var _rc = RARITY_COLORS[_rar] || G.deep;
     ctx.textAlign = 'center';
     ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
@@ -1209,7 +911,7 @@ window.MJ = window.MJ || {};
     }
     ctx.textAlign = 'center';
 
-    function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
+    function wrapCenter(c, text, maxW) { var isEn = MJ.i18n && MJ.i18n.lang === 'en'; var units = isEn ? text.split(' ') : text.split(''); var lines = [], cur = ''; for (var i = 0; i < units.length; i++) { var u = units[i]; var test = cur ? (isEn ? cur + ' ' + u : cur + u) : u; if (c.measureText(test).width > maxW && cur) { lines.push(cur); cur = u; } else cur = test; } if (cur) lines.push(cur); return lines; }
     var _pq = posterQuoteText(state, endingId); // 固定种子：同一海报语录恒定
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _ql = wrapCenter(ctx, _pq, W - 120); if (_ql.length > 2) _ql = _ql.slice(0, 2);
@@ -1249,7 +951,7 @@ window.MJ = window.MJ || {};
     ctx.fillText('1958 — 2009', W / 2, 102);
     // 主视觉与文案页完全同款（大号星徽 + 结局名 + 气质标签），保持两页视觉统一
     var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
-    var _rc = { common: G.common, rare: G.deep, epic: '#c9b3f0', legendary: G.bright }[_rar] || G.deep;
+    var _rc = RARITY_COLORS[_rar] || G.deep;
     ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
     ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
     if (_rar === 'epic' || _rar === 'legendary') { ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2); ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
@@ -1352,7 +1054,7 @@ window.MJ = window.MJ || {};
     ctx.textAlign = 'center'; ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif';
     ctx.fillText(T('ui.posterFootprint', { met: _metN, keys: _st.keyChoices || 0, vars: _st.variants || 0 }, '人生足迹：结识 {met} / 6 · 关键抉择 {keys} 次 · 命运分岔 {vars} 段'), W / 2, y + 40);
     ctx.textAlign = 'center';
-    function wrapCenter(c, text, maxW) { var lines = [], cur = ''; for (var i = 0; i < text.length; i++) { var ch = text[i]; if (c.measureText(cur + ch).width > maxW && cur) { lines.push(cur); cur = ch; } else cur += ch; } if (cur) lines.push(cur); return lines; }
+    function wrapCenter(c, text, maxW) { var isEn = MJ.i18n && MJ.i18n.lang === 'en'; var units = isEn ? text.split(' ') : text.split(''); var lines = [], cur = ''; for (var i = 0; i < units.length; i++) { var u = units[i]; var test = cur ? (isEn ? cur + ' ' + u : cur + u) : u; if (c.measureText(test).width > maxW && cur) { lines.push(cur); cur = u; } else cur = test; } if (cur) lines.push(cur); return lines; }
     var _pq = posterQuoteText(state, endingId); // 固定种子：同一海报语录恒定（与另一页一致）
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qln = wrapCenter(ctx, _pq, W - 120); if (_qln.length > 2) _qln = _qln.slice(0, 2);
@@ -1570,7 +1272,7 @@ window.MJ = window.MJ || {};
     }
     var body =
       '<div class="panel event">' + epilogueHtml +
-        '<div class="yr">' + (MJ.eventYear(ev) || '') + ' 年' + (ev.key ? ' <span class="pill pill-gold pill-xs">' + T('ui.keyChoicePill', null, '关键抉择') + '</span>' : '') + '</div>' +
+        '<div class="yr">' + (MJ.eventYear(ev) || '') + T('ui.yearSuffix', null, ' 年') + (ev.key ? ' <span class="pill pill-gold pill-xs">' + T('ui.keyChoicePill', null, '关键抉择') + '</span>' : '') + '</div>' +
         '<h2>' + escapeHtml(title) + '</h2>' +
         '<div class="body">' + escapeHtml(text) + '</div>';
     if (ev.keyNote) {
@@ -1675,10 +1377,11 @@ window.MJ = window.MJ || {};
         (e.hidden ? '<div class="badge-ultimate">' + T('ui.badgeUltimate', null, '★ 终极隐藏结局') + '</div>' : '') +
         '<div class="icon">' + e.icon + '</div>' +
         '<h2>' + T('ending.' + id + '.name', null, e.name) + '</h2>' +
-        ((e.assumption || e.tone) ? '<div class="ed-tags">' +
+        '<div class="ed-tags">' +
           (e.assumption ? '<span class="pill pill-violet">✦ ' + T('ui.assumptionLine', null, '假设线') + '</span>' : '') +
           (e.tone ? '<span class="pill pill-gold">' + escapeHtml(T('ending.' + id + '.tone', null, e.tone)) + '</span>' : '') +
-        '</div>' : '') +
+          '<span class="pill ' + rarityClass((MJ.config.endingRarity && MJ.config.endingRarity[id]) || 'common') + '">★ ' + rarityLabel((MJ.config.endingRarity && MJ.config.endingRarity[id]) || 'common') + '</span>' +
+        '</div>' +
         '<div class="desc">' + escapeHtml(T('ending.' + id + '.summary', null, e.summary)) + '</div>' +
         '<div class="poster-section">' +
           '<div class="poster-box" id="poster-box"></div>' +
@@ -1713,13 +1416,18 @@ window.MJ = window.MJ || {};
     var posterCanvas = createPosterFace2(state, id);
     var pbox = document.getElementById('poster-box');
     if (pbox) {
+      // U3#8 键盘可达：缩略图改 button 包裹（Enter/Space 原生触发）
+      var zoom = document.createElement('button');
+      zoom.type = 'button'; zoom.className = 'poster-thumb-btn';
+      zoom.title = T('ui.zoomHint', null, '点击放大海报');
+      zoom.setAttribute('aria-label', T('ui.zoomHint', null, '点击放大海报'));
       var thumb = document.createElement('img');
       thumb.src = posterCanvas.toDataURL('image/png');
       thumb.alt = T('ui.posterOfTag', null, '传奇海报');
       thumb.className = 'poster-thumb';
-      thumb.title = T('ui.zoomHint', null, '点击放大海报');
-      thumb.addEventListener('click', function () { openPosterModal(state, id); });
-      pbox.appendChild(thumb);
+      zoom.appendChild(thumb);
+      zoom.addEventListener('click', function () { openPosterModal(state, id); });
+      pbox.appendChild(zoom);
     }
     // 不再自动弹海报；用户点缩略图自行打开（两页可翻）
     var bge = $('#btn-gallery-end'); if (bge) bge.addEventListener('click', galleryModal);
@@ -1748,7 +1456,7 @@ window.MJ = window.MJ || {};
     } else {
       items.forEach(function (o) {
         var def = byKey[o.k] || {};
-        var name = def.name || o.k;
+        var name = T('rel.' + o.k, null, def.name || o.k);
         var sign = o.v > 0 ? '+' : '';
         var cls = o.v >= 20 ? 'warm' : (o.v <= -10 ? 'cold' : 'neutral');
         var note = T('fate.' + o.k + '.note', null,

@@ -21,7 +21,7 @@ var checks = [
   ['640: .btn-row 纵向排列', inMedia('max-width: 640px', /\.btn-row\s*\{[^}]*flex-direction:\s*column/)],
   ['640: .bars 两列', inMedia('max-width: 640px', /\.bars\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
   ['640: 图鉴网格两列', inMedia('max-width: 640px', /(\.menu-grid|\.menu-row)\s*\{[^}]*grid-template-columns:\s*repeat\(2/)],
-  ['640: .toolbar 可换行', inMedia('max-width: 640px', /\.toolbar\s*\{[^}]*flex-wrap:\s*wrap/)],
+  // .toolbar 死类已随 U3#11 清理移除（0 引用），对应断言一并撤销
   ['640: .subdim-grid 单列', inMedia('max-width: 640px', /\.subdim-grid\s*\{[^}]*grid-template-columns:\s*1fr/)],
   // 契约变更：原先 .modal 与 .modal-body 双层 overflow（双滚动条），
   // 现改为 .modal 限高 + .modal-body 唯一滚动区，故断言同步更新。

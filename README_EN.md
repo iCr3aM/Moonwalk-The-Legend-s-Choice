@@ -10,7 +10,7 @@
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://www.ecma-international.org/)
 [![Vanilla JS](https://img.shields.io/badge/UI-Vanilla%20JS-2ea44f?style=flat-square)](https://developer.mozilla.org/)
-[![Design](https://img.shields.io/badge/design-GDD%20v1.13-8A2BE2?style=flat-square)](./GDD.md)
+[![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
 [![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#license)
 
@@ -30,7 +30,7 @@
 
 ## ✨ Features
 
-- **Strictly aligned with the design doc**: all mechanics, branches, values, and endings follow [`GDD.md`](./GDD.md) (v1.13).
+- **Strictly aligned with the design doc**: all mechanics, branches, values, and endings follow the design docs (GDD v1.13 archived at [`archive/GDD_v1.13.md`](./archive/GDD_v1.13.md); current status in [`NEXT_STEPS.md`](./NEXT_STEPS.md)).
 - **Six attributes + dual-track Economy**: Health / Reputation / Wealth / Family / Art / Stress (all 0–100); large sums go through `netWorth` / `debt` (in 10k units), fixing the early "wealth clamped to 0" unreachable-ending bug.
 - **30 endings (23 mainline + 7 alt-history)**: including 1 hidden ultimate (True Eternal) and 7 alt-history ("what-if") endings, resolved by a priority rule table plus meta-route tie-breaking.
 - **Four hidden meta-routes**: Artist / Philanthropist / Mogul / Recluse, accumulated from choices with a live "you are on the path to X" hint.
@@ -93,7 +93,7 @@ js/events.js              Event data (data-driven, all GDD 6.4 nodes + variant e
 js/state.js               Game state + Economy subsystem (net worth / debt dual-track)
 js/engine.js              Rule engine / effect application / ending resolution / event flow / variant injection / save
 js/ui.js                  View & user flow (onboarding / status bar / event cards / ending)
-GDD.md                    Game Design Document (authoritative spec)
+NEXT_STEPS.md             Current status & roadmap (authoritative; design docs archived)
 test/smoke.cjs            Node DOM-free smoke + balance test (400 random runs + timeline monotonicity regression)
 test/en_smoke.cjs         EN text / sequel chain / new-event coverage tests
 ```
@@ -116,7 +116,7 @@ node test/en_smoke.cjs     # EN text / sequel chain / Ch.2 solo link / new-event
 
 ## 📐 Design Constraints
 
-- [`GDD.md`](./GDD.md) is the authoritative design spec; on conflict, GDD wins and the doc is annotated.
+- [`NEXT_STEPS.md`](./NEXT_STEPS.md) is the authoritative status summary; design docs are archived (`archive/GDD_v1.13.md`). On conflict, source code wins and the doc gets annotated.
 - Sensitive legal events must be **neutral, procedural**; no presumption of guilt/innocence; avoid naming minors.
 - The legacy single-file HTML prototype is archived under `archive/` and no longer maintained here.
 

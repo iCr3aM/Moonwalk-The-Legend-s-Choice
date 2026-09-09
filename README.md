@@ -10,7 +10,7 @@
 
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://www.ecma-international.org/)
 [![Vanilla JS](https://img.shields.io/badge/UI-Vanilla%20JS-2ea44f?style=flat-square)](https://developer.mozilla.org/)
-[![Design](https://img.shields.io/badge/design-GDD%20v1.13-8A2BE2?style=flat-square)](./GDD.md)
+[![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
 [![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#许可证)
 
@@ -30,7 +30,7 @@
 
 ## ✨ 特性
 
-- **严格对齐设计文档**：所有玩法、分支、数值、结局均依据 [`GDD.md`](./GDD.md)（v1.13）实现。
+- **严格对齐设计文档**：所有玩法、分支、数值、结局均依据设计文档实现（GDD v1.13 已归档至 [`archive/GDD_v1.13.md`](./archive/GDD_v1.13.md)，现行状态见 [`NEXT_STEPS.md`](./NEXT_STEPS.md)）。
 - **六维属性 + Economy 双轨**：健康 / 声誉 / 财富 / 家庭 / 艺术 / 压力（均 0–100）；大额金钱走 `netWorth` / `debt`（万元），修复早期「财富被 clamp 到 0」导致结局不可达的 bug。
 - **30 种结局（23 主线 + 7 假设线）**：含 1 个隐藏终极结局（真·永恒）与 7 个假设线（架空历史）结局，由优先级规则表 + 元路线破平次序解析。
 - **四条隐藏元路线**：艺术家 / 慈善家 / 商业巨擘 / 隐士，由选择累积、实时提示「正在走向 X 之路」。
@@ -93,7 +93,7 @@ js/events.js              事件数据（数据驱动，对齐 GDD 6.4 全部节
 js/state.js               游戏状态 + Economy 子系统（净资产 / 债务双轨）
 js/engine.js              规则引擎 / 效应应用 / 结局解析 / 事件流 / 变体插入 / 存档
 js/ui.js                  视图与用户流程（引导 / 状态栏 / 事件卡 / 结局）
-GDD.md                    游戏设计文档（权威规范）
+NEXT_STEPS.md             现行状态与待办（权威汇总；设计文档已归档 archive/）
 test/smoke.cjs            Node 无 DOM 冒烟 + 平衡测试（随机 400 局 + 时间线单调回归断言）
 test/en_smoke.cjs         英文文案 / 续章链路 / 新事件覆盖测试
 ```
@@ -116,7 +116,7 @@ node test/en_smoke.cjs     # 英文文案 / 续章链路 / 第二章 solo 链路
 
 ## 📐 设计约束
 
-- 一切以 [`GDD.md`](./GDD.md) 为权威设计规范；文档与实现冲突时以 GDD 为准并在文档标注。
+- 一切以 [`NEXT_STEPS.md`](./NEXT_STEPS.md) 为权威现状汇总；设计文档已归档（`archive/GDD_v1.13.md`），文档与实现冲突时以源码为准并在文档标注。
 - 敏感法律事件必须**中性、程序化**表述，不预设有罪 / 无罪，避免指名未成年当事人。
 - 旧版单文件 HTML 原型已归档至 `archive/`，不在本仓库继续维护。
 

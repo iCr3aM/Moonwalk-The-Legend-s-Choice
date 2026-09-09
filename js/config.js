@@ -511,27 +511,43 @@ window.MJ = window.MJ || {};
   C.diaryTemplates = {
     0: [
       { key: 'diary.0.0', cond: function (s) { return (s.attributes.art || 0) >= 50; }, text: '哥哥说我天生属于舞台。我偷偷把洗发水瓶当麦克风，对着镜子练了整晚的舞步。' },
+      { key: 'diary.0.2', cond: function (s) { return (s.meta.mogul || 0) >= 1; }, text: '我第一次听说「版权」两个字。原来唱过的歌，是可以被好好收藏、反复生长的种子。' },
+      { key: 'diary.0.3', cond: function (s) { return (s.attributes.reputation || 0) >= 60; }, text: '报纸上开始出现我的名字。别人念「杰克逊家的小迈克尔」时，我把每个音都咬得更清楚了。' },
       { key: 'diary.0.1', text: '盖瑞的夜晚总带着炼钢厂的铁锈味。我常在床上数着哥哥们的呼吸，想：外面的世界，会不会也有人为我的歌声停下脚步？' }
     ],
     1: [
       { key: 'diary.1.0', cond: function (s) { return s.flags.isSolo === true; }, text: '离开兄弟的那天，我既兴奋又空。方向盘握在自己手里，可庆功宴上少了几张熟悉的脸。' },
       { key: 'diary.1.1', cond: function (s) { return s.flags.isSolo === false; }, text: '我选择留在兄弟身边。有人笑我错失了独舞的聚光灯，可血缘的合唱，是谁也偷不走的。' },
+      { key: 'diary.1.3', cond: function (s) { return (s.meta.mogul || 0) >= 2; }, text: '录音棚之外，我盯着合同看到深夜。属于旋律的直觉，也可以用来丈量生意的分寸。' },
+      { key: 'diary.1.4', cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '电话那头是母亲的声音。无论舞台多大，绳子那头总有人替我留着一碗热汤。' },
       { key: 'diary.1.2', text: '二十岁像一张没写完的乐谱。我急于证明自己不只是"那个小男孩"。' }
     ],
     2: [
       { key: 'diary.2.0', cond: function (s) { return (s.attributes.art || 0) >= 75; }, text: '当《Thriller》的黑胶转起来，我听见全世界屏住了呼吸。这一刻，我确信音乐能打败孤独。' },
       { key: 'diary.2.1', cond: function (s) { return (s.attributes.stress || 0) >= 55; }, text: '名声像涨潮，我忙着不被冲走。偶尔想起盖瑞，才想起自己为什么开始唱。' },
+      { key: 'diary.2.3', cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '派对散场后我总想往家跑。镁光灯越亮，越想念那间挤满兄弟的窄屋。' },
+      { key: 'diary.2.4', cond: function (s) { return (s.attributes.reputation || 0) >= 85; }, text: '我的脸出现在五大洲的墙上。这份重量，得用一辈子的作品去扛。' },
       { key: 'diary.2.2', text: '镁光灯很暖，也很烫。我在世界之巅学着想：接下来，要留下什么？' }
     ],
     3: [
       { key: 'diary.3.0', cond: function (s) { return (s.meta.phil || 0) >= 2; }, text: '我建起乐园、办起基金会，只想把光分一点给够不着灯的孩子。' },
       { key: 'diary.3.1', cond: function (s) { return (s.meta.recluse || 0) >= 1; }, text: '我一点点退向高墙里。外界的议论越响，我越想安静。' },
+      { key: 'diary.3.3', cond: function (s) { return (s.attributes.media || 0) <= 40; }, text: '头版又开始编故事。我学会把剪报折起来收进抽屉——那是别人的笔，不是我的命。' },
+      { key: 'diary.3.4', cond: function (s) { return (s.attributes.wealth || 0) >= 80; }, text: '账面上的数字长成一座山。我提醒自己：钱是乐器，不是作品。' },
       { key: 'diary.3.2', text: '掌声和流言同时涌来。我在法庭与舞台之间，学着不让任何人替我写结局。' }
     ],
     4: [
       { key: 'diary.4.0', cond: function (s) { return s.debt === true; }, text: '账单像雪片。我告诉自己：活下来，有时比完美落幕更需要勇气。' },
       { key: 'diary.4.1', cond: function (s) { return (s.attributes.health || 0) >= 60 && (s.attributes.reputation || 0) >= 60; }, text: '镜前的舞步慢了，可那双手套还在闪光。这一程，我不亏欠舞台。' },
+      { key: 'diary.4.3', cond: function (s) { return (s.attributes.loneliness || 0) >= 60; }, text: '庄园很大，回声也很大。我数着走廊尽头的灯，像小时候数哥哥们的呼吸。' },
+      { key: 'diary.4.4', cond: function (s) { return (s.meta.mogul || 0) >= 3; }, text: '谈判桌前的我比舞台上的更冷静。原来这两张桌子的台灯，照的都是同一个人。' },
       { key: 'diary.4.2', text: '2009 年的夏天，很多事要落幕了。我合上谱子，听见最初的那个盖瑞孩子在鼓掌。' }
+    ],
+    5: [
+      { key: 'diary.5.0', cond: function (s) { return (s.attributes.family || 0) >= 70; }, text: '这一次我不再把巡演排在生日前面。孩子们的书包和我的乐谱，放在同一个房间。' },
+      { key: 'diary.5.1', cond: function (s) { return (s.attributes.reputation || 0) >= 85; }, text: '人们开始用「传奇」形容我。可我知道，传奇最怕的不是衰老，是停下。' },
+      { key: 'diary.5.2', cond: function (s) { return (s.attributes.art || 0) >= 85; }, text: '我的手还记得每一个节拍。新的旋律在凌晨叫我起床，像四十年前一样。' },
+      { key: 'diary.5.3', text: '多出来的每一年都是礼物。我慢慢写，慢慢唱，把谢幕往后挪。' }
     ]
   };
 
@@ -543,7 +559,12 @@ window.MJ = window.MJ || {};
     { key: 'echo.3', cond: function (s) { return s.flags.marriedLisa === true || s.flags.marriedDebbie === true; }, text: '命运回响：你曾向镜头前的人交付过真心，婚姻的余温是暖，也是软肋。' },
     { key: 'echo.4', cond: function (s) { return s.flags.blanketBorn === true || s.flags.surrogacy === true; }, text: '命运回响：孩子降生的啼哭，是这喧嚣人间里你最想守护的安静。' },
     { key: 'echo.5', cond: function (s) { return (s.meta.phil || 0) >= 3; }, text: '命运回响：早年种下的善，如今长成了 Heal the World 的森林。' },
-    { key: 'echo.6', cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' }
+    { key: 'echo.6', cond: function (s) { return (s.meta.recluse || 0) >= 2; }, text: '命运回响：你一次次退回静默，喧嚣终于关在了门外。' },
+    { key: 'echo.7', cond: function (s) { return ((s.relations || {}).diana || 0) >= 40; }, text: '命运回响：Motown 门口牵过你的那只手，后来一直放在你身后。' },
+    { key: 'echo.8', cond: function (s) { return !!s.flags.rumorReversed; }, text: '命运回响：你亲手把钉在头条的谣言，改写成了反转的注脚。' },
+    { key: 'echo.9', cond: function (s) { return !!s.flags.flashbackFather; }, text: '命运回响：童年没人接住的那些瞬间，你用一生慢慢接住了自己。' },
+    { key: 'echo.10', cond: function (s) { return !!s.flags.survived2009; }, text: '命运回响：多出来的每一年，都是你替时光唱的返场。' },
+    { key: 'echo.11', cond: function (s) { return s.flags.thriller25 === true || s.flags.anniv2001 === true; }, text: '命运回响：加冕不是终点——王冠越重，你越记得自己为何出发。' }
   ];
 
   // M2 扩展：假如…（想象）微片段模板（GDD §17.11），按主导元路线程序化生成，全部标注"想象"
@@ -563,8 +584,17 @@ window.MJ = window.MJ || {};
       { key: 'vignette.recluse.0', zh: '若你关掉所有聚光灯，听见的第一种声音是什么？' },
       { key: 'vignette.recluse.1', zh: '若你把自己藏进一张旧唱片，谁会第一个把唱针放上去？' }
     ],
+    craftsman: [
+      { key: 'vignette.craftsman.0', zh: '若每一版母带你都磨到第五十遍，世界会不会等来一张无可挑剔的唱片？' },
+      { key: 'vignette.craftsman.1', zh: '若你把钱都花在刀刃上、把每一场巡演排得稳稳当当，故事会不会少些波澜——也少些传奇？' }
+    ],
+    innovator: [
+      { key: 'vignette.innovator.0', zh: '若你把每一种「不可能」都亲手试一遍，音乐史会不会提前十年翻页？' }
+    ],
     default: [
-      { key: 'vignette.default.0', zh: '若时光肯倒流一秒，你最想回到哪一个舞台？' }
+      { key: 'vignette.default.0', zh: '若时光肯倒流一秒，你最想回到哪一个舞台？' },
+      { key: 'vignette.default.1', cond: function (s) { return s.flags.thriller25 === true || s.flags.anniv2001 === true; }, zh: '若那场加冕的舞台再大一圈，你还会害怕站在最中央吗？' },
+      { key: 'vignette.default.2', cond: function (s) { return !!s.flags.survived2009; }, zh: '若 2009 年那场排练只是一次普通彩排，之后的第一个清晨，你想先做哪件事？' }
     ]
   };
 

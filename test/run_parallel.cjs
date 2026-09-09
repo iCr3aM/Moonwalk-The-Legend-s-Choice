@@ -9,6 +9,8 @@ var path = require('path');
 var ROOT = path.join(__dirname, '..');
 
 var GATES = [
+  'node test/check_gitignore.cjs',
+  'node test/check_syntax.cjs',
   'node test/check_dup_events.cjs',
   'node test/check_variant_windows.cjs',
   'node test/check_dream_achievements.cjs',

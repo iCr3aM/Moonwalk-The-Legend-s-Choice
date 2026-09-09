@@ -17,6 +17,10 @@ MJ.i18n.setLang('en');
 var SENTINEL = '__MISSING__';
 function zh(x) { return typeof x === 'string' && /[一-鿿]/.test(x); }
 
+// 设计性 EN 空值白名单：EN 语义无该后缀/字样（如事件卡年份的中文「年」字），zh 走 fallback 真值。
+// 第二/三阶段对「EN 空且中文回退非空」默认判 FAIL，此表内的键显式放行。
+var EN_EMPTY_OK = { 'ui.yearSuffix': 1 };
+
 var groups = [];
 groups.push({ tag: '变体', ids: Object.keys(MJ.EVENTS).filter(function (k) { var e = MJ.EVENTS[k]; return e && e.variant; }), fields: ['title', 'text'], ns: function (id) { return 'event.' + id; } });
 groups.push({ tag: '成就', ids: (MJ.config.achievements || []).map(function (a) { return a.id; }), fields: ['name', 'desc'], ns: function (id) { return 'ach.' + id; } });
@@ -70,6 +74,7 @@ Object.keys(enDict).forEach(function (key) {
   var en = enDict[key];
   if (typeof en !== 'string' || !en.trim()) {
     // 空串仅当「中文回退也非空」才算缺失；设计为空的占位（如 suffix）放行
+    if (EN_EMPTY_OK[key]) return;
     var zhFb0 = MJ.t(key, null, SENTINEL);
     if (zhFb0 !== SENTINEL && zhFb0.trim() !== '') { emptyFail++; console.log('FAIL EN 空值(中文非空): ' + key); }
     return;
@@ -92,6 +97,7 @@ Object.keys(foundKeys).forEach(function (key) {
   var en = enDict[key];
   if (typeof en !== 'string' || !en.trim()) {
     // 空串放行：仅当「中文回退也非空」才算真正缺失（如 ui.tendSuffix/ui.metaRouteSuffix 设计为占位空串）
+    if (EN_EMPTY_OK[key]) return;
     var zhFb0 = MJ.t(key, null, SENTINEL);
     if (zhFb0 !== SENTINEL && zhFb0.trim() !== '') { uiScanFail++; console.log('FAIL UI键 EN缺失: ' + key); }
     return;

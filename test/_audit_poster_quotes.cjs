@@ -37,12 +37,15 @@ try {
   };
 }
 
-function wrapCenter(text, maxW) {
+// 与 ui.js wrapCenter 同步：EN 按空格分词（防单词腰斩），ZH 按字符换行
+function wrapCenter(text, maxW, isEn) {
+  const units = isEn ? String(text || '').split(' ') : String(text || '').split('');
   const lines = []; let cur = '';
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (measure(cur + ch) > maxW && cur) { lines.push(cur); cur = ch; }
-    else cur += ch;
+  for (let i = 0; i < units.length; i++) {
+    const u = units[i];
+    const test = cur ? (isEn ? cur + ' ' + u : cur + u) : u;
+    if (measure(test) > maxW && cur) { lines.push(cur); cur = u; }
+    else cur = test;
   }
   if (cur) lines.push(cur);
   return lines;
@@ -54,8 +57,8 @@ console.log(`[total] MJ_POSTER_QUOTES 共 ${arr.length} 条\n`);
 let bad = 0;
 const rows = [];
 arr.forEach((q, i) => {
-  const zl = wrapCenter(q.zh || '', maxW).length;
-  const el = wrapCenter(q.en || '', maxW).length;
+  const zl = wrapCenter(q.zh || '', maxW, false).length;
+  const el = wrapCenter(q.en || '', maxW, true).length;
   const maxLine = Math.max(zl, el);
   const flag = maxLine > 2 ? '  <<< 超 2 行' : '';
   if (maxLine > 2) bad++;
