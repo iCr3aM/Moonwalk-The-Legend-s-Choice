@@ -13,7 +13,8 @@
 [![Status](https://img.shields.io/badge/status-released·iterable-brightgreen?style=flat-square)](./NEXT_STEPS.md)
 [![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
-[![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#license)
+[![Version](https://img.shields.io/github/package-json/v/iCr3aM/Moonwalk-The-Legend-s-Choice?style=flat-square&label=version)](./package.json)
+[![License](https://img.shields.io/github/license/iCr3aM/Moonwalk-The-Legend-s-Choice?style=flat-square)](./LICENSE)
 
 ---
 
@@ -125,7 +126,9 @@ node test/en_smoke.cjs     # EN text / sequel chain / Ch.2 solo link / new-event
 
 ## 📄 License
 
-This project currently has **no explicit open-source license** (all rights reserved). To use, modify, or distribute, please contact the author first.
+This project's code is open-sourced under the [MIT License](./LICENSE) — free to use, modify, and distribute (commercially included), as long as the copyright notice is retained.
+
+> Disclaimer: This is a fan-made tribute project, not affiliated with Michael Jackson or his Estate. Names and life events referenced in the game are for narrative purposes only; all related rights belong to their respective owners.
 
 ---
 

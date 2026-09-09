@@ -13,7 +13,8 @@
 [![Status](https://img.shields.io/badge/status-%E5%B7%B2%E5%8F%91%E5%B8%83·%E5%8F%AF%E8%BF%AD%E4%BB%A3-brightgreen?style=flat-square)](./NEXT_STEPS.md)
 [![Design](https://img.shields.io/badge/design-v1.15-8A2BE2?style=flat-square)](./NEXT_STEPS.md)
 [![No Build](https://img.shields.io/badge/build-none%20required-00b4d8?style=flat-square)](./index.html)
-[![License](https://img.shields.io/badge/license-Unspecified-red?style=flat-square)](#许可证)
+[![Version](https://img.shields.io/github/package-json/v/iCr3aM/Moonwalk-The-Legend-s-Choice?style=flat-square&label=version)](./package.json)
+[![License](https://img.shields.io/github/license/iCr3aM/Moonwalk-The-Legend-s-Choice?style=flat-square)](./LICENSE)
 
 ---
 
@@ -125,7 +126,9 @@ node test/en_smoke.cjs     # 英文文案 / 续章链路 / 第二章 solo 链路
 
 ## 📄 许可证
 
-本项目目前**未包含明确开源许可证**（保留所有权利）。如需使用、修改或分发，请先联系作者。
+本项目代码以 [MIT License](./LICENSE) 开源——可自由使用、修改、分发（含商用），仅需保留版权声明。
+
+> 免责声明：本项目为粉丝向致敬作品（fan tribute），与 Michael Jackson 本人及其遗产管理委员会（Estate）无关。游戏中涉及的姓名、生平事件等仅作叙事用途，相关权利归其各自权利人所有。
 
 ---
 
