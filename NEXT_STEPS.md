@@ -92,8 +92,15 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 - **B 补场景（5 → 约 11 处）**：①图鉴进度按类型着色：`.egg-gallery .g-prog`=violet、`.trivia-gallery .g-prog`=teal、结局/成就保持 gold；②未解锁卡片按类型描边：`.g-cell.off` 只换 border-color，**虚线 + opacity .55 语言不动**；③内容类型着色：手记 gold / 命运回响 violet / 抉择的回响 violet（ui.js era-block 加 `era-diary`/`era-echo` 类，均已在 CSS 定义，过 `check_ui_classes`）；④人物志未结识 `.collab-card.locked` 描边 violet（仍虚线 + opacity .55）。
 - **运行时验证（临时脚本实测后已删）**：default + 六章的 `--violet/--teal` computed 值全部符合新值；egg/trivia 进度与未解锁描边着色生效；ach 进度保持原色；`.era-diary .e-tag` 深字金底生效（era-echo 同构）。
 - 回归：npm test 30/30、随机 6/6、reset 16/16、截图 4 设备 × 双语无溢出无 pageerror。
-- **暂缓**：C canvas 海报跟随（需把硬编码色表抽成 `MJ.THEME_COLORS`）、D 玩家可选主题（需设置面板）。
+- **暂缓**：**D 玩家可选主题 —— 无限期暂缓（用户拍板 2026-09-09）**；C canvas 海报跟随（效果/成本见下，随时可开工）。
 - **目检提醒**：色彩与对比度的最终确认需人眼看 `test/_ui_shots/` 截图（4 设备 × 双语 × 7 场景），模型无法读图；若某章下 pill 与章色仍觉得近，调对应章的 `--violet/--teal` 覆写值即可。
+
+### ✅ 阶段 C 已落地：canvas 海报跟随章节（2026-09-09，js `?v=1.1.4`）
+
+- **效果**：海报点缀色（双线边框/星徽圆环/分隔线/区块标题/签名行）随**结局时所在章节**变色（ch1 靛紫调、ch3 青绿调…），与 UI 章节色同一套数值；稀有度五档色（RARITY_COLORS）与布局文案不变；**假设线结局海报描边恒为 violet**（与 UI「假设线」pill 呼应，alpha 0.70/0.40 双框）。海报是位图，色彩在生成时定格——档案回看按 `state.era`（serialize/hydrate 已持久化）重绘，每张海报保留它那一程的色彩记忆。
+- **实现**：`ui.js` 新增 `POSTER_GOLD`（默认金）+ `POSTER_THEMES`（六章色表，bright/cream/legendHi 为同色相高明度版，dim/dim2 暗版）+ `posterTheme(state)`（按 `state.era` 取表，缺省回金）；`createPosterFace1/2` 的 `var G = {...}` 改为 `posterTheme(state)`；16 处硬编码 `rgba(212,175,55,x)` 全部替换为 `'rgba(' + G.rgb + ',x)'`（按 alpha 分 7 组 replace_all）；假设线描边按 `MJ.config.endings[endingId].assumption` 分支。
+- **运行时验证（临时脚本实测后已删）**：Playwright 打开档案海报 modal，把 `img.poster-img` 的 dataURL 解码到离屏 canvas 后 getImageData 采样——era=null/2 金框 (129,106,35)/(140,118,48)、era=1 紫 22273 px、era=3 青 27018 px、era=5 蓝 28541 px；**同章节同结局下，假设线边框 (147,131,170) 紫调 vs 主线 (140,118,48) 金调**。注意 canvas 内部 1440×2560、绘制坐标 1080×1707（DPI 4/3），采样需乘缩放。
+- 回归：npm test 30/30、随机 6/6、endings 30/30（渲染海报）、eggs 43/43、reset 16/16、counts 9/9、截图 4×2 无溢出；`_audit_poster_quotes` PASS（35 条 ≤2 行）。
 
 ---
 
@@ -125,7 +132,7 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 
 ## 四、暂缓（用户指示，恢复时间待定）
 
-- [ ] **海报留白内容方案 A–E**：A 人生年轮（Face1 时间轴）/ B 六维星环（Face1 雷达）/ C 同行者剪影（Face2 合作者行）/ D 本程之最（Face2 三个最）/ E 元路线四相（Face2 meta 条）。成本 C/D/E 小，A/B 中。
+- **海报留白内容方案 A–E —— 无限期暂缓（用户拍板 2026-09-09）**（A 人生年轮 / B 六维星环 / C 同行者剪影 / D 本程之最 / E 元路线四相，方案存 git 历史）。
 - [ ] **多周目传承 M10 / 关键抉择回放 M12**（M11 成就叙事化已落地）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍深化（移动端、轻量可视化、社交增强）。

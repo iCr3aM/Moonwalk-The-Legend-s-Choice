@@ -309,6 +309,25 @@ window.MJ = window.MJ || {};
   // ---------- 图鉴 / 成就 弹窗（主菜单各收为一个按钮；含多次确认重置） ----------
   // U1 稀有度颜色体系：色板与 css --r-* 变量、海报 canvas 对齐（uncommon 原 canvas 缺失，此处补全）
   var RARITY_COLORS = { common: '#9c8a5a', uncommon: '#b9a06a', rare: '#c79a2c', epic: '#c9b3f0', legendary: '#f3e2b0' };
+  // 海报主题色表（2026-09-09 C）：与 css/style.css 六章 .app[data-chapter=N] 同一套数值。
+  // 海报点缀色（边框/星徽/分隔线/标题/签名）随「结局时所在章节」变色；稀有度五档色不随章节。
+  // bright/cream/legendHi 为同色相高明度版（深底大标题/高光文字），dim/dim2 为暗版（次要信息）。
+  var POSTER_GOLD = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
+  var POSTER_THEMES = {
+    0: { rgb: '224,168,90', base: '#e0a85a', bright: '#f6ddb0', deep: '#bd8438', dim: '#b99a55', dim2: '#8a6f38', cream: '#f2e3c0', legendHi: '#fff3d6' },
+    1: { rgb: '157,140,255', base: '#9d8cff', bright: '#d9d0ff', deep: '#7a6fd6', dim: '#8f85d9', dim2: '#5a51a8', cream: '#e6e0ff', legendHi: '#f3efff' },
+    2: { rgb: '230,194,78', base: '#e6c24e', bright: '#f3e2b0', deep: '#c79a2c', dim: '#bda25c', dim2: '#8a7a4a', cream: '#eee0b0', legendHi: '#fff4cf' },
+    3: { rgb: '84,194,176', base: '#54c2b0', bright: '#b8efe6', deep: '#3a9b8c', dim: '#5fb3a6', dim2: '#2f6e64', cream: '#d6f2ec', legendHi: '#eafff9' },
+    4: { rgb: '180,140,255', base: '#b48cff', bright: '#e3d3ff', deep: '#8f6fd6', dim: '#a589d9', dim2: '#6b57a8', cream: '#ece0ff', legendHi: '#f6efff' },
+    5: { rgb: '124,199,230', base: '#7cc7e6', bright: '#c9ecf9', deep: '#54a6c8', dim: '#6fb2cc', dim2: '#3d7d99', cream: '#ddf2fa', legendHi: '#effbff' }
+  };
+  function posterTheme(state) {
+    var ch = (state && state.era != null && POSTER_THEMES[state.era]) ? state.era : null;
+    var t = (ch === null) ? POSTER_GOLD : POSTER_THEMES[ch];
+    var g = {};
+    for (var k in POSTER_GOLD) g[k] = (t[k] != null) ? t[k] : POSTER_GOLD[k];
+    return g;
+  }
   function rarityLabel(r) {
     var zh = ({ common: '普通', uncommon: '平凡', rare: '稀有', epic: '史诗', legendary: '传奇' })[r] || '普通';
     return T('rarity.' + r, null, zh);
@@ -905,7 +924,7 @@ window.MJ = window.MJ || {};
 
   // 两页海报 · 正面（主视觉 + 独白 + 语录签名）
   function createPosterFace1(state, endingId) {
-    var G = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
+    var G = posterTheme(state);
     var e = MJ.config.endings[endingId] || { name: endingId, tone: '', monologue: '' };
     var eName = T('ending.' + endingId + '.name', null, e.name);
     var eTone = T('ending.' + endingId + '.tone', null, e.tone);
@@ -916,19 +935,19 @@ window.MJ = window.MJ || {};
     var ctx = cv.getContext('2d'); ctx.scale(S, S); ctx.textBaseline = 'alphabetic';
     var bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(' + G.rgb + ',0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
-    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
+    ctx.strokeStyle = (MJ.config.endings[endingId] && MJ.config.endings[endingId].assumption) ? 'rgba(196,177,238,0.70)' : 'rgba(' + G.rgb + ',0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = (MJ.config.endings[endingId] && MJ.config.endings[endingId].assumption) ? 'rgba(196,177,238,0.40)' : 'rgba(' + G.rgb + ',0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
     var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
     var _rc = RARITY_COLORS[_rar] || G.deep;
     ctx.textAlign = 'center';
     ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
-    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — 2009', W / 2, 102);
-    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + G.rgb + ',0.10)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
     if (_rar === 'epic' || _rar === 'legendary') { ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2); ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
     function starPath(cx, cy, sp, oR, iR) { var rot = -Math.PI / 2, step = Math.PI / sp; ctx.beginPath(); for (var si = 0; si < sp; si++) { ctx.lineTo(cx + Math.cos(rot) * oR, cy + Math.sin(rot) * oR); rot += step; ctx.lineTo(cx + Math.cos(rot) * iR, cy + Math.sin(rot) * iR); rot += step; } ctx.closePath(); }
     starPath(W / 2, 178, 5, 40, 17);
@@ -939,7 +958,7 @@ window.MJ = window.MJ || {};
     ctx.textAlign = 'left';
     ctx.fillStyle = G.base; ctx.font = '600 17px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterEndingLabel', null, '结局 · 你的传奇'), 60, 384);
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, 398); ctx.lineTo(W - 60, 398); ctx.stroke();
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, 398); ctx.lineTo(W - 60, 398); ctx.stroke();
     var _narr = (eSum ? eSum + '\n' : '') + (eMon || '');
     var _ext = monologueExtFor(state, endingId);
     if (_ext) _narr += '\n' + _ext;
@@ -950,7 +969,7 @@ window.MJ = window.MJ || {};
     if (_tail) {
       y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
       ctx.fillText(T('ui.posterEpilogue', null, '尾声'), 60, y); y += 14;
-      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
+      ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
       ctx.fillStyle = G.cream; ctx.font = '14px "PingFang SC",sans-serif';
       y = wrapParagraph(ctx, _tail, 60, y, W - 120, 24, H - 158);
     }
@@ -959,7 +978,7 @@ window.MJ = window.MJ || {};
     if (_hl.length && y + 150 < H - 130) {
       y += 24; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 16px "PingFang SC",sans-serif';
       ctx.fillText(T('ui.posterHighlight', null, '高光时刻'), 60, y); y += 14;
-      ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
+      ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 22;
       var _lead = T('ui.achNarrLead', null, '回望这一程，有几枚瞬间格外滚烫——');
       var _tailS = T('ui.achNarrTail', null, '它们不是奖赏，是路标。');
       ctx.fillStyle = G.cream; ctx.font = '15px "PingFang SC",sans-serif';
@@ -972,16 +991,16 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _ql = wrapCenter(ctx, _pq, W - 120); if (_ql.length > 2) _ql = _ql.slice(0, 2);
     var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
     for (var _i = 0; _i < _ql.length; _i++) ctx.fillText(_ql[_i], W / 2, tagY + _i * 22);
     var _sy = tagY + _ql.length * 22 + 14;
-    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy);
-    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy + 20);
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy);
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy + 20);
     return cv;
   }
   // 两页海报 · 背面（属性快照 + 关键抉择 + 尾声 + 语录签名）
   function createPosterFace2(state, endingId) {
-    var G = { rgb: '212,175,55', base: '#d4af37', bright: '#f3e2b0', deep: '#c79a2c', dim: '#b9a06a', dim2: '#8a7a4a', cream: '#e8d6a6', common: '#9c8a5a', legendHi: '#fff4cf' };
+    var G = posterTheme(state);
     var a = state.attributes;
     var _gw = (state.meta && state.meta.grammyWins) || 0;
     var dm = MJ.dominantMeta(state.meta);
@@ -995,21 +1014,21 @@ window.MJ = window.MJ || {};
     var ctx = cv.getContext('2d'); ctx.scale(S, S); ctx.textBaseline = 'alphabetic';
     var bg = ctx.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#17110a'); bg.addColorStop(0.55, '#0e0b07'); bg.addColorStop(1, '#090705');
     ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(212,175,55,0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
+    var vg = ctx.createRadialGradient(W / 2, 300, 120, W / 2, H / 2, H * 0.75); vg.addColorStop(0, 'rgba(' + G.rgb + ',0.10)'); vg.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-    ctx.strokeStyle = 'rgba(212,175,55,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
-    ctx.strokeStyle = 'rgba(212,175,55,0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
+    ctx.strokeStyle = (MJ.config.endings[endingId] && MJ.config.endings[endingId].assumption) ? 'rgba(196,177,238,0.70)' : 'rgba(' + G.rgb + ',0.55)'; ctx.lineWidth = 2; ctx.strokeRect(24, 24, W - 48, H - 48);
+    ctx.strokeStyle = (MJ.config.endings[endingId] && MJ.config.endings[endingId].assumption) ? 'rgba(196,177,238,0.40)' : 'rgba(' + G.rgb + ',0.18)'; ctx.lineWidth = 1; ctx.strokeRect(34, 34, W - 68, H - 68);
     ctx.textAlign = 'center';
     // 顶部 header 与文案页统一（两页一致）
     ctx.fillStyle = G.base; ctx.font = '600 21px "PingFang SC","Microsoft YaHei",sans-serif';
     ctx.fillText(T('ui.posterHeader', null, 'MICHAEL JACKSON · 人 生 选 择'), W / 2, 78);
-    ctx.fillStyle = 'rgba(212,175,55,0.55)'; ctx.font = '14px sans-serif';
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.55)'; ctx.font = '14px sans-serif';
     ctx.fillText('1958 — 2009', W / 2, 102);
     // 主视觉与文案页完全同款（大号星徽 + 结局名 + 气质标签），保持两页视觉统一
     var _rar = (MJ.config.endingRarity && MJ.config.endingRarity[endingId]) || 'common';
     var _rc = RARITY_COLORS[_rar] || G.deep;
-    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(212,175,55,0.10)'; ctx.fill();
-    ctx.strokeStyle = 'rgba(212,175,55,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(W / 2, 178, 58, 0, Math.PI * 2); ctx.fillStyle = 'rgba(' + G.rgb + ',0.10)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
     if (_rar === 'epic' || _rar === 'legendary') { ctx.beginPath(); ctx.arc(W / 2, 178, 66, 0, Math.PI * 2); ctx.strokeStyle = _rc; ctx.globalAlpha = 0.55; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1; }
     function starPath(cx, cy, sp, oR, iR) { var rot = -Math.PI / 2, step = Math.PI / sp; ctx.beginPath(); for (var si = 0; si < sp; si++) { ctx.lineTo(cx + Math.cos(rot) * oR, cy + Math.sin(rot) * oR); rot += step; ctx.lineTo(cx + Math.cos(rot) * iR, cy + Math.sin(rot) * iR); rot += step; } ctx.closePath(); }
     starPath(W / 2, 178, 5, 40, 17);
@@ -1064,7 +1083,7 @@ window.MJ = window.MJ || {};
     ctx.textBaseline = 'alphabetic';
     y += 6; ctx.textAlign = 'left'; ctx.fillStyle = G.base; ctx.font = '600 15px "PingFang SC",sans-serif';
     ctx.fillText(T('ui.posterKeyChoices', null, '关键抉择'), 60, y); y += 12;
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 20;
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke(); y += 20;
     var _keys = (state.history || []).filter(function (h) { return h && h.key; });
     if (!_keys.length) { ctx.fillStyle = G.dim2; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterNoKey', null, '— 这一程没有惊天岔路 —'), 60, y); y += 22; }
     else {
@@ -1115,11 +1134,11 @@ window.MJ = window.MJ || {};
     ctx.fillStyle = G.base; ctx.font = 'italic 15px "PingFang SC",sans-serif';
     var _qln = wrapCenter(ctx, _pq, W - 120); if (_qln.length > 2) _qln = _qln.slice(0, 2);
     var tagY = Math.min(H - 112, Math.max(H - 130, y + 42));
-    ctx.strokeStyle = 'rgba(212,175,55,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
+    ctx.strokeStyle = 'rgba(' + G.rgb + ',0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2 - 30, tagY - 18); ctx.lineTo(W / 2 + 30, tagY - 18); ctx.stroke();
     for (var _j = 0; _j < _qln.length; _j++) ctx.fillText(_qln[_j], W / 2, tagY + _j * 22);
     var _sy2 = tagY + _qln.length * 22 + 14;
-    ctx.fillStyle = 'rgba(212,175,55,0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy2);
-    ctx.fillStyle = 'rgba(212,175,55,0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy2 + 20);
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.5)'; ctx.font = '13px sans-serif'; ctx.fillText(T('ui.posterSigned', null, '月球漫步 · 传奇抉择'), W / 2, _sy2);
+    ctx.fillStyle = 'rgba(' + G.rgb + ',0.42)'; ctx.font = '12px sans-serif'; ctx.fillText(T('ui.credit', null, 'Cr3aM 制作 · MJ Forever'), W / 2, _sy2 + 20);
     return cv;
   }
   // M11 成就叙事化：本局高光成就 → 第一人称叙事句（无模板的成就不进叙事；稀有度+固定序，无随机保恒定）
