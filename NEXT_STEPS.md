@@ -78,7 +78,7 @@ px→rem 大改（style.css 700+ 行），收益不成比例。
 - [ ] **多周目传承 M10 / 关键抉择回放 M12**（M11 成就叙事化已落地）。
 - [ ] **重复游玩**：每日挑战、硬核纯净、NG+、结局达成向导、最接近结局提示。
 - [ ] **系统化彩蛋、更多结局候选**；性能/无障碍深化（移动端、轻量可视化、社交增强）。
-- [ ] **发布前**：`node test/_audit_playthrough.cjs 5000` + `npm run e2e`（真机 Playwright：随机 6/6、结局 30/30、彩蛋 43/43）。
+- [x] **发布前验证（2026-09-09 已完成，全绿）**：`node test/_audit_playthrough.cjs 5000` → PASS（矛盾局=0 / 悬空链接=0 / 粘性 debt=0）；`npm run e2e` 随机 **6/6**、`npm run e2e:endings` **30/30**、`npm run e2e:eggs` **43/43**，三种模式均 **0 console ERROR、0 WARNING**。
 - [ ] **violet/teal 主题化延伸**（可选）：章节配色体系（`--gold` 六章色）是否扩展覆盖 violet/teal 语义色。
 
 ---
